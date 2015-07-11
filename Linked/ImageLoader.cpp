@@ -25,11 +25,9 @@ ImageLoader::~ImageLoader()
 
 vec3 ImageLoader::getPixel(int x, int y)
 {
-	/*for (int i = 0; i < (3 * 4); i++)
-	{
-		std::cout << (int)loadedImage[i] << ", ";
-	}
-	return vec3(0, 0, 0);*/
+	if (y < 0 || x < 0 || y > width || x > height)
+		throw PixelOutOfBoundsException();
+
 	vec3 rgb_vector = vec3();
 	rgb_vector.r = (int)loadedImage[(y * width * 3) + x * 3];
 	rgb_vector.g = (int)loadedImage[(y * width * 3) + x * 3 + 1];

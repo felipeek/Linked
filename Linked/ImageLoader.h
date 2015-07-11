@@ -6,6 +6,8 @@
 
 using namespace glm;
 
+class PixelOutOfBoundsException : std::exception{};
+
 class ImageLoader
 {
 public:
@@ -19,4 +21,3 @@ protected:
 	int channels;
 	vec3 getPixel(int x, int y);
 };
-

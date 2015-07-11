@@ -9,5 +9,5 @@ public:
 	void update();
 private:
 	void input();
-	void test(int x, int y);
+	void printCoordinate(int x, int y);
 };

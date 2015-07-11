@@ -16,10 +16,10 @@ enum MapHeight{
 
 class MapCoordinate {
 public:
-	static const MapObject STANDARD_MAP_OBJECT = NORMAL_FLOOR;
-	static const MapHeight STANDARD_MAP_HEIGHT = GROUND;
 	MapCoordinate();
 	~MapCoordinate();
 	MapObject object;
 	MapHeight height;
+	static const MapObject STANDARD_MAP_OBJECT = NORMAL_FLOOR;
+	static const MapHeight STANDARD_MAP_HEIGHT = GROUND;
 };

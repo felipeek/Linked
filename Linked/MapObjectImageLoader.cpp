@@ -1,4 +1,5 @@
 #include "MapObjectImageLoader.h"
+#include <string>
 
 using namespace glm;
 
@@ -13,11 +14,19 @@ MapObjectImageLoader::~MapObjectImageLoader()
 
 }
 
-MapObject MapObjectImageLoader::getMapCoordinate(vec3 coordinateVector)
+MapObject MapObjectImageLoader::getMapObject(vec3 coordinateVector)
 {
 	MapObject mapObject;
-	vec3 rgb = getPixel((int)coordinateVector.x, (int)coordinateVector.y);
-	mapObject = transformRgbIntoMapObject(rgb);
+
+	try
+	{
+		vec3 rgb = getPixel((int)coordinateVector.x, (int)coordinateVector.y);
+		mapObject = transformRgbIntoMapObject(rgb);
+	}
+	catch (PixelOutOfBoundsException e)
+	{
+		mapObject = BLOCKED;
+	}
 
 	return mapObject;
 }
@@ -28,22 +37,16 @@ MapObject MapObjectImageLoader::transformRgbIntoMapObject(vec3 rgb)
 
 	if (rgb == vec3(255, 255, 255))
 		return NORMAL_FLOOR;
-
 	if (rgb == vec3(0, 0, 0))
 		return BLOCKED;
-
 	if (rgb == vec3(0, 0, 255))
 		return HOLE;
-
 	if (rgb == vec3(0, 255, 0))
 		return SPIKES;
-
 	if (rgb == vec3(255, 0, 0))
 		return FIRE;
-
 	if (rgb == vec3(0, 255, 255))
 		return MUD;
-
 	if (rgb == vec3(255, 0, 255))
 		return SLIPPERY;
 	

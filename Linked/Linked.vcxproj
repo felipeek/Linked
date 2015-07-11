@@ -77,7 +77,9 @@
     <ClInclude Include="IndexedModel.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="MapCoordinate.h" />
+    <ClInclude Include="MapHeightImageLoader.h" />
     <ClInclude Include="MapObjectImageLoader.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Primitive.h" />
@@ -95,7 +97,9 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapCoordinate.cpp" />
+    <ClCompile Include="MapHeightImageLoader.cpp" />
     <ClCompile Include="MapObjectImageLoader.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Primitive.cpp" />
