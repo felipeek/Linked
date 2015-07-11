@@ -44,11 +44,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Hoshoyo\Documents\Visual Studio 2013\Projects\Linked\Linked\Linked\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Hoshoyo\Documents\Visual Studio 2013\Projects\Linked\Linked\Linked\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>./lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32s.lib;glew32.lib;glut32.lib;SOIL.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -76,6 +76,7 @@
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="IndexedModel.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="MapCoordinate.h" />
     <ClInclude Include="MapObjectImageLoader.h" />
     <ClInclude Include="Mesh.h" />
@@ -92,6 +93,7 @@
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="IndexedModel.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MapCoordinate.cpp" />
     <ClCompile Include="MapObjectImageLoader.cpp" />
