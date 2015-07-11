@@ -14,6 +14,7 @@
 #include "Camera.h"
 
 #include "Map.h"
+#include "Display.h"
 
 
 Mesh* mesh;
@@ -89,18 +90,26 @@ void Game::render()
 
 void Game::input()
 {
-	float x = 0.001f;
+	const float speed = 1;
+
+	double s = 0;
+
+	//if (Display::delta > 0.01)
+	//	s = 0;
+	//else
+		s = Display::delta;
+
 	if (Input::keyStates['w'])
-		entity->getTransform()->incTranslate(0, x, 0);
+		entity->getTransform()->incTranslate(0, speed * s, 0);
 
 	if (Input::keyStates['s'])
-		entity->getTransform()->incTranslate(0, -x, 0);
+		entity->getTransform()->incTranslate(0, -speed * s, 0);
 
 	if (Input::keyStates['a'])
-		entity->getTransform()->incTranslate(-x, 0, 0);
+		entity->getTransform()->incTranslate(-speed * s, 0, 0);
 
 	if (Input::keyStates['d'])
-		entity->getTransform()->incTranslate(x, 0, 0);
+		entity->getTransform()->incTranslate(speed * s, 0, 0);
 
 	if (Input::keyStates['r'])
 		entity->getTransform()->incRotateY(0.0001f);

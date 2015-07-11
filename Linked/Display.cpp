@@ -15,6 +15,7 @@ double Display::lastTime;
 double Display::startTime;
 double Display::passedTime;
 int Display::frames = 0;
+double Display::delta = 0;
 
 Display::Display(int* argc, char** argv, std::string name)
 {
@@ -92,6 +93,7 @@ void Display::MainLoop()
 	}
 	if (mustRender)
 	{
+
 		render();
 		frames++;
 	}
