@@ -72,7 +72,8 @@ void Display::MainLoop()
 	//std::cout << startTime - lastTime << std::endl;
 
 	passedTime = startTime - lastTime;
-	std::cout << passedTime << std::endl;
+	delta = passedTime;
+	//std::cout << passedTime << std::endl;
 	lastTime = startTime;
 	unprocessedTime += passedTime;
 	frameCounter += passedTime;

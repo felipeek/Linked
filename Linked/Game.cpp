@@ -1,34 +1,51 @@
 #include "Game.h"
 #include "MapObjectImageLoader.h"
+
+#include "MapHeightImageLoader.h"
+#include <string>
+#include <iostream>
+
 #include "Mesh.h"
 #include "Primitive.h"
 #include "PrimitiveShader.h"
 #include "Input.h"
 #include "Entity.h"
+
 #include "Camera.h"
 
-#include <string>
-#include <iostream>
+#include "Map.h"
 
-/*Game::Game()
-{
-	//std::string a = "./res/imagem_hoshoyo.png";
-	//std::string enumr = "teste";
-	//MapObjectImageLoader *imagem = new MapObjectImageLoader(a, 3);
-	//MapObject obj = imagem->getMapCoordinate(glm::vec3(0, 0, 0));
-	test(0, 0);
-	test(1, 0);
-	test(0, 1);
-	test(1, 1);
-}*/
 
-void Game::test(int x, int y)
+Mesh* mesh;
+Mesh* mesh2;
+PrimitiveShader* shader;
+Entity* entity;
+Camera* camera;
+
+
+//Game::Game()
+//{
+//	printCoordinate(0, 0);
+//	printCoordinate(1, 0);
+//	printCoordinate(2, 0);
+//	printCoordinate(0, 1);
+//	printCoordinate(1, 1);
+//	printCoordinate(2, 1);
+//
+//	std::string shaderPath = "./shaders/normalshader";
+//	mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.3f), new Texture("./res/Textures/predio.jpg"));
+//	mesh2 = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.5f, 0.5f), new Texture("./res/imagem_hoshoyo2.png"));
+//	entity = new Entity(new Transform(), mesh2);
+//}
+
+void Game::printCoordinate(int x, int y)
 {
-	std::string a = "./res/imagem_hoshoyo.png";
+	std::string objectMapPath = "./res/Maps/objectmap.png";
+	std::string heightMapPath = "./res/Maps/heightmap.png";
 	std::string enumr = "teste";
-	MapObjectImageLoader *imagem = new MapObjectImageLoader(a, 3);
-	MapObject obj = imagem->getMapCoordinate(glm::vec3(x, y, 0));
-	switch (obj)
+	Map myOwnMap = Map(objectMapPath, heightMapPath, 3);
+	MapCoordinate coord = myOwnMap.getMapCoordinate(glm::vec3(x, y, 0));
+	switch (coord.object)
 	{
 	case NORMAL_FLOOR: enumr = "NORMAL_FLOOR"; break;
 	case BLOCKED: enumr = "BLOCKED"; break;
@@ -43,11 +60,6 @@ void Game::test(int x, int y)
 	std::cout << enumr << std::endl << std:: endl;
 }
 
-Mesh* mesh;
-PrimitiveShader* shader;
-Entity* entity;
-Camera* camera;
-
 Game::Game(int windowsWidth, int windowsHeight)
 {
 	std::string shaderPath = "./shaders/normalshader";
@@ -55,6 +67,12 @@ Game::Game(int windowsWidth, int windowsHeight)
 	entity = new Entity(new Transform(), mesh);
 	camera = new Camera(glm::vec3(0,0,1), glm::vec3(0,0,0), 70.0f, (float)windowsWidth/windowsHeight, 0.1, 500.0f);
 	shader = new PrimitiveShader(shaderPath, camera);
+	printCoordinate(0, 0);
+	printCoordinate(1, 0);
+	printCoordinate(2, 0);
+	printCoordinate(0, 1);
+	printCoordinate(1, 1);
+	printCoordinate(2, 1);
 }
 
 Game::~Game()

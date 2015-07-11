@@ -3,11 +3,12 @@
 class Game
 {
 public:
+	Game();
 	Game(int windowsWidth, int windowsHeight);
 	~Game();
 	void render();
 	void update();
 private:
 	void input();
-	void test(int x, int y);
+	void printCoordinate(int x, int y);
 };

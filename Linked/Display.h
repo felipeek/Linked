@@ -17,6 +17,7 @@ class Display
 public:
 	Display(int* argc, char** argv, std::string name);
 	~Display();
+	static double delta;
 private:
 	static Game* game;
 	static void startGlut(int* argc, char** argv, std::string titulo);
