@@ -7,10 +7,11 @@ layout(location = 2) in vec2 textureCoord;
 out vec2 uvCoords;
 
 uniform mat4 Model;
+uniform mat4 viewProj;
 
 void main()
 {
 	vec4 worldPosition = Model * vec4(vertexPosition_modelspace, 1.0);
-	gl_Position = worldPosition;
+	gl_Position = viewProj * worldPosition;
 	uvCoords = vec2(textureCoord.x, textureCoord.y);
 }

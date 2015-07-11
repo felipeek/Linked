@@ -10,7 +10,6 @@ class ImageLoader
 {
 public:
 	ImageLoader(std::string& filename, int nChannels);
-	ImageLoader();
 	~ImageLoader();
 protected:
 	unsigned char* loadedImage;

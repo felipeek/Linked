@@ -3,7 +3,7 @@
 class Game
 {
 public:
-	Game();
+	Game(int windowsWidth, int windowsHeight);
 	~Game();
 	void render();
 	void update();

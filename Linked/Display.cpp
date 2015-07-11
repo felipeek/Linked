@@ -1,10 +1,20 @@
 #include "Display.h"
 #include "Input.h"
+#include "Time.h"
+#include <Windows.h>
+
 #include <GL\glew.h>
 #include <GL\glut.h>
 #include <iostream>
 
 Game* Display::game = NULL;
+const double Display::frameTime = 1.0 / FRAMECAP;
+double Display::unprocessedTime = 0;
+double Display::frameCounter = 0;
+double Display::lastTime;
+double Display::startTime;
+double Display::passedTime;
+int Display::frames = 0;
 
 Display::Display(int* argc, char** argv, std::string name)
 {
@@ -53,6 +63,44 @@ void Display::startGlut(int* argc, char** argv, std::string titulo)
 
 void Display::MainLoop()
 {
+
+	// Main Game loop with time control
+	bool mustRender = false;
+
+	double startTime = Time::getTime();
+
+	//std::cout << startTime - lastTime << std::endl;
+
+	passedTime = startTime - lastTime;
+	std::cout << passedTime << std::endl;
+	lastTime = startTime;
+	unprocessedTime += passedTime;
+	frameCounter += passedTime;
+
+	if (frameCounter >= 1.0)
+	{
+		//std::cout << frames << std::endl;
+		frames = 0;
+		frameCounter = 0;
+	}
+
+	while (unprocessedTime > frameTime)
+	{
+		mustRender = true;
+		unprocessedTime -= frameTime;
+	}
+	if (mustRender)
+	{
+		render();
+		frames++;
+	}
+	else
+		Sleep(1);
+
+}
+
+void Display::render()
+{
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	game->render();
 	glutSwapBuffers();
@@ -66,7 +114,7 @@ void Display::initOpenGL()
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 
-	game = new Game();
+	game = new Game(WWID, WHEI);
 }
 
 void Display::KeyboardDownEvent(unsigned char key, int x, int y)

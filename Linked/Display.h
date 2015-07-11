@@ -29,5 +29,14 @@ private:
 	static void MousePassive(int x, int y);
 
 	static void initOpenGL();
+	static void render();
+
+	const static double frameTime;
+	static double unprocessedTime;
+	static double frameCounter;
+	static double lastTime;
+	static double startTime;
+	static double passedTime;
+	static int frames;
 };
 

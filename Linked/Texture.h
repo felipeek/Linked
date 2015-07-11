@@ -9,6 +9,6 @@ public:
 	Texture(std::string fileName);
 	~Texture();
 	GLuint textureID;
-	GLuint loadSTB(std::string& fileName);
+	GLuint genGLTexture();
 };
 

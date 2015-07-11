@@ -1,12 +1,14 @@
 #include "Game.h"
 #include "MapObjectImageLoader.h"
-#include <string>
-#include <iostream>
 #include "Mesh.h"
 #include "Primitive.h"
 #include "PrimitiveShader.h"
 #include "Input.h"
 #include "Entity.h"
+#include "Camera.h"
+
+#include <string>
+#include <iostream>
 
 /*Game::Game()
 {
@@ -44,13 +46,15 @@ void Game::test(int x, int y)
 Mesh* mesh;
 PrimitiveShader* shader;
 Entity* entity;
+Camera* camera;
 
-Game::Game()
+Game::Game(int windowsWidth, int windowsHeight)
 {
 	std::string shaderPath = "./shaders/normalshader";
 	mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.3f), new Texture("./res/Textures/predio.jpg"));
 	entity = new Entity(new Transform(), mesh);
-	shader = new PrimitiveShader(shaderPath);
+	camera = new Camera(glm::vec3(0,0,1), glm::vec3(0,0,0), 70.0f, (float)windowsWidth/windowsHeight, 0.1, 500.0f);
+	shader = new PrimitiveShader(shaderPath, camera);
 }
 
 Game::~Game()
@@ -79,4 +83,7 @@ void Game::input()
 
 	if (Input::keyStates['d'])
 		entity->getTransform()->incTranslate(x, 0, 0);
+
+	if (Input::keyStates['r'])
+		entity->getTransform()->incRotateY(0.0001f);
 }

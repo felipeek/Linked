@@ -16,6 +16,7 @@ public:
 	void scale(float x, float y, float z);
 
 	void incTranslate(float x, float y, float z);
+	void incRotateY(float amt);
 	void incScale(float x, float y, float z);
 
 private:
@@ -25,6 +26,7 @@ private:
 
 	glm::vec3 mPosition;
 	glm::vec3 mScale;
+	float angleY;
 
 	void updateModel();
 };

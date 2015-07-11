@@ -8,6 +8,7 @@ Transform::Transform(float x, float y, float z)
 	translationMatrix = glm::mat4(1.0f);
 	scaleMatrix = glm::mat4(1.0f);
 	rotationMatrix = glm::mat4(1.0f);
+	angleY = 0;
 }
 
 
@@ -41,6 +42,13 @@ void Transform::incTranslate(float x, float y, float z)
 
 	translationMatrix = glm::translate(glm::mat4(), mPosition);
 
+	updateModel();
+}
+
+void Transform::incRotateY(float amt)
+{
+	angleY += amt;
+	rotationMatrix = rotationMatrix * glm::rotate(glm::mat4(), angleY, glm::vec3(0, 1, 0));
 	updateModel();
 }
 
