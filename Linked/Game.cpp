@@ -66,7 +66,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	std::string shaderPath = "./shaders/normalshader";
 	mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.3f), new Texture("./res/Textures/predio.jpg"));
 	entity = new Entity(new Transform(), mesh);
-	camera = new Camera(glm::vec3(0,0,1), glm::vec3(0,0,0), 70.0f, (float)windowsWidth/windowsHeight, 0.1, 500.0f);
+	camera = new Camera(glm::vec3(0,0,1), glm::vec3(0,0,0), 70.0f, (float)windowsWidth/windowsHeight, 0.1f, 500.0f);
 	shader = new PrimitiveShader(shaderPath, camera);
 	printCoordinate(0, 0);
 	printCoordinate(1, 0);
@@ -84,32 +84,29 @@ Game::~Game()
 
 void Game::render()
 {
-	input();
 	entity->render(shader);
+}
+
+void Game::update()
+{
+	input();
 }
 
 void Game::input()
 {
-	const float speed = 1;
-
-	double s = 0;
-
-	//if (Display::delta > 0.01)
-	//	s = 0;
-	//else
-		s = Display::delta;
+	float speed = 1;
 
 	if (Input::keyStates['w'])
-		entity->getTransform()->incTranslate(0, speed * s, 0);
+		entity->getTransform()->incTranslate(0, (float)Display::frameTime * speed, 0);
 
 	if (Input::keyStates['s'])
-		entity->getTransform()->incTranslate(0, -speed * s, 0);
+		entity->getTransform()->incTranslate(0, -(float)Display::frameTime * speed, 0);
 
 	if (Input::keyStates['a'])
-		entity->getTransform()->incTranslate(-speed * s, 0, 0);
+		entity->getTransform()->incTranslate(-(float)Display::frameTime * speed, 0, 0);
 
 	if (Input::keyStates['d'])
-		entity->getTransform()->incTranslate(speed * s, 0, 0);
+		entity->getTransform()->incTranslate((float)Display::frameTime * speed, 0, 0);
 
 	if (Input::keyStates['r'])
 		entity->getTransform()->incRotateY(0.0001f);
