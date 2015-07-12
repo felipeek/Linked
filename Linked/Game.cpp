@@ -39,23 +39,24 @@ Entity* map;
 
 Map* mapM;
 Light* light;
+Entity* entity;
 
 Game::Game(int windowsWidth, int windowsHeight)
 {
-	std::string mapPath = "./res/Maps/officialmap.png";
+	std::string mapPath = "./res/Maps/maze.png";
 	Mesh* mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.28f, 0.5f), new Texture("./res/Textures/clown.png"));
-	light = new Light(glm::vec3(100, 100, 100), glm::vec3(1, 1, 1));
+	light = new Light(glm::vec3(100, 500, 10), glm::vec3(1, 1, 1));
 
 	mapM = new Map(mapPath, mapPath, 3);
 
 	Mesh* mesh2 = new Mesh(new Grid(1024, mapM),
-		new Texture("./res/Maps/path.png"),
+		new Texture("./res/Maps/stonePath.png"),
 		new Texture("./res/Maps/mountain.jpg"),
 		new Texture("./res/Maps/water.jpg"),
 		new Texture("./res/Maps/dirt.png"),
 		new Texture(mapPath)
 		);
-	Entity* entity = new Entity(new Transform(90,75,1.1f), mesh);
+	entity = new Entity(new Transform(70,980,1.1f), mesh);
 	entity->getTransform()->scale(3, 3, 3);
 	entity->getTransform()->rotate(45, glm::vec3(1, 0, 0));
 	map = new Entity(new Transform(), mesh2);
@@ -91,6 +92,8 @@ void Game::update()
 	input();
 	glm::vec3 camOri = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y, 0);
 	glm::vec3 camPos = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y-10, 30);
+	light->lightPosition.x = entity->getTransform()->getPosition().x;
+	light->lightPosition.y = entity->getTransform()->getPosition().y;
 
 	camera->setCamPosition(camPos);
 	camera->setCamOrientation(camOri);
