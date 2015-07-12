@@ -1,7 +1,7 @@
 #include "PrimitiveShader.h"
 
 
-PrimitiveShader::PrimitiveShader(std::string& fileName, Camera* camera) : Shader(fileName, camera)
+PrimitiveShader::PrimitiveShader(std::string fileName, Camera* camera) : Shader(fileName, camera)
 {
 	getUniformLocations();
 }

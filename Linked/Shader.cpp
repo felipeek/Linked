@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-Shader::Shader(std::string& filename, Camera* camera)
+Shader::Shader(std::string filename, Camera* camera)
 {
 	GLuint ShaderProgram = glCreateProgram();
 	ShaderProgram = loadShader(filename.c_str(), ShaderProgram);

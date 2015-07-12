@@ -7,37 +7,10 @@
 
 #include "Mesh.h"
 #include "Primitive.h"
-#include "PrimitiveShader.h"
 #include "Input.h"
-#include "Entity.h"
-
-#include "Camera.h"
 
 #include "Map.h"
 #include "Display.h"
-
-
-Mesh* mesh;
-Mesh* mesh2;
-PrimitiveShader* shader;
-Entity* entity;
-Camera* camera;
-
-
-//Game::Game()
-//{
-//	printCoordinate(0, 0);
-//	printCoordinate(1, 0);
-//	printCoordinate(2, 0);
-//	printCoordinate(0, 1);
-//	printCoordinate(1, 1);
-//	printCoordinate(2, 1);
-//
-//	std::string shaderPath = "./shaders/normalshader";
-//	mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.3f), new Texture("./res/Textures/predio.jpg"));
-//	mesh2 = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.5f, 0.5f), new Texture("./res/imagem_hoshoyo2.png"));
-//	entity = new Entity(new Transform(), mesh2);
-//}
 
 void Game::printCoordinate(int x, int y)
 {
@@ -63,28 +36,37 @@ void Game::printCoordinate(int x, int y)
 
 Game::Game(int windowsWidth, int windowsHeight)
 {
-	std::string shaderPath = "./shaders/normalshader";
-	mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.3f), new Texture("./res/Textures/predio.jpg"));
-	entity = new Entity(new Transform(), mesh);
-	camera = new Camera(glm::vec3(0,0,1), glm::vec3(0,0,0), 70.0f, (float)windowsWidth/windowsHeight, 0.1f, 500.0f);
-	shader = new PrimitiveShader(shaderPath, camera);
-	printCoordinate(0, 0);
-	printCoordinate(1, 0);
-	printCoordinate(2, 0);
-	printCoordinate(0, 1);
-	printCoordinate(1, 1);
-	printCoordinate(2, 1);
+	Mesh* mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.3f), new Texture("./res/Textures/predio.jpg"));
+	Entity* entity = new Entity(new Transform(), mesh);
+	this->camera = new Camera(glm::vec3(0,0,1), glm::vec3(0,0,0), 70.0f, (float)windowsWidth/windowsHeight, 0.1f, 500.0f);
+	this->shader = new PrimitiveShader("./shaders/normalshader", camera);
+	entities.push_back(entity);
+
+	//printCoordinate(0, 0);
+	//printCoordinate(1, 0);
+	//printCoordinate(2, 0);
+	//printCoordinate(0, 1);
+	//printCoordinate(1, 1);
+	//printCoordinate(2, 1);
 }
 
 Game::~Game()
 {
 	delete shader;
-	delete mesh;
+	delete camera;
 }
 
 void Game::render()
 {
-	entity->render(shader);
+	for (Entity* e : entities)
+	{
+		try{
+			e->render(shader);
+		}
+		catch (...){
+			std::cerr << "Error rendering entity" << std::endl;
+		}
+	}
 }
 
 void Game::update()
@@ -97,17 +79,17 @@ void Game::input()
 	float speed = 1;
 
 	if (Input::keyStates['w'])
-		entity->getTransform()->incTranslate(0, (float)Display::frameTime * speed, 0);
+		entities[0]->getTransform()->incTranslate(0, (float)Display::frameTime * speed, 0);
 
 	if (Input::keyStates['s'])
-		entity->getTransform()->incTranslate(0, -(float)Display::frameTime * speed, 0);
+		entities[0]->getTransform()->incTranslate(0, -(float)Display::frameTime * speed, 0);
 
 	if (Input::keyStates['a'])
-		entity->getTransform()->incTranslate(-(float)Display::frameTime * speed, 0, 0);
+		entities[0]->getTransform()->incTranslate(-(float)Display::frameTime * speed, 0, 0);
 
 	if (Input::keyStates['d'])
-		entity->getTransform()->incTranslate((float)Display::frameTime * speed, 0, 0);
+		entities[0]->getTransform()->incTranslate((float)Display::frameTime * speed, 0, 0);
 
 	if (Input::keyStates['r'])
-		entity->getTransform()->incRotateY(0.0001f);
+		entities[0]->getTransform()->incRotateY(0.0001f);
 }

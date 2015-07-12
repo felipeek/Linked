@@ -4,7 +4,7 @@
 class PrimitiveShader : public Shader
 {
 public:
-	PrimitiveShader(std::string& fileName, Camera* camera);
+	PrimitiveShader(std::string fileName, Camera* camera);
 	~PrimitiveShader();
 	virtual void update(Transform* transform);
 private:

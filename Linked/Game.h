@@ -1,4 +1,8 @@
 #pragma once
+#include <vector>
+#include "Entity.h"
+#include "Camera.h"
+#include "PrimitiveShader.h"
 
 class Game
 {
@@ -9,6 +13,10 @@ public:
 	void render();
 	void update();
 private:
+	std::vector<Entity*> entities;
+	Camera* camera;
+	PrimitiveShader* shader;
+
 	void input();
 	void printCoordinate(int x, int y);
 };
