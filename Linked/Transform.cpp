@@ -5,10 +5,12 @@ Transform::Transform() : Transform(0, 0, 0){}
 
 Transform::Transform(float x, float y, float z)
 {
-	translationMatrix = glm::mat4(1.0f);
+	translationMatrix = glm::translate(glm::mat4(), glm::vec3(x,y,z));
+	mPosition = glm::vec3(x, y, z);
 	scaleMatrix = glm::mat4(1.0f);
 	rotationMatrix = glm::mat4(1.0f);
 	angleY = 0;
+	updateModel();
 }
 
 
@@ -66,4 +68,14 @@ void Transform::incScale(float x, float y, float z)
 void Transform::updateModel()
 {
 	model = translationMatrix * rotationMatrix * scaleMatrix;
+}
+
+glm::vec3 Transform::getPosition()
+{
+	return mPosition;
+}
+
+glm::vec3 Transform::getScale()
+{
+	return mScale;
 }

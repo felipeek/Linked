@@ -8,6 +8,9 @@ public:
 	Camera(glm::vec3 position, glm::vec3 orientation, float fov, float aspect, float zNear, float zFar);
 	~Camera();
 
+	void setCamPosition(glm::vec3 pos);
+	void setCamOrientation(glm::vec3 ori);
+
 	glm::mat4 viewProj;
 private:
 	glm::mat4 viewMatrix;

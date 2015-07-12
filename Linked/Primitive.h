@@ -8,7 +8,7 @@ public:
 	~Primitive();
 };
 
-class Quad
+class Quad : public Primitive
 {
 public:
 	Quad(glm::vec3 center, float sizeX, float sizeY);

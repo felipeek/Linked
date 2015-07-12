@@ -3,6 +3,7 @@
 #include "Entity.h"
 #include "Camera.h"
 #include "PrimitiveShader.h"
+#include "MapShader.h"
 
 class Game
 {
