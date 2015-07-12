@@ -35,13 +35,13 @@ void main(){
 	vec4 backgroundTextureColor = texture(Blocked, tiledCoords) * backTextureAmount;
 	vec4 rTextureColor = texture(Dirt, tiledCoords) * blendMapColor.r;
 	vec4 gTextureColor = texture(Water, tiledCoords) * blendMapColor.g;
-	vec4 bTextureColor = texture(NormalFloor, tiledCoords) * blendMapColor.b;
+	vec4 bTextureColor = texture(NormalFloor, tiledCoords*2) * blendMapColor.b;
 
 	vec4 totalColor;
 
-	if (blendMapColor.r < 0.35 && blendMapColor.g < 0.35 && blendMapColor.b < 0.35)
-		totalColor = backgroundTextureColor;
-	else
+	//if (blendMapColor.r < 0.35 && blendMapColor.g < 0.35 && blendMapColor.b < 0.35)
+	//	totalColor = backgroundTextureColor;
+	//else
 		totalColor = backgroundTextureColor + rTextureColor + gTextureColor + bTextureColor;
 		
 	vec3 lightInt = vec3(1,1,1);

@@ -11,7 +11,7 @@ Grid::Grid(int blockSize, Map* map)
 	{
 		for (int j = 0; j < blockSize; j += 2)
 		{
-			float height = 1.5f;
+			float height = 2;
 			float height1 = 0;
 			float height2 = 0;
 			float height3 = 0;
