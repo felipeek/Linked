@@ -22,5 +22,6 @@ public:
 	static bool isOfCollisionType(MapTerrain terrain){
 		if (terrain == BLOCKED || terrain == WATER)
 			return true;
+		return false;
 	}
 };

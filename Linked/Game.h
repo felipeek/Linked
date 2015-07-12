@@ -21,3 +21,4 @@ private:
 	void input();
 	void printCoordinate(int x, int y);
 };
+

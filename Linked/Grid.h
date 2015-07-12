@@ -12,6 +12,8 @@ public:
 	~Grid();
 	inline IndexedModel* getIndexedModel(){ return &indexedModel; }
 private:
+	glm::vec3 calculateNormal(glm::vec3& position);
+	float getHeight(float x, float y);
 	IndexedModel indexedModel;
 	int blockSize;
 };

@@ -71,7 +71,7 @@ MapTerrain MapTerrainImageLoader::transformRgbIntoMapTerrain(vec3 rgb)
 		return NORMAL_FLOOR;
 	else
 		return WATER;
-	
+
 	return MapCoordinate::STANDARD_MAP_TERRAIN;
 
 	/* ***************************** */

@@ -25,10 +25,10 @@ void Entity::render(Shader* shader)
 	shader->stopShader();
 }
 
-void Entity::renderMap(Shader* shader)
+void Entity::renderMap(MapShader* shader, Light* light)
 {
 	shader->useShader();
-	shader->update(transform);
+	shader->update(transform, light);
 	mesh->renderMap();
 	shader->stopShader();
 }

@@ -1,6 +1,10 @@
 #version 330 core
 
 in vec2 uvCoords;
+in vec3 normal;
+in vec3 surfaceToLight;
+in vec3 lightPos;
+in vec3 lightColor;
 
 out vec4 out_Color;
 
@@ -39,6 +43,11 @@ void main(){
 		totalColor = backgroundTextureColor;
 	else
 		totalColor = backgroundTextureColor + rTextureColor + gTextureColor + bTextureColor;
+		
+	vec3 lightInt = vec3(1,1,1);
+	
+	float cosDiffuse = dot(normalize(normal), normalize(surfaceToLight));
+	vec3 diffuse = clamp(cosDiffuse * lightColor, 0, 1);
 
-	out_Color = totalColor;
+	out_Color = totalColor * vec4(diffuse, 1);
 }

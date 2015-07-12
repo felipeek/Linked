@@ -14,4 +14,5 @@ void main()
 	vec4 worldPosition = Model * vec4(vertexPosition_modelspace, 1.0);
 	gl_Position = viewProj * worldPosition;
 	uvCoords = vec2(textureCoord.x, textureCoord.y);
+
 }
