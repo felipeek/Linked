@@ -10,7 +10,7 @@
 #define CLEARCOLOR_G 0.75f
 #define CLEARCOLOR_B 0.93f
 #define CLEARCOLOR_A 1.0f
-#define FRAMECAP 120.0
+#define FRAMECAP 1000.0
 
 
 class Display

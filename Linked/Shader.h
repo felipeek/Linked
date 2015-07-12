@@ -7,7 +7,7 @@
 class Shader
 {
 public:
-	Shader(std::string&, Camera* camera);
+	Shader(std::string, Camera* camera);
 	~Shader();
 	GLuint getShader();
 	GLuint getActiveShader();
