@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include "mapObjectImageLoader.h"
-#include "mapHeightImageLoader.h"
+#include "MapObjectImageLoader.h"
+#include "MapHeightImageLoader.h"
 
 class Map
 {

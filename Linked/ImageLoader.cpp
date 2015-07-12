@@ -28,8 +28,8 @@ vec3 ImageLoader::getPixel(int x, int y)
 	rgb_vector.r = floor((float)loadedImage[(y * width * 3) + x * 3]);
 	rgb_vector.g = floor((float)loadedImage[(y * width * 3) + x * 3 + 1]);
 	rgb_vector.b = floor((float)loadedImage[(y * width * 3) + x * 3 + 2]);
-	std::cout << "X: " << x << std::endl;
+	/*std::cout << "X: " << x << std::endl;
 	std::cout << "Y: " << y << std::endl;
-	std::cout << "rgb: (" << rgb_vector.r << ", " << rgb_vector.g << ", " << rgb_vector.b << ")" << std::endl;
+	std::cout << "rgb: (" << rgb_vector.r << ", " << rgb_vector.g << ", " << rgb_vector.b << ")" << std::endl;*/
 	return rgb_vector;
 }
