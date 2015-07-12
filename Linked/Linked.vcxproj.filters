@@ -43,6 +43,24 @@
     <Filter Include="Header Files\Map">
       <UniqueIdentifier>{9ec4a7d1-7691-4fcb-8180-35e6e0e7da98}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game">
+      <UniqueIdentifier>{db4786a0-fe91-467d-93f8-172d49f85b9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Models">
+      <UniqueIdentifier>{31d86a2d-6949-4df2-adb3-eb44a744bfe6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Factory">
+      <UniqueIdentifier>{2263ed14-819c-4766-b387-9da3f2f2d345}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game">
+      <UniqueIdentifier>{ef9d0d03-56d4-4829-ab01-58b359ac54ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game\Models">
+      <UniqueIdentifier>{d96ae95e-4386-4e98-b74d-9a58b7be3056}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game\Factory">
+      <UniqueIdentifier>{82e79d0c-b4c2-4a3d-826e-6fca417f0986}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -96,11 +114,29 @@
     <ClInclude Include="MapObjectImageLoader.h">
       <Filter>Header Files\Map</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Time.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Equipment.h">
+      <Filter>Header Files\Game\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Header Files\Game\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Game\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemFactory.h">
+      <Filter>Header Files\Game\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerFactory.h">
+      <Filter>Header Files\Game\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="EquipmentFactory.h">
+      <Filter>Header Files\Game\Factory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -158,11 +194,29 @@
     <ClCompile Include="MapObjectImageLoader.cpp">
       <Filter>Source Files\Map</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Time.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Equipment.cpp">
+      <Filter>Source Files\Game\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Source Files\Game\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files\Game\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerFactory.cpp">
+      <Filter>Source Files\Game\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemFactory.cpp">
+      <Filter>Source Files\Game\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="EquipmentFactory.cpp">
+      <Filter>Source Files\Game\Factory</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

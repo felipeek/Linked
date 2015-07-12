@@ -1,8 +1,8 @@
 #pragma once
-class EquipmentBuilder
+class EquipmentFactory
 {
 public:
-	EquipmentBuilder();
-	~EquipmentBuilder();
+	EquipmentFactory();
+	~EquipmentFactory();
 };
 
