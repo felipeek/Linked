@@ -11,11 +11,9 @@ Game* Display::game = NULL;
 const double Display::frameTime = 1.0 / FRAMECAP;
 double Display::unprocessedTime = 0;
 double Display::frameCounter = 0;
+double Display::passedTime = 0;
 double Display::lastTime;
-double Display::startTime;
-double Display::passedTime;
 int Display::frames = 0;
-double Display::delta = 0;
 
 Display::Display(int* argc, char** argv, std::string name)
 {
@@ -64,42 +62,34 @@ void Display::startGlut(int* argc, char** argv, std::string titulo)
 
 void Display::MainLoop()
 {
-
-	// Main Game loop with time control
 	bool mustRender = false;
-
 	double startTime = Time::getTime();
-
-	//std::cout << startTime - lastTime << std::endl;
-
 	passedTime = startTime - lastTime;
-	delta = passedTime;
-	//std::cout << passedTime << std::endl;
 	lastTime = startTime;
+	
 	unprocessedTime += passedTime;
 	frameCounter += passedTime;
 
 	if (frameCounter >= 1.0)
 	{
-		//std::cout << frames << std::endl;
+		std::cout << frames << std::endl;
 		frames = 0;
 		frameCounter = 0;
 	}
-
 	while (unprocessedTime > frameTime)
 	{
 		mustRender = true;
+		game->update();
 		unprocessedTime -= frameTime;
 	}
+
 	if (mustRender)
 	{
-
 		render();
 		frames++;
 	}
-	else
-		Sleep(1);
-
+	//else
+		//Sleep(1);
 }
 
 void Display::render()
@@ -118,6 +108,12 @@ void Display::initOpenGL()
 	glFrontFace(GL_CCW);
 
 	game = new Game(WWID, WHEI);
+
+	//Time
+	lastTime = Time::getTime();
+	frameCounter = 0;
+	unprocessedTime = 0;
+	frames = 0;
 }
 
 void Display::KeyboardDownEvent(unsigned char key, int x, int y)

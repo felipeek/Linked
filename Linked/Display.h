@@ -10,14 +10,15 @@
 #define CLEARCOLOR_G 0.75f
 #define CLEARCOLOR_B 0.93f
 #define CLEARCOLOR_A 1.0f
-#define FRAMECAP 60.0
+#define FRAMECAP 120.0
+
 
 class Display
 {
 public:
 	Display(int* argc, char** argv, std::string name);
 	~Display();
-	static double delta;
+	const static double frameTime;
 private:
 	static Game* game;
 	static void startGlut(int* argc, char** argv, std::string titulo);
@@ -31,13 +32,11 @@ private:
 
 	static void initOpenGL();
 	static void render();
-
-	const static double frameTime;
+	
+	static double passedTime;
 	static double unprocessedTime;
 	static double frameCounter;
 	static double lastTime;
-	static double startTime;
-	static double passedTime;
 	static int frames;
 };
 
