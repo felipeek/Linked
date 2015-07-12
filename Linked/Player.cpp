@@ -16,7 +16,7 @@ Player::Player(unsigned int hpMaximum, unsigned int livesMaximum, std::vector<Sk
 	this->equipments = equipments;
 }
 
-Player::~Player()
+/*Player::~Player()
 {
 }
 unsigned int Player::getHp(){
@@ -49,4 +49,4 @@ void Player::addSkill(Skill skill){
 Equipment Player::addEquipment(Equipment equipment)
 {
 	return Equipment();
-}
+}*/

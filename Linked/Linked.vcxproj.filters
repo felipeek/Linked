@@ -138,6 +138,12 @@
     <ClInclude Include="EquipmentFactory.h">
       <Filter>Header Files\Game\Factory</Filter>
     </ClInclude>
+    <ClInclude Include="Skill.h">
+      <Filter>Header Files\Game\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillFactory.h">
+      <Filter>Header Files\Game\Factory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -216,6 +222,12 @@
       <Filter>Source Files\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="EquipmentFactory.cpp">
+      <Filter>Source Files\Game\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill.cpp">
+      <Filter>Source Files\Game\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillFactory.cpp">
       <Filter>Source Files\Game\Factory</Filter>
     </ClCompile>
   </ItemGroup>
