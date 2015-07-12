@@ -85,8 +85,8 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapCoordinate.h" />
-    <ClInclude Include="MapHeightImageLoader.h" />
-    <ClInclude Include="MapObjectImageLoader.h" />
+    <ClInclude Include="MapEntityImageLoader.h" />
+    <ClInclude Include="MapTerrainImageLoader.h" />
     <ClInclude Include="MapShader.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Player.h" />
@@ -117,8 +117,8 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapCoordinate.cpp" />
-    <ClCompile Include="MapHeightImageLoader.cpp" />
-    <ClCompile Include="MapObjectImageLoader.cpp" />
+    <ClCompile Include="MapEntityImageLoader.cpp" />
+    <ClCompile Include="MapTerrainImageLoader.cpp" />
     <ClCompile Include="MapShader.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Player.cpp" />

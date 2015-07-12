@@ -50,12 +50,12 @@ public:
 	unsigned int getTotalMagicalPower();
 
 	/* SKILLS */
-	std::vector<Skill> getSkills();
-	Skill getSkillOfSlot(SkillSlot slot);
+	std::vector<Skill>* getSkills();
+	Skill* getSkillOfSlot(SkillSlot slot);
 	bool addNewSkill(Skill skill);
 
 	/* EQUIPMENTS */
-	std::vector<Equipment> getEquipments();
+	std::vector<Equipment>* getEquipments();
 	Equipment* getEquipmentOfClass(EquipmentClass equipmentClass);
 	Equipment* addNewEquipment(Equipment equipment);
 
@@ -68,7 +68,7 @@ private:
 	unsigned int attackBasis;
 	unsigned int defenseBasis;
 	unsigned int magicalPowerBasis;
-	std::vector<Skill> skills;
-	std::vector<Equipment> equipments;
+	std::vector<Skill>* skills;
+	std::vector<Equipment>* equipments;
 };
 

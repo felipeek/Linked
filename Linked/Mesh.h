@@ -11,7 +11,7 @@ class Mesh
 public:
 	Mesh(std::string, Texture*, float, float);
 	Mesh(Quad* quad, Texture* texture);
-	Mesh(Grid* grid, Texture*, Texture*, Texture*, Texture*);
+	Mesh(Grid* grid, Texture*, Texture*, Texture*, Texture*, Texture*);
 	~Mesh();
 	void render();
 	void renderMap();
@@ -29,6 +29,7 @@ private:
 	Texture *texture0;
 	Texture *texture1;
 	Texture *texture2;
+	Texture *texture3;
 	Texture *blendMap;
 
 	std::vector<unsigned int> indices;

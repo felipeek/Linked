@@ -2,8 +2,8 @@
 
 MapCoordinate::MapCoordinate()
 {
-	object = STANDARD_MAP_OBJECT;
-	height = STANDARD_MAP_HEIGHT;
+	terrain = STANDARD_MAP_TERRAIN;
+	entity = STANDARD_MAP_ENTITY;
 }
 
 MapCoordinate::~MapCoordinate()

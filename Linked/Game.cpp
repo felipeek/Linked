@@ -1,7 +1,7 @@
 #include "Game.h"
-#include "MapObjectImageLoader.h"
+#include "MapTerrainImageLoader.h"
 
-#include "MapHeightImageLoader.h"
+#include "MapEntityImageLoader.h"
 #include <string>
 #include <iostream>
 
@@ -15,7 +15,7 @@
 MapShader* mapShader;
 Entity* map;
 
-void Game::printCoordinate(int x, int y)
+/*void Game::printCoordinate(int x, int y)
 {
 	std::string objectMapPath = "./res/Maps/objectmap.png";
 	std::string heightMapPath = "./res/Maps/heightmap.png";
@@ -35,17 +35,18 @@ void Game::printCoordinate(int x, int y)
 		enumr = "nenhum"; break;
 	}
 	std::cout << enumr << std::endl << std:: endl;
-}
+}*/
 
 Game::Game(int windowsWidth, int windowsHeight)
 {
-	std::string mapPath = "./res/Maps/map.png";
+	std::string mapPath = "./res/Maps/officialmap.png";
 	Mesh* mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.3f), new Texture("./res/Textures/predio.jpg"));
 	Mesh* mesh2 = new Mesh(new Grid(1024, new Map(mapPath, mapPath, 3)),
-		new Texture("./res/Maps/grassy.png"),
-		new Texture("./res/Maps/dirt.png"),
 		new Texture("./res/Maps/path.png"),
-		new Texture(mapPath)//"./res/Maps/blendMap.png")
+		new Texture("./res/Maps/mountain.jpg"),
+		new Texture("./res/Maps/water.jpg"),
+		new Texture("./res/Maps/dirt.png"),
+		new Texture(mapPath)
 		);
 	Entity* entity = new Entity(new Transform(0,0,10), mesh);
 	map = new Entity(new Transform(), mesh2);

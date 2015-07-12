@@ -7,6 +7,7 @@ out vec4 out_Color;
 uniform sampler2D NormalFloor;
 uniform sampler2D Blocked;
 uniform sampler2D Water;
+uniform sampler2D Dirt;
 uniform sampler2D BlendMap;
 
 
@@ -27,11 +28,17 @@ void main(){
 	
 	float backTextureAmount = 1 - (blendMapColor.r + blendMapColor.g + blendMapColor.b);
 	vec2 tiledCoords = uvCoords * 40.0;
-	vec4 backgroundTextureColor = texture(NormalFloor, tiledCoords) * backTextureAmount;
-	vec4 rTextureColor = texture(NormalFloor, tiledCoords) * blendMapColor.r;
-	vec4 gTextureColor = texture(Blocked, tiledCoords) * blendMapColor.g;
-	vec4 bTextureColor = texture(Water, tiledCoords) * blendMapColor.b;
-	
-	vec4 totalColor = backgroundTextureColor + rTextureColor + gTextureColor + bTextureColor;
+	vec4 backgroundTextureColor = texture(Blocked, tiledCoords) * backTextureAmount;
+	vec4 rTextureColor = texture(Dirt, tiledCoords) * blendMapColor.r;
+	vec4 gTextureColor = texture(Water, tiledCoords) * blendMapColor.g;
+	vec4 bTextureColor = texture(NormalFloor, tiledCoords) * blendMapColor.b;
+
+	vec4 totalColor;
+
+	if (blendMapColor.r < 0.35 && blendMapColor.g < 0.35 && blendMapColor.b < 0.35)
+		totalColor = backgroundTextureColor;
+	else
+		totalColor = backgroundTextureColor + rTextureColor + gTextureColor + bTextureColor;
+
 	out_Color = totalColor;
 }

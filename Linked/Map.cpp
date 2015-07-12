@@ -1,25 +1,25 @@
 #include "Map.h"
 
 
-Map::Map(std::string& mapObjectsFilename, std::string& mapHeightsFilename, int nChannels)
+Map::Map(std::string& mapTerrainFilename, std::string& mapEntityFileName, int nChannels)
 {
-	mapObjectLoader = new MapObjectImageLoader(mapObjectsFilename, nChannels);
-	mapHeightLoader = new MapHeightImageLoader(mapHeightsFilename, nChannels);
+	mapTerrainLoader = new MapTerrainImageLoader(mapTerrainFilename, nChannels);
+	mapEntityLoader = new MapEntityImageLoader(mapEntityFileName, nChannels);
 }
 
 
 Map::~Map()
 {
-	delete mapObjectLoader;
-	delete mapHeightLoader;
+	delete mapTerrainLoader;
+	delete mapEntityLoader;
 }
 
 MapCoordinate Map::getMapCoordinate(glm::vec3 coordinate)
 {
 	MapCoordinate mapCoordinates;
 
-	mapCoordinates.object = mapObjectLoader->getMapObject(coordinate);
-	mapCoordinates.height = mapHeightLoader->getMapHeight(coordinate);
+	mapCoordinates.terrain = mapTerrainLoader->getMapTerrain(coordinate);
+	mapCoordinates.entity = mapEntityLoader->getMapEntity(coordinate);
 
 	return mapCoordinates;
 }

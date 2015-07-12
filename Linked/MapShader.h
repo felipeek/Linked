@@ -13,6 +13,7 @@ private:
 	GLuint uniform_NormalFloor;
 	GLuint uniform_Blocked;
 	GLuint uniform_Water;
+	GLuint uniform_Dirt;
 	GLuint uniform_BlendMap;
 
 	GLuint uniform_Model;

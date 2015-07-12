@@ -108,12 +108,6 @@
     <ClInclude Include="MapCoordinate.h">
       <Filter>Header Files\Map</Filter>
     </ClInclude>
-    <ClInclude Include="MapHeightImageLoader.h">
-      <Filter>Header Files\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="MapObjectImageLoader.h">
-      <Filter>Header Files\Map</Filter>
-    </ClInclude>
     <ClInclude Include="Time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -144,11 +138,17 @@
     <ClInclude Include="SkillFactory.h">
       <Filter>Header Files\Game\Factory</Filter>
     </ClInclude>
-    <ClInclude Include="Grid.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="MapEntityImageLoader.h">
+      <Filter>Header Files\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTerrainImageLoader.h">
+      <Filter>Header Files\Map</Filter>
     </ClInclude>
     <ClInclude Include="MapShader.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Header Files\Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -200,12 +200,6 @@
     <ClCompile Include="MapCoordinate.cpp">
       <Filter>Source Files\Map</Filter>
     </ClCompile>
-    <ClCompile Include="MapHeightImageLoader.cpp">
-      <Filter>Source Files\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="MapObjectImageLoader.cpp">
-      <Filter>Source Files\Map</Filter>
-    </ClCompile>
     <ClCompile Include="Time.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -236,11 +230,17 @@
     <ClCompile Include="SkillFactory.cpp">
       <Filter>Source Files\Game\Factory</Filter>
     </ClCompile>
-    <ClCompile Include="Grid.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="MapEntityImageLoader.cpp">
+      <Filter>Source Files\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="MapTerrainImageLoader.cpp">
+      <Filter>Source Files\Map</Filter>
     </ClCompile>
     <ClCompile Include="MapShader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>Source Files\Map</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

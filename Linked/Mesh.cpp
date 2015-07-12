@@ -29,11 +29,12 @@ Mesh::Mesh(Quad* quad, Texture* texture)
 	genIndexBuffer(quad->getIndexedModel());
 }
 
-Mesh::Mesh(Grid* grid, Texture* texture0, Texture* texture1, Texture* texture2, Texture* blendMap)
+Mesh::Mesh(Grid* grid, Texture* texture0, Texture* texture1, Texture* texture2, Texture* texture3, Texture* blendMap)
 {
 	this->texture0 = texture0;
 	this->texture1 = texture1;
 	this->texture2 = texture2;
+	this->texture3 = texture3;
 	this->blendMap = blendMap;
 
 	this->reflectivity = 0;
@@ -142,6 +143,8 @@ void Mesh::renderMap()
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, texture2->textureID);
 	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, texture3->textureID);
+	glActiveTexture(GL_TEXTURE4);
 	glBindTexture(GL_TEXTURE_2D, blendMap->textureID);
 
 	glEnableVertexAttribArray(0);

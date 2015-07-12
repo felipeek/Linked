@@ -17,6 +17,7 @@ void MapShader::getUniformLocations()
 	uniform_NormalFloor = glGetUniformLocation(shader, "NormalFloor");
 	uniform_Blocked = glGetUniformLocation(shader, "Blocked");
 	uniform_Water = glGetUniformLocation(shader, "Water");
+	uniform_Dirt = glGetUniformLocation(shader, "Dirt");
 	uniform_BlendMap = glGetUniformLocation(shader, "BlendMap");
 
 	uniform_Model = glGetUniformLocation(shader, "Model");
@@ -32,7 +33,10 @@ void MapShader::update(Transform* transform)
 	glActiveTexture(GL_TEXTURE2);
 	glUniform1i(uniform_Water, 2);
 	glActiveTexture(GL_TEXTURE3);
-	glUniform1i(uniform_BlendMap, 3);
+	glUniform1i(uniform_Dirt, 3);
+	glActiveTexture(GL_TEXTURE3);
+	glUniform1i(uniform_BlendMap, 4);
+
 
 	glUniformMatrix4fv(uniform_Model, 1, GL_FALSE, &transform->model[0][0]);
 	glUniformMatrix4fv(uniform_viewProj, 1, GL_FALSE, &camera->viewProj[0][0]);

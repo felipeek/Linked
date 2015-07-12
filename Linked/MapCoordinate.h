@@ -1,25 +1,22 @@
-enum MapObject {
+enum MapTerrain {
 	NORMAL_FLOOR,
 	BLOCKED,
-	HOLE,
-	SPIKES,
-	FIRE,
-	MUD,
-	SLIPPERY,
+	WATER,
+	DIRT
 };
 
-enum MapHeight{
-	GROUND,
-	FIRST_FLOOR,
-	SECOND_FLOOR
+enum MapEntity{
+	NONE,
+	FIRE,
+	MUD
 };
 
 class MapCoordinate {
 public:
 	MapCoordinate();
 	~MapCoordinate();
-	MapObject object;
-	MapHeight height;
-	static const MapObject STANDARD_MAP_OBJECT = NORMAL_FLOOR;
-	static const MapHeight STANDARD_MAP_HEIGHT = GROUND;
+	MapTerrain terrain;
+	MapEntity entity;
+	static const MapTerrain STANDARD_MAP_TERRAIN = NORMAL_FLOOR;
+	static const MapEntity STANDARD_MAP_ENTITY = NONE;
 };
