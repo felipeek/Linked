@@ -9,5 +9,11 @@ uniform sampler2D TextureSampler;
 
 void main(){
 	
-	out_Color = texture(TextureSampler, uvCoords);
+	vec4 textureColor = texture(TextureSampler, uvCoords);
+	if(textureColor.a < 0.8)
+	{
+		discard;
+	}
+	
+	out_Color = textureColor;
 }

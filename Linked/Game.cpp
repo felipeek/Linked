@@ -37,21 +37,28 @@ Entity* map;
 	std::cout << enumr << std::endl << std:: endl;
 }*/
 
+Map* mapM;
+
 Game::Game(int windowsWidth, int windowsHeight)
 {
 	std::string mapPath = "./res/Maps/officialmap.png";
-	Mesh* mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.3f), new Texture("./res/Textures/predio.jpg"));
-	Mesh* mesh2 = new Mesh(new Grid(1024, new Map(mapPath, mapPath, 3)),
+	Mesh* mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.5f), new Texture("./res/Textures/clown.png"));
+	
+	mapM = new Map(mapPath, mapPath, 3);
+
+	Mesh* mesh2 = new Mesh(new Grid(1024, mapM),
 		new Texture("./res/Maps/path.png"),
 		new Texture("./res/Maps/mountain.jpg"),
 		new Texture("./res/Maps/water.jpg"),
 		new Texture("./res/Maps/dirt.png"),
 		new Texture(mapPath)
 		);
-	Entity* entity = new Entity(new Transform(0,0,10), mesh);
+	Entity* entity = new Entity(new Transform(75,50,2), mesh);
+	entity->getTransform()->scale(5, 5, 5);
+	entity->getTransform()->rotate(45, glm::vec3(1, 0, 0));
 	map = new Entity(new Transform(), mesh2);
-	map->getTransform()->rotate(-45, glm::vec3(1, 0, 0));
-	this->camera = new Camera(glm::vec3(0,0,50), glm::vec3(0,0,0), 70.0f, (float)windowsWidth/windowsHeight, 0.1f, 500.0f);
+	//map->getTransform()->rotate(-45, glm::vec3(1, 0, 0));
+	this->camera = new Camera(glm::vec3(0,0,50), glm::vec3(0,0,0), 70.0f, (float)windowsWidth/windowsHeight, 0.1f, 2500.0f);
 	this->shader = new PrimitiveShader("./shaders/normalshader", camera);
 
 	mapShader = new MapShader("./shaders/mapshader", camera);
@@ -82,7 +89,7 @@ void Game::update()
 {
 	input();
 	glm::vec3 camOri = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y, 0);
-	glm::vec3 camPos = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y, 30);
+	glm::vec3 camPos = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y-10, 30);
 
 	camera->setCamPosition(camPos);
 	camera->setCamOrientation(camOri);
@@ -92,20 +99,43 @@ void Game::input()
 {
 	float speed = 100;
 
+	glm::vec3 lastPos = entities[0]->getTransform()->getPosition();
+
 	if (Input::keyStates['w'])
-		entities[0]->getTransform()->incTranslate(0, (float)Display::frameTime * speed, 0);
+	{
+		glm::vec3 nextPos = glm::vec3(entities[0]->getTransform()->getPosition().x,
+			entities[0]->getTransform()->getPosition().y + (float)Display::frameTime * speed,
+			entities[0]->getTransform()->getPosition().z);
+		if (mapM->getMapCoordinate(nextPos).terrain != BLOCKED && mapM->getMapCoordinate(nextPos).terrain != WATER)
+			entities[0]->getTransform()->translate(nextPos.x, nextPos.y, nextPos.z);
+	}
 
 	if (Input::keyStates['s'])
-		entities[0]->getTransform()->incTranslate(0, -(float)Display::frameTime * speed, 0);
+	{
+		glm::vec3 nextPos = glm::vec3(entities[0]->getTransform()->getPosition().x,
+			entities[0]->getTransform()->getPosition().y - (float)Display::frameTime * speed,
+			entities[0]->getTransform()->getPosition().z);
+		if (mapM->getMapCoordinate(nextPos).terrain != BLOCKED && mapM->getMapCoordinate(nextPos).terrain != WATER)
+			entities[0]->getTransform()->translate(nextPos.x, nextPos.y, nextPos.z);
+	}
 
 	if (Input::keyStates['a'])
-		entities[0]->getTransform()->incTranslate(-(float)Display::frameTime * speed, 0, 0);
+	{
+		glm::vec3 nextPos = glm::vec3(entities[0]->getTransform()->getPosition().x - (float)Display::frameTime * speed,
+			entities[0]->getTransform()->getPosition().y,
+			entities[0]->getTransform()->getPosition().z);
+		if (mapM->getMapCoordinate(nextPos).terrain != BLOCKED && mapM->getMapCoordinate(nextPos).terrain != WATER)
+			entities[0]->getTransform()->translate(nextPos.x, nextPos.y, nextPos.z);
+	}
 
 	if (Input::keyStates['d'])
-		entities[0]->getTransform()->incTranslate((float)Display::frameTime * speed, 0, 0);
-
-	if (Input::keyStates['r'])
-		entities[0]->getTransform()->incRotateY(0.0001f);
+	{
+		glm::vec3 nextPos = glm::vec3(entities[0]->getTransform()->getPosition().x + (float)Display::frameTime * speed,
+			entities[0]->getTransform()->getPosition().y,
+			entities[0]->getTransform()->getPosition().z);
+		if (mapM->getMapCoordinate(nextPos).terrain != BLOCKED && mapM->getMapCoordinate(nextPos).terrain != WATER)
+			entities[0]->getTransform()->translate(nextPos.x, nextPos.y, nextPos.z);
+	}
 
 	if (Input::keyStates['l'])
 	{

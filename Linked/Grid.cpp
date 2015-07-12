@@ -11,7 +11,7 @@ Grid::Grid(int blockSize, Map* map)
 	{
 		for (int j = 0; j < blockSize; j += 2)
 		{
-			float height = 10;
+			float height = 1.5;
 			float height1 = 0;
 			float height2 = 0;
 			float height3 = 0;
@@ -25,13 +25,13 @@ Grid::Grid(int blockSize, Map* map)
 			if (map->getMapCoordinate(glm::vec3(j + 1, i + 1, 0)).terrain == BLOCKED)
 				height4 = height;
 			if (map->getMapCoordinate(glm::vec3(j, i, 0)).terrain == WATER)
-				height1 = -5;
+				height1 = -height;
 			if (map->getMapCoordinate(glm::vec3(j, i + 1, 0)).terrain == WATER)
-				height2 = -5;
+				height2 = -height;
 			if (map->getMapCoordinate(glm::vec3(j + 1, i, 0)).terrain == WATER)
-				height3 = -5;
+				height3 = -height;
 			if (map->getMapCoordinate(glm::vec3(j + 1, i + 1, 0)).terrain == WATER)
-				height4 = -5;
+				height4 = -height;
 
 			glm::vec3 pos1 = glm::vec3(j, i, height1);
 			glm::vec3 pos2 = glm::vec3(j, i + 1, height2);
