@@ -2,6 +2,7 @@
 #include "Transform.h"
 #include "Mesh.h"
 #include "Shader.h"
+#include "MapShader.h"
 
 class Entity
 {
@@ -10,7 +11,7 @@ public:
 	~Entity();
 	Transform* getTransform();
 	void render(Shader* shader);
-	void renderMap(Shader* shader);
+	void renderMap(MapShader* shader, Light* light);
 private:
 	Transform* transform;
 	Mesh* mesh;

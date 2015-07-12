@@ -37,16 +37,13 @@ MapTerrain MapTerrainImageLoader::transformRgbIntoMapTerrain(vec3 rgb)
 
 	if (rgb.r < 62 && rgb.g < 62 && rgb.b < 62)
 		return BLOCKED;
-
-	if (rgb == vec3(0, 0, 0))
-		return BLOCKED;
-	if (rgb.r > rgb.g && rgb.r > rgb.b)
-		return DIRT;
-	else if (rgb.b > rgb.g)
-		return NORMAL_FLOOR;
-	else
+	if (rgb.g > 222)
 		return WATER;
-	
+	else if (rgb.r > rgb.b)
+		return DIRT;
+	else
+		return NORMAL_FLOOR;
+
 	return MapCoordinate::STANDARD_MAP_TERRAIN;
 
 	/* ***************************** */
