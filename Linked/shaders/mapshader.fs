@@ -47,7 +47,7 @@ void main(){
 	vec3 lightInt = vec3(1,1,1);
 	
 	float cosDiffuse = dot(normalize(normal), normalize(surfaceToLight));
-	vec3 diffuse = clamp(cosDiffuse * lightColor, 0, 1);
+	vec3 diffuse = max(cosDiffuse * lightColor, 0.2);
 
 	out_Color = totalColor * vec4(diffuse, 1);
 }
