@@ -19,3 +19,16 @@ void Camera::updateViewProj()
 {
 	viewProj = projectionMatrix * viewMatrix;
 }
+
+void Camera::setCamPosition(glm::vec3 pos)
+{
+	camPosition = pos;
+	viewMatrix = glm::lookAt(pos, camOrientation, glm::vec3(0, 1, 0));
+	updateViewProj();
+}
+void Camera::setCamOrientation(glm::vec3 ori)
+{
+	camOrientation = ori;
+	viewMatrix = glm::lookAt(camPosition, ori, glm::vec3(0, 1, 0));
+	updateViewProj();
+}

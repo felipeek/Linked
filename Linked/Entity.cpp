@@ -24,3 +24,11 @@ void Entity::render(Shader* shader)
 	mesh->render();
 	shader->stopShader();
 }
+
+void Entity::renderMap(Shader* shader)
+{
+	shader->useShader();
+	shader->update(transform);
+	mesh->renderMap();
+	shader->stopShader();
+}

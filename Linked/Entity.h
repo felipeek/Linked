@@ -10,6 +10,7 @@ public:
 	~Entity();
 	Transform* getTransform();
 	void render(Shader* shader);
+	void renderMap(Shader* shader);
 private:
 	Transform* transform;
 	Mesh* mesh;

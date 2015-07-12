@@ -76,6 +76,7 @@
     <ClInclude Include="Equipment.h" />
     <ClInclude Include="EquipmentFactory.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Grid.h" />
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="IndexedModel.h" />
     <ClInclude Include="Input.h" />
@@ -86,6 +87,7 @@
     <ClInclude Include="MapCoordinate.h" />
     <ClInclude Include="MapHeightImageLoader.h" />
     <ClInclude Include="MapObjectImageLoader.h" />
+    <ClInclude Include="MapShader.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerFactory.h" />
@@ -105,6 +107,7 @@
     <ClCompile Include="Equipment.cpp" />
     <ClCompile Include="EquipmentFactory.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="IndexedModel.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -116,6 +119,7 @@
     <ClCompile Include="MapCoordinate.cpp" />
     <ClCompile Include="MapHeightImageLoader.cpp" />
     <ClCompile Include="MapObjectImageLoader.cpp" />
+    <ClCompile Include="MapShader.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerFactory.cpp" />

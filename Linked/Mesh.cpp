@@ -8,7 +8,7 @@ Mesh::Mesh(std::string fileName, Texture* texture, float reflectivity, float glo
 {
 	ObjModel model(fileName);
 	IndexedModel *indexedModel = model.toIndexedModel();
-	this->texture = texture;
+	this->texture0 = texture;
 	this->reflectivity = reflectivity;
 	this->glossiness = glossiness;
 
@@ -20,13 +20,28 @@ Mesh::Mesh(std::string fileName, Texture* texture, float reflectivity, float glo
 
 Mesh::Mesh(Quad* quad, Texture* texture)
 {
-	this->texture = texture;
+	this->texture0 = texture;
 	this->reflectivity = 0;
 	this->glossiness = 0;
 	genVAO();
 	genVBOS(quad->getIndexedModel());
 	indicesSize = quad->getIndexedModel()->getIndices()->size() * sizeof(float);
 	genIndexBuffer(quad->getIndexedModel());
+}
+
+Mesh::Mesh(Grid* grid, Texture* texture0, Texture* texture1, Texture* texture2, Texture* blendMap)
+{
+	this->texture0 = texture0;
+	this->texture1 = texture1;
+	this->texture2 = texture2;
+	this->blendMap = blendMap;
+
+	this->reflectivity = 0;
+	this->glossiness = 0;
+	genVAO();
+	genVBOS(grid->getIndexedModel());
+	indicesSize = grid->getIndexedModel()->getIndices()->size() * sizeof(float);
+	genIndexBuffer(grid->getIndexedModel());
 }
 
 Mesh::~Mesh()
@@ -92,7 +107,7 @@ void Mesh::render()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBufferID);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture->textureID);
+	glBindTexture(GL_TEXTURE_2D, texture0->textureID);
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferID);
@@ -113,3 +128,37 @@ void Mesh::render()
 	glDisableVertexAttribArray(0);
 }
 
+void Mesh::renderMap()
+{
+	//shader.update(transform);
+	glBindVertexArray(VertexArrayID);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBufferID);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture0->textureID);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, texture1->textureID);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, texture2->textureID);
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, blendMap->textureID);
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferID);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, NormalsBufferID);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glEnableVertexAttribArray(2);
+	glBindBuffer(GL_ARRAY_BUFFER, TextureBufferID);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glDrawElements(drawForm, indicesSize / sizeof(float), GL_UNSIGNED_INT, 0);
+
+	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(0);
+}

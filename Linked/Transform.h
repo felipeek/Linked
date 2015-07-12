@@ -19,6 +19,9 @@ public:
 	void incRotateY(float amt);
 	void incScale(float x, float y, float z);
 
+	glm::vec3 getPosition();
+	glm::vec3 getScale();
+
 private:
 	glm::mat4 translationMatrix;
 	glm::mat4 scaleMatrix;
