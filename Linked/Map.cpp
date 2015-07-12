@@ -14,11 +14,21 @@ Map::~Map()
 	delete mapEntityLoader;
 }
 
-MapCoordinate Map::getMapCoordinate(glm::vec3 coordinate)
+MapCoordinate Map::getMapCoordinateForPlayerMovement(glm::vec3 coordinate)
 {
 	MapCoordinate mapCoordinates;
 
-	mapCoordinates.terrain = mapTerrainLoader->getMapTerrain(coordinate);
+	mapCoordinates.terrain = mapTerrainLoader->getMapTerrainForPlayerMovement(coordinate);
+	mapCoordinates.entity = mapEntityLoader->getMapEntity(coordinate);
+
+	return mapCoordinates;
+}
+
+MapCoordinate Map::getMapCoordinateForMapCreation(glm::vec3 coordinate)
+{
+	MapCoordinate mapCoordinates;
+
+	mapCoordinates.terrain = mapTerrainLoader->getMapTerrainForMapCreation(coordinate);
 	mapCoordinates.entity = mapEntityLoader->getMapEntity(coordinate);
 
 	return mapCoordinates;

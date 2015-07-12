@@ -72,7 +72,7 @@ void Display::MainLoop()
 
 	if (frameCounter >= 1.0)
 	{
-		std::cout << frames << std::endl;
+		//std::cout << frames << std::endl;
 		frames = 0;
 		frameCounter = 0;
 	}

@@ -8,7 +8,8 @@ class Map
 public:
 	Map(std::string& mapTerrainFilename, std::string& mapEntityFileName, int nChannels);
 	~Map();
-	MapCoordinate getMapCoordinate(glm::vec3 coordinate);
+	MapCoordinate getMapCoordinateForPlayerMovement(glm::vec3 coordinate);
+	MapCoordinate getMapCoordinateForMapCreation(glm::vec3 coordinate);
 private:
 	MapTerrainImageLoader* mapTerrainLoader;
 	MapEntityImageLoader* mapEntityLoader;

@@ -19,4 +19,8 @@ public:
 	MapEntity entity;
 	static const MapTerrain STANDARD_MAP_TERRAIN = NORMAL_FLOOR;
 	static const MapEntity STANDARD_MAP_ENTITY = NONE;
+	static bool isOfCollisionType(MapTerrain terrain){
+		if (terrain == BLOCKED || terrain == WATER)
+			return true;
+	}
 };
