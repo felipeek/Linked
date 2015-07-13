@@ -41,3 +41,8 @@ void Entity::setMesh(Mesh* mesh)
 {
 	this->mesh = mesh;
 }
+
+Mesh* Entity::getMesh()
+{
+	return mesh;
+}

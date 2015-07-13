@@ -14,11 +14,10 @@ public:
 	virtual void render(Shader* shader);
 	Texture* getTexture();
 	void setMesh(Mesh* mesh);
-	Mesh* getMesh(){
-		return mesh;
-	}
+	Mesh* getMesh();
 protected:
 	Transform* transform;
 	Mesh* mesh;
+	Texture* texture;
 };
 

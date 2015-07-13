@@ -168,6 +168,9 @@
     <ClInclude Include="MapTerrain.h">
       <Filter>Header Files\Map</Filter>
     </ClInclude>
+    <ClInclude Include="MouseAttack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -271,6 +274,9 @@
     </ClCompile>
     <ClCompile Include="MapTerrain.cpp">
       <Filter>Source Files\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseAttack.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

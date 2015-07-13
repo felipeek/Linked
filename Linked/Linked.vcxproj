@@ -95,6 +95,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterFactory.h" />
+    <ClInclude Include="MouseAttack.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerFactory.h" />
     <ClInclude Include="PlayerMovement.h" />
@@ -131,6 +132,7 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MonsterFactory.cpp" />
+    <ClCompile Include="MouseAttack.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerFactory.cpp" />
     <ClCompile Include="PlayerMovement.cpp" />

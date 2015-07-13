@@ -127,7 +127,14 @@ void Display::KeyboardUpEvent(unsigned char key, int x, int y)
 }
 void Display::MouseEvent(int button, int state, int x, int y)
 {
+	float screenX = (float)x / WWID - 0.5f;
+	float screenY = -((float)y / WHEI - 0.5f);
 
+	if (button == 0)
+	{
+		Input::attack = true;
+		Input::mouseAttack.setAttackPos(screenX, screenY);
+	}
 }
 void Display::MouseMotion(int x, int y)
 {
