@@ -31,3 +31,13 @@ Texture* Entity::getTexture()
 {
 	return mesh->getTexture0();
 }
+
+void Entity::setTransform(Transform* transform)
+{
+	this->transform = transform;
+}
+
+void Entity::setMesh(Mesh* mesh)
+{
+	this->mesh = mesh;
+}

@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#define MAP_SIZE 1024
+
 class EntityMap;
 class Entity;
 class Camera;
@@ -8,6 +10,8 @@ class MapShader;
 class PlayerMovement;
 class Map;
 class Light;
+class MonsterFactory;
+class Monster;
 
 class Game
 {
@@ -25,7 +29,10 @@ private:
 	EntityMap* entityMap;
 	MapShader* mapShader;
 	Map* map;
+	Map* monsterMap;
 	PlayerMovement* playerMovement;
+	MonsterFactory* monsterFactory;
+	std::vector<Monster*> monsters;
 	double lastTime;
 
 	void input();

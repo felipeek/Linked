@@ -7,8 +7,9 @@ class MapMonster
 public:
 	MapMonster();
 	~MapMonster();
-	Monster monster;
+	Monster *monster;
 	bool monsterExists;
+	static MapMonster initWithNoMonster();
 };
 
 class MapMonsterImageLoader : public ImageLoader

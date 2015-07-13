@@ -1,4 +1,5 @@
 #include "MapMonster.h"
+#include <iostream>
 
 MapMonsterImageLoader::MapMonsterImageLoader(std::string& filename, int nChannels, MonsterFactory* monsterFactory) : ImageLoader(filename, nChannels)
 {
@@ -9,8 +10,9 @@ MapMonsterImageLoader::~MapMonsterImageLoader()
 {
 }
 
-MapMonster::MapMonster() : monster(NULL, NULL)
+MapMonster::MapMonster()
 {
+	monster = NULL;
 }
 
 MapMonster::~MapMonster()
@@ -24,8 +26,14 @@ MapMonster MapMonsterImageLoader::getMonster(vec3 coordinateVector)
 	try
 	{
 		vec3 rgb = getPixel((int)coordinateVector.x, (int)coordinateVector.y);
-		mapMonster.monster = monsterFactory->getMonsterOfMapColor(rgb);
-		mapMonster.monsterExists = true;
+
+		if (monsterFactory->isMonsterMapColorValid(rgb))
+		{
+			mapMonster.monster = monsterFactory->getMonsterOfMapColor(rgb);
+			mapMonster.monsterExists = true;
+		}
+		else
+			mapMonster.monsterExists = false;
 	}
 	catch (PixelOutOfBoundsException e)
 	{
@@ -36,5 +44,12 @@ MapMonster MapMonsterImageLoader::getMonster(vec3 coordinateVector)
 		mapMonster.monsterExists = false;
 	}
 
+	return mapMonster;
+}
+
+MapMonster MapMonster::initWithNoMonster()
+{
+	MapMonster mapMonster;
+	mapMonster.monsterExists = false;
 	return mapMonster;
 }

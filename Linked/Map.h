@@ -9,13 +9,14 @@ public:
 	~MapCoordinate();
 	MapTerrain terrain;
 	MapEntity entity;
-	MapMonster monster;
+	MapMonster mapMonster;
 };
 
 class Map
 {
 public:
 	Map(std::string& mapTerrainFilename, std::string& mapEntityFilename, int nChannels);
+	Map(std::string& mapTerrainFilename, std::string& mapEntityFilename, std::string& mapMonsterFilename, int nChannels, MonsterFactory* monsterFactory);
 	~Map();
 	MapCoordinate getMapCoordinateForPlayerMovement(glm::vec3 coordinate);
 	MapCoordinate getMapCoordinateForMapCreation(glm::vec3 coordinate);

@@ -64,7 +64,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	// Criação do Mapa
 	std::string mapPath = "./res/Maps/teste.png";
 	this->map = new Map(mapPath, mapPath, 3);
-	Mesh* mapMesh = new Mesh(new Grid(1024, this->map),
+	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, this->map),
 		new Texture("./res/Maps/stonePath.png"),
 		new Texture("./res/Maps/mountain.jpg"),
 		new Texture("./res/Maps/water.jpg"),
@@ -73,22 +73,32 @@ Game::Game(int windowsWidth, int windowsHeight)
 		);
 	this->entityMap = new EntityMap(new Transform(), mapMesh);
 
+	// Criação dos Monstros
+	std::string monsterMapPath = "./res/Maps/monsters.png";
+	this->monsterFactory = new MonsterFactory();
+	this->monsterMap = new Map(mapPath, mapPath, monsterMapPath, 3, this->monsterFactory);
+
+	for (int i = 0; i < MAP_SIZE; i++)
+		for (int j = 0; j < MAP_SIZE; j++)
+		{
+			MapCoordinate coordinate = monsterMap->getMapCoordinateForMapCreation(glm::vec3(i,j,0));
+			Monster *monster = coordinate.mapMonster.monster;
+
+			if (coordinate.mapMonster.monsterExists == true)
+			{
+				monster->setTransform(new Transform(vec3(i, j, 1.0f), 45, glm::vec3(1, 0, 0), glm::vec3(1, 1, 1)));
+				entities.push_back(monster);
+				monsters.push_back(monster);
+			}
+	}
+
+	for (int i = 0; i < monsters.size(); i++)
+		std::cout << monsters[i]->getName() << std::endl;
+
 	lastTime = 0;
 
 	// Movimento
 	playerMovement = new PlayerMovement(this->map, player);
-
-	MonsterFactory f = MonsterFactory();
-
-	for (Monster m : f.getListOfAllMonsters())
-	{
-		std::cout << "MONSTER NAME: " << m.getName() << std::endl;
-		std::cout << "MONSTER HP: " << m.getHp() << std::endl;
-		std::cout << "MONSTER ATTACK: " << m.getAttack() << std::endl;
-		std::cout << "MONSTER DEFENSE: " << m.getDefense() << std::endl;
-		std::cout << "MONSTER RGB: (" << m.getMapColorRed() << ", "
-			<< m.getMapColorGreen() << ", " << m.getMapColorBlue() << ")" << std::endl;
-	}
 }
 
 Game::~Game()
@@ -96,6 +106,12 @@ Game::~Game()
 	delete shader;
 	delete camera;
 	delete playerMovement;
+	if (monsterFactory != NULL)
+		delete monsterFactory;
+	if (this->monsterMap != NULL)
+		delete monsterMap;
+	for (Monster* monster : monsters)
+		delete monster;
 }
 
 void Game::render()
