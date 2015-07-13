@@ -5,6 +5,7 @@
 #include "PrimitiveShader.h"
 #include "MapShader.h"
 #include "PlayerMovement.h"
+#include "Time.h"
 
 class Game
 {
@@ -23,6 +24,7 @@ private:
 	MapShader* mapShader;
 	Map* map;
 	PlayerMovement* playerMovement;
+	double lastTime;
 
 	void input();
 	void printCoordinate(int x, int y);
