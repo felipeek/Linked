@@ -1,0 +1,10 @@
+<MONSTER>
+  <NAME>Demilord</NAME>
+  <SPRITE>./Sprites/Demilord.png</SPRITE>
+  <HP>100</HP>
+  <ATTACK>1000</ATTACK>
+  <DEFENSE>1000</DEFENSE>
+  <RED>34</RED>
+  <GREEN>43</GREEN>
+  <BLUE>32</BLUE>
+</MONSTER>

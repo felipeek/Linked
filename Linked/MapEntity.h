@@ -1,6 +1,12 @@
 #pragma once
 #include "ImageLoader.h"
 
+enum MapEntity{
+	NONE,
+	FIRE,
+	MUD
+};
+
 class MapEntityImageLoader : public ImageLoader
 {
 public:

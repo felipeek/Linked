@@ -1,7 +1,7 @@
 #pragma once
 #include "glm/glm.hpp"
-#include "Map.h"
-#include "Entity.h"
+class Map;
+class Entity;
 
 #define SLIDE_FACTOR 60
 #define SLIDE_SPEED_FACTOR 0.01f

@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <glm/glm.hpp>
-#include "MapCoordinate.h"
 #include <GL\glew.h>
 
 using namespace glm;

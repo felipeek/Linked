@@ -1,6 +1,5 @@
 #include "Camera.h"
 
-
 Camera::Camera(glm::vec3 position, glm::vec3 orientation, float fov, float aspect, float zNear, float zFar)
 {
 	camPosition = position;

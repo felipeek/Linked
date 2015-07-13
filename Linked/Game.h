@@ -1,11 +1,13 @@
 #pragma once
 #include <vector>
-#include "EntityMap.h"
-#include "Camera.h"
-#include "PrimitiveShader.h"
-#include "MapShader.h"
-#include "PlayerMovement.h"
-#include "Time.h"
+class EntityMap;
+class Entity;
+class Camera;
+class PrimitiveShader;
+class MapShader;
+class PlayerMovement;
+class Map;
+class Light;
 
 class Game
 {

@@ -1,17 +1,27 @@
 #include "Game.h"
-#include "MapTerrainImageLoader.h"
 
-#include "MapEntityImageLoader.h"
-#include <string>
-#include <iostream>
-#include <cstdlib> 
-
-#include "Mesh.h"
-#include "Grid.h"
+#include "Display.h"
+#include "Time.h"
 #include "Input.h"
 
 #include "Map.h"
-#include "Display.h"
+#include "MapTerrain.h"
+#include "MapEntity.h"
+
+#include "Mesh.h"
+#include "Grid.h"
+#include "EntityMap.h"
+#include "PlayerMovement.h"
+#include "MonsterFactory.h"
+
+#include "Camera.h"
+#include "PrimitiveShader.h"
+#include "MapShader.h"
+#include "Light.h"
+
+#include <string>
+#include <iostream>
+#include <cstdlib> 
 
 /*void Game::printCoordinate(int x, int y)
 {
@@ -65,6 +75,18 @@ Game::Game(int windowsWidth, int windowsHeight)
 
 	// Movimento
 	playerMovement = new PlayerMovement(this->map, player);
+
+	MonsterFactory f = MonsterFactory();
+
+	for (Monster m : f.getListOfAllMonsters())
+	{
+		std::cout << "MONSTER NAME: " << m.getName() << std::endl;
+		std::cout << "MONSTER HP: " << m.getHp() << std::endl;
+		std::cout << "MONSTER ATTACK: " << m.getAttack() << std::endl;
+		std::cout << "MONSTER DEFENSE: " << m.getDefense() << std::endl;
+		std::cout << "MONSTER RGB: (" << m.getMapColorRed() << ", "
+			<< m.getMapColorGreen() << ", " << m.getMapColorBlue() << ")" << std::endl;
+	}
 }
 
 Game::~Game()

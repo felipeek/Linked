@@ -1,9 +1,9 @@
 #pragma once
 #include <GL/glew.h>
 #include <string>
-#include "Transform.h"
-#include "Camera.h"
-#include "Texture.h"
+class Transform;
+class Camera;
+class Texture;
 
 class Shader
 {

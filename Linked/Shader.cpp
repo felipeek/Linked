@@ -1,4 +1,7 @@
 #include "Shader.h"
+#include "Transform.h"
+#include "Camera.h"
+#include "Texture.h"
 #include "glm\glm.hpp"
 #include "glm\gtc\matrix_transform.hpp"
 #include <fstream>

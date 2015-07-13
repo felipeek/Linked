@@ -1,4 +1,7 @@
 #include "MapShader.h"
+#include "Light.h"
+#include "Transform.h"
+#include "Camera.h"
 
 MapShader::MapShader(std::string fileName, Camera* camera) : Shader(fileName, camera)
 {

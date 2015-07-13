@@ -45,11 +45,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>./include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>./lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;glew32.lib;glut32.lib;SOIL.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;glew32.lib;glut32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -60,13 +62,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>./include</AdditionalIncludeDirectories>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>./lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;glew32.lib;glut32.lib;SOIL.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;glew32.lib;glut32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -85,11 +88,13 @@
     <ClInclude Include="ItemFactory.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="MapCoordinate.h" />
-    <ClInclude Include="MapEntityImageLoader.h" />
-    <ClInclude Include="MapTerrainImageLoader.h" />
+    <ClInclude Include="MapEntity.h" />
+    <ClInclude Include="MapMonster.h" />
     <ClInclude Include="MapShader.h" />
+    <ClInclude Include="MapTerrain.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Monster.h" />
+    <ClInclude Include="MonsterFactory.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerFactory.h" />
     <ClInclude Include="PlayerMovement.h" />
@@ -119,11 +124,13 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="MapCoordinate.cpp" />
-    <ClCompile Include="MapEntityImageLoader.cpp" />
-    <ClCompile Include="MapTerrainImageLoader.cpp" />
+    <ClCompile Include="MapEntity.cpp" />
+    <ClCompile Include="MapMonster.cpp" />
+    <ClCompile Include="MapTerrain.cpp" />
     <ClCompile Include="MapShader.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="MonsterFactory.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerFactory.cpp" />
     <ClCompile Include="PlayerMovement.cpp" />
@@ -135,6 +142,10 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Transform.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="res\Monsters\BadHoshoyo.xml" />
+    <Xml Include="res\Monsters\Demilord.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

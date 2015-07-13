@@ -1,0 +1,10 @@
+<MONSTER>
+  <NAME>Bad Hoshoyo</NAME>
+  <SPRITE>./Sprites/BadHoshoyo.png</SPRITE>
+  <HP>1</HP>
+  <ATTACK>1</ATTACK>
+  <DEFENSE>2</DEFENSE>
+  <RED>37</RED>
+  <GREEN>255</GREEN>
+  <BLUE>125</BLUE>
+</MONSTER>

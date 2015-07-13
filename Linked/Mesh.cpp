@@ -1,5 +1,6 @@
 #include "Mesh.h"
 #include "Shader.h"
+#include "Grid.h"
 #include <iostream>
 
 GLuint Mesh::drawForm = GL_TRIANGLES;

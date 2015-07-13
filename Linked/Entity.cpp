@@ -1,6 +1,5 @@
 #include "Entity.h"
 
-
 Entity::Entity(Transform* transform, Mesh* mesh)
 {
 	this->transform = transform;

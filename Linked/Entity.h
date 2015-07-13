@@ -2,7 +2,6 @@
 #include "Transform.h"
 #include "Mesh.h"
 #include "Shader.h"
-#include "MapShader.h"
 #include "Texture.h"
 
 class Entity

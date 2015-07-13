@@ -61,6 +61,12 @@
     <Filter Include="Header Files\Game\Factory">
       <UniqueIdentifier>{82e79d0c-b4c2-4a3d-826e-6fca417f0986}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Data Files">
+      <UniqueIdentifier>{ae51580e-efb0-46f5-baab-2f47a5b43db3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data Files\Monsters">
+      <UniqueIdentifier>{fe6130e6-cf92-4906-a0ae-dd1f912543b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -105,12 +111,6 @@
     <ClInclude Include="Map.h">
       <Filter>Header Files\Map</Filter>
     </ClInclude>
-    <ClInclude Include="MapCoordinate.h">
-      <Filter>Header Files\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="Time.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Shaders</Filter>
     </ClInclude>
@@ -138,23 +138,35 @@
     <ClInclude Include="SkillFactory.h">
       <Filter>Header Files\Game\Factory</Filter>
     </ClInclude>
-    <ClInclude Include="MapEntityImageLoader.h">
-      <Filter>Header Files\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="MapTerrainImageLoader.h">
-      <Filter>Header Files\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="MapShader.h">
-      <Filter>Header Files\Map</Filter>
-    </ClInclude>
     <ClInclude Include="Grid.h">
       <Filter>Header Files\Map</Filter>
     </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>Header Files\Game\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterFactory.h">
+      <Filter>Header Files\Game\Factory</Filter>
+    </ClInclude>
     <ClInclude Include="EntityMap.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="PlayerMovement.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="MapShader.h">
+      <Filter>Header Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="MapEntity.h">
+      <Filter>Header Files\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="MapMonster.h">
+      <Filter>Header Files\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTerrain.h">
+      <Filter>Header Files\Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -203,12 +215,6 @@
     <ClCompile Include="Map.cpp">
       <Filter>Source Files\Map</Filter>
     </ClCompile>
-    <ClCompile Include="MapCoordinate.cpp">
-      <Filter>Source Files\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="Time.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Equipment.cpp">
       <Filter>Source Files\Game\Models</Filter>
     </ClCompile>
@@ -236,23 +242,43 @@
     <ClCompile Include="SkillFactory.cpp">
       <Filter>Source Files\Game\Factory</Filter>
     </ClCompile>
-    <ClCompile Include="MapEntityImageLoader.cpp">
-      <Filter>Source Files\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="MapTerrainImageLoader.cpp">
-      <Filter>Source Files\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="MapShader.cpp">
-      <Filter>Source Files\Map</Filter>
-    </ClCompile>
     <ClCompile Include="Grid.cpp">
       <Filter>Source Files\Map</Filter>
     </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>Source Files\Game\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterFactory.cpp">
+      <Filter>Source Files\Game\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="MapShader.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
     <ClCompile Include="EntityMap.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="PlayerMovement.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Game</Filter>
     </ClCompile>
+    <ClCompile Include="MapEntity.cpp">
+      <Filter>Source Files\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMonster.cpp">
+      <Filter>Source Files\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="MapTerrain.cpp">
+      <Filter>Source Files\Map</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="res\Monsters\Demilord.xml">
+      <Filter>Data Files\Monsters</Filter>
+    </Xml>
+    <Xml Include="res\Monsters\BadHoshoyo.xml">
+      <Filter>Data Files\Monsters</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

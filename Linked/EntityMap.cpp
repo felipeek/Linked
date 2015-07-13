@@ -1,5 +1,5 @@
 #include "EntityMap.h"
-
+#include "MapShader.h"
 
 EntityMap::EntityMap(Transform* transform, Mesh* mesh) : Entity(transform, mesh){}
 

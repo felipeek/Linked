@@ -1,5 +1,7 @@
 #include "PrimitiveShader.h"
-
+#include "Texture.h"
+#include "Transform.h"
+#include "Camera.h"
 
 PrimitiveShader::PrimitiveShader(std::string fileName, Camera* camera) : Shader(fileName, camera)
 {

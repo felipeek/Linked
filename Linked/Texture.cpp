@@ -44,7 +44,7 @@ void Texture::calcAtlas()
 {
 	int column = (int)index % (int)numRows;
 	offset.x = (float)column / (float)numRows;
-	int row = (int)index / numRows;
+	int row = (int)index / (int)numRows;
 	offset.y = (float)row / (float)numRows;
 }
 

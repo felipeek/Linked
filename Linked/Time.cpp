@@ -3,6 +3,10 @@
 
 #include <Windows.h>
 #include <iostream>
+#include <ctime>
+#include <ratio>
+#include <chrono>
+
 static double g_freq;
 static bool g_timerInitialized = false;
 

@@ -1,5 +1,7 @@
 #pragma once
 #include "Entity.h"
+class MapShader;
+class Light;
 
 class EntityMap : public Entity
 {

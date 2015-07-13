@@ -1,4 +1,5 @@
 #include "IndexedModel.h"
+#include <fstream>
 
 using namespace std;
 
@@ -33,7 +34,7 @@ IndexedModel* ObjModel::toIndexedModel()
 	IndexedModel* result = new IndexedModel();
 
 	int currentVertexIndex = 0;
-	for (int i = 0; i < indices.size(); i++)
+	for (unsigned int i = 0; i < indices.size(); i++)
 	{
 		ObjIndex currentIndex = indices[i];
 		glm::vec3 currentPosition = positions[currentIndex.vertexIndex];
@@ -73,7 +74,7 @@ void ObjModel::loadObjFile(string fileName)
 glm::vec3 ObjModel::parseVertex(string& line)
 {
 	float x, y, z;
-	int i, beginIndex = 2;
+	unsigned int i, beginIndex = 2;
 	if (line[beginIndex] == ' ')
 		beginIndex++;
 	for (i = beginIndex; line[i] != ' '; i++);
@@ -91,7 +92,7 @@ glm::vec3 ObjModel::parseVertex(string& line)
 glm::vec2 ObjModel::parseTexCoord(string& line)
 {
 	float x, y;
-	int i, beginIndex = 3;
+	unsigned int i, beginIndex = 3;
 	for (i = beginIndex; line[i] != ' '; i++);
 	x = std::stof(line.substr(beginIndex, i));
 	beginIndex = ++i;
@@ -104,7 +105,7 @@ glm::vec2 ObjModel::parseTexCoord(string& line)
 glm::vec3 ObjModel::parseNormal(string& line)
 {
 	float x, y, z;
-	int i, beginIndex = 3;
+	unsigned int i, beginIndex = 3;
 	for (i = beginIndex; line[i] != ' '; i++);
 	x = std::stof(line.substr(beginIndex, i));
 	beginIndex = ++i;

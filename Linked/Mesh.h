@@ -4,7 +4,9 @@
 #include <GL\glew.h>
 #include "IndexedModel.h"
 #include "Texture.h"
-#include "Grid.h"
+
+class Grid;
+class Quad;
 
 class Mesh
 {

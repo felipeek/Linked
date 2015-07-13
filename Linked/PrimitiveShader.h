@@ -1,6 +1,6 @@
 #pragma once
 #include "Shader.h"
-#include "Texture.h"
+class Texture;
 
 class PrimitiveShader : public Shader
 {

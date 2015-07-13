@@ -1,4 +1,4 @@
-#include "MapEntityImageLoader.h"
+#include "MapEntity.h"
 
 using namespace glm;
 
@@ -39,7 +39,7 @@ MapEntity MapEntityImageLoader::transformRgbIntoMapEntity(vec3 rgb)
 	if (rgb == vec3(0, 0, 255))
 		return MUD;
 
-	return MapCoordinate::STANDARD_MAP_ENTITY;
+	return NONE;
 
 	/* ***************************** */
 }

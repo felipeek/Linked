@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "Game.h"
+class Game;
 
 #define WWID 1600
 #define WHEI 900

@@ -6,6 +6,7 @@
 #include <GL\glew.h>
 #include <GL\glut.h>
 #include <iostream>
+#include "Game.h"
 
 Game* Display::game = NULL;
 const double Display::frameTime = 1.0 / FRAMECAP;

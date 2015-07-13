@@ -1,7 +1,7 @@
 #include "Grid.h"
+#include "Map.h"
 #include <cmath>
 #include <iostream>
-
 
 Grid::Grid(int blockSize, Map* map)
 {
@@ -111,14 +111,14 @@ glm::vec3 Grid::calculateNormal(glm::vec3& position)
 
 float Grid::getHeight(float x, float y)
 {
-	int index = 0;
+	unsigned int index = 0;
 	if ((int)y % 2 == 0)
 	{
-		index = blockSize * y + 2 * x;
+		index = (unsigned int)(blockSize * y + 2 * x);
 	}
 	else
 	{
-		index = ((blockSize * (y - 1)) + 1) + 2 * x;
+		index = (unsigned int)(((blockSize * (y - 1)) + 1) + 2 * x);
 	}
 	glm::vec3 position;
 	if (index < indexedModel.positions.size())

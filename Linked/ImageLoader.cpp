@@ -1,9 +1,8 @@
+#define STB_IMAGE_IMPLEMENTATION
+
 #include "ImageLoader.h"
 #include "include\stb_image.h"
 #include <glm\glm.hpp>
-#include <iostream>
-
-#define STB_IMAGE_IMPLEMENTATION
 
 using namespace glm;
 

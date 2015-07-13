@@ -1,6 +1,5 @@
-#include "MapTerrainImageLoader.h"
+#include "MapTerrain.h"
 #include <string>
-#include <iostream>
 #define COLLISION_FACTOR 1
 
 using namespace glm;
@@ -17,7 +16,7 @@ MapTerrainImageLoader::~MapTerrainImageLoader()
 }
 
 MapTerrain MapTerrainImageLoader::getMapTerrainForPlayerMovement(vec3 coordinateVector){
-	MapTerrain mapObject, aux;
+	MapTerrain mapObject;
 
 	try
 	{
@@ -30,7 +29,7 @@ MapTerrain MapTerrainImageLoader::getMapTerrainForPlayerMovement(vec3 coordinate
 				for (int k = i; k >= -i; k--)
 				{
 					rgb = getPixel((int)coordinateVector.x + j, (int)coordinateVector.y + k);
-					if (MapCoordinate::isOfCollisionType(transformRgbIntoMapTerrain(rgb)))
+					if (isOfCollisionType(transformRgbIntoMapTerrain(rgb)))
 						return transformRgbIntoMapTerrain(rgb);
 				}
 	}
@@ -74,7 +73,14 @@ MapTerrain MapTerrainImageLoader::transformRgbIntoMapTerrain(vec3 rgb)
 	else
 		return WATER;
 
-	return MapCoordinate::STANDARD_MAP_TERRAIN;
+	return BLOCKED;
 
 	/* ***************************** */
+}
+
+bool MapTerrainImageLoader::isOfCollisionType(MapTerrain terrain)
+{
+	if (terrain == BLOCKED || terrain == WATER)
+		return true;
+	return false;
 }

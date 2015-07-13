@@ -1,7 +1,8 @@
 #include "PlayerMovement.h"
 #include "Input.h"
 #include "Display.h"
-
+#include "Map.h"
+#include "Entity.h"
 
 PlayerMovement::PlayerMovement(Map* map, Entity* player)
 {
@@ -17,7 +18,7 @@ PlayerMovement::~PlayerMovement()
 void PlayerMovement::inputPlayerMovement()
 {
 	glm::vec3 finalPos;
-	float frameTime = Display::frameTime;
+	float frameTime = (float)Display::frameTime;
 
 	if (Input::keyStates['w'])
 	{
@@ -97,7 +98,7 @@ bool PlayerMovement::moveTo(MovementDirection direction, glm::vec3 currentPositi
 		nextPosition.y = nextPosition.y - range; break;
 	}
 
-	if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(nextPosition).terrain))
+	if (!MapTerrainImageLoader::isOfCollisionType(map->getMapCoordinateForPlayerMovement(nextPosition).terrain))
 	{
 		endPosition->x = nextPosition.x;
 		endPosition->y = nextPosition.y;
@@ -124,7 +125,7 @@ bool PlayerMovement::moveTo(MovementDirection direction, glm::vec3 currentPositi
 					positionToSlide2.y = positionToSlide2.y + i * range;
 				}
 
-				if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(positionToSlide1).terrain))
+				if (!MapTerrainImageLoader::isOfCollisionType(map->getMapCoordinateForPlayerMovement(positionToSlide1).terrain))
 				{
 					if (direction == NORTH || direction == SOUTH)
 					{
@@ -140,7 +141,7 @@ bool PlayerMovement::moveTo(MovementDirection direction, glm::vec3 currentPositi
 					endPosition->z = currentPosition.z;
 					return true;
 				}
-				else if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(positionToSlide2).terrain))
+				else if (!MapTerrainImageLoader::isOfCollisionType(map->getMapCoordinateForPlayerMovement(positionToSlide2).terrain))
 				{
 					if (direction == NORTH || direction == SOUTH)
 					{
