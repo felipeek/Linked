@@ -12,9 +12,6 @@
 #include "Map.h"
 #include "Display.h"
 
-#define SLIDE_FACTOR 60
-#define SLIDE_SPEED_FACTOR 0.01f
-
 /*void Game::printCoordinate(int x, int y)
 {
 	std::string objectMapPath = "./res/Maps/objectmap.png";
@@ -61,12 +58,16 @@ Game::Game(int windowsWidth, int windowsHeight)
 		new Texture(mapPath)
 		);
 	this->entityMap = new EntityMap(new Transform(), mapMesh);
+
+	// Movimento
+	playerMovement = new PlayerMovement(this->map);
 }
 
 Game::~Game()
 {
 	delete shader;
 	delete camera;
+	delete playerMovement;
 }
 
 void Game::render()
@@ -100,155 +101,62 @@ float charRot = 0;
 
 void Game::input()
 {
-	float speed = 15;
-
-	glm::vec3 lastPos = entities[0]->getTransform()->getPosition();
+	float frameTime = (float)Display::frameTime;
+	glm::vec3 finalPos;
 
 	if (Input::keyStates['w'])
 	{
-		glm::vec3 nextPos = glm::vec3(entities[0]->getTransform()->getPosition().x,
-			entities[0]->getTransform()->getPosition().y + (float)Display::frameTime * speed,
-			entities[0]->getTransform()->getPosition().z);
-		if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(nextPos).terrain))
-			entities[0]->getTransform()->translate(nextPos.x, nextPos.y, nextPos.z);
-		else
+		if (!Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
 		{
-			if (!Input::keyStates['s'] && !Input::keyStates['a'] && !Input::keyStates['d'])
-			{
-				for (int i = 1; i <= SLIDE_FACTOR; i++)
-				{
-					glm::vec3 leftPos = nextPos;
-					leftPos.x = leftPos.x - (float)i * ((float)Display::frameTime * speed/10);
-					glm::vec3 rightPos = nextPos;
-					rightPos.x = rightPos.x + (float)i * ((float)Display::frameTime * speed / 10);
-					if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(rightPos).terrain))
-					{
-						glm::vec3 inlineRightPos = lastPos;
-						inlineRightPos.x = inlineRightPos.x + SLIDE_SPEED_FACTOR;
-						entities[0]->getTransform()->translate(inlineRightPos.x, inlineRightPos.y, inlineRightPos.z);
-						break;
-					}
-					else
-					if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(leftPos).terrain))
-					{
-						glm::vec3 inlineLeftPos = lastPos;
-						inlineLeftPos.x = inlineLeftPos.x - SLIDE_SPEED_FACTOR;
-						entities[0]->getTransform()->translate(inlineLeftPos.x, inlineLeftPos.y, inlineLeftPos.z);
-						break;
-					}
-				}
-			}
+			if (playerMovement->moveTo(NORTH, entities[0]->getTransform()->getPosition(), frameTime, true, &finalPos))
+				entities[0]->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
 		}
-	}
-
-	if (Input::keyStates['s'])
-	{
-		glm::vec3 nextPos = glm::vec3(entities[0]->getTransform()->getPosition().x,
-			entities[0]->getTransform()->getPosition().y - (float)Display::frameTime * speed,
-			entities[0]->getTransform()->getPosition().z);
-		if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(nextPos).terrain))
-			entities[0]->getTransform()->translate(nextPos.x, nextPos.y, nextPos.z);
 		else
 		{
-			if (!Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['d'])
-			{
-				for (int i = 1; i <= SLIDE_FACTOR; i++)
-				{
-					glm::vec3 leftPos = nextPos;
-					leftPos.x = leftPos.x - (float)i * ((float)Display::frameTime * speed / 10);
-					glm::vec3 rightPos = nextPos;
-					rightPos.x = rightPos.x + (float)i * ((float)Display::frameTime * speed / 10);
-					if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(rightPos).terrain))
-					{
-						glm::vec3 inlineRightPos = lastPos;
-						inlineRightPos.x = inlineRightPos.x + SLIDE_SPEED_FACTOR;
-						entities[0]->getTransform()->translate(inlineRightPos.x, inlineRightPos.y, inlineRightPos.z);
-						break;
-					}
-					else
-						if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(leftPos).terrain))
-						{
-							glm::vec3 inlineLeftPos = lastPos;
-							inlineLeftPos.x = inlineLeftPos.x - SLIDE_SPEED_FACTOR;
-							entities[0]->getTransform()->translate(inlineLeftPos.x, inlineLeftPos.y, inlineLeftPos.z);
-							break;
-						}
-				}
-			}
+			if (playerMovement->moveTo(NORTH, entities[0]->getTransform()->getPosition(), frameTime, false, &finalPos))
+				entities[0]->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
 		}
 	}
 
 	if (Input::keyStates['a'])
 	{
-		glm::vec3 nextPos = glm::vec3(entities[0]->getTransform()->getPosition().x - (float)Display::frameTime * speed,
-			entities[0]->getTransform()->getPosition().y,
-			entities[0]->getTransform()->getPosition().z);
-		if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(nextPos).terrain))
-			entities[0]->getTransform()->translate(nextPos.x, nextPos.y, nextPos.z);
+		if (!Input::keyStates['w'] && !Input::keyStates['s'] && !Input::keyStates['d'])
+		{
+			if (playerMovement->moveTo(WEST, entities[0]->getTransform()->getPosition(), frameTime, true, &finalPos))
+				entities[0]->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
+		}
 		else
 		{
-			if (!Input::keyStates['w'] && !Input::keyStates['s'] && !Input::keyStates['d'])
-			{
-				for (int i = 1; i <= SLIDE_FACTOR; i++)
-				{
-					glm::vec3 southPos = nextPos;
-					southPos.y = southPos.y - (float)i * ((float)Display::frameTime * speed / 10);
-					glm::vec3 northPos = nextPos;
-					northPos.y = northPos.y + (float)i * ((float)Display::frameTime * speed / 10);
-					if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(southPos).terrain))
-					{
-						glm::vec3 inlineSouthPos = lastPos;
-						inlineSouthPos.y = inlineSouthPos.y - SLIDE_SPEED_FACTOR;
-						entities[0]->getTransform()->translate(inlineSouthPos.x, inlineSouthPos.y, inlineSouthPos.z);
-						break;
-					}
-					else
-						if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(northPos).terrain))
-						{
-							glm::vec3 inlineNorthPos = lastPos;
-							inlineNorthPos.y = inlineNorthPos.y + SLIDE_SPEED_FACTOR;
-							entities[0]->getTransform()->translate(inlineNorthPos.x, inlineNorthPos.y, inlineNorthPos.z);
-							break;
-						}
-				}
-			}
+			if (playerMovement->moveTo(WEST, entities[0]->getTransform()->getPosition(), frameTime, false, &finalPos))
+				entities[0]->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
+		}
+	}
+
+	if (Input::keyStates['s'])
+	{
+		if (!Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['d'])
+		{
+			if (playerMovement->moveTo(SOUTH, entities[0]->getTransform()->getPosition(), frameTime, true, &finalPos))
+				entities[0]->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
+		}
+		else
+		{
+			if (playerMovement->moveTo(SOUTH, entities[0]->getTransform()->getPosition(), frameTime, false, &finalPos))
+				entities[0]->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
 		}
 	}
 
 	if (Input::keyStates['d'])
 	{
-		glm::vec3 nextPos = glm::vec3(entities[0]->getTransform()->getPosition().x + (float)Display::frameTime * speed,
-			entities[0]->getTransform()->getPosition().y,
-			entities[0]->getTransform()->getPosition().z);
-		if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(nextPos).terrain))
-			entities[0]->getTransform()->translate(nextPos.x, nextPos.y, nextPos.z);
+		if (!Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'])
+		{
+			if (playerMovement->moveTo(EAST, entities[0]->getTransform()->getPosition(), frameTime, true, &finalPos))
+				entities[0]->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
+		}
 		else
 		{
-			if (!Input::keyStates['w'] && !Input::keyStates['s'] && !Input::keyStates['a'])
-			{
-				for (int i = 1; i <= SLIDE_FACTOR; i++)
-				{
-					glm::vec3 southPos = nextPos;
-					southPos.y = southPos.y - (float)i * ((float)Display::frameTime * speed / 10);
-					glm::vec3 northPos = nextPos;
-					northPos.y = northPos.y + (float)i * ((float)Display::frameTime * speed / 10);
-					if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(southPos).terrain))
-					{
-						glm::vec3 inlineSouthPos = lastPos;
-						inlineSouthPos.y = inlineSouthPos.y - SLIDE_SPEED_FACTOR;
-						entities[0]->getTransform()->translate(inlineSouthPos.x, inlineSouthPos.y, inlineSouthPos.z);
-						break;
-					}
-					else
-						if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(northPos).terrain))
-						{
-							glm::vec3 inlineNorthPos = lastPos;
-							inlineNorthPos.y = inlineNorthPos.y + SLIDE_SPEED_FACTOR;
-							entities[0]->getTransform()->translate(inlineNorthPos.x, inlineNorthPos.y, inlineNorthPos.z);
-							break;
-						}
-				}
-			}
+			if (playerMovement->moveTo(EAST, entities[0]->getTransform()->getPosition(), frameTime, false, &finalPos))
+				entities[0]->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
 		}
 	}
 

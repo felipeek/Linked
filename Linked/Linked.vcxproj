@@ -92,6 +92,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerFactory.h" />
+    <ClInclude Include="PlayerMovement.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="PrimitiveShader.h" />
     <ClInclude Include="Shader.h" />
@@ -125,6 +126,7 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerFactory.cpp" />
+    <ClCompile Include="PlayerMovement.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="PrimitiveShader.cpp" />
     <ClCompile Include="Shader.cpp" />
