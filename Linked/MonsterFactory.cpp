@@ -3,17 +3,6 @@
 #include <dirent.h>
 #include <iostream>
 #include "rapidxml_utils.hpp"
-#define MONSTERS_DIRECTORY "./res/Monsters/"
-#define FILE_EXTENSION ".xml"
-#define READ_DIRECTORY_ERROR "Error trying to read monster directory"
-#define ROOT_NODE "MONSTER"
-#define NAME_NODE "NAME"
-#define HP_NODE "HP"
-#define ATTACK_NODE "ATTACK"
-#define DEFENSE_NODE "DEFENSE"
-#define RED_NODE "RED"
-#define GREEN_NODE "GREEN"
-#define BLUE_NODE "BLUE"
 
 using namespace rapidxml;
 using namespace std;

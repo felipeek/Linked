@@ -3,9 +3,9 @@
 class Map;
 class Entity;
 
-#define SLIDE_FACTOR 60
+#define SLIDE_FACTOR 20
 #define SLIDE_SPEED_FACTOR 0.01f
-#define PLAYER_SPEED 15
+#define PLAYER_SPEED 10
 
 enum MovementDirection
 {

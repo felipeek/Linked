@@ -1,6 +1,5 @@
 #include "MapTerrain.h"
 #include <string>
-#define COLLISION_FACTOR 1
 
 using namespace glm;
 
@@ -62,9 +61,7 @@ MapTerrain MapTerrainImageLoader::transformRgbIntoMapTerrain(vec3 rgb)
 {
 	/* TRANSFORMATION MAP DEFINITION */
 
-	const int threshold = 62;
-
-	if (rgb.r < threshold && rgb.g < threshold && rgb.b < threshold)
+	if (rgb.r < THRESHOLD && rgb.g < THRESHOLD && rgb.b < THRESHOLD)
 		return BLOCKED;
 	else if (rgb.r > rgb.g && rgb.r > rgb.b)
 		return DIRT;

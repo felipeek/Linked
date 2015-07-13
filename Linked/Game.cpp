@@ -21,7 +21,9 @@
 
 #include <string>
 #include <iostream>
-#include <cstdlib> 
+#include <cstdlib>
+
+float cameraDistance = 30;
 
 /*void Game::printCoordinate(int x, int y)
 {
@@ -49,7 +51,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 {	
 	// Câmera luz e shaders
 	this->camera = new Camera(glm::vec3(0, 0, 50), glm::vec3(0, 0, 0), 70.0f, (float)windowsWidth / windowsHeight, 0.1f, 2500.0f);
-	this->light = new Light(glm::vec3(100, 500, 10), glm::vec3(1, 1, 1));
+	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 1, 1));
 	this->shader = new PrimitiveShader("./shaders/normalshader", camera);
 	this->mapShader = new MapShader("./shaders/mapshader", camera);
 	
@@ -60,7 +62,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	entities.push_back(player);
 
 	// Criação do Mapa
-	std::string mapPath = "./res/Maps/maze.png";
+	std::string mapPath = "./res/Maps/teste.png";
 	this->map = new Map(mapPath, mapPath, 3);
 	Mesh* mapMesh = new Mesh(new Grid(1024, this->map),
 		new Texture("./res/Maps/stonePath.png"),
@@ -115,7 +117,7 @@ void Game::update()
 {
 	input();
 	glm::vec3 camOri = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y, 0);
-	glm::vec3 camPos = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y-10, 20);
+	glm::vec3 camPos = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y-10, cameraDistance);
 	light->lightPosition.x = entities[0]->getTransform()->getPosition().x;
 	light->lightPosition.y = entities[0]->getTransform()->getPosition().y;
 
@@ -191,4 +193,14 @@ void Game::input()
 		}
 	}
 
+	if (Input::keyStates['='])
+	{
+		cameraDistance += 1.0f;
+	}
+
+	if (Input::keyStates['-'])
+	{
+		if (cameraDistance > 10)
+			cameraDistance -= 1.0f;
+	}
 }
