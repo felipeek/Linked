@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "PrimitiveShader.h"
 #include "MapShader.h"
+#include "Time.h"
 
 class Game
 {
@@ -21,6 +22,7 @@ private:
 	EntityMap* entityMap;
 	MapShader* mapShader;
 	Map* map;
+	double lastTime;
 
 	void input();
 	void printCoordinate(int x, int y);

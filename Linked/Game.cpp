@@ -4,6 +4,7 @@
 #include "MapEntityImageLoader.h"
 #include <string>
 #include <iostream>
+#include <cstdlib> 
 
 #include "Mesh.h"
 #include "Grid.h"
@@ -46,8 +47,8 @@ Game::Game(int windowsWidth, int windowsHeight)
 	this->mapShader = new MapShader("./shaders/mapshader", camera);
 	
 	// Criação do player
-	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.28f, 0.5f), new Texture("./res/Textures/clown.png"));
-	Entity* player = new Entity(new Transform(glm::vec3(70, 980, 1.1f), 45, glm::vec3(1, 0, 0), glm::vec3(3, 3, 3)), playerMesh);
+	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.28f, 0.6f), new Texture("./res/Textures/clown.png"));
+	Entity* player = new Entity(new Transform(glm::vec3(70, 980, 1.3f), 35, glm::vec3(1, 0, 0), glm::vec3(3, 3, 3)), playerMesh);
 	entities.push_back(player);
 
 	// Criação do Mapa
@@ -61,6 +62,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 		new Texture(mapPath)
 		);
 	this->entityMap = new EntityMap(new Transform(), mapMesh);
+	lastTime = 0;
 }
 
 Game::~Game()
@@ -71,7 +73,7 @@ Game::~Game()
 
 void Game::render()
 {
-	((EntityMap*)entityMap)->render(mapShader, light);
+	entityMap->render(mapShader, light);
 
 	for (Entity* e : entities)
 	{
@@ -88,7 +90,7 @@ void Game::update()
 {
 	input();
 	glm::vec3 camOri = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y, 0);
-	glm::vec3 camPos = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y-10, 30);
+	glm::vec3 camPos = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y-10, 15);
 	light->lightPosition.x = entities[0]->getTransform()->getPosition().x;
 	light->lightPosition.y = entities[0]->getTransform()->getPosition().y;
 
@@ -267,15 +269,51 @@ void Game::input()
 
 	if (Input::keyStates['r'])
 	{
-		charRot += 0.5f;
+		charRot += 0.1f;
 		entities[0]->getTransform()->rotate(charRot, glm::vec3(1, 0, 0));
+		std::cout << charRot << std::endl;
+	}
+	if (Input::keyStates['f'])
+	{
+		charRot -= 0.1f;
+		entities[0]->getTransform()->rotate(charRot, glm::vec3(1, 0, 0));
+		std::cout << charRot << std::endl;
+	}
+
+	if (Input::keyStates['t'])
+	{
+		
+
+		double now = Time::getTime();
+		double delta = now - lastTime;
+		
+		if (delta >= 0.3)
+		{
+			int randomNumberX;
+			int randomNumberY;
+			glm::vec3 newPos;
+			do{
+				randomNumberX = std::rand() % 1024;
+				randomNumberY = std::rand() % 1024;
+				newPos = glm::vec3((float)randomNumberX, (float)randomNumberY, 0);
+			} while (map->getMapCoordinateForPlayerMovement(newPos).terrain != NORMAL_FLOOR);
+
+			lastTime = Time::getTime();
+			entities[0]->getTransform()->translate(newPos.x, newPos.y, entities[0]->getTransform()->getPosition().z);
+		}
 	}
 
 	if (Input::keyStates['l'])
 	{
-	if (Mesh::drawForm == GL_TRIANGLES)
-		Mesh::drawForm = GL_LINES;
-	else
-		Mesh::drawForm = GL_TRIANGLES;
+		double now = Time::getTime();
+		if (now - lastTime >= 0.3)
+		{
+			if (Mesh::drawForm == GL_TRIANGLES)
+				Mesh::drawForm = GL_LINES;
+			else
+				Mesh::drawForm = GL_TRIANGLES;
+			lastTime = Time::getTime();
+		}
 	}
+
 }
