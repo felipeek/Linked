@@ -8,11 +8,13 @@ out vec2 uvCoords;
 
 uniform mat4 Model;
 uniform mat4 viewProj;
+uniform float textureNumRows;
+uniform vec2 textureOffset;
 
 void main()
 {
 	vec4 worldPosition = Model * vec4(vertexPosition_modelspace, 1.0);
 	gl_Position = viewProj * worldPosition;
 	uvCoords = vec2(textureCoord.x, textureCoord.y);
-
+	uvCoords = (uvCoords/textureNumRows) + textureOffset;
 }

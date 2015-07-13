@@ -165,3 +165,8 @@ void Mesh::renderMap()
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);
 }
+
+Texture* Mesh::getTexture0()
+{
+	return texture0;
+}

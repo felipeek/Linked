@@ -29,9 +29,9 @@ void Shader::stopShader()
 	glUseProgram(0);
 }
 
-void Shader::update(Transform* transform)
+void Shader::update(Transform* transform, Texture* texture)
 {
-	std::cout << "teste" << std::endl;
+	std::cout << "Shader abstrato update!" << std::endl;
 }
 
 void Shader::getUniformLocations()

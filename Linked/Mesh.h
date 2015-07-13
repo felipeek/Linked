@@ -18,6 +18,7 @@ public:
 	float reflectivity;
 	float glossiness;
 	static GLuint drawForm;
+	Texture* getTexture0();
 private:
 
 	GLuint VertexArrayID;

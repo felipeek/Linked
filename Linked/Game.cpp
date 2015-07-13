@@ -44,8 +44,9 @@ Game::Game(int windowsWidth, int windowsHeight)
 	this->mapShader = new MapShader("./shaders/mapshader", camera);
 	
 	// Criação do player
-	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.28f, 0.6f), new Texture("./res/Textures/clown.png"));
-	Entity* player = new Entity(new Transform(glm::vec3(70, 980, 1.3f), 40, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh);
+	//Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.28f, 0.6f), new Texture("./res/Textures/clown.png"));
+	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f), new Texture("./res/Textures/clownAtlas.png", 2, 2));
+	Entity* player = new Entity(new Transform(glm::vec3(70, 980, 1.0f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh);
 	entities.push_back(player);
 
 	// Criação do Mapa

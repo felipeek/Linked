@@ -23,7 +23,12 @@ Transform* Entity::getTransform()
 void Entity::render(Shader* shader)
 {
 	shader->useShader();
-	shader->update(transform);
+	shader->update(transform, mesh->getTexture0());
 	mesh->render();
 	shader->stopShader();
+}
+
+Texture* Entity::getTexture()
+{
+	return mesh->getTexture0();
 }
