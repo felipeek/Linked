@@ -63,7 +63,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	lastTime = 0;
 
 	// Movimento
-	playerMovement = new PlayerMovement(this->map);
+	playerMovement = new PlayerMovement(this->map, player);
 }
 
 Game::~Game()
@@ -104,64 +104,7 @@ float charRot = 0;
 
 void Game::input()
 {
-	float frameTime = (float)Display::frameTime;
-	glm::vec3 finalPos;
-
-	if (Input::keyStates['w'])
-	{
-		if (!Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
-		{
-			if (playerMovement->moveTo(NORTH, entities[0]->getTransform()->getPosition(), frameTime, true, &finalPos))
-				entities[0]->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
-		}
-		else
-		{
-			if (playerMovement->moveTo(NORTH, entities[0]->getTransform()->getPosition(), frameTime, false, &finalPos))
-				entities[0]->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
-		}
-	}
-
-	if (Input::keyStates['a'])
-	{
-		if (!Input::keyStates['w'] && !Input::keyStates['s'] && !Input::keyStates['d'])
-		{
-			if (playerMovement->moveTo(WEST, entities[0]->getTransform()->getPosition(), frameTime, true, &finalPos))
-				entities[0]->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
-		}
-		else
-		{
-			if (playerMovement->moveTo(WEST, entities[0]->getTransform()->getPosition(), frameTime, false, &finalPos))
-				entities[0]->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
-		}
-	}
-
-	if (Input::keyStates['s'])
-	{
-		if (!Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['d'])
-		{
-			if (playerMovement->moveTo(SOUTH, entities[0]->getTransform()->getPosition(), frameTime, true, &finalPos))
-				entities[0]->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
-		}
-		else
-		{
-			if (playerMovement->moveTo(SOUTH, entities[0]->getTransform()->getPosition(), frameTime, false, &finalPos))
-				entities[0]->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
-		}
-	}
-
-	if (Input::keyStates['d'])
-	{
-		if (!Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'])
-		{
-			if (playerMovement->moveTo(EAST, entities[0]->getTransform()->getPosition(), frameTime, true, &finalPos))
-				entities[0]->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
-		}
-		else
-		{
-			if (playerMovement->moveTo(EAST, entities[0]->getTransform()->getPosition(), frameTime, false, &finalPos))
-				entities[0]->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
-		}
-	}
+	playerMovement->inputPlayerMovement();
 
 	if (Input::keyStates['8'])
 		light->lightPosition.y += 1.0f;

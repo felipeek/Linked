@@ -1,18 +1,79 @@
 #include "PlayerMovement.h"
-
-#define SLIDE_FACTOR 60
-#define SLIDE_SPEED_FACTOR 0.01f
-#define PLAYER_SPEED 60
+#include "Input.h"
+#include "Display.h"
 
 
-PlayerMovement::PlayerMovement(Map* map)
+PlayerMovement::PlayerMovement(Map* map, Entity* player)
 {
 	this->map = map;
+	this->player = player;
 }
 
 
 PlayerMovement::~PlayerMovement()
 {
+}
+
+void PlayerMovement::inputPlayerMovement()
+{
+	glm::vec3 finalPos;
+	float frameTime = Display::frameTime;
+
+	if (Input::keyStates['w'])
+	{
+		if (!Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
+		{
+			if (moveTo(NORTH, player->getTransform()->getPosition(), frameTime, true, &finalPos))
+				player->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
+		}
+		else
+		{
+			if (moveTo(NORTH, player->getTransform()->getPosition(), frameTime, false, &finalPos))
+				player->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
+		}
+	}
+
+	if (Input::keyStates['a'])
+	{
+		if (!Input::keyStates['w'] && !Input::keyStates['s'] && !Input::keyStates['d'])
+		{
+			if (moveTo(WEST, player->getTransform()->getPosition(), frameTime, true, &finalPos))
+				player->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
+		}
+		else
+		{
+			if (moveTo(WEST, player->getTransform()->getPosition(), frameTime, false, &finalPos))
+				player->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
+		}
+	}
+
+	if (Input::keyStates['s'])
+	{
+		if (!Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['d'])
+		{
+			if (moveTo(SOUTH, player->getTransform()->getPosition(), frameTime, true, &finalPos))
+				player->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
+		}
+		else
+		{
+			if (moveTo(SOUTH, player->getTransform()->getPosition(), frameTime, false, &finalPos))
+				player->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
+		}
+	}
+
+	if (Input::keyStates['d'])
+	{
+		if (!Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'])
+		{
+			if (moveTo(EAST, player->getTransform()->getPosition(), frameTime, true, &finalPos))
+				player->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
+		}
+		else
+		{
+			if (moveTo(EAST, player->getTransform()->getPosition(), frameTime, false, &finalPos))
+				player->getTransform()->translate(finalPos.x, finalPos.y, finalPos.z);
+		}
+	}
 }
 
 bool PlayerMovement::moveTo(MovementDirection direction, glm::vec3 currentPosition, float frameTime, bool isOnlyKeyPressed, glm::vec3 *endPosition)
