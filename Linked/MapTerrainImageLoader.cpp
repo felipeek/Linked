@@ -63,7 +63,7 @@ MapTerrain MapTerrainImageLoader::transformRgbIntoMapTerrain(vec3 rgb)
 {
 	/* TRANSFORMATION MAP DEFINITION */
 
-	const int threshold = 1;
+	const int threshold = 62;
 
 	if (rgb.r < threshold && rgb.g < threshold && rgb.b < threshold)
 		return BLOCKED;

@@ -55,7 +55,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 		new Texture("./res/Maps/stonePath.png"),
 		new Texture("./res/Maps/mountain.jpg"),
 		new Texture("./res/Maps/water.jpg"),
-		new Texture("./res/Maps/grassTex_00000.png"),
+		new Texture("./res/Maps/grassTex.png"),
 		new Texture(mapPath)
 		);
 	this->entityMap = new EntityMap(new Transform(), mapMesh);
@@ -92,7 +92,7 @@ void Game::update()
 {
 	input();
 	glm::vec3 camOri = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y, 0);
-	glm::vec3 camPos = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y-10, 15);
+	glm::vec3 camPos = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y-10, 20);
 	light->lightPosition.x = entities[0]->getTransform()->getPosition().x;
 	light->lightPosition.y = entities[0]->getTransform()->getPosition().y;
 
