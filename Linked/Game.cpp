@@ -45,7 +45,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	
 	// Criação do player
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.28f, 0.6f), new Texture("./res/Textures/clown.png"));
-	Entity* player = new Entity(new Transform(glm::vec3(70, 980, 1.3f), 40, glm::vec3(1, 0, 0), glm::vec3(3, 3, 3)), playerMesh);
+	Entity* player = new Entity(new Transform(glm::vec3(70, 980, 1.3f), 40, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh);
 	entities.push_back(player);
 
 	// Criação do Mapa
@@ -55,7 +55,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 		new Texture("./res/Maps/stonePath.png"),
 		new Texture("./res/Maps/mountain.jpg"),
 		new Texture("./res/Maps/water.jpg"),
-		new Texture("./res/Maps/dirt.png"),
+		new Texture("./res/Maps/grassTex_00000.png"),
 		new Texture(mapPath)
 		);
 	this->entityMap = new EntityMap(new Transform(), mapMesh);
