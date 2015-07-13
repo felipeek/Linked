@@ -9,7 +9,10 @@ Entity::Entity(Transform* transform, Mesh* mesh)
 
 Entity::~Entity()
 {
-	delete transform;
+	if (transform != NULL)
+		delete transform;
+	if (mesh != NULL)
+		delete mesh;
 }
 
 Transform* Entity::getTransform()
@@ -22,13 +25,5 @@ void Entity::render(Shader* shader)
 	shader->useShader();
 	shader->update(transform);
 	mesh->render();
-	shader->stopShader();
-}
-
-void Entity::renderMap(MapShader* shader, Light* light)
-{
-	shader->useShader();
-	shader->update(transform, light);
-	mesh->renderMap();
 	shader->stopShader();
 }

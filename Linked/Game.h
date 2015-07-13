@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Entity.h"
+#include "EntityMap.h"
 #include "Camera.h"
 #include "PrimitiveShader.h"
 #include "MapShader.h"
@@ -17,6 +17,10 @@ private:
 	std::vector<Entity*> entities;
 	Camera* camera;
 	PrimitiveShader* shader;
+	Light* light;
+	EntityMap* entityMap;
+	MapShader* mapShader;
+	Map* map;
 
 	void input();
 	void printCoordinate(int x, int y);

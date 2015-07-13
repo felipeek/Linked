@@ -12,11 +12,8 @@
 #include "Map.h"
 #include "Display.h"
 
-#define SLIDE_FACTOR 100
-#define SLIDE_SPEED_FACTOR 1.0
-
-MapShader* mapShader;
-Entity* map;
+#define SLIDE_FACTOR 60
+#define SLIDE_SPEED_FACTOR 0.01f
 
 /*void Game::printCoordinate(int x, int y)
 {
@@ -40,34 +37,30 @@ Entity* map;
 	std::cout << enumr << std::endl << std:: endl;
 }*/
 
-Map* mapM;
-Light* light;
-Entity* entity;
-
 Game::Game(int windowsWidth, int windowsHeight)
-{
+{	
+	// Câmera luz e shaders
+	this->camera = new Camera(glm::vec3(0, 0, 50), glm::vec3(0, 0, 0), 70.0f, (float)windowsWidth / windowsHeight, 0.1f, 2500.0f);
+	this->light = new Light(glm::vec3(100, 500, 10), glm::vec3(1, 1, 1));
+	this->shader = new PrimitiveShader("./shaders/normalshader", camera);
+	this->mapShader = new MapShader("./shaders/mapshader", camera);
+	
+	// Criação do player
+	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.28f, 0.5f), new Texture("./res/Textures/clown.png"));
+	Entity* player = new Entity(new Transform(glm::vec3(70, 980, 1.1f), 45, glm::vec3(1, 0, 0), glm::vec3(3, 3, 3)), playerMesh);
+	entities.push_back(player);
+
+	// Criação do Mapa
 	std::string mapPath = "./res/Maps/maze.png";
-	Mesh* mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.28f, 0.5f), new Texture("./res/Textures/clown.png"));
-	light = new Light(glm::vec3(100, 500, 10), glm::vec3(1, 1, 1));
-
-	mapM = new Map(mapPath, mapPath, 3);
-
-	Mesh* mesh2 = new Mesh(new Grid(1024, mapM),
+	this->map = new Map(mapPath, mapPath, 3);
+	Mesh* mapMesh = new Mesh(new Grid(1024, this->map),
 		new Texture("./res/Maps/stonePath.png"),
 		new Texture("./res/Maps/mountain.jpg"),
 		new Texture("./res/Maps/water.jpg"),
 		new Texture("./res/Maps/dirt.png"),
 		new Texture(mapPath)
 		);
-	entity = new Entity(new Transform(70,980,1.1f), mesh);
-	entity->getTransform()->scale(3, 3, 3);
-	entity->getTransform()->rotate(45, glm::vec3(1, 0, 0));
-	map = new Entity(new Transform(), mesh2);
-	this->camera = new Camera(glm::vec3(0,0,50), glm::vec3(0,0,0), 70.0f, (float)windowsWidth/windowsHeight, 0.1f, 2500.0f);
-	this->shader = new PrimitiveShader("./shaders/normalshader", camera);
-
-	mapShader = new MapShader("./shaders/mapshader", camera);
-	entities.push_back(entity);
+	this->entityMap = new EntityMap(new Transform(), mapMesh);
 }
 
 Game::~Game()
@@ -78,7 +71,8 @@ Game::~Game()
 
 void Game::render()
 {
-	map->renderMap(mapShader, light);
+	((EntityMap*)entityMap)->render(mapShader, light);
+
 	for (Entity* e : entities)
 	{
 		try{
@@ -95,8 +89,8 @@ void Game::update()
 	input();
 	glm::vec3 camOri = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y, 0);
 	glm::vec3 camPos = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y-10, 30);
-	light->lightPosition.x = entity->getTransform()->getPosition().x;
-	light->lightPosition.y = entity->getTransform()->getPosition().y;
+	light->lightPosition.x = entities[0]->getTransform()->getPosition().x;
+	light->lightPosition.y = entities[0]->getTransform()->getPosition().y;
 
 	camera->setCamPosition(camPos);
 	camera->setCamOrientation(camOri);
@@ -106,7 +100,7 @@ float charRot = 0;
 
 void Game::input()
 {
-	float speed = 100;
+	float speed = 15;
 
 	glm::vec3 lastPos = entities[0]->getTransform()->getPosition();
 
@@ -115,7 +109,7 @@ void Game::input()
 		glm::vec3 nextPos = glm::vec3(entities[0]->getTransform()->getPosition().x,
 			entities[0]->getTransform()->getPosition().y + (float)Display::frameTime * speed,
 			entities[0]->getTransform()->getPosition().z);
-		if (!MapCoordinate::isOfCollisionType(mapM->getMapCoordinateForPlayerMovement(nextPos).terrain))
+		if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(nextPos).terrain))
 			entities[0]->getTransform()->translate(nextPos.x, nextPos.y, nextPos.z);
 		else
 		{
@@ -127,7 +121,7 @@ void Game::input()
 					leftPos.x = leftPos.x - (float)i * ((float)Display::frameTime * speed/10);
 					glm::vec3 rightPos = nextPos;
 					rightPos.x = rightPos.x + (float)i * ((float)Display::frameTime * speed / 10);
-					if (!MapCoordinate::isOfCollisionType(mapM->getMapCoordinateForPlayerMovement(rightPos).terrain))
+					if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(rightPos).terrain))
 					{
 						glm::vec3 inlineRightPos = lastPos;
 						inlineRightPos.x = inlineRightPos.x + SLIDE_SPEED_FACTOR;
@@ -135,7 +129,7 @@ void Game::input()
 						break;
 					}
 					else
-					if (!MapCoordinate::isOfCollisionType(mapM->getMapCoordinateForPlayerMovement(leftPos).terrain))
+					if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(leftPos).terrain))
 					{
 						glm::vec3 inlineLeftPos = lastPos;
 						inlineLeftPos.x = inlineLeftPos.x - SLIDE_SPEED_FACTOR;
@@ -152,7 +146,7 @@ void Game::input()
 		glm::vec3 nextPos = glm::vec3(entities[0]->getTransform()->getPosition().x,
 			entities[0]->getTransform()->getPosition().y - (float)Display::frameTime * speed,
 			entities[0]->getTransform()->getPosition().z);
-		if (!MapCoordinate::isOfCollisionType(mapM->getMapCoordinateForPlayerMovement(nextPos).terrain))
+		if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(nextPos).terrain))
 			entities[0]->getTransform()->translate(nextPos.x, nextPos.y, nextPos.z);
 		else
 		{
@@ -164,7 +158,7 @@ void Game::input()
 					leftPos.x = leftPos.x - (float)i * ((float)Display::frameTime * speed / 10);
 					glm::vec3 rightPos = nextPos;
 					rightPos.x = rightPos.x + (float)i * ((float)Display::frameTime * speed / 10);
-					if (!MapCoordinate::isOfCollisionType(mapM->getMapCoordinateForPlayerMovement(rightPos).terrain))
+					if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(rightPos).terrain))
 					{
 						glm::vec3 inlineRightPos = lastPos;
 						inlineRightPos.x = inlineRightPos.x + SLIDE_SPEED_FACTOR;
@@ -172,7 +166,7 @@ void Game::input()
 						break;
 					}
 					else
-						if (!MapCoordinate::isOfCollisionType(mapM->getMapCoordinateForPlayerMovement(leftPos).terrain))
+						if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(leftPos).terrain))
 						{
 							glm::vec3 inlineLeftPos = lastPos;
 							inlineLeftPos.x = inlineLeftPos.x - SLIDE_SPEED_FACTOR;
@@ -189,7 +183,7 @@ void Game::input()
 		glm::vec3 nextPos = glm::vec3(entities[0]->getTransform()->getPosition().x - (float)Display::frameTime * speed,
 			entities[0]->getTransform()->getPosition().y,
 			entities[0]->getTransform()->getPosition().z);
-		if (!MapCoordinate::isOfCollisionType(mapM->getMapCoordinateForPlayerMovement(nextPos).terrain))
+		if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(nextPos).terrain))
 			entities[0]->getTransform()->translate(nextPos.x, nextPos.y, nextPos.z);
 		else
 		{
@@ -201,7 +195,7 @@ void Game::input()
 					southPos.y = southPos.y - (float)i * ((float)Display::frameTime * speed / 10);
 					glm::vec3 northPos = nextPos;
 					northPos.y = northPos.y + (float)i * ((float)Display::frameTime * speed / 10);
-					if (!MapCoordinate::isOfCollisionType(mapM->getMapCoordinateForPlayerMovement(southPos).terrain))
+					if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(southPos).terrain))
 					{
 						glm::vec3 inlineSouthPos = lastPos;
 						inlineSouthPos.y = inlineSouthPos.y - SLIDE_SPEED_FACTOR;
@@ -209,7 +203,7 @@ void Game::input()
 						break;
 					}
 					else
-						if (!MapCoordinate::isOfCollisionType(mapM->getMapCoordinateForPlayerMovement(northPos).terrain))
+						if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(northPos).terrain))
 						{
 							glm::vec3 inlineNorthPos = lastPos;
 							inlineNorthPos.y = inlineNorthPos.y + SLIDE_SPEED_FACTOR;
@@ -226,7 +220,7 @@ void Game::input()
 		glm::vec3 nextPos = glm::vec3(entities[0]->getTransform()->getPosition().x + (float)Display::frameTime * speed,
 			entities[0]->getTransform()->getPosition().y,
 			entities[0]->getTransform()->getPosition().z);
-		if (!MapCoordinate::isOfCollisionType(mapM->getMapCoordinateForPlayerMovement(nextPos).terrain))
+		if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(nextPos).terrain))
 			entities[0]->getTransform()->translate(nextPos.x, nextPos.y, nextPos.z);
 		else
 		{
@@ -238,7 +232,7 @@ void Game::input()
 					southPos.y = southPos.y - (float)i * ((float)Display::frameTime * speed / 10);
 					glm::vec3 northPos = nextPos;
 					northPos.y = northPos.y + (float)i * ((float)Display::frameTime * speed / 10);
-					if (!MapCoordinate::isOfCollisionType(mapM->getMapCoordinateForPlayerMovement(southPos).terrain))
+					if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(southPos).terrain))
 					{
 						glm::vec3 inlineSouthPos = lastPos;
 						inlineSouthPos.y = inlineSouthPos.y - SLIDE_SPEED_FACTOR;
@@ -246,7 +240,7 @@ void Game::input()
 						break;
 					}
 					else
-						if (!MapCoordinate::isOfCollisionType(mapM->getMapCoordinateForPlayerMovement(northPos).terrain))
+						if (!MapCoordinate::isOfCollisionType(map->getMapCoordinateForPlayerMovement(northPos).terrain))
 						{
 							glm::vec3 inlineNorthPos = lastPos;
 							inlineNorthPos.y = inlineNorthPos.y + SLIDE_SPEED_FACTOR;

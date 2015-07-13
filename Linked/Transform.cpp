@@ -1,18 +1,24 @@
 #include "Transform.h"
 
 
-Transform::Transform() : Transform(0, 0, 0){}
+Transform::Transform() : Transform(glm::vec3(0,0,0)){}
 
-Transform::Transform(float x, float y, float z)
+Transform::Transform(glm::vec3 position)
 {
-	translationMatrix = glm::translate(glm::mat4(), glm::vec3(x,y,z));
-	mPosition = glm::vec3(x, y, z);
+	translationMatrix = glm::translate(glm::mat4(), position);
+	mPosition = position;
 	scaleMatrix = glm::mat4(1.0f);
 	rotationMatrix = glm::mat4(1.0f);
 	angleY = 0;
 	updateModel();
 }
 
+Transform::Transform(glm::vec3 position, float angle, glm::vec3 axis, glm::vec3 size) : Transform(position)
+{
+	rotate(angle, axis);
+	scale(size.x, size.y, size.z);
+	updateModel();
+}
 
 Transform::~Transform()
 {

@@ -10,9 +10,8 @@ public:
 	Entity(Transform* transform, Mesh* mesh);
 	~Entity();
 	Transform* getTransform();
-	void render(Shader* shader);
-	void renderMap(MapShader* shader, Light* light);
-private:
+	virtual void render(Shader* shader);
+protected:
 	Transform* transform;
 	Mesh* mesh;
 };

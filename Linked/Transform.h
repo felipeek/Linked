@@ -6,7 +6,9 @@ class Transform
 {
 public:
 	Transform();
-	Transform(float x, float y, float z);
+	Transform(glm::vec3 position);
+	Transform(glm::vec3 position, float angle, glm::vec3 axis, glm::vec3 scale);
+
 	~Transform();
 	glm::mat4 model;
 

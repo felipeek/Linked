@@ -1,7 +1,7 @@
 #include "MapTerrainImageLoader.h"
 #include <string>
 #include <iostream>
-#define COLLISION_FACTOR 3
+#define COLLISION_FACTOR 1
 
 using namespace glm;
 

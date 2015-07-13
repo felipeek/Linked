@@ -73,6 +73,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="EntityMap.h" />
     <ClInclude Include="Equipment.h" />
     <ClInclude Include="EquipmentFactory.h" />
     <ClInclude Include="Game.h" />
@@ -104,6 +105,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EntityMap.cpp" />
     <ClCompile Include="Equipment.cpp" />
     <ClCompile Include="EquipmentFactory.cpp" />
     <ClCompile Include="Game.cpp" />
