@@ -12,8 +12,10 @@ public:
 	Transform* getTransform();
 	virtual void render(Shader* shader);
 	Texture* getTexture();
+	Mesh* getMesh();
 protected:
 	Transform* transform;
 	Mesh* mesh;
+	Texture* texture;
 };
 

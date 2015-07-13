@@ -23,29 +23,7 @@
 #include <iostream>
 #include <cstdlib>
 
-float cameraDistance = 30;
-
-/*void Game::printCoordinate(int x, int y)
-{
-	std::string objectMapPath = "./res/Maps/objectmap.png";
-	std::string heightMapPath = "./res/Maps/heightmap.png";
-	std::string enumr = "teste";
-	Map myOwnMap = Map(objectMapPath, heightMapPath, 3);
-	MapCoordinate coord = myOwnMap.getMapCoordinate(glm::vec3(x, y, 0));
-	switch (coord.object)
-	{
-	case NORMAL_FLOOR: enumr = "NORMAL_FLOOR"; break;
-	case BLOCKED: enumr = "BLOCKED"; break;
-	case HOLE: enumr = "HOLE"; break;
-	case SPIKES: enumr = "SPIKES"; break;
-	case FIRE: enumr = "FIRE"; break;
-	case MUD: enumr = "MUD"; break;
-	case SLIPPERY: enumr = "SLIPPERY"; break;
-	default:
-		enumr = "nenhum"; break;
-	}
-	std::cout << enumr << std::endl << std:: endl;
-}*/
+float cameraDistance = 20;
 
 Game::Game(int windowsWidth, int windowsHeight)
 {	
@@ -159,8 +137,6 @@ void Game::input()
 
 	if (Input::keyStates['t'])
 	{
-		
-
 		double now = Time::getTime();
 		double delta = now - lastTime;
 		
@@ -203,4 +179,37 @@ void Game::input()
 		if (cameraDistance > 10)
 			cameraDistance -= 1.0f;
 	}
+
+	if (Input::attack)
+	{
+		glm::vec3 attackVector = Input::mouseAttack.attack(entities[0]->getTransform()->getPosition());
+		float pz = entities[0]->getTransform()->getPosition().z;
+		glm::vec3 projVector = attackVector;
+		projVector.z = pz;
+		//entities[0]->getTransform()->translate(attackVector.x, attackVector.y, pz);
+		Entity* entityD = new Entity(new Transform(projVector, 35, glm::vec3(1,0,0), glm::vec3(10,10,10)), entities[0]->getMesh());
+		entities.push_back(entityD);
+	}
 }
+
+/*void Game::printCoordinate(int x, int y)
+{
+std::string objectMapPath = "./res/Maps/objectmap.png";
+std::string heightMapPath = "./res/Maps/heightmap.png";
+std::string enumr = "teste";
+Map myOwnMap = Map(objectMapPath, heightMapPath, 3);
+MapCoordinate coord = myOwnMap.getMapCoordinate(glm::vec3(x, y, 0));
+switch (coord.object)
+{
+case NORMAL_FLOOR: enumr = "NORMAL_FLOOR"; break;
+case BLOCKED: enumr = "BLOCKED"; break;
+case HOLE: enumr = "HOLE"; break;
+case SPIKES: enumr = "SPIKES"; break;
+case FIRE: enumr = "FIRE"; break;
+case MUD: enumr = "MUD"; break;
+case SLIPPERY: enumr = "SLIPPERY"; break;
+default:
+enumr = "nenhum"; break;
+}
+std::cout << enumr << std::endl << std:: endl;
+}*/

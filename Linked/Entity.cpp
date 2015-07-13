@@ -31,3 +31,8 @@ Texture* Entity::getTexture()
 {
 	return mesh->getTexture0();
 }
+
+Mesh* Entity::getMesh()
+{
+	return mesh;
+}

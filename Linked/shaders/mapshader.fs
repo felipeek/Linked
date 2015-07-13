@@ -32,10 +32,10 @@ void main(){
 	
 	float backTextureAmount = 1 - (blendMapColor.r + blendMapColor.g + blendMapColor.b);
 	vec2 tiledCoords = uvCoords * 40.0;
-	vec4 backgroundTextureColor = texture(Blocked, tiledCoords) * backTextureAmount;
-	vec4 rTextureColor = texture(Dirt, tiledCoords*2) * blendMapColor.r;
+	vec4 backgroundTextureColor = texture(Blocked, tiledCoords*1.5) * backTextureAmount;
+	vec4 rTextureColor = texture(Dirt, tiledCoords*4) * blendMapColor.r;
 	vec4 gTextureColor = texture(Water, tiledCoords) * blendMapColor.g;
-	vec4 bTextureColor = texture(NormalFloor, tiledCoords*2) * blendMapColor.b;
+	vec4 bTextureColor = texture(NormalFloor, tiledCoords*4) * blendMapColor.b;
 
 	vec4 totalColor;
 
