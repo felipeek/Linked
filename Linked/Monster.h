@@ -2,6 +2,7 @@
 #include "Entity.h"
 class MonsterAI;
 class Map;
+enum MovementDirection;
 
 class Monster : public Entity
 {
@@ -27,6 +28,7 @@ public:
 	glm::vec3 getMapColor();
 	void setMapColor(glm::vec3 mapColor);
 	void moveTo(Entity* entity, Map* map);
+	void moveAway(Entity* entity, Map* map);
 private:
 	std::string name;
 	unsigned int hp;
@@ -35,4 +37,5 @@ private:
 	unsigned int speed;
 	glm::vec3 mapColor;
 	MonsterAI* ai;
+	void changeTextureBasedOnMovementDirection(MovementDirection direction);
 };

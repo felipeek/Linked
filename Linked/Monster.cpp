@@ -107,31 +107,43 @@ void Monster::moveTo(Entity* entity, Map* map)
 {
 	float rangeSpeed = speed * (float)Display::frameTime;
 
-	MovementDefinition movement = ai->moveTo(this->getTransform()->getPosition(),
+	MovementDefinition movement = ai->moveTo(map, this->getTransform()->getPosition(),
 		entity->getTransform()->getPosition(), rangeSpeed);
 
-	if (!MapTerrainImageLoader::isOfCollisionType(map->getMapCoordinateForPlayerMovement(movement.movement).terrain))
-	{
-		switch (movement.direction)
-		{
-		case TOP:
-		case TOP_LEFT:
-			this->getTexture()->setIndex(3);
-			break;
-		case RIGHT:
-		case TOP_RIGHT:
-			this->getTexture()->setIndex(0);
-			break;
-		case BOTTOM:
-		case BOTTOM_RIGHT:
-			this->getTexture()->setIndex(2);
-			break;
-		case LEFT:
-		case BOTTOM_LEFT:
-			this->getTexture()->setIndex(1);
-			break;
-		}
-
+	if (movement.doMove)
 		this->getTransform()->translate(movement.movement.x, movement.movement.y, movement.movement.z);
+}
+
+void Monster::moveAway(Entity* entity, Map* map)
+{
+	float rangeSpeed = speed * (float)Display::frameTime;
+
+	MovementDefinition movement = ai->moveAway(map, this->getTransform()->getPosition(),
+		entity->getTransform()->getPosition(), rangeSpeed);
+
+	if (movement.doMove)
+		this->getTransform()->translate(movement.movement.x, movement.movement.y, movement.movement.z);
+}
+
+void Monster::changeTextureBasedOnMovementDirection(MovementDirection direction)
+{
+	switch (direction)
+	{
+	case TOP:
+	case TOP_LEFT:
+		this->getTexture()->setIndex(3);
+		break;
+	case RIGHT:
+	case TOP_RIGHT:
+		this->getTexture()->setIndex(0);
+		break;
+	case BOTTOM:
+	case BOTTOM_RIGHT:
+		this->getTexture()->setIndex(2);
+		break;
+	case LEFT:
+	case BOTTOM_LEFT:
+		this->getTexture()->setIndex(1);
+		break;
 	}
 }

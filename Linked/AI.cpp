@@ -1,5 +1,6 @@
 #include "AI.h"
 #include "Display.h"
+#include "Map.h"
 #include <stdlib.h>
 #include <time.h>
 
@@ -13,9 +14,10 @@ AI::~AI()
 {
 }
 
-MovementDefinition AI::moveTo(glm::vec3 reference, glm::vec3 destination, float rangeSpeed)
+MovementDefinition AI::moveTo(Map* map, glm::vec3 reference, glm::vec3 destination, float rangeSpeed)
 {
 	MovementDefinition movDef = MovementDefinition();
+	movDef.doMove = false;
 	float distance = glm::length(reference - destination);
 	glm::vec3 movement = glm::vec3(reference.x, reference.y, reference.z);
 
@@ -65,64 +67,84 @@ MovementDefinition AI::moveTo(glm::vec3 reference, glm::vec3 destination, float 
 			movement.y = movement.y - rangeSpeed;
 			movDef.direction = BOTTOM;
 		}
+
+		if (!MapTerrainImageLoader::isOfCollisionType(map->getMapCoordinateForPlayerMovement(movement).terrain))
+		{
+			movDef.doMove = true;
+			movDef.movement = movement;
+		}
 	}
 	else
 	{
-		if (randAuxiliarValue >= RANDOM_MOVEMENT_FACTOR)
-		{
-			randNumber = rand() % 8;
-			randAuxiliarValue = 0;
-		}
-		else
-			randAuxiliarValue++;
-
-		switch (randNumber)
-		{
-		case 0:
-			movement.x = movement.x + rangeSpeed;
-			movement.y = movement.y + rangeSpeed;
-			movDef.direction = TOP_RIGHT;
-			break;
-		case 1:
-			movement.x = movement.x + rangeSpeed;
-			movement.y = movement.y - rangeSpeed;
-			movDef.direction = BOTTOM_RIGHT;
-			break;
-		case 2:
-			movement.x = movement.x - rangeSpeed;
-			movement.y = movement.y + rangeSpeed;
-			movDef.direction = TOP_LEFT;
-			break;
-		case 3:
-			movement.x = movement.x - rangeSpeed;
-			movement.y = movement.y - rangeSpeed;
-			movDef.direction = BOTTOM_LEFT;
-			break;
-		case 4:
-			movement.x = movement.x + rangeSpeed;
-			movDef.direction = RIGHT;
-			break;
-		case 5:
-			movement.x = movement.x - rangeSpeed;
-			movDef.direction = LEFT;
-			break;
-		case 6:
-			movement.y = movement.y + rangeSpeed;
-			movDef.direction = TOP;
-			break;
-		case 7:
-			movement.y = movement.y - rangeSpeed;
-			movDef.direction = BOTTOM;
-			break;
-		}
+		movDef = moveToRandomPosition(map, reference, destination, rangeSpeed);
 	}
-
-	movDef.movement = movement;
 
 	return movDef;
 }
 
-MovementDefinition AI::moveAway(glm::vec3 reference, glm::vec3 destination, float rangeSpeed)
+MovementDefinition AI::moveToRandomPosition(Map* map, glm::vec3 reference, glm::vec3 destination, float rangeSpeed)
+{
+	MovementDefinition movDef = MovementDefinition();
+	glm::vec3 movement = glm::vec3(reference.x, reference.y, reference.z);
+
+	if (randAuxiliarValue >= RANDOM_MOVEMENT_FACTOR)
+	{
+		randNumber = rand() % 8;
+		randAuxiliarValue = 0;
+	}
+	else
+		randAuxiliarValue++;
+
+	switch (randNumber)
+	{
+	case 0:
+		movement.x = movement.x + rangeSpeed;
+		movement.y = movement.y + rangeSpeed;
+		movDef.direction = TOP_RIGHT;
+		break;
+	case 1:
+		movement.x = movement.x + rangeSpeed;
+		movement.y = movement.y - rangeSpeed;
+		movDef.direction = BOTTOM_RIGHT;
+		break;
+	case 2:
+		movement.x = movement.x - rangeSpeed;
+		movement.y = movement.y + rangeSpeed;
+		movDef.direction = TOP_LEFT;
+		break;
+	case 3:
+		movement.x = movement.x - rangeSpeed;
+		movement.y = movement.y - rangeSpeed;
+		movDef.direction = BOTTOM_LEFT;
+		break;
+	case 4:
+		movement.x = movement.x + rangeSpeed;
+		movDef.direction = RIGHT;
+		break;
+	case 5:
+		movement.x = movement.x - rangeSpeed;
+		movDef.direction = LEFT;
+		break;
+	case 6:
+		movement.y = movement.y + rangeSpeed;
+		movDef.direction = TOP;
+		break;
+	case 7:
+		movement.y = movement.y - rangeSpeed;
+		movDef.direction = BOTTOM;
+		break;
+	}
+
+	if (!MapTerrainImageLoader::isOfCollisionType(map->getMapCoordinateForPlayerMovement(movement).terrain))
+	{
+		movDef.doMove = true;
+		movDef.movement = movement;
+	}
+
+	return movDef;
+}
+
+MovementDefinition AI::moveAway(Map* map, glm::vec3 reference, glm::vec3 destination, float rangeSpeed)
 {
 	MovementDefinition movDef = MovementDefinition();
 	float distance = glm::length(reference - destination);
@@ -174,59 +196,17 @@ MovementDefinition AI::moveAway(glm::vec3 reference, glm::vec3 destination, floa
 			movement.y = movement.y - rangeSpeed;
 			movDef.direction = BOTTOM;
 		}
+
+		if (!MapTerrainImageLoader::isOfCollisionType(map->getMapCoordinateForPlayerMovement(movement).terrain))
+		{
+			movDef.doMove = true;
+			movDef.movement = movement;
+		}
 	}
 	else
 	{
-		if (randAuxiliarValue >= RANDOM_MOVEMENT_FACTOR)
-		{
-			randNumber = rand() % 8;
-			randAuxiliarValue = 0;
-		}
-		else
-			randAuxiliarValue++;
-
-		switch (randNumber)
-		{
-		case 0:
-			movement.x = movement.x + rangeSpeed;
-			movement.y = movement.y + rangeSpeed;
-			movDef.direction = TOP_RIGHT;
-			break;
-		case 1:
-			movement.x = movement.x + rangeSpeed;
-			movement.y = movement.y - rangeSpeed;
-			movDef.direction = BOTTOM_RIGHT;
-			break;
-		case 2:
-			movement.x = movement.x - rangeSpeed;
-			movement.y = movement.y + rangeSpeed;
-			movDef.direction = TOP_LEFT;
-			break;
-		case 3:
-			movement.x = movement.x - rangeSpeed;
-			movement.y = movement.y - rangeSpeed;
-			movDef.direction = BOTTOM_LEFT;
-			break;
-		case 4:
-			movement.x = movement.x + rangeSpeed;
-			movDef.direction = RIGHT;
-			break;
-		case 5:
-			movement.x = movement.x - rangeSpeed;
-			movDef.direction = LEFT;
-			break;
-		case 6:
-			movement.y = movement.y + rangeSpeed;
-			movDef.direction = TOP;
-			break;
-		case 7:
-			movement.y = movement.y - rangeSpeed;
-			movDef.direction = BOTTOM;
-			break;
-		}
+		movDef = moveToRandomPosition(map, reference, destination, rangeSpeed);
 	}
-
-	movDef.movement = movement;
 
 	return movDef;
 }
