@@ -183,6 +183,12 @@
     <ClInclude Include="MonsterAI.h">
       <Filter>Header Files\Game\AI</Filter>
     </ClInclude>
+    <ClInclude Include="RangeAttack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -295,6 +301,12 @@
     </ClCompile>
     <ClCompile Include="MonsterAI.cpp">
       <Filter>Source Files\Game\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="RangeAttack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Projectile.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
