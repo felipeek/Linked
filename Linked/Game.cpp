@@ -36,7 +36,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	// Criação do player
 	//Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.28f, 0.6f), new Texture("./res/Textures/clown.png"));
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f));
-	Entity* player = new Entity(new Transform(glm::vec3(70, 980, 1.0f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Textures/clownAtlas.png", 2, 2));
+	player = new Entity(new Transform(glm::vec3(70, 980, 1.0f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Textures/clownAtlas.png", 2, 2));
 	entities.push_back(player);
 
 	// Criação do Mapa
@@ -116,6 +116,9 @@ void Game::update()
 
 	camera->setCamPosition(camPos);
 	camera->setCamOrientation(camOri);
+
+	for (Monster* monster : monsters)
+		monster->moveTo(player, map);
 }
 
 float charRot = 0;

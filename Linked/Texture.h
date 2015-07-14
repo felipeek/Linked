@@ -14,8 +14,10 @@ public:
 	void setIndex(int i);
 	float numRows;
 	glm::vec2 offset;
+	std::string getFilename();
 private:
 	float index;
 	void calcAtlas();
+	std::string fileName;
 };
 

@@ -76,10 +76,12 @@ Monster* MonsterFactory::generateCopyOfMonster(Monster* monster)
 	copy->setHp(monster->getHp());
 	copy->setMapColor(monster->getMapColor());
 	copy->setName(monster->getName());
+	copy->setSpeed(monster->getSpeed());
 	// Copy Mesh (The same mesh will be setted for all monsters of same class)
 	copy->setMesh(monster->getMesh());
-	// Copy Texture (The same texture will be setted for all monsters of same class)
-	copy->setTexture(monster->getTexture());
+	// Copy Texture (A new texture object must be created for each monster)
+	Texture* monsterTexture = monster->getTexture();
+	copy->setTexture(new Texture(monster->getTexture()->getFilename(), 2, 2));
 	// Copy Transform (A new transform object must be created for each monster)
 	Transform *monsterTransform = monster->getTransform();
 	vec3 monsterTransformPosition = monsterTransform->getPosition();
@@ -121,6 +123,8 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 				monster->setAttack(std::atoi(nodeValue));
 			else if (nodeName == DEFENSE_NODE)
 				monster->setDefense(std::atoi(nodeValue));
+			else if (nodeName == SPEED_NODE)
+				monster->setSpeed(std::atoi(nodeValue));
 			else if (nodeName == RED_NODE)
 				monster->setMapColorRed(std::atoi(nodeValue));
 			else if (nodeName == GREEN_NODE)

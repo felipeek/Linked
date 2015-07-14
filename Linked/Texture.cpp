@@ -3,6 +3,7 @@
 
 Texture::Texture(std::string fileName) : ImageLoader(fileName, 4)
 {
+	this->fileName = fileName;
 	numRows = 1;
 	index = 0;
 	calcAtlas();
@@ -11,6 +12,7 @@ Texture::Texture(std::string fileName) : ImageLoader(fileName, 4)
 
 Texture::Texture(std::string fileName, int numRows, int index) : ImageLoader(fileName, 4)
 {
+	this->fileName = fileName;
 	this->numRows = (float)numRows;
 	this->index = (float)index;
 	calcAtlas();
@@ -19,6 +21,11 @@ Texture::Texture(std::string fileName, int numRows, int index) : ImageLoader(fil
 
 Texture::~Texture()
 {
+}
+
+std::string Texture::getFilename()
+{
+	return this->fileName;
 }
 
 GLuint Texture::genGLTexture()

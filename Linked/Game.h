@@ -34,6 +34,7 @@ private:
 	MonsterFactory* monsterFactory;
 	std::vector<Monster*> monsters;
 	double lastTime;
+	Entity* player;
 
 	void input();
 	void printCoordinate(int x, int y);

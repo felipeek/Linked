@@ -67,6 +67,12 @@
     <Filter Include="Data Files\Monsters">
       <UniqueIdentifier>{fe6130e6-cf92-4906-a0ae-dd1f912543b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game\AI">
+      <UniqueIdentifier>{d7177c72-32e2-4ccc-89a1-63fccba7b440}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game\AI">
+      <UniqueIdentifier>{c96c8673-9c21-45f8-abe6-ccf76152a956}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -172,7 +178,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AI.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Game\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterAI.h">
+      <Filter>Header Files\Game\AI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -282,7 +291,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AI.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Game\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterAI.cpp">
+      <Filter>Source Files\Game\AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

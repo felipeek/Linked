@@ -95,6 +95,7 @@
     <ClInclude Include="MapTerrain.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="MonsterAI.h" />
     <ClInclude Include="MonsterFactory.h" />
     <ClInclude Include="MouseAttack.h" />
     <ClInclude Include="Player.h" />
@@ -133,6 +134,7 @@
     <ClCompile Include="MapShader.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="MonsterAI.cpp" />
     <ClCompile Include="MonsterFactory.cpp" />
     <ClCompile Include="MouseAttack.cpp" />
     <ClCompile Include="Player.cpp" />

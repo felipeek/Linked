@@ -1,11 +1,16 @@
 #include "Monster.h"
+#include "MonsterAI.h"
+#include "Display.h"
+#include "Map.h"
 
 Monster::Monster(Transform* transform, Mesh* mesh, Texture* texture) : Entity(transform, mesh, texture)
 {
+	this->ai = new MonsterAI();
 }
 
 Monster::~Monster()
 {
+	delete this->ai;
 }
 
 std::string Monster::getName()
@@ -48,6 +53,16 @@ void Monster::setDefense(unsigned int defense)
 	this->defense = defense;
 }
 
+unsigned int Monster::getSpeed()
+{
+	return speed;
+}
+
+void Monster::setSpeed(unsigned int speed)
+{
+	this->speed = speed;
+}
+
 glm::vec3 Monster::getMapColor()
 {
 	return mapColor;
@@ -86,4 +101,37 @@ int Monster::getMapColorBlue()
 void Monster::setMapColorBlue(int blue)
 {
 	this->mapColor.b = (float)blue;
+}
+
+void Monster::moveTo(Entity* entity, Map* map)
+{
+	float rangeSpeed = speed * (float)Display::frameTime;
+
+	MovementDefinition movement = ai->moveTo(this->getTransform()->getPosition(),
+		entity->getTransform()->getPosition(), rangeSpeed);
+
+	if (!MapTerrainImageLoader::isOfCollisionType(map->getMapCoordinateForPlayerMovement(movement.movement).terrain))
+	{
+		switch (movement.direction)
+		{
+		case TOP:
+		case TOP_LEFT:
+			this->getTexture()->setIndex(3);
+			break;
+		case RIGHT:
+		case TOP_RIGHT:
+			this->getTexture()->setIndex(0);
+			break;
+		case BOTTOM:
+		case BOTTOM_RIGHT:
+			this->getTexture()->setIndex(2);
+			break;
+		case LEFT:
+		case BOTTOM_LEFT:
+			this->getTexture()->setIndex(1);
+			break;
+		}
+
+		this->getTransform()->translate(movement.movement.x, movement.movement.y, movement.movement.z);
+	}
 }

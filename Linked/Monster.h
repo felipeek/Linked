@@ -1,5 +1,7 @@
 #pragma once
 #include "Entity.h"
+class MonsterAI;
+class Map;
 
 class Monster : public Entity
 {
@@ -14,6 +16,8 @@ public:
 	void setAttack(unsigned int attack);
 	unsigned int getDefense();
 	void setDefense(unsigned int defense);
+	unsigned int getSpeed();
+	void setSpeed(unsigned int speed);
 	int getMapColorRed();
 	void setMapColorRed(int red);
 	int getMapColorGreen();
@@ -22,10 +26,17 @@ public:
 	void setMapColorBlue(int blue);
 	glm::vec3 getMapColor();
 	void setMapColor(glm::vec3 mapColor);
+	void moveTo(Entity* entity, Map* map);
 private:
 	std::string name;
 	unsigned int hp;
 	unsigned int attack;
 	unsigned int defense;
+	unsigned int speed;
 	glm::vec3 mapColor;
+	MonsterAI* ai;
+
+	// temp
+	float radix = 0.5f;
+	bool d = false;
 };
