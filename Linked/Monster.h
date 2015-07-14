@@ -4,7 +4,7 @@
 class Monster : public Entity
 {
 public:
-	Monster(Transform* transform, Mesh* mesh);
+	Monster(Transform* transform, Mesh* mesh, Texture* texture);
 	~Monster();
 	std::string getName();
 	void setName(std::string name);

@@ -1,9 +1,10 @@
 #include "Entity.h"
 
-Entity::Entity(Transform* transform, Mesh* mesh)
+Entity::Entity(Transform* transform, Mesh* mesh, Texture* texture)
 {
 	this->transform = transform;
 	this->mesh = mesh;
+	this->texture = texture;
 }
 
 Entity::~Entity()
@@ -12,6 +13,8 @@ Entity::~Entity()
 		delete transform;
 	if (mesh != NULL)
 		delete mesh;
+	if (texture != NULL)
+		delete texture;
 }
 
 Transform* Entity::getTransform()
@@ -22,14 +25,20 @@ Transform* Entity::getTransform()
 void Entity::render(Shader* shader)
 {
 	shader->useShader();
-	shader->update(transform, mesh->getTexture0());
+	shader->update(transform, texture);
+	bindTextures();
 	mesh->render();
 	shader->stopShader();
 }
 
 Texture* Entity::getTexture()
 {
-	return mesh->getTexture0();
+	return texture;
+}
+
+void Entity::setTexture(Texture* texture)
+{
+	this->texture = texture;
 }
 
 void Entity::setTransform(Transform* transform)
@@ -45,4 +54,10 @@ void Entity::setMesh(Mesh* mesh)
 Mesh* Entity::getMesh()
 {
 	return mesh;
+}
+
+void Entity::bindTextures()
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture->textureID);
 }

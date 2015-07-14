@@ -35,21 +35,20 @@ Game::Game(int windowsWidth, int windowsHeight)
 	
 	// Criação do player
 	//Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.28f, 0.6f), new Texture("./res/Textures/clown.png"));
-	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f), new Texture("./res/Textures/clownAtlas.png", 2, 2));
-	Entity* player = new Entity(new Transform(glm::vec3(70, 980, 1.0f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh);
+	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f));
+	Entity* player = new Entity(new Transform(glm::vec3(70, 980, 1.0f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Textures/clownAtlas.png", 2, 2));
 	entities.push_back(player);
 
 	// Criação do Mapa
 	std::string mapPath = "./res/Maps/teste.png";
 	this->map = new Map(mapPath, mapPath, 3);
-	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, this->map),
+	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, this->map));
+	this->entityMap = new EntityMap(new Transform(), mapMesh,
 		new Texture("./res/Maps/stonePath.png"),
 		new Texture("./res/Maps/mountain.jpg"),
 		new Texture("./res/Maps/water.jpg"),
 		new Texture("./res/Maps/grassTex.png"),
-		new Texture(mapPath)
-		);
-	this->entityMap = new EntityMap(new Transform(), mapMesh);
+		new Texture(mapPath));
 
 	// Criação dos Monstros
 	std::string monsterMapPath = "./res/Maps/monsters.png";
@@ -64,7 +63,8 @@ Game::Game(int windowsWidth, int windowsHeight)
 
 			if (coordinate.mapMonster.monsterExists == true)
 			{
-				monster->setTransform(new Transform(vec3(i, j, 1.0f), 45, glm::vec3(1, 0, 0), glm::vec3(1, 1, 1)));
+				monster->setTransform(new Transform(vec3(i, j, 1.8f), 35, glm::vec3(1, 0, 0), glm::vec3(5, 5, 5)));
+				
 				entities.push_back(monster);
 				monsters.push_back(monster);
 			}
@@ -203,7 +203,8 @@ void Game::input()
 		glm::vec3 projVector = attackVector;
 		projVector.z = pz;
 		//entities[0]->getTransform()->translate(attackVector.x, attackVector.y, pz);
-		Entity* entityD = new Entity(new Transform(projVector, 35, glm::vec3(1,0,0), glm::vec3(10,10,10)), entities[0]->getMesh());
+		Texture* textureD = new Texture("./res/Textures/clownAtlas.png", 2, 2);
+		Entity* entityD = new Entity(new Transform(projVector, 35, glm::vec3(1,0,0), glm::vec3(10,10,10)), entities[0]->getMesh(), textureD);
 		entities.push_back(entityD);
 	}
 }

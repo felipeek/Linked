@@ -1,6 +1,6 @@
 #include "Monster.h"
 
-Monster::Monster(Transform* transform, Mesh* mesh) : Entity(transform, mesh)
+Monster::Monster(Transform* transform, Mesh* mesh, Texture* texture) : Entity(transform, mesh, texture)
 {
 }
 

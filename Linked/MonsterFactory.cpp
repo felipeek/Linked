@@ -71,7 +71,7 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 	file<> xmlFile(monsterPath);
 	xml_document<> doc;
 	doc.parse<0>(xmlFile.data());
-	Monster* monster = new Monster(NULL, NULL);
+	Monster* monster = new Monster(NULL, NULL, NULL);
 	std::string xmlRootNodeName = std::string(doc.first_node()->name());
 
 	if (xmlRootNodeName == ROOT_NODE)
@@ -83,12 +83,13 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 			std::string nodeName = std::string(child->name());
 			char* nodeValue = child->value();
 			
-			Mesh *mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.5f, 1.0f), new Texture(MONSTERS_DIRECTORY + std::string(nodeValue), 1, 0));
+			Mesh *mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f));
+			monster->setMesh(mesh);
 
 			if (nodeName == NAME_NODE)
 				monster->setName(std::string(nodeValue));
 			else if (nodeName == SPRITE_NODE)
-				monster->setMesh(mesh);
+				monster->setTexture(new Texture(MONSTERS_DIRECTORY + std::string(nodeValue), 2, 2));
 			else if (nodeName == HP_NODE)
 				monster->setHp(std::atoi(nodeValue));
 			else if (nodeName == ATTACK_NODE)
@@ -137,7 +138,8 @@ std::vector<std::string> MonsterFactory::getListOfFilesInDirectory()
 
 Monster* MonsterFactory::generateCopyOfMonster(Monster* monster)
 {
-	Monster* copy = new Monster(NULL, NULL);
+	Monster* copy = new Monster(NULL, NULL, NULL);
+	copy->setTexture(monster->getTexture());
 	copy->setAttack(monster->getAttack());
 	copy->setDefense(monster->getDefense());
 	copy->setHp(monster->getHp());
