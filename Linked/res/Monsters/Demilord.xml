@@ -1,6 +1,7 @@
 <MONSTER>
   <NAME>Demilord</NAME>
   <SPRITE>Sprites/Demilord.png</SPRITE>
+  <SIZE>20</SIZE>
   <HP>100</HP>
   <ATTACK>1000</ATTACK>
   <DEFENSE>1000</DEFENSE>

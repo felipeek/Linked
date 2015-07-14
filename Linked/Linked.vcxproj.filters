@@ -171,6 +171,9 @@
     <ClInclude Include="MouseAttack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -278,12 +281,18 @@
     <ClCompile Include="MouseAttack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="res\Monsters\Demilord.xml">
       <Filter>Data Files\Monsters</Filter>
     </Xml>
     <Xml Include="res\Monsters\BadHoshoyo.xml">
+      <Filter>Data Files\Monsters</Filter>
+    </Xml>
+    <Xml Include="res\Monsters\Poring.xml">
       <Filter>Data Files\Monsters</Filter>
     </Xml>
   </ItemGroup>

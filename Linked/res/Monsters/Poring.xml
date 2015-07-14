@@ -1,0 +1,11 @@
+<MONSTER>
+  <NAME>Poring</NAME>
+  <SPRITE>Sprites/Poring.png</SPRITE>
+  <SIZE>20</SIZE>
+  <HP>30</HP>
+  <ATTACK>10</ATTACK>
+  <DEFENSE>8</DEFENSE>
+  <RED>0</RED>
+  <GREEN>0</GREEN>
+  <BLUE>255</BLUE>
+</MONSTER>

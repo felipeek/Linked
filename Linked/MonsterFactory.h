@@ -10,12 +10,17 @@
 #define ROOT_NODE "MONSTER"
 #define NAME_NODE "NAME"
 #define SPRITE_NODE "SPRITE"
+#define SIZE_NODE "SIZE"
 #define HP_NODE "HP"
 #define ATTACK_NODE "ATTACK"
 #define DEFENSE_NODE "DEFENSE"
 #define RED_NODE "RED"
 #define GREEN_NODE "GREEN"
 #define BLUE_NODE "BLUE"
+#define STANDARD_POSITION vec3(0, 0, 1.0f)
+#define STANDARD_ANGLE 35
+#define STANDARD_AXIS vec3(1, 0, 0)
+#define STANDARD_SCALE vec3(1, 1, 1)
 
 class MonsterNotFoundException : std::exception{};
 

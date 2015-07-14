@@ -66,6 +66,29 @@ void MonsterFactory::parseAllMonstersInDirectory()
 	}
 }
 
+Monster* MonsterFactory::generateCopyOfMonster(Monster* monster)
+{
+	Monster* copy = new Monster(NULL, NULL, NULL);
+
+	// Copy Basic Attributes
+	copy->setAttack(monster->getAttack());
+	copy->setDefense(monster->getDefense());
+	copy->setHp(monster->getHp());
+	copy->setMapColor(monster->getMapColor());
+	copy->setName(monster->getName());
+	// Copy Mesh (The same mesh will be setted for all monsters of same class)
+	copy->setMesh(monster->getMesh());
+	// Copy Texture (The same texture will be setted for all monsters of same class)
+	copy->setTexture(monster->getTexture());
+	// Copy Transform (A new transform object must be created for each monster)
+	Transform *monsterTransform = monster->getTransform();
+	vec3 monsterTransformPosition = monsterTransform->getPosition();
+	vec3 monsterTransformScale = monsterTransform->getScale();
+	copy->setTransform(new Transform(monsterTransformPosition, STANDARD_ANGLE, STANDARD_AXIS, monsterTransformScale));
+
+	return copy;
+}
+
 Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 {
 	file<> xmlFile(monsterPath);
@@ -78,18 +101,20 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 	{
 		xml_node<> *rootNode = doc.first_node();
 
+		monster->setMesh(new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f)));
+		monster->setTransform(new Transform(STANDARD_POSITION, STANDARD_ANGLE, STANDARD_AXIS, STANDARD_SCALE));
+
 		for (xml_node<> *child = rootNode->first_node(); child; child = child->next_sibling())
 		{
 			std::string nodeName = std::string(child->name());
 			char* nodeValue = child->value();
-			
-			Mesh *mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f));
-			monster->setMesh(mesh);
 
 			if (nodeName == NAME_NODE)
 				monster->setName(std::string(nodeValue));
 			else if (nodeName == SPRITE_NODE)
 				monster->setTexture(new Texture(MONSTERS_DIRECTORY + std::string(nodeValue), 2, 2));
+			else if (nodeName == SIZE_NODE)
+				monster->getTransform()->scale(std::atoi(nodeValue) / 10, std::atoi(nodeValue) / 10, std::atoi(nodeValue) / 10);
 			else if (nodeName == HP_NODE)
 				monster->setHp(std::atoi(nodeValue));
 			else if (nodeName == ATTACK_NODE)
@@ -134,18 +159,4 @@ std::vector<std::string> MonsterFactory::getListOfFilesInDirectory()
 	}
 
 	return fileNames;
-}
-
-Monster* MonsterFactory::generateCopyOfMonster(Monster* monster)
-{
-	Monster* copy = new Monster(NULL, NULL, NULL);
-	copy->setTexture(monster->getTexture());
-	copy->setAttack(monster->getAttack());
-	copy->setDefense(monster->getDefense());
-	copy->setHp(monster->getHp());
-	copy->setMapColor(monster->getMapColor());
-	copy->setMesh(monster->getMesh());
-	copy->setName(monster->getName());
-	copy->setTransform(monster->getTransform());
-	return copy;
 }

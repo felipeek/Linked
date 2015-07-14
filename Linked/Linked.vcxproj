@@ -73,6 +73,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AI.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Entity.h" />
@@ -109,6 +110,7 @@
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AI.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -148,6 +150,7 @@
   <ItemGroup>
     <Xml Include="res\Monsters\BadHoshoyo.xml" />
     <Xml Include="res\Monsters\Demilord.xml" />
+    <Xml Include="res\Monsters\Poring.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

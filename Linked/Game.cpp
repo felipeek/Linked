@@ -63,12 +63,11 @@ Game::Game(int windowsWidth, int windowsHeight)
 
 			if (coordinate.mapMonster.monsterExists == true)
 			{
-				monster->setTransform(new Transform(vec3(i, j, 1.8f), 35, glm::vec3(1, 0, 0), glm::vec3(5, 5, 5)));
-				
+				monster->getTransform()->translate(i, j, 1.0f);
 				entities.push_back(monster);
 				monsters.push_back(monster);
 			}
-	}
+		}
 
 	for (int i = 0; i < monsters.size(); i++)
 		std::cout << monsters[i]->getName() << std::endl;
