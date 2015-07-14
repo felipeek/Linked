@@ -1,6 +1,9 @@
 #pragma once
 #include "glm\glm.hpp"
 
+#define LIMIT_DISTANCE 25
+#define RANDOM_MOVEMENT_FACTOR 100
+
 enum MovementDirection{
 	TOP,
 	LEFT,
@@ -26,5 +29,8 @@ public:
 	~AI();
 	MovementDefinition moveTo(glm::vec3 reference, glm::vec3 destination, float rangeSpeed);
 	MovementDefinition moveAway(glm::vec3 reference, glm::vec3 destination, float rangeSpeed);
+private:
+	int randNumber;
+	unsigned int randAuxiliarValue;
 };
 

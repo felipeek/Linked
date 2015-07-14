@@ -35,8 +35,4 @@ private:
 	unsigned int speed;
 	glm::vec3 mapColor;
 	MonsterAI* ai;
-
-	// temp
-	float radix = 0.5f;
-	bool d = false;
 };
