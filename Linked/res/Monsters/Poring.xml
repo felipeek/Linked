@@ -1,11 +1,11 @@
 <MONSTER>
   <NAME>Poring</NAME>
-  <SPRITE>Sprites/Poring.png</SPRITE>
+  <SPRITE>Sprites/yasuoMythic.png</SPRITE>
   <SIZE>20</SIZE>
   <HP>30</HP>
   <ATTACK>10</ATTACK>
   <DEFENSE>8</DEFENSE>
-  <SPEED>1</SPEED>
+  <SPEED>2</SPEED>
   <RED>0</RED>
   <GREEN>0</GREEN>
   <BLUE>255</BLUE>
