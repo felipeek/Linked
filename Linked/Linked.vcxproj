@@ -151,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <Xml Include="res\Monsters\BadHoshoyo.xml" />
+    <Xml Include="res\Monsters\Cactus.xml" />
     <Xml Include="res\Monsters\Demilord.xml" />
     <Xml Include="res\Monsters\Poring.xml" />
   </ItemGroup>

@@ -307,5 +307,8 @@
     <Xml Include="res\Monsters\Poring.xml">
       <Filter>Data Files\Monsters</Filter>
     </Xml>
+    <Xml Include="res\Monsters\Cactus.xml">
+      <Filter>Data Files\Monsters</Filter>
+    </Xml>
   </ItemGroup>
 </Project>
