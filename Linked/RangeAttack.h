@@ -2,8 +2,11 @@
 #include <glm\glm.hpp>
 #include <vector>
 
+#define ASPD 0.1
+
 class Projectile;
 class Entity;
+class Texture;
 
 class RangeAttack
 {
@@ -18,9 +21,11 @@ public:
 private:
 	float speed;
 	float life;
-
+	double lastTimeUpdate;
+	double lastTimeCreate;
 	std::vector<Projectile*>* attacks;
 
 	Entity* player;
+	Texture* texture;
 };
 
