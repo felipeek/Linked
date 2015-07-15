@@ -15,6 +15,7 @@
 #define ATTACK_NODE "ATTACK"
 #define DEFENSE_NODE "DEFENSE"
 #define SPEED_NODE "SPEED"
+#define RANGE_NODE "RANGE"
 #define RED_NODE "RED"
 #define GREEN_NODE "GREEN"
 #define BLUE_NODE "BLUE"

@@ -63,6 +63,17 @@ void Monster::setSpeed(unsigned int speed)
 	this->speed = speed;
 }
 
+unsigned int Monster::getRange()
+{
+	return range;
+}
+
+void Monster::setRange(unsigned int range)
+{
+	this->ai->setMonsterRange(range);
+	this->range = range;
+}
+
 glm::vec3 Monster::getMapColor()
 {
 	return mapColor;
@@ -106,19 +117,22 @@ void Monster::setMapColorBlue(int blue)
 void Monster::moveTo(Entity* entity, Map* map)
 {
 	float rangeSpeed = speed * (float)Display::frameTime;
+	MovementDefinition movement;
 
-	MovementDefinition movement = ai->moveTo(map, this->getTransform()->getPosition(),
-		entity->getTransform()->getPosition(), rangeSpeed);
+	movement = ai->moveToDestination(map, this->getTransform()->getPosition(), entity->getTransform()->getPosition(), rangeSpeed);
 
 	if (movement.doMove)
+	{
 		this->getTransform()->translate(movement.movement.x, movement.movement.y, movement.movement.z);
+		changeTextureBasedOnMovementDirection(movement.direction);
+	}
 }
 
 void Monster::moveAway(Entity* entity, Map* map)
 {
 	float rangeSpeed = speed * (float)Display::frameTime;
 
-	MovementDefinition movement = ai->moveAway(map, this->getTransform()->getPosition(),
+	MovementDefinition movement = ai->movePerfectlyAway(map, this->getTransform()->getPosition(),
 		entity->getTransform()->getPosition(), rangeSpeed);
 
 	if (movement.doMove)

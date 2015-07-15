@@ -19,6 +19,8 @@ public:
 	void setDefense(unsigned int defense);
 	unsigned int getSpeed();
 	void setSpeed(unsigned int speed);
+	unsigned int getRange();
+	void setRange(unsigned int range);
 	int getMapColorRed();
 	void setMapColorRed(int red);
 	int getMapColorGreen();
@@ -35,6 +37,7 @@ private:
 	unsigned int attack;
 	unsigned int defense;
 	unsigned int speed;
+	unsigned int range;
 	glm::vec3 mapColor;
 	MonsterAI* ai;
 	void changeTextureBasedOnMovementDirection(MovementDirection direction);

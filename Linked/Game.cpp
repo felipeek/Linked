@@ -57,6 +57,8 @@ Game::Game(int windowsWidth, int windowsHeight)
 	this->monsterFactory = new MonsterFactory();
 	this->monsterMap = new Map(mapPath, mapPath, monsterMapPath, 3, this->monsterFactory);
 
+	//bool aux = false;
+
 	for (int i = 0; i < MAP_SIZE; i++)
 		for (int j = 0; j < MAP_SIZE; j++)
 		{
@@ -65,9 +67,14 @@ Game::Game(int windowsWidth, int windowsHeight)
 
 			if (coordinate.mapMonster.monsterExists == true)
 			{
+				//if (!aux)
+				//{
 				monster->getTransform()->translate(i, j, 1.0f);
 				entities.push_back(monster);
 				monsters.push_back(monster);
+				//aux = true;
+				//}
+				
 			}
 		}
 

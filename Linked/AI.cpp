@@ -6,22 +6,122 @@
 
 AI::AI()
 {
-	randAuxiliarValue = RANDOM_MOVEMENT_FACTOR;
+	movingRandomly = false;
 }
-
 
 AI::~AI()
 {
 }
 
-MovementDefinition AI::moveTo(Map* map, glm::vec3 reference, glm::vec3 destination, float rangeSpeed)
+bool AI::isMovingRandomly()
+{
+	return this->movingRandomly;
+}
+
+void AI::startRandomMovement(Map* map, glm::vec3 reference, float rangeSpeed)
+{
+	this->randomMap = map;
+	randomReference = reference;
+	randomChangedReference = reference;
+	randomRangeSpeed = rangeSpeed;
+
+	int randNumber = rand() % 8;
+
+	switch (randNumber)
+	{
+	case 0:
+		randomDirection = TOP_RIGHT; break;
+	case 1:
+		randomDirection = RIGHT; break;
+	case 2:
+		randomDirection = BOTTOM_RIGHT; break;
+	case 3:
+		randomDirection = BOTTOM; break;
+	case 4:
+		randomDirection = BOTTOM_LEFT; break;
+	case 5:
+		randomDirection = LEFT; break;
+	case 6:
+		randomDirection = TOP_LEFT; break;
+	case 7:
+		randomDirection = TOP; break;
+	default:
+		randomDirection = TOP_RIGHT; break;
+	}
+
+	this->movingRandomly = true;
+}
+
+MovementDefinition AI::nextRandomStep()
+{
+	MovementDefinition movDef = MovementDefinition();
+
+	if (!movingRandomly)
+	{
+		movDef.doMove = false;
+		return movDef;
+	}
+
+	switch (randomDirection)
+	{
+	case TOP_RIGHT:
+		randomChangedReference.x = randomChangedReference.x + randomRangeSpeed;
+		randomChangedReference.y = randomChangedReference.y + randomRangeSpeed;
+		break;
+	case RIGHT:
+		randomChangedReference.x = randomChangedReference.x + randomRangeSpeed;
+		break;
+	case BOTTOM_RIGHT:
+		randomChangedReference.x = randomChangedReference.x + randomRangeSpeed;
+		randomChangedReference.y = randomChangedReference.y - randomRangeSpeed;
+		break;
+	case BOTTOM:
+		randomChangedReference.y = randomChangedReference.y - randomRangeSpeed;
+		break;
+	case BOTTOM_LEFT:
+		randomChangedReference.x = randomChangedReference.x - randomRangeSpeed;
+		randomChangedReference.y = randomChangedReference.y - randomRangeSpeed;
+		break;
+	case LEFT:
+		randomChangedReference.x = randomChangedReference.x - randomRangeSpeed;
+		break;
+	case TOP_LEFT:
+		randomChangedReference.x = randomChangedReference.x - randomRangeSpeed;
+		randomChangedReference.y = randomChangedReference.y + randomRangeSpeed;
+		break;
+	case TOP:
+		randomChangedReference.y = randomChangedReference.y + randomRangeSpeed;
+		break;
+	default:
+		break;
+	}
+
+	movDef.direction = randomDirection;
+	movDef.movement = randomChangedReference;
+
+	if (!MapTerrainImageLoader::isOfCollisionType(randomMap->getMapCoordinateForPlayerMovement(randomChangedReference).terrain))
+	{
+		movDef.doMove = true;
+		if (length(randomReference - randomChangedReference) >= RANDOM_MOVEMENT_FACTOR)
+			this->movingRandomly = false;
+	}
+	else
+	{
+		movDef.doMove = false;
+		this->movingRandomly = false;
+	}
+
+	return movDef;
+}
+
+MovementDefinition AI::movePerfectlyTo(Map* map, glm::vec3 reference, glm::vec3 destination, float rangeSpeed)
 {
 	MovementDefinition movDef = MovementDefinition();
 	movDef.doMove = false;
 	float distance = glm::length(reference - destination);
 	glm::vec3 movement = glm::vec3(reference.x, reference.y, reference.z);
 
-	if (distance < LIMIT_DISTANCE && randAuxiliarValue == RANDOM_MOVEMENT_FACTOR)
+	if (distance < LIMIT_DISTANCE && !isMovingRandomly())
 	{
 		if (destination.x > reference.x && destination.y > reference.y)
 		{
@@ -76,81 +176,28 @@ MovementDefinition AI::moveTo(Map* map, glm::vec3 reference, glm::vec3 destinati
 	}
 	else
 	{
-		movDef = moveToRandomPosition(map, reference, destination, rangeSpeed);
+		if (isMovingRandomly())
+		{
+			return nextRandomStep();
+		}
+		else
+		{
+			startRandomMovement(map, reference, rangeSpeed);
+			return nextRandomStep();
+		}
 	}
 
 	return movDef;
 }
 
-MovementDefinition AI::moveToRandomPosition(Map* map, glm::vec3 reference, glm::vec3 destination, float rangeSpeed)
+MovementDefinition AI::movePerfectlyAway(Map* map, glm::vec3 reference, glm::vec3 destination, float rangeSpeed)
 {
 	MovementDefinition movDef = MovementDefinition();
-	glm::vec3 movement = glm::vec3(reference.x, reference.y, reference.z);
-
-	if (randAuxiliarValue >= RANDOM_MOVEMENT_FACTOR)
-	{
-		randNumber = rand() % 8;
-		randAuxiliarValue = 0;
-	}
-	else
-		randAuxiliarValue++;
-
-	switch (randNumber)
-	{
-	case 0:
-		movement.x = movement.x + rangeSpeed;
-		movement.y = movement.y + rangeSpeed;
-		movDef.direction = TOP_RIGHT;
-		break;
-	case 1:
-		movement.x = movement.x + rangeSpeed;
-		movement.y = movement.y - rangeSpeed;
-		movDef.direction = BOTTOM_RIGHT;
-		break;
-	case 2:
-		movement.x = movement.x - rangeSpeed;
-		movement.y = movement.y + rangeSpeed;
-		movDef.direction = TOP_LEFT;
-		break;
-	case 3:
-		movement.x = movement.x - rangeSpeed;
-		movement.y = movement.y - rangeSpeed;
-		movDef.direction = BOTTOM_LEFT;
-		break;
-	case 4:
-		movement.x = movement.x + rangeSpeed;
-		movDef.direction = RIGHT;
-		break;
-	case 5:
-		movement.x = movement.x - rangeSpeed;
-		movDef.direction = LEFT;
-		break;
-	case 6:
-		movement.y = movement.y + rangeSpeed;
-		movDef.direction = TOP;
-		break;
-	case 7:
-		movement.y = movement.y - rangeSpeed;
-		movDef.direction = BOTTOM;
-		break;
-	}
-
-	if (!MapTerrainImageLoader::isOfCollisionType(map->getMapCoordinateForPlayerMovement(movement).terrain))
-	{
-		movDef.doMove = true;
-		movDef.movement = movement;
-	}
-
-	return movDef;
-}
-
-MovementDefinition AI::moveAway(Map* map, glm::vec3 reference, glm::vec3 destination, float rangeSpeed)
-{
-	MovementDefinition movDef = MovementDefinition();
+	movDef.doMove = false;
 	float distance = glm::length(reference - destination);
 	glm::vec3 movement = glm::vec3(reference.x, reference.y, reference.z);
 	
-	if (distance < LIMIT_DISTANCE && randAuxiliarValue == RANDOM_MOVEMENT_FACTOR)
+	if (distance < LIMIT_DISTANCE && !isMovingRandomly())
 	{
 		if (reference.x > destination.x && reference.y > destination.y)
 		{
@@ -205,7 +252,15 @@ MovementDefinition AI::moveAway(Map* map, glm::vec3 reference, glm::vec3 destina
 	}
 	else
 	{
-		movDef = moveToRandomPosition(map, reference, destination, rangeSpeed);
+		if (isMovingRandomly())
+		{
+			return nextRandomStep();
+		}
+		else
+		{
+			startRandomMovement(map, reference, rangeSpeed);
+			return nextRandomStep();
+		}
 	}
 
 	return movDef;

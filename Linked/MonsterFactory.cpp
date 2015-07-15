@@ -77,6 +77,7 @@ Monster* MonsterFactory::generateCopyOfMonster(Monster* monster)
 	copy->setMapColor(monster->getMapColor());
 	copy->setName(monster->getName());
 	copy->setSpeed(monster->getSpeed());
+	copy->setRange(monster->getRange());
 	// Copy Mesh (The same mesh will be setted for all monsters of same class)
 	copy->setMesh(monster->getMesh());
 	// Copy Texture (A new texture object must be created for each monster)
@@ -125,6 +126,8 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 				monster->setDefense(std::atoi(nodeValue));
 			else if (nodeName == SPEED_NODE)
 				monster->setSpeed(std::atoi(nodeValue));
+			else if (nodeName == RANGE_NODE)
+				monster->setRange(std::atoi(nodeValue));
 			else if (nodeName == RED_NODE)
 				monster->setMapColorRed(std::atoi(nodeValue));
 			else if (nodeName == GREEN_NODE)
