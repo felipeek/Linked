@@ -63,6 +63,17 @@ void Monster::setSpeed(unsigned int speed)
 	this->speed = speed;
 }
 
+unsigned int Monster::getRange()
+{
+	return range;
+}
+
+void Monster::setRange(unsigned int range)
+{
+	this->ai->setMonsterRange(range);
+	this->range = range;
+}
+
 glm::vec3 Monster::getMapColor()
 {
 	return mapColor;
@@ -106,32 +117,47 @@ void Monster::setMapColorBlue(int blue)
 void Monster::moveTo(Entity* entity, Map* map)
 {
 	float rangeSpeed = speed * (float)Display::frameTime;
+	MovementDefinition movement;
 
-	MovementDefinition movement = ai->moveTo(this->getTransform()->getPosition(),
+	movement = ai->moveToDestination(map, this->getTransform()->getPosition(), entity->getTransform()->getPosition(), rangeSpeed);
+
+	if (movement.doMove)
+	{
+		this->getTransform()->translate(movement.movement.x, movement.movement.y, movement.movement.z);
+		changeTextureBasedOnMovementDirection(movement.direction);
+	}
+}
+
+void Monster::moveAway(Entity* entity, Map* map)
+{
+	float rangeSpeed = speed * (float)Display::frameTime;
+
+	MovementDefinition movement = ai->movePerfectlyAway(map, this->getTransform()->getPosition(),
 		entity->getTransform()->getPosition(), rangeSpeed);
 
-	if (!MapTerrainImageLoader::isOfCollisionType(map->getMapCoordinateForPlayerMovement(movement.movement).terrain))
-	{
-		switch (movement.direction)
-		{
-		case TOP:
-		case TOP_LEFT:
-			this->getTexture()->setIndex(3);
-			break;
-		case RIGHT:
-		case TOP_RIGHT:
-			this->getTexture()->setIndex(0);
-			break;
-		case BOTTOM:
-		case BOTTOM_RIGHT:
-			this->getTexture()->setIndex(2);
-			break;
-		case LEFT:
-		case BOTTOM_LEFT:
-			this->getTexture()->setIndex(1);
-			break;
-		}
-
+	if (movement.doMove)
 		this->getTransform()->translate(movement.movement.x, movement.movement.y, movement.movement.z);
+}
+
+void Monster::changeTextureBasedOnMovementDirection(MovementDirection direction)
+{
+	switch (direction)
+	{
+	case TOP:
+	case TOP_LEFT:
+		this->getTexture()->setIndex(3);
+		break;
+	case RIGHT:
+	case TOP_RIGHT:
+		this->getTexture()->setIndex(0);
+		break;
+	case BOTTOM:
+	case BOTTOM_RIGHT:
+		this->getTexture()->setIndex(2);
+		break;
+	case LEFT:
+	case BOTTOM_LEFT:
+		this->getTexture()->setIndex(1);
+		break;
 	}
 }
