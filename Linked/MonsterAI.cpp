@@ -39,17 +39,19 @@ MovementDefinition MonsterAI::moveToDestination(Map *monsterMovementMap, glm::ve
 		MovementDefinition movDef = MovementDefinition();
 		movDef.doMove = false;
 		stopMovingToPosition();
+		stopMovingRandomly();
 		return movDef;
 	}
 	// If the monster is doing a random movement
-	else if (isMovingRandomly())
-	{
-		// Let the random movement finishes before continue moving.
-		MovementDefinition movementDefinition = nextRandomStep();
-		stopMovingToPosition();
-		return movementDefinition;
-	}
-	// If the monster is far away from destination
+	// Commented so position movement will have preference with regards to random movement
+//	else if (isMovingRandomly())
+//	{
+//		// Let the random movement finishes before continue moving.
+//		MovementDefinition movementDefinition = nextRandomStep();
+//		stopMovingToPosition();
+//		return movementDefinition;
+//	}
+//	// If the monster is far away from destination
 	else if (distance > LIMIT_DISTANCE)
 	{
 		stopMovingToPosition();
@@ -97,6 +99,8 @@ MovementDefinition MonsterAI::moveToDestination(Map *monsterMovementMap, glm::ve
 			}
 		}
 	}
+
+	stopMovingRandomly();
 
 	if (isMovingToPosition())
 	{

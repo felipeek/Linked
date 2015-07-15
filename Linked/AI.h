@@ -3,7 +3,8 @@
 class Map;
 
 #define LIMIT_DISTANCE 25
-#define RANDOM_MOVEMENT_FACTOR 5.0f
+#define RANDOM_MOVEMENT_FACTOR 6.0f
+#define STAND_STILL_RANDOM_FACTOR 8
 
 enum MovementDirection{
 	TOP,
@@ -34,6 +35,7 @@ public:
 	void startRandomMovement(Map* map, glm::vec3 reference, float rangeSpeed);
 	MovementDefinition nextRandomStep();
 	bool isMovingRandomly();
+	void stopMovingRandomly();
 private:
 	Map* randomMap;
 	glm::vec3 randomReference;
@@ -41,5 +43,6 @@ private:
 	float randomRangeSpeed;
 	MovementDirection randomDirection;
 	bool movingRandomly;
+	double timeRandomMovementStarted = 0;
 };
 

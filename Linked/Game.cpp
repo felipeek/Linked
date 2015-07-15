@@ -28,8 +28,12 @@
 
 float cameraDistance = 20;
 
+Entity* myEntity;
+
 Game::Game(int windowsWidth, int windowsHeight)
 {	
+	myEntity = new Entity(new Transform(glm::vec3(0,0,0)), new Mesh(new Quad(glm::vec3(0, 0, 0), 0.1f, 0.1f)), new Texture("./res/Maps/stonePath.png"));
+	
 	// Câmera luz e shaders
 	this->camera = new Camera(glm::vec3(0, 0, 50), glm::vec3(0, 0, 0), 70.0f, (float)windowsWidth / windowsHeight, 0.1f, 2500.0f);
 	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 1, 1));

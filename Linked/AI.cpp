@@ -1,6 +1,7 @@
 #include "AI.h"
 #include "Display.h"
 #include "Map.h"
+#include "Time.h"
 #include <stdlib.h>
 #include <time.h>
 
@@ -18,12 +19,18 @@ bool AI::isMovingRandomly()
 	return this->movingRandomly;
 }
 
+void AI::stopMovingRandomly()
+{
+	this->movingRandomly = false;
+}
+
 void AI::startRandomMovement(Map* map, glm::vec3 reference, float rangeSpeed)
 {
 	this->randomMap = map;
 	randomReference = reference;
 	randomChangedReference = reference;
 	randomRangeSpeed = rangeSpeed;
+	timeRandomMovementStarted = Time::getTime();
 
 	int randNumber = rand() % 8;
 
@@ -55,8 +62,9 @@ void AI::startRandomMovement(Map* map, glm::vec3 reference, float rangeSpeed)
 MovementDefinition AI::nextRandomStep()
 {
 	MovementDefinition movDef = MovementDefinition();
+	bool shouldNotBeMoving = (Time::getTime() - timeRandomMovementStarted) <= (STAND_STILL_RANDOM_FACTOR / (float)10);
 
-	if (!movingRandomly)
+	if (!movingRandomly || shouldNotBeMoving)
 	{
 		movDef.doMove = false;
 		return movDef;
@@ -64,36 +72,36 @@ MovementDefinition AI::nextRandomStep()
 
 	switch (randomDirection)
 	{
-	case TOP_RIGHT:
-		randomChangedReference.x = randomChangedReference.x + randomRangeSpeed;
-		randomChangedReference.y = randomChangedReference.y + randomRangeSpeed;
-		break;
-	case RIGHT:
-		randomChangedReference.x = randomChangedReference.x + randomRangeSpeed;
-		break;
-	case BOTTOM_RIGHT:
-		randomChangedReference.x = randomChangedReference.x + randomRangeSpeed;
-		randomChangedReference.y = randomChangedReference.y - randomRangeSpeed;
-		break;
-	case BOTTOM:
-		randomChangedReference.y = randomChangedReference.y - randomRangeSpeed;
-		break;
-	case BOTTOM_LEFT:
-		randomChangedReference.x = randomChangedReference.x - randomRangeSpeed;
-		randomChangedReference.y = randomChangedReference.y - randomRangeSpeed;
-		break;
-	case LEFT:
-		randomChangedReference.x = randomChangedReference.x - randomRangeSpeed;
-		break;
-	case TOP_LEFT:
-		randomChangedReference.x = randomChangedReference.x - randomRangeSpeed;
-		randomChangedReference.y = randomChangedReference.y + randomRangeSpeed;
-		break;
-	case TOP:
-		randomChangedReference.y = randomChangedReference.y + randomRangeSpeed;
-		break;
-	default:
-		break;
+		case TOP_RIGHT:
+			randomChangedReference.x = randomChangedReference.x + randomRangeSpeed;
+			randomChangedReference.y = randomChangedReference.y + randomRangeSpeed;
+			break;
+		case RIGHT:
+			randomChangedReference.x = randomChangedReference.x + randomRangeSpeed;
+			break;
+		case BOTTOM_RIGHT:
+			randomChangedReference.x = randomChangedReference.x + randomRangeSpeed;
+			randomChangedReference.y = randomChangedReference.y - randomRangeSpeed;
+			break;
+		case BOTTOM:
+			randomChangedReference.y = randomChangedReference.y - randomRangeSpeed;
+			break;
+		case BOTTOM_LEFT:
+			randomChangedReference.x = randomChangedReference.x - randomRangeSpeed;
+			randomChangedReference.y = randomChangedReference.y - randomRangeSpeed;
+			break;
+		case LEFT:
+			randomChangedReference.x = randomChangedReference.x - randomRangeSpeed;
+			break;
+		case TOP_LEFT:
+			randomChangedReference.x = randomChangedReference.x - randomRangeSpeed;
+			randomChangedReference.y = randomChangedReference.y + randomRangeSpeed;
+			break;
+		case TOP:
+			randomChangedReference.y = randomChangedReference.y + randomRangeSpeed;
+			break;
+		default:
+			break;
 	}
 
 	movDef.direction = randomDirection;
