@@ -36,9 +36,9 @@ private:
 	PlayerMovement* playerMovement;
 	MonsterFactory* monsterFactory;
 	std::vector<Monster*> monsters;
-	double lastTime;
 	Entity* player;
 	RangeAttack* rangeAttack;
+	double lastTime;
 
 	void input();
 	void printCoordinate(int x, int y);

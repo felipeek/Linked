@@ -11,8 +11,7 @@ Projectile::Projectile(Transform* transform, Mesh* mesh, Texture* texture, float
 
 Projectile::~Projectile()
 {
-	//if (mesh != NULL)
-		//delete mesh;
+
 }
 
 void Projectile::update()

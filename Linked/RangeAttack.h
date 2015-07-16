@@ -5,6 +5,8 @@
 
 #define ASPD 0.1
 #define ATTACK 10
+#define LIFE 2
+#define SPEED 0.3f
 
 class Projectile;
 class Entity;
@@ -23,6 +25,7 @@ public:
 	void setLife(float value);
 	void attack();
 	void update();
+	void input();
 private:
 	float speed;
 	float life;
