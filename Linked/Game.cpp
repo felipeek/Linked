@@ -26,20 +26,10 @@
 #include <iostream>
 #include <cstdlib>
 
-float cameraDistance = 20;
-
-Entity* myEntity;
+//#define DEBUG
 
 Game::Game(int windowsWidth, int windowsHeight)
 {	
-	//while (true)
-	//{
-	//	Mesh *hoshoyoMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.3f));
-	//	delete hoshoyoMesh;
-	//}
-
-	myEntity = new Entity(new Transform(glm::vec3(0,0,0)), new Mesh(new Quad(glm::vec3(0, 0, 0), 0.1f, 0.1f)), new Texture("./res/Maps/stonePath.png"));
-	
 	// Câmera luz e shaders
 	this->camera = new Camera(glm::vec3(0, 0, 50), glm::vec3(0, 0, 0), 70.0f, (float)windowsWidth / windowsHeight, 0.1f, 2500.0f);
 	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 1, 1));
@@ -83,12 +73,9 @@ Game::Game(int windowsWidth, int windowsHeight)
 				monsters.push_back(monster);
 				//aux = true;
 				//}
-				
 			}
 		}
-	
-	std::cout << "qntdade de monstros: " << monsters.size() << std::endl;
-	
+		
 	/*for (int i = 0; i < monsters.size(); i++)
 		std::cout << monsters[i]->getName() << std::endl;*/
 	
@@ -145,56 +132,34 @@ void Game::render()
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
-	rangeAttack->update();
 }
 
 void Game::update()
 {
+	// Game input
 	input();
-	glm::vec3 camOri = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y, 0);
-	glm::vec3 camPos = glm::vec3(entities[0]->getTransform()->getPosition().x, entities[0]->getTransform()->getPosition().y-10, cameraDistance);
-	light->lightPosition.x = entities[0]->getTransform()->getPosition().x;
-	light->lightPosition.y = entities[0]->getTransform()->getPosition().y;
 
-	camera->setCamPosition(camPos);
-	camera->setCamOrientation(camOri);
+	// Camera input & update
+	camera->input();
+	camera->update(player->getTransform()->getPosition());
 
+	// Light input & update
+	light->input();
+	light->update(player->getTransform()->getPosition());
+
+	// RangeAttack input & update
+	rangeAttack->input();
+	rangeAttack->update();
+	
 	for (Monster* monster : monsters)
 		monster->moveTo(player, map);
 }
-
-float charRot = 0;
 
 void Game::input()
 {
 	playerMovement->inputPlayerMovement();
 
-	if (Input::keyStates['8'])
-		light->lightPosition.y += 1.0f;
-	if (Input::keyStates['2'])
-		light->lightPosition.y -= 1.0f;
-	if (Input::keyStates['6'])
-		light->lightPosition.x += 1.0f;
-	if (Input::keyStates['4'])
-		light->lightPosition.x -= 1.0f;
-	if (Input::keyStates['1'])
-		light->lightPosition.z += 1.0f;
-	if (Input::keyStates['9'])
-		light->lightPosition.z -= 1.0f;
-
-	if (Input::keyStates['r'])
-	{
-		charRot += 0.1f;
-		entities[0]->getTransform()->rotate(charRot, glm::vec3(1, 0, 0));
-		std::cout << charRot << std::endl;
-	}
-	if (Input::keyStates['f'])
-	{
-		charRot -= 0.1f;
-		entities[0]->getTransform()->rotate(charRot, glm::vec3(1, 0, 0));
-		std::cout << charRot << std::endl;
-	}
-
+#ifdef DEBUG
 	if (Input::keyStates['t'])
 	{
 		double now = Time::getTime();
@@ -228,44 +193,5 @@ void Game::input()
 			lastTime = Time::getTime();
 		}
 	}
-
-	if (Input::keyStates['='])
-	{
-		cameraDistance += 1.0f;
-	}
-
-	if (Input::keyStates['-'])
-	{
-		if (cameraDistance > 10)
-			cameraDistance -= 1.0f;
-	}
-
-	if (Input::attack)
-	{
-		rangeAttack->setLife(2);
-		rangeAttack->setSpeed(0.3f);
-		rangeAttack->attack();
-	}
+#endif
 }
-
-/*void Game::printCoordinate(int x, int y)
-{
-std::string objectMapPath = "./res/Maps/objectmap.png";
-std::string heightMapPath = "./res/Maps/heightmap.png";
-std::string enumr = "teste";
-Map myOwnMap = Map(objectMapPath, heightMapPath, 3);
-MapCoordinate coord = myOwnMap.getMapCoordinate(glm::vec3(x, y, 0));
-switch (coord.object)
-{
-case NORMAL_FLOOR: enumr = "NORMAL_FLOOR"; break;
-case BLOCKED: enumr = "BLOCKED"; break;
-case HOLE: enumr = "HOLE"; break;
-case SPIKES: enumr = "SPIKES"; break;
-case FIRE: enumr = "FIRE"; break;
-case MUD: enumr = "MUD"; break;
-case SLIPPERY: enumr = "SLIPPERY"; break;
-default:
-enumr = "nenhum"; break;
-}
-std::cout << enumr << std::endl << std:: endl;
-}*/

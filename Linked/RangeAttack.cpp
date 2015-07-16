@@ -22,7 +22,6 @@ RangeAttack::RangeAttack(Entity* player, std::vector<Projectile*>* attacks, std:
 	lastTimeCreate = 0;
 }
 
-
 RangeAttack::~RangeAttack()
 {
 }
@@ -35,7 +34,7 @@ void RangeAttack::update()
 	
 	bool piercingAttack = false;
 
-	for (int i = 0; i < attacks->size(); i++)
+	for (unsigned int i = 0; i < attacks->size(); i++)
 	{
 		(*attacks)[i]->update();
 	
@@ -101,7 +100,7 @@ bool RangeAttack::monsterCollision(Projectile* projectile, int* hitMonsterIndex)
 
 	*hitMonsterIndex = -1;
 
-	for (int i = 0; i < monsters->size(); i++)
+	for (unsigned int i = 0; i < monsters->size(); i++)
 	{
 		glm::vec3 monsterPos = (*monsters)[i]->getTransform()->getPosition();
 		float monsterSize = (*monsters)[i]->getCollisionRange()/10.0f;
@@ -120,4 +119,14 @@ bool RangeAttack::monsterCollision(Projectile* projectile, int* hitMonsterIndex)
 		}
 	}
 	return false;
+}
+
+void RangeAttack::input()
+{
+	if (Input::attack)
+	{
+		setLife(LIFE);
+		setSpeed(SPEED);
+		attack();
+	}
 }
