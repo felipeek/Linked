@@ -3,10 +3,10 @@
 #include <vector>
 
 
-#define ASPD 0.1
-#define ATTACK 10
-#define LIFE 2
-#define SPEED 0.3f
+#define ASPD 0.3f
+#define ATTACK 2
+#define LIFE 0.1f
+#define SPEED 0.2f
 
 class Projectile;
 class Entity;

@@ -58,7 +58,7 @@ void RangeAttack::update()
 				attacks->erase((*attacks).begin() + i);
 			}
 		}
-		else if (now - (*attacks)[i]->spawnTime >= 1.0)
+		else if (now - (*attacks)[i]->spawnTime >= life)
 		{
 			delete (*attacks)[i];
 			attacks->erase((*attacks).begin() + i);
