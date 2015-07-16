@@ -2,16 +2,17 @@
 #include <glm\glm.hpp>
 #include <vector>
 
-#define ASPD 0.1
+#define ASPD 0.5
 
 class Projectile;
 class Entity;
 class Texture;
+class Monster;
 
 class RangeAttack
 {
 public:
-	RangeAttack(Entity* player, std::vector<Projectile*>* attacks);
+	RangeAttack(Entity* player, std::vector<Projectile*>* attacks, std::vector<Monster*>* monsters);
 	~RangeAttack();
 
 	void setSpeed(float value);
@@ -24,6 +25,9 @@ private:
 	double lastTimeUpdate;
 	double lastTimeCreate;
 	std::vector<Projectile*>* attacks;
+	std::vector<Monster*>* monsters;
+
+	bool monsterCollision(Projectile* projectile);
 
 	Entity* player;
 	Texture* texture;

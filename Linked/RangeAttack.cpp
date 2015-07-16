@@ -4,13 +4,15 @@
 #include "Texture.h"
 #include "Time.h"
 #include "Primitive.h"
+#include "Monster.h"
 
 #include <iostream>
 
-RangeAttack::RangeAttack(Entity* player, std::vector<Projectile*>* attacks)
+RangeAttack::RangeAttack(Entity* player, std::vector<Projectile*>* attacks, std::vector<Monster*>* monsters)
 {
 	this->player = player;
 	this->attacks = attacks;
+	this->monsters = monsters;
 	texture = new Texture("./res/Textures/clownAtlas.png", 2, 2);
 	lastTimeUpdate = 0;
 	lastTimeCreate = 0;
@@ -34,6 +36,7 @@ void RangeAttack::update()
 			delete (*attacks)[i];
 			attacks->erase((*attacks).begin() + i);
 		}
+		monsterCollision((*attacks)[i]);
 	}
 }
 
@@ -65,4 +68,15 @@ void RangeAttack::setSpeed(float value)
 void RangeAttack::setLife(float value)
 {
 	life = value;
+}
+
+bool RangeAttack::monsterCollision(Projectile* projectile)
+{
+	glm::vec3 projPosition = projectile->getTransform()->getPosition();
+
+	for (int i = 0; i < monsters->size(); i++)
+	{
+		glm::vec3 monsterPos = (*monsters)[i]->getTransform()->getPosition();
+		//if (monsterPos.x )
+	}
 }

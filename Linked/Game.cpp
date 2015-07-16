@@ -91,7 +91,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	playerMovement = new PlayerMovement(this->map, player);
 
 	// Ataque à distancia
-	rangeAttack = new RangeAttack(player, &attacks);
+	rangeAttack = new RangeAttack(player, &attacks, &monsters);
 }
 
 Game::~Game()
@@ -227,7 +227,7 @@ void Game::input()
 	if (Input::attack)
 	{
 		rangeAttack->setLife(2);
-		rangeAttack->setSpeed(0.1f);
+		rangeAttack->setSpeed(0.3f);
 		rangeAttack->attack();
 	}
 }
