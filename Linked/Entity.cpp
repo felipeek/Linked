@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "Monster.h"
 
 Entity::Entity(Transform* transform, Mesh* mesh, Texture* texture)
 {

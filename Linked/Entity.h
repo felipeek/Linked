@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "Texture.h"
 
+// Remember to delete mesh when extending
 class Entity
 {
 public:
@@ -23,6 +24,5 @@ protected:
 	Mesh* mesh;
 	Texture* texture;
 	virtual void bindTextures();
-
 };
 
