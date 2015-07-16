@@ -3,7 +3,7 @@
 #include <vector>
 
 
-#define ASPD 0.5
+#define ASPD 0.1
 
 class Projectile;
 class Entity;

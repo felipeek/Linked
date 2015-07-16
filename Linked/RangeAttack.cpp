@@ -5,6 +5,7 @@
 #include "Time.h"
 #include "Primitive.h"
 #include "Monster.h"
+#include "MapTerrain.h"
 
 #include <iostream>
 
@@ -31,12 +32,17 @@ void RangeAttack::update()
 	{
 		(*attacks)[i]->update();
 
-		if (now - (*attacks)[i]->spawnTime >= 1.0)
+		if (monsterCollision((*attacks)[i]))
+		{
+			std::cout << "houve colisao" << std::endl;
+			delete (*attacks)[i];
+			attacks->erase((*attacks).begin() + i);
+		}
+		else if (now - (*attacks)[i]->spawnTime >= 1.0)
 		{
 			delete (*attacks)[i];
 			attacks->erase((*attacks).begin() + i);
 		}
-		monsterCollision((*attacks)[i]);
 	}
 }
 
@@ -77,6 +83,13 @@ bool RangeAttack::monsterCollision(Projectile* projectile)
 	for (int i = 0; i < monsters->size(); i++)
 	{
 		glm::vec3 monsterPos = (*monsters)[i]->getTransform()->getPosition();
-		//if (monsterPos.x )
+		float monsterSize = (*monsters)[i]->getCollisionRange();
+		
+		float difference = glm::length(glm::vec2(monsterPos) - glm::vec2(projPosition));
+
+		// TODO : projetil na parede
+		if (difference < monsterSize)
+			return true;
 	}
+	return false;
 }
