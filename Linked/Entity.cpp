@@ -13,8 +13,8 @@ Entity::~Entity()
 		delete transform;
 	if (mesh != NULL)
 		delete mesh;
-	if (texture != NULL)
-		delete texture;
+	//if (texture != NULL)
+		//delete texture;
 }
 
 Transform* Entity::getTransform()

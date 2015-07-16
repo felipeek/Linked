@@ -8,6 +8,7 @@ public:
 	Projectile(Transform* transform, Mesh* mesh, Texture* texture, float speed, glm::vec3 direction);
 	~Projectile();
 	void update();
+	double spawnTime;
 private:
 	glm::vec3 direction;
 	float speed;
