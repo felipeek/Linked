@@ -51,7 +51,7 @@ MovementDefinition MonsterAI::moveToDestination(Map *monsterMovementMap, glm::ve
 //		stopMovingToPosition();
 //		return movementDefinition;
 //	}
-//	// If the monster is far away from destination
+	// If the monster is far away from destination
 	else if (distance > LIMIT_DISTANCE)
 	{
 		stopMovingToPosition();
