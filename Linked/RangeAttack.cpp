@@ -17,7 +17,7 @@ RangeAttack::RangeAttack(Entity* player, std::vector<Projectile*>* attacks, std:
 	this->attacks = attacks;
 	this->monsters = monsters;
 	this->map = map;
-	texture = new Texture("./res/Textures/clownAtlas.png", 2, 2);
+	texture = new Texture("./res/Textures/energyBall.png");
 	lastTimeUpdate = 0;
 	lastTimeCreate = 0;
 }
