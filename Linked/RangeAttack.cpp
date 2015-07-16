@@ -32,7 +32,7 @@ void RangeAttack::update()
 	double now = Time::getTime();
 	int hitMonsterIndex;
 	
-	bool piercingAttack = false;
+	bool piercingAttack = true;
 
 	for (unsigned int i = 0; i < attacks->size(); i++)
 	{
