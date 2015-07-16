@@ -69,6 +69,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 			{
 				//if (!aux)
 				//{
+				if (!MapTerrainImageLoader::isOfCollisionType(monsterMap->getMapCoordinateForPlayerMovement(glm::vec3(i,j,0)).terrain))
 				monster->getTransform()->translate(i, j, 1.0f);
 				monsters.push_back(monster);
 				//aux = true;
