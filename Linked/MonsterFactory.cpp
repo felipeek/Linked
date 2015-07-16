@@ -78,6 +78,7 @@ Monster* MonsterFactory::generateCopyOfMonster(Monster* monster)
 	copy->setName(monster->getName());
 	copy->setSpeed(monster->getSpeed());
 	copy->setRange(monster->getRange());
+	copy->setCollisionRange(monster->getCollisionRange());
 	// Copy Mesh (The same mesh will be setted for all monsters of same class)
 	copy->setMesh(monster->getMesh());
 	// Copy Texture (A new texture object must be created for each monster)
@@ -118,6 +119,8 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 				monster->setTexture(new Texture(MONSTERS_DIRECTORY + std::string(nodeValue), 2, 2));
 			else if (nodeName == SIZE_NODE)
 				monster->getTransform()->scale(std::atoi(nodeValue) / 10, std::atoi(nodeValue) / 10, std::atoi(nodeValue) / 10);
+			else if (nodeName == COLLISIONRANGE_NODE)
+				monster->setCollisionRange(std::atoi(nodeValue));
 			else if (nodeName == HP_NODE)
 				monster->setHp(std::atoi(nodeValue));
 			else if (nodeName == ATTACK_NODE)

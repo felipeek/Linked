@@ -227,7 +227,7 @@ void Game::input()
 	if (Input::attack)
 	{
 		rangeAttack->setLife(2);
-		rangeAttack->setSpeed(0.1f);
+		rangeAttack->setSpeed(1.0f);
 		rangeAttack->attack();
 	}
 }

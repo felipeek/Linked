@@ -2,7 +2,7 @@
 #include <glm\glm.hpp>
 #include <vector>
 
-#define ASPD 0.1
+#define ASPD 1.0
 
 class Projectile;
 class Entity;
