@@ -44,7 +44,7 @@ Quad::Quad(glm::vec3 center, float sizeX, float sizeY)
 
 Quad::~Quad()
 {
-
+	delete model;
 }
 
 IndexedModel* Quad::getIndexedModel()

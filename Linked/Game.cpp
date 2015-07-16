@@ -32,6 +32,12 @@ Entity* myEntity;
 
 Game::Game(int windowsWidth, int windowsHeight)
 {	
+	//while (true)
+	//{
+	//	Mesh *hoshoyoMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.3f));
+	//	delete hoshoyoMesh;
+	//}
+
 	myEntity = new Entity(new Transform(glm::vec3(0,0,0)), new Mesh(new Quad(glm::vec3(0, 0, 0), 0.1f, 0.1f)), new Texture("./res/Maps/stonePath.png"));
 	
 	// Câmera luz e shaders
@@ -44,7 +50,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f));
 	player = new Entity(new Transform(glm::vec3(534, 500, 1.0f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Textures/clownAtlas.png", 2, 2));
 	entities.push_back(player);
-
+	
 	// Criação do Mapa
 	std::string mapPath = "./res/Maps/teste.png";
 	this->map = new Map(mapPath, mapPath, 3);
@@ -55,20 +61,20 @@ Game::Game(int windowsWidth, int windowsHeight)
 		new Texture("./res/Maps/water.jpg"),
 		new Texture("./res/Maps/grassTex.png"),
 		new Texture(mapPath));
-
+	
 	// Criação dos Monstros
 	std::string monsterMapPath = "./res/Maps/monsters.png";
 	this->monsterFactory = new MonsterFactory();
 	this->monsterMap = new Map(mapPath, mapPath, monsterMapPath, 3, this->monsterFactory);
-
+	
 	//bool aux = false;
-
+	
 	for (int i = 0; i < MAP_SIZE; i++)
 		for (int j = 0; j < MAP_SIZE; j++)
 		{
 			MapCoordinate coordinate = monsterMap->getMapCoordinateForMapCreation(glm::vec3(i,j,0));
 			Monster *monster = coordinate.mapMonster.monster;
-
+	
 			if (coordinate.mapMonster.monsterExists == true)
 			{
 				//if (!aux)
@@ -80,17 +86,17 @@ Game::Game(int windowsWidth, int windowsHeight)
 				
 			}
 		}
-
+	
 	std::cout << "qntdade de monstros: " << monsters.size() << std::endl;
-
+	
 	/*for (int i = 0; i < monsters.size(); i++)
 		std::cout << monsters[i]->getName() << std::endl;*/
-
+	
 	lastTime = 0;
-
+	
 	// Movimento
 	playerMovement = new PlayerMovement(this->map, player);
-
+	
 	// Ataque à distancia
 	rangeAttack = new RangeAttack(player, &attacks, &monsters, map);
 }
