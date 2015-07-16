@@ -31,9 +31,8 @@ void RangeAttack::update()
 
 		if (now - (*attacks)[i]->spawnTime >= 1.0)
 		{
-			//delete (*attacks)[i];
-			//*attacks->erase(attacks->begin() + i);
-			attacks->pop_back();
+			delete (*attacks)[i];
+			attacks->erase((*attacks).begin() + i);
 		}
 	}
 }
