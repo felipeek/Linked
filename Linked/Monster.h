@@ -21,6 +21,8 @@ public:
 	void setSpeed(unsigned int speed);
 	unsigned int getRange();
 	void setRange(unsigned int range);
+	unsigned int getCollisionRange();
+	void setCollisionRange(unsigned int collisionRange);
 	int getMapColorRed();
 	void setMapColorRed(int red);
 	int getMapColorGreen();
@@ -38,6 +40,7 @@ private:
 	unsigned int defense;
 	unsigned int speed;
 	unsigned int range;
+	unsigned int collisionRange;
 	glm::vec3 mapColor;
 	MonsterAI* ai;
 	void changeTextureBasedOnMovementDirection(MovementDirection direction);

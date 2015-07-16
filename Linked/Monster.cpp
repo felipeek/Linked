@@ -74,6 +74,16 @@ void Monster::setRange(unsigned int range)
 	this->range = range;
 }
 
+unsigned int Monster::getCollisionRange()
+{
+	return this->collisionRange;
+}
+
+void Monster::setCollisionRange(unsigned int collisionRage)
+{
+	this->collisionRange = collisionRange;
+}
+
 glm::vec3 Monster::getMapColor()
 {
 	return mapColor;

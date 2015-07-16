@@ -2,6 +2,7 @@
   <NAME>Bad Hoshoyo</NAME>
   <SPRITE>Sprites/BadHoshoyo.png</SPRITE>
   <SIZE>20</SIZE>
+  <COLLISIONRANGE>10</COLLISIONRANGE>
   <HP>1</HP>
   <ATTACK>1</ATTACK>
   <DEFENSE>2</DEFENSE>
