@@ -73,7 +73,7 @@ MovementDefinition MonsterAI::moveToDestination(Map *monsterMovementMap, glm::ve
 		// Get vector from reference to destination
 		glm::vec3 differenceVector = 0.1f * glm::normalize(monsterMovementReference - monsterMovementDestination);
 		// Get difference vector length
-		float differenceVectorOriginalLength = glm::length(monsterMovementReference - monsterMovementDestination) - BORDER_MOVEMENT_LIMIT;
+		float differenceVectorOriginalLength = (float)(glm::length(monsterMovementReference - monsterMovementDestination) - BORDER_MOVEMENT_LIMIT);
 
 		// Tests if there is a collision
 		// If a collision is found, start moving randomly
@@ -135,7 +135,7 @@ MovementDefinition MonsterAI::nextPositionMovementStep()
 	if (movingToPosition)
 	{
 		glm::vec3 directionVector = glm::normalize(positionMovementDestination - positionMovementReference);
-		glm:vec3 moveRange = glm::vec3(directionVector.x * positionMovementRangeSpeed, directionVector.y * positionMovementRangeSpeed, 0);
+		glm::vec3 moveRange = glm::vec3(directionVector.x * positionMovementRangeSpeed, directionVector.y * positionMovementRangeSpeed, 0);
 		positionMovementReference = positionMovementReference + moveRange;
 		virtualTravelledDistance = virtualTravelledDistance + moveRange;
 		if (!MapTerrainImageLoader::isOfCollisionType(positionMovementMap->getMapCoordinateForPlayerMovement(movement).terrain))

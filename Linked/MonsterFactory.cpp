@@ -119,7 +119,7 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 			else if (nodeName == SPRITE_NODE)
 				monster->setTexture(new Texture(MONSTERS_DIRECTORY + std::string(nodeValue), 2, 2));
 			else if (nodeName == SIZE_NODE)
-				monster->getTransform()->scale(std::atoi(nodeValue) / 10, std::atoi(nodeValue) / 10, std::atoi(nodeValue) / 10);
+				monster->getTransform()->scale(std::atoi(nodeValue) / 10.0f, std::atoi(nodeValue) / 10.0f, std::atoi(nodeValue) / 10.0f);
 			else if (nodeName == COLLISIONRANGE_NODE)
 				monster->setCollisionRange(std::atoi(nodeValue));
 			else if (nodeName == MAXHP_NODE)

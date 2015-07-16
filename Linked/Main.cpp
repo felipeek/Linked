@@ -4,7 +4,7 @@
 
 int main(int argc, char** argv)
 {
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 	Display* display = new Display(&argc, argv, "Linked");
 	delete display;
 	return 0;
