@@ -5,15 +5,16 @@
 #include "Time.h"
 #include "Primitive.h"
 #include "Monster.h"
-#include "MapTerrain.h"
+#include "Map.h"
 
 #include <iostream>
 
-RangeAttack::RangeAttack(Entity* player, std::vector<Projectile*>* attacks, std::vector<Monster*>* monsters)
+RangeAttack::RangeAttack(Entity* player, std::vector<Projectile*>* attacks, std::vector<Monster*>* monsters, Map* map)
 {
 	this->player = player;
 	this->attacks = attacks;
 	this->monsters = monsters;
+	this->map = map;
 	texture = new Texture("./res/Textures/clownAtlas.png", 2, 2);
 	lastTimeUpdate = 0;
 	lastTimeCreate = 0;
@@ -27,14 +28,26 @@ RangeAttack::~RangeAttack()
 void RangeAttack::update()
 {
 	double now = Time::getTime();
+	int hitMonsterIndex;
 	
 	for (int i = 0; i < attacks->size(); i++)
 	{
 		(*attacks)[i]->update();
 
-		if (monsterCollision((*attacks)[i]))
+		if (monsterCollision((*attacks)[i], &hitMonsterIndex))
 		{
-			std::cout << "houve colisao" << std::endl;
+			if (hitMonsterIndex >= 0)
+			{
+				if (ATTACK >= (*monsters)[hitMonsterIndex]->getHp())
+				{
+					delete (*monsters)[hitMonsterIndex];
+					monsters->erase((*monsters).begin() + hitMonsterIndex);
+				}
+				else
+				{
+					(*monsters)[hitMonsterIndex]->setHp((*monsters)[hitMonsterIndex]->getHp() - ATTACK);
+				}
+			}
 			delete (*attacks)[i];
 			attacks->erase((*attacks).begin() + i);
 		}
@@ -54,7 +67,6 @@ void RangeAttack::attack()
 	direction = glm::normalize(direction);
 
 	double now = Time::getTime();
-	std::cout << now - lastTimeCreate << std::endl;
 
 	if (now - lastTimeCreate >= ASPD)
 	{
@@ -76,20 +88,29 @@ void RangeAttack::setLife(float value)
 	life = value;
 }
 
-bool RangeAttack::monsterCollision(Projectile* projectile)
+bool RangeAttack::monsterCollision(Projectile* projectile, int* hitMonsterIndex)
 {
 	glm::vec3 projPosition = projectile->getTransform()->getPosition();
+
+	*hitMonsterIndex = -1;
 
 	for (int i = 0; i < monsters->size(); i++)
 	{
 		glm::vec3 monsterPos = (*monsters)[i]->getTransform()->getPosition();
-		float monsterSize = (*monsters)[i]->getCollisionRange();
+		float monsterSize = (*monsters)[i]->getCollisionRange()/10.0f;
 		
 		float difference = glm::length(glm::vec2(monsterPos) - glm::vec2(projPosition));
 
 		// TODO : projetil na parede
 		if (difference < monsterSize)
+		{
+			*hitMonsterIndex = i;
 			return true;
+		}
+		if (MapTerrainImageLoader::isOfCollisionType(map->getMapCoordinateForMapCreation(projPosition).terrain))
+		{
+			return true;
+		}
 	}
 	return false;
 }

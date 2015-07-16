@@ -4,16 +4,18 @@
 
 
 #define ASPD 0.1
+#define ATTACK 10
 
 class Projectile;
 class Entity;
 class Texture;
 class Monster;
+class Map;
 
 class RangeAttack
 {
 public:
-	RangeAttack(Entity* player, std::vector<Projectile*>* attacks, std::vector<Monster*>* monsters);
+	RangeAttack(Entity* player, std::vector<Projectile*>* attacks, std::vector<Monster*>* monsters, Map* map);
 	~RangeAttack();
 
 	void setSpeed(float value);
@@ -27,8 +29,9 @@ private:
 	double lastTimeCreate;
 	std::vector<Projectile*>* attacks;
 	std::vector<Monster*>* monsters;
+	Map* map;
 
-	bool monsterCollision(Projectile* projectile);
+	bool monsterCollision(Projectile* projectile, int* hitMonsterIndex);
 
 	Entity* player;
 	Texture* texture;

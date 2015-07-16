@@ -79,7 +79,7 @@ unsigned int Monster::getCollisionRange()
 	return this->collisionRange;
 }
 
-void Monster::setCollisionRange(unsigned int collisionRage)
+void Monster::setCollisionRange(unsigned int collisionRange)
 {
 	this->collisionRange = collisionRange;
 }

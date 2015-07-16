@@ -11,8 +11,8 @@ Entity::~Entity()
 {
 	if (transform != NULL)
 		delete transform;
-	if (mesh != NULL)
-		delete mesh;
+	//if (mesh != NULL)
+		//delete mesh;
 	//if (texture != NULL)
 		//delete texture;
 }

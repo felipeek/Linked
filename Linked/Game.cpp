@@ -57,7 +57,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 		new Texture(mapPath));
 
 	// Criação dos Monstros
-	std::string monsterMapPath = "./res/Maps/monsters.png";
+	std::string monsterMapPath = "./res/Maps/hoshoyomonsters.png";
 	this->monsterFactory = new MonsterFactory();
 	this->monsterMap = new Map(mapPath, mapPath, monsterMapPath, 3, this->monsterFactory);
 
@@ -74,7 +74,6 @@ Game::Game(int windowsWidth, int windowsHeight)
 				//if (!aux)
 				//{
 				monster->getTransform()->translate(i, j, 1.0f);
-				entities.push_back(monster);
 				monsters.push_back(monster);
 				//aux = true;
 				//}
@@ -82,8 +81,10 @@ Game::Game(int windowsWidth, int windowsHeight)
 			}
 		}
 
-	for (int i = 0; i < monsters.size(); i++)
-		std::cout << monsters[i]->getName() << std::endl;
+	std::cout << "qntdade de monstros: " << monsters.size() << std::endl;
+
+	/*for (int i = 0; i < monsters.size(); i++)
+		std::cout << monsters[i]->getName() << std::endl;*/
 
 	lastTime = 0;
 
@@ -91,7 +92,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	playerMovement = new PlayerMovement(this->map, player);
 
 	// Ataque à distancia
-	rangeAttack = new RangeAttack(player, &attacks, &monsters);
+	rangeAttack = new RangeAttack(player, &attacks, &monsters, map);
 }
 
 Game::~Game()
@@ -112,6 +113,15 @@ void Game::render()
 	entityMap->render(mapShader, light);
 
 	for (Entity* e : entities)
+	{
+		try{
+			e->render(shader);
+		}
+		catch (...){
+			std::cerr << "Error rendering entity" << std::endl;
+		}
+	}
+	for (Entity* e : monsters)
 	{
 		try{
 			e->render(shader);
