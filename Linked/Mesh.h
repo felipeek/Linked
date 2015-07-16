@@ -20,7 +20,8 @@ public:
 	float glossiness;
 	static GLuint drawForm;
 private:
-
+	Quad* quad;
+	Grid* grid;
 	GLuint VertexArrayID;
 	GLuint VertexBufferID;
 	GLuint TextureBufferID;

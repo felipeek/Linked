@@ -20,6 +20,8 @@ Mesh::Mesh(std::string fileName, float reflectivity, float glossiness)
 
 Mesh::Mesh(Quad* quad)
 {
+	this->quad = quad;
+	this->grid = NULL;
 	this->reflectivity = 0;
 	this->glossiness = 0;
 	genVAO();
@@ -30,7 +32,8 @@ Mesh::Mesh(Quad* quad)
 
 Mesh::Mesh(Grid* grid)
 {
-
+	this->grid = grid;
+	this->quad = NULL;
 	this->reflectivity = 0;
 	this->glossiness = 0;
 	genVAO();
@@ -51,6 +54,12 @@ Mesh::~Mesh()
 		glDeleteBuffers(1, &TextureBufferID);
 	if (IndexBufferID != NULL)
 		glDeleteBuffers(1, &IndexBufferID);
+
+	if (grid != NULL)
+		delete grid;
+	if (quad != NULL)
+		delete quad;
+
 }
 
 void Mesh::genVAO()

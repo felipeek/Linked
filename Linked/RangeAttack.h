@@ -11,6 +11,7 @@ class Entity;
 class Texture;
 class Monster;
 class Map;
+class Mesh;
 
 class RangeAttack
 {
@@ -35,5 +36,6 @@ private:
 
 	Entity* player;
 	Texture* texture;
+	Mesh* mesh;
 };
 

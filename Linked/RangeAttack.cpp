@@ -6,11 +6,13 @@
 #include "Primitive.h"
 #include "Monster.h"
 #include "Map.h"
+#include "Mesh.h"
 
 #include <iostream>
 
 RangeAttack::RangeAttack(Entity* player, std::vector<Projectile*>* attacks, std::vector<Monster*>* monsters, Map* map)
 {
+	this->mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.3f));
 	this->player = player;
 	this->attacks = attacks;
 	this->monsters = monsters;
@@ -27,13 +29,14 @@ RangeAttack::~RangeAttack()
 
 void RangeAttack::update()
 {
+
 	double now = Time::getTime();
 	int hitMonsterIndex;
 	
 	for (int i = 0; i < attacks->size(); i++)
 	{
 		(*attacks)[i]->update();
-
+	
 		if (monsterCollision((*attacks)[i], &hitMonsterIndex))
 		{
 			if (hitMonsterIndex >= 0)
@@ -70,9 +73,8 @@ void RangeAttack::attack()
 
 	if (now - lastTimeCreate >= ASPD)
 	{
-		Mesh* mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.3f));
 		Projectile* entityD = new Projectile(new Transform(playerPos + glm::vec3(0,0,playerPos.z), 35, glm::vec3(1, 0, 0), glm::vec3(3, 3, 3)), mesh, texture, speed, direction);
-		attacks->push_back(entityD);
+		(*attacks).push_back(entityD);
 		lastTimeCreate = now;
 	}
 	
