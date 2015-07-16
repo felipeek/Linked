@@ -25,12 +25,30 @@ void Monster::setName(std::string name)
 
 unsigned int Monster::getHp()
 {
-	return hp;
+	return this->hp;
 }
 
 void Monster::setHp(unsigned int hp)
 {
 	this->hp = hp;
+}
+
+unsigned int Monster::getMaxHp()
+{
+	return maxHp;
+}
+
+void Monster::setMaxHp(unsigned int maxHp)
+{
+	this->maxHp = maxHp;
+}
+
+void Monster::doDamage(unsigned int damage)
+{
+	if (damage > hp)
+		hp = 0;
+	else
+		hp = hp - damage;
 }
 
 unsigned int Monster::getAttack()

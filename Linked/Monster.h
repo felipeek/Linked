@@ -13,6 +13,9 @@ public:
 	void setName(std::string name);
 	unsigned int getHp();
 	void setHp(unsigned int hp);
+	unsigned int getMaxHp();
+	void setMaxHp(unsigned int maxHp);
+	void doDamage(unsigned int damage);
 	unsigned int getAttack();
 	void setAttack(unsigned int attack);
 	unsigned int getDefense();
@@ -36,6 +39,7 @@ public:
 private:
 	std::string name;
 	unsigned int hp;
+	unsigned int maxHp;
 	unsigned int attack;
 	unsigned int defense;
 	unsigned int speed;

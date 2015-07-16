@@ -74,6 +74,7 @@ Monster* MonsterFactory::generateCopyOfMonster(Monster* monster)
 	copy->setAttack(monster->getAttack());
 	copy->setDefense(monster->getDefense());
 	copy->setHp(monster->getHp());
+	copy->setMaxHp(monster->getMaxHp());
 	copy->setMapColor(monster->getMapColor());
 	copy->setName(monster->getName());
 	copy->setSpeed(monster->getSpeed());
@@ -121,6 +122,8 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 				monster->getTransform()->scale(std::atoi(nodeValue) / 10, std::atoi(nodeValue) / 10, std::atoi(nodeValue) / 10);
 			else if (nodeName == COLLISIONRANGE_NODE)
 				monster->setCollisionRange(std::atoi(nodeValue));
+			else if (nodeName == MAXHP_NODE)
+				monster->setMaxHp(std::atoi(nodeValue));
 			else if (nodeName == HP_NODE)
 				monster->setHp(std::atoi(nodeValue));
 			else if (nodeName == ATTACK_NODE)
