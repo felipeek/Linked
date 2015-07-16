@@ -63,7 +63,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 		new Texture(mapPath));
 	
 	// Criação dos Monstros
-	std::string monsterMapPath = "./res/Maps/monsters.png";
+	std::string monsterMapPath = "./res/Maps/hoshoyomonsters.png";
 	this->monsterFactory = new MonsterFactory();
 	this->monsterMap = new Map(mapPath, mapPath, monsterMapPath, 3, this->monsterFactory);
 	

@@ -33,6 +33,8 @@ void RangeAttack::update()
 	double now = Time::getTime();
 	int hitMonsterIndex;
 	
+	bool piercingAttack = false;
+
 	for (int i = 0; i < attacks->size(); i++)
 	{
 		(*attacks)[i]->update();
@@ -51,8 +53,11 @@ void RangeAttack::update()
 					(*monsters)[hitMonsterIndex]->setHp((*monsters)[hitMonsterIndex]->getHp() - ATTACK);
 				}
 			}
-			delete (*attacks)[i];
-			attacks->erase((*attacks).begin() + i);
+			if (!piercingAttack)
+			{
+				delete (*attacks)[i];
+				attacks->erase((*attacks).begin() + i);
+			}
 		}
 		else if (now - (*attacks)[i]->spawnTime >= 1.0)
 		{

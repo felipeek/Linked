@@ -1,7 +1,6 @@
 #include "MonsterAI.h"
 #include "Map.h"
 
-
 MonsterAI::MonsterAI()
 {
 	virtualTravelledDistance = glm::vec3(0, 0, 0);

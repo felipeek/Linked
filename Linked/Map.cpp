@@ -15,8 +15,12 @@ Map::Map(std::string& mapTerrainFilename, std::string& mapEntityFilename, std::s
 
 Map::~Map()
 {
-	delete mapTerrainLoader;
-	delete mapEntityLoader;
+	if (mapTerrainLoader != NULL)
+		delete mapTerrainLoader;
+	if (mapEntityLoader != NULL)
+		delete mapEntityLoader;
+	if (mapMonsterLoader != NULL)
+		delete mapMonsterLoader;
 }
 
 MapCoordinate::MapCoordinate()

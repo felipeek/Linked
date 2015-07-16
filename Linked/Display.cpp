@@ -23,6 +23,8 @@ Display::Display(int* argc, char** argv, std::string name)
 
 Display::~Display()
 {
+	if (game != NULL)
+		delete game;
 }
 
 void Display::startGlut(int* argc, char** argv, std::string titulo)
