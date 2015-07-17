@@ -14,6 +14,7 @@ class MonsterFactory;
 class Monster;
 class RangeAttack;
 class Projectile;
+class GameEntityFactory;
 
 class Game
 {
@@ -35,6 +36,7 @@ private:
 	Map* monsterMap;
 	PlayerMovement* playerMovement;
 	MonsterFactory* monsterFactory;
+	GameEntityFactory* gameEntityFactory;
 	std::vector<Monster*> monsters;
 	Entity* player;
 	RangeAttack* rangeAttack;

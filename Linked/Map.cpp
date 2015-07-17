@@ -3,13 +3,12 @@
 Map::Map(std::string& mapTerrainFilename, std::string& mapEntityFilename, int nChannels)
 {
 	mapTerrainLoader = new MapTerrainImageLoader(mapTerrainFilename, nChannels);
-	mapEntityLoader = new MapEntityImageLoader(mapEntityFilename, nChannels);
 }
 
-Map::Map(std::string& mapTerrainFilename, std::string& mapEntityFilename, std::string& mapMonsterFilename, int nChannels, MonsterFactory* monsterFactory)
+Map::Map(std::string& mapTerrainFilename, std::string& mapEntityFilename, std::string& mapMonsterFilename, int nChannels, MonsterFactory* monsterFactory, GameEntityFactory* gameEntityFactory)
 {
 	mapTerrainLoader = new MapTerrainImageLoader(mapTerrainFilename, nChannels);
-	mapEntityLoader = new MapEntityImageLoader(mapEntityFilename, nChannels);
+	mapGameEntityLoader = new MapGameEntityImageLoader(mapEntityFilename, nChannels, gameEntityFactory);
 	mapMonsterLoader = new MapMonsterImageLoader(mapMonsterFilename, nChannels, monsterFactory);
 }
 
@@ -17,8 +16,8 @@ Map::~Map()
 {
 	if (mapTerrainLoader != NULL)
 		delete mapTerrainLoader;
-	if (mapEntityLoader != NULL)
-		delete mapEntityLoader;
+	if (mapGameEntityLoader != NULL)
+		delete mapGameEntityLoader;
 	if (mapMonsterLoader != NULL)
 		delete mapMonsterLoader;
 }
@@ -36,12 +35,16 @@ MapCoordinate Map::getMapCoordinateForPlayerMovement(glm::vec3 coordinate)
 	MapCoordinate mapCoordinates;
 
 	mapCoordinates.terrain = mapTerrainLoader->getMapTerrainForPlayerMovement(coordinate);
-	mapCoordinates.entity = mapEntityLoader->getMapEntity(coordinate);
 
 	if (mapMonsterLoader != NULL)
 		mapCoordinates.mapMonster = mapMonsterLoader->getMonster(coordinate);
 	else
 		mapCoordinates.mapMonster = MapMonster::initWithNoMonster();
+
+	if (mapGameEntityLoader != NULL)
+		mapCoordinates.mapGameEntity = mapGameEntityLoader->getMapEntity(coordinate);
+	else
+		mapCoordinates.mapGameEntity = MapGameEntity::initWithNoGameEntity();
 
 	return mapCoordinates;
 }
@@ -51,12 +54,16 @@ MapCoordinate Map::getMapCoordinateForMapCreation(glm::vec3 coordinate)
 	MapCoordinate mapCoordinates;
 
 	mapCoordinates.terrain = mapTerrainLoader->getMapTerrainForMapCreation(coordinate);
-	mapCoordinates.entity = mapEntityLoader->getMapEntity(coordinate);
 	
 	if (mapMonsterLoader != NULL)
 		mapCoordinates.mapMonster = mapMonsterLoader->getMonster(coordinate);
 	else
 		mapCoordinates.mapMonster = MapMonster::initWithNoMonster();
+
+	if (mapGameEntityLoader != NULL)
+		mapCoordinates.mapGameEntity = mapGameEntityLoader->getMapEntity(coordinate);
+	else
+		mapCoordinates.mapGameEntity = MapGameEntity::initWithNoGameEntity();
 
 	return mapCoordinates;
 }

@@ -73,6 +73,9 @@
     <Filter Include="Header Files\Game\AI">
       <UniqueIdentifier>{c96c8673-9c21-45f8-abe6-ccf76152a956}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Data Files\GameEntities">
+      <UniqueIdentifier>{da36f291-1a13-4552-9cdb-9a52beec859e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -188,6 +191,15 @@
     </ClInclude>
     <ClInclude Include="Projectile.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEntity.h">
+      <Filter>Header Files\Game\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEntityFactory.h">
+      <Filter>Header Files\Game\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory.h">
+      <Filter>Header Files\Game\Factory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -308,6 +320,15 @@
     <ClCompile Include="Projectile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GameEntity.cpp">
+      <Filter>Source Files\Game\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEntityFactory.cpp">
+      <Filter>Source Files\Game\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="Factory.cpp">
+      <Filter>Source Files\Game\Factory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="res\Monsters\Demilord.xml">
@@ -321,6 +342,9 @@
     </Xml>
     <Xml Include="res\Monsters\Cactus.xml">
       <Filter>Data Files\Monsters</Filter>
+    </Xml>
+    <Xml Include="res\GameEntities\House.xml">
+      <Filter>Data Files\GameEntities</Filter>
     </Xml>
   </ItemGroup>
 </Project>

@@ -13,6 +13,7 @@
 #include "EntityMap.h"
 #include "PlayerMovement.h"
 #include "MonsterFactory.h"
+#include "GameEntityFactory.h"
 #include "Projectile.h"
 
 #include "Camera.h"
@@ -55,34 +56,31 @@ Game::Game(int windowsWidth, int windowsHeight)
 	// Criação dos Monstros
 	std::string monsterMapPath = "./res/Maps/poringMap.png";
 	this->monsterFactory = new MonsterFactory();
-	this->monsterMap = new Map(mapPath, mapPath, monsterMapPath, 3, this->monsterFactory);
-	
-	//bool aux = false;
+	this->gameEntityFactory = new GameEntityFactory();
+	this->monsterMap = new Map(mapPath, mapPath, monsterMapPath, 3, this->monsterFactory, this->gameEntityFactory);
 	
 	for (int i = 0; i < MAP_SIZE; i++)
 		for (int j = 0; j < MAP_SIZE; j++)
 		{
 			MapCoordinate coordinate = monsterMap->getMapCoordinateForMapCreation(glm::vec3(i,j,0));
 			Monster *monster = coordinate.mapMonster.monster;
+			GameEntity *gameEntity = coordinate.mapGameEntity.gameEntity;
 	
-			if (coordinate.mapMonster.monsterExists == true)
+			if (!MapTerrainImageLoader::isOfCollisionType(monsterMap->getMapCoordinateForPlayerMovement(glm::vec3(i, j, 0)).terrain))
 			{
-				//if (!aux)
-				//{
-				if (!MapTerrainImageLoader::isOfCollisionType(monsterMap->getMapCoordinateForPlayerMovement(glm::vec3(i, j, 0)).terrain))
+				if (coordinate.mapMonster.monsterExists == true)
 				{
 					monster->getTransform()->translate((float)i, (float)j, 1.0f);
 					monsters.push_back(monster);
 				}
-				//aux = true;
-				//}
+				if (coordinate.mapGameEntity.gameEntityExists == true)
+				{
+					printf("EXISTS");
+				}
 			}
 		}
-		
-	/*for (int i = 0; i < monsters.size(); i++)
-		std::cout << monsters[i]->getName() << std::endl;*/
 
-	std::cout << monsters.size() << std::endl;
+	//std::cout << monsters.size() << std::endl;
 
 	lastTime = 0;
 	

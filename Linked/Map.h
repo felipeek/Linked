@@ -8,7 +8,7 @@ public:
 	MapCoordinate();
 	~MapCoordinate();
 	MapTerrain terrain;
-	MapEntity entity;
+	MapGameEntity mapGameEntity;
 	MapMonster mapMonster;
 };
 
@@ -16,12 +16,12 @@ class Map
 {
 public:
 	Map(std::string& mapTerrainFilename, std::string& mapEntityFilename, int nChannels);
-	Map(std::string& mapTerrainFilename, std::string& mapEntityFilename, std::string& mapMonsterFilename, int nChannels, MonsterFactory* monsterFactory);
+	Map(std::string& mapTerrainFilename, std::string& mapEntityFilename, std::string& mapMonsterFilename, int nChannels, MonsterFactory* monsterFactory, GameEntityFactory* gameEntityFactory);
 	~Map();
 	MapCoordinate getMapCoordinateForPlayerMovement(glm::vec3 coordinate);
 	MapCoordinate getMapCoordinateForMapCreation(glm::vec3 coordinate);
 private:
 	MapTerrainImageLoader* mapTerrainLoader;
-	MapEntityImageLoader* mapEntityLoader;
+	MapGameEntityImageLoader* mapGameEntityLoader;
 	MapMonsterImageLoader* mapMonsterLoader;
 };

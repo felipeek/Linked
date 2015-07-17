@@ -2,44 +2,57 @@
 
 using namespace glm;
 
-MapEntityImageLoader::MapEntityImageLoader(std::string& filename, int nChannels) : ImageLoader(filename, nChannels)
+MapGameEntityImageLoader::MapGameEntityImageLoader(std::string& filename, int nChannels, GameEntityFactory* gameEntityFactory) : ImageLoader(filename, nChannels)
 {
+	this->gameEntityFactory = gameEntityFactory;
 }
 
 
-MapEntityImageLoader::~MapEntityImageLoader()
+MapGameEntityImageLoader::~MapGameEntityImageLoader()
 {
 }
 
-MapEntity MapEntityImageLoader::getMapEntity(vec3 coordinateVector)
+MapGameEntity::MapGameEntity()
 {
-	MapEntity mapEntity;
+	gameEntity = NULL;
+}
+
+MapGameEntity::~MapGameEntity()
+{
+
+}
+
+MapGameEntity MapGameEntityImageLoader::getMapEntity(vec3 coordinateVector)
+{
+	MapGameEntity mapGameEntity = MapGameEntity();
 
 	try
 	{
 		vec3 rgb = getPixel((int)coordinateVector.x, (int)coordinateVector.y);
-		mapEntity = transformRgbIntoMapEntity(rgb);
+
+		if (gameEntityFactory->isGameEntityMapColorValid(rgb))
+		{
+			mapGameEntity.gameEntity = gameEntityFactory->getGameEntityOfMapColor(rgb);
+			mapGameEntity.gameEntityExists = true;
+		}
+		else
+			mapGameEntity.gameEntityExists = false;
 	}
 	catch (PixelOutOfBoundsException e)
 	{
-		mapEntity = NONE;
+		mapGameEntity.gameEntityExists = false;
+	}
+	catch (GameEntityNotFoundException e)
+	{
+		mapGameEntity.gameEntityExists = false;
 	}
 
-	return mapEntity;
+	return mapGameEntity;
 }
 
-MapEntity MapEntityImageLoader::transformRgbIntoMapEntity(vec3 rgb)
+MapGameEntity MapGameEntity::initWithNoGameEntity()
 {
-	/* TRANSFORMATION MAP DEFINITION */
-
-	if (rgb == vec3(255, 0, 0))
-		return NONE;
-	if (rgb == vec3(0, 255, 0))
-		return FIRE;
-	if (rgb == vec3(0, 0, 255))
-		return MUD;
-
-	return NONE;
-
-	/* ***************************** */
+	MapGameEntity mapGameEntity;
+	mapGameEntity.gameEntityExists = false;
+	return mapGameEntity;
 }

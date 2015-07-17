@@ -1,18 +1,22 @@
 #pragma once
 #include "ImageLoader.h"
+#include "GameEntityFactory.h"
 
-enum MapEntity{
-	NONE,
-	FIRE,
-	MUD
+class MapGameEntity{
+public:
+	MapGameEntity();
+	~MapGameEntity();
+	GameEntity* gameEntity;
+	bool gameEntityExists;
+	static MapGameEntity initWithNoGameEntity();
 };
 
-class MapEntityImageLoader : public ImageLoader
+class MapGameEntityImageLoader : public ImageLoader
 {
 public:
-	MapEntityImageLoader(std::string& filename, int nChannels);
-	~MapEntityImageLoader();
-	MapEntity getMapEntity(vec3 coordinate);
+	MapGameEntityImageLoader(std::string& filename, int nChannels, GameEntityFactory* gameEntityFactory);
+	~MapGameEntityImageLoader();
+	MapGameEntity getMapEntity(vec3 coordinateVector);
 private:
-	MapEntity transformRgbIntoMapEntity(vec3 rgb);
+	GameEntityFactory *gameEntityFactory;
 };

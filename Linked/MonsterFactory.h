@@ -2,11 +2,9 @@
 #include <vector>
 #include <string>
 #include "Monster.h"
-#include <vector>
+#include "Factory.h"
 
 #define MONSTERS_DIRECTORY "./res/Monsters/"
-#define FILE_EXTENSION ".xml"
-#define READ_DIRECTORY_ERROR "Error trying to read monster directory"
 #define ROOT_NODE "MONSTER"
 #define NAME_NODE "NAME"
 #define SPRITE_NODE "SPRITE"
@@ -28,7 +26,7 @@
 
 class MonsterNotFoundException : std::exception{};
 
-class MonsterFactory
+class MonsterFactory : public Factory
 {
 public:
 	MonsterFactory();
@@ -42,7 +40,6 @@ public:
 	Monster* getMonsterOfMapColor(glm::vec3 color);
 	bool isMonsterMapColorValid(glm::vec3 color);
 private:
-	std::vector<std::string> getListOfFilesInDirectory();
 	Monster* parseXmlMonster(char* monsterPath);
 	void parseAllMonstersInDirectory();
 	std::vector<Monster*> monsters;

@@ -1,8 +1,5 @@
 #include "MonsterFactory.h"
 #include "rapidxml_utils.hpp"
-#include <dirent.h>
-#include <iostream>
-#include "rapidxml_utils.hpp"
 #include "Primitive.h"
 
 using namespace rapidxml;
@@ -56,7 +53,7 @@ bool MonsterFactory::isMonsterMapColorValid(glm::vec3 color)
 
 void MonsterFactory::parseAllMonstersInDirectory()
 {
-	for (std::string str : getListOfFilesInDirectory())
+	for (std::string str : getListOfFilesInDirectory(MONSTERS_DIRECTORY))
 	{
 		std::string fullPath = MONSTERS_DIRECTORY + str;
 		std::vector<char> writable(fullPath.begin(), fullPath.end());
@@ -84,7 +81,7 @@ Monster* MonsterFactory::generateCopyOfMonster(Monster* monster)
 	copy->setMesh(monster->getMesh());
 	// Copy Texture (A new texture object must be created for each monster)
 	Texture* monsterTexture = monster->getTexture();
-	copy->setTexture(new Texture(monster->getTexture()->getFilename(), 2, 2));
+	copy->setTexture(new Texture(monsterTexture->getFilename(), 2, 2));
 	// Copy Transform (A new transform object must be created for each monster)
 	Transform *monsterTransform = monster->getTransform();
 	vec3 monsterTransformPosition = monsterTransform->getPosition();
@@ -147,29 +144,4 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 		validColors.push_back(monster->getMapColor());
 
 	return monster;
-}
-
-std::vector<std::string> MonsterFactory::getListOfFilesInDirectory()
-{
-	DIR *dir;
-	struct dirent *ent;
-	char* aux;
-	std::vector<std::string> fileNames;
-
-	if ((dir = opendir(MONSTERS_DIRECTORY)) != NULL)
-	{
-		while ((ent = readdir(dir)) != NULL) {
-			aux = ent->d_name;
-			if (strstr(aux, FILE_EXTENSION))
-				fileNames.push_back(std::string(aux));
-		}
-
-		closedir(dir);
-	}
-	else
-	{
-		perror(READ_DIRECTORY_ERROR);
-	}
-
-	return fileNames;
 }
