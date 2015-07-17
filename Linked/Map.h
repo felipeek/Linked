@@ -18,8 +18,13 @@ public:
 	Map(std::string& mapTerrainFilename, std::string& mapEntityFilename, int nChannels);
 	Map(std::string& mapTerrainFilename, std::string& mapEntityFilename, std::string& mapMonsterFilename, int nChannels, MonsterFactory* monsterFactory, GameEntityFactory* gameEntityFactory);
 	~Map();
-	MapTerrain getMapTerrainWithMovementCollisionForCoordinate(glm::vec3 coordinate);
-	MapCoordinate getMapCoordinateForCoordinate(glm::vec3 coordinate);
+
+	// Obs.: This function must be used carefully.
+	// This function will eventually create a new monster and/or a new gameEntity on heap and return it inside MapCoordinate.
+	// Must be use ONLY for the map creation and NOT for getting general information about map coordinates.
+	MapCoordinate getMapCoordinateForMapCreation(glm::vec3 coordinate);
+
+	bool coordinateHasCollision(glm::vec3 coordinate);
 	MapTerrain getMapTerrainForCoordinate(glm::vec3 coordinate);
 private:
 	MapTerrainImageLoader* mapTerrainLoader;

@@ -14,30 +14,25 @@ MapTerrainImageLoader::~MapTerrainImageLoader()
 
 }
 
-MapTerrain MapTerrainImageLoader::getMapTerrainWithMovementCollisionForCoordinate(vec3 coordinateVector){
-	MapTerrain mapObject;
-
+bool MapTerrainImageLoader::coordinateHasCollision(glm::vec3 coordinateVector){
 	try
 	{
-		vec3 rgb = getPixel((int)coordinateVector.x, (int)coordinateVector.y);
-		mapObject = transformRgbIntoMapTerrain(rgb);
-		rgb = getPixel((int)coordinateVector.x+1, (int)coordinateVector.y);
-
 		for (int i = 1; i <= COLLISION_FACTOR; i++)
 			for (int j = i; j >= -i; j--)
 				for (int k = i; k >= -i; k--)
 				{
-					rgb = getPixel((int)coordinateVector.x + j, (int)coordinateVector.y + k);
-					if (isOfCollisionType(transformRgbIntoMapTerrain(rgb)))
-						return transformRgbIntoMapTerrain(rgb);
+					glm::vec3 rgb = getPixel((int)coordinateVector.x + j, (int)coordinateVector.y + k);
+					MapTerrain mapTerrain = transformRgbIntoMapTerrain(rgb);
+					if (mapTerrain == BLOCKED || mapTerrain == WATER)
+						return true;
 				}
 	}
 	catch (PixelOutOfBoundsException e)
 	{
-		mapObject = BLOCKED;
+		return false;
 	}
 
-	return mapObject;
+	return false;
 }
 
 MapTerrain MapTerrainImageLoader::getMapTerrainForCoordinate(vec3 coordinateVector)
@@ -46,7 +41,7 @@ MapTerrain MapTerrainImageLoader::getMapTerrainForCoordinate(vec3 coordinateVect
 
 	try
 	{
-		vec3 rgb = getPixel((int)coordinateVector.x, (int)coordinateVector.y);
+		vec3 rgb = getPixel(floor(coordinateVector.x), floor(coordinateVector.y));
 		mapObject = transformRgbIntoMapTerrain(rgb);
 	}
 	catch (PixelOutOfBoundsException e)
@@ -73,11 +68,4 @@ MapTerrain MapTerrainImageLoader::transformRgbIntoMapTerrain(vec3 rgb)
 	return BLOCKED;
 
 	/* ***************************** */
-}
-
-bool MapTerrainImageLoader::isOfCollisionType(MapTerrain terrain)
-{
-	if (terrain == BLOCKED || terrain == WATER)
-		return true;
-	return false;
 }

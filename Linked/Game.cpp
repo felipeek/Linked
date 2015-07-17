@@ -42,10 +42,10 @@ Game::Game(int windowsWidth, int windowsHeight)
 	player = new Entity(new Transform(glm::vec3(534, 500, 1.0f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Textures/hoshoyo.png", 2, 2));
 	entities.push_back(player);
 	
-	// Criação do Mapa, Monstros e Entidades
+	// Criação do Mapa
 	std::string mapPath = "./res/Maps/teste.png";
 	std::string entitiesMapPath = "./res/Maps/entities.png";
-	std::string monsterMapPath = "./res/Maps/poringMap.png";
+	std::string monsterMapPath = "./res/Maps/poringlandia.png";
 
 	this->monsterFactory = new MonsterFactory();
 	this->gameEntityFactory = new GameEntityFactory();
@@ -59,38 +59,35 @@ Game::Game(int windowsWidth, int windowsHeight)
 		new Texture("./res/Maps/grassTex.png"),
 		new Texture(mapPath));
 
+	// Criação dos Monstros e das Entidades
 	for (int i = 0; i < MAP_SIZE; i++)
 		for (int j = 0; j < MAP_SIZE; j++)
 		{
-			MapCoordinate coordinate = map->getMapCoordinateForCoordinate(glm::vec3(i,j,0));
+			MapCoordinate coordinate = map->getMapCoordinateForMapCreation(glm::vec3(i,j,0));
 			Monster *monster = coordinate.mapMonster.monster;
 			GameEntity *gameEntity = coordinate.mapGameEntity.gameEntity;
 	
-			if (!MapTerrainImageLoader::isOfCollisionType(map->getMapTerrainWithMovementCollisionForCoordinate(glm::vec3(i, j, 0))))
+			if (coordinate.mapMonster.monsterExists)
 			{
-				if (coordinate.mapMonster.monsterExists == true)
+				if (!map->coordinateHasCollision(glm::vec3(i, j, 0)))
 				{
 					monster->getTransform()->translate((float)i, (float)j, 1.0f);
 					monsters.push_back(monster);
 				}
-				if (coordinate.mapGameEntity.gameEntityExists == true)
-				{
-					gameEntity->getTransform()->translate((float)i, (float)j, 0);
-					gameEntities.push_back(gameEntity);
-				}
+				else
+					delete monster;
+			}
+			if (coordinate.mapGameEntity.gameEntityExists)
+			{
+				gameEntity->getTransform()->translate((float)i, (float)j, 0);
+				gameEntities.push_back(gameEntity);
 			}
 		}
-
-	//Mesh* houseMesh = new Mesh("./res/obj/house1.obj", 0, 0);
-	//Texture* houseTexture = new Texture("./res/obj/Textures/house1Texture1.png");
-	//Entity* house1 = new Entity(new Transform(glm::vec3(530, 500, 0), 90, glm::vec3(1, 0, 0), glm::vec3(0.6f, 0.6f, 0.6f)), houseMesh, houseTexture);
-	//house1->getTransform()->incRotateY(180);
-	//entities.push_back(house1);
 		
 	/*for (int i = 0; i < monsters.size(); i++)
 		std::cout << monsters[i]->getName() << std::endl;*/
 
-	//std::cout << monsters.size() << std::endl;
+	std::cout << "QUANTIDADE DE MONSTROS: " << monsters.size() << std::endl;
 
 	lastTime = 0;
 	

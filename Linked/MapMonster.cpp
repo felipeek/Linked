@@ -1,15 +1,6 @@
 #include "MapMonster.h"
 #include <iostream>
 
-MapMonsterImageLoader::MapMonsterImageLoader(std::string& filename, int nChannels, MonsterFactory* monsterFactory) : ImageLoader(filename, nChannels)
-{
-	this->monsterFactory = monsterFactory;
-}
-
-MapMonsterImageLoader::~MapMonsterImageLoader()
-{
-}
-
 MapMonster::MapMonster()
 {
 	monster = NULL;
@@ -19,9 +10,25 @@ MapMonster::~MapMonster()
 {
 }
 
+MapMonster MapMonster::initWithNoMonster()
+{
+	MapMonster mapMonster;
+	mapMonster.monsterExists = false;
+	return mapMonster;
+}
+
+MapMonsterImageLoader::MapMonsterImageLoader(std::string& filename, int nChannels, MonsterFactory* monsterFactory) : ImageLoader(filename, nChannels)
+{
+	this->monsterFactory = monsterFactory;
+}
+
+MapMonsterImageLoader::~MapMonsterImageLoader()
+{
+}
+
 MapMonster MapMonsterImageLoader::getMonster(vec3 coordinateVector)
 {
-	MapMonster mapMonster = MapMonster();
+	MapMonster mapMonster;
 
 	try
 	{
@@ -47,9 +54,7 @@ MapMonster MapMonsterImageLoader::getMonster(vec3 coordinateVector)
 	return mapMonster;
 }
 
-MapMonster MapMonster::initWithNoMonster()
+bool MapMonsterImageLoader::coordinateHasCollision(vec3 coordinate)
 {
-	MapMonster mapMonster;
-	mapMonster.monsterExists = false;
-	return mapMonster;
+	return false;
 }

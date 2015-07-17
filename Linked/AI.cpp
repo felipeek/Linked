@@ -107,7 +107,9 @@ MovementDefinition AI::nextRandomStep()
 	movDef.direction = randomDirection;
 	movDef.movement = randomChangedReference;
 
-	if (!MapTerrainImageLoader::isOfCollisionType(randomMap->getMapTerrainWithMovementCollisionForCoordinate(randomChangedReference)))
+	bool samePosition = checkIfMonsterIsStillOnTheSameMapPosition(randomReference, randomChangedReference);
+
+	if (samePosition || !randomMap->coordinateHasCollision(randomChangedReference))
 	{
 		movDef.doMove = true;
 		if (length(randomReference - randomChangedReference) >= RANDOM_MOVEMENT_FACTOR)
@@ -176,7 +178,9 @@ MovementDefinition AI::movePerfectlyTo(Map* map, glm::vec3 reference, glm::vec3 
 			movDef.direction = BOTTOM;
 		}
 
-		if (!MapTerrainImageLoader::isOfCollisionType(map->getMapTerrainWithMovementCollisionForCoordinate(movement)))
+		bool samePosition = checkIfMonsterIsStillOnTheSameMapPosition(reference, movement);
+
+		if (samePosition || !map->coordinateHasCollision(movement))
 		{
 			movDef.doMove = true;
 			movDef.movement = movement;
@@ -204,7 +208,7 @@ MovementDefinition AI::movePerfectlyAway(Map* map, glm::vec3 reference, glm::vec
 	movDef.doMove = false;
 	float distance = glm::length(reference - destination);
 	glm::vec3 movement = glm::vec3(reference.x, reference.y, reference.z);
-	
+
 	if (distance < LIMIT_DISTANCE && !isMovingRandomly())
 	{
 		if (reference.x > destination.x && reference.y > destination.y)
@@ -252,7 +256,9 @@ MovementDefinition AI::movePerfectlyAway(Map* map, glm::vec3 reference, glm::vec
 			movDef.direction = BOTTOM;
 		}
 
-		if (!MapTerrainImageLoader::isOfCollisionType(map->getMapTerrainWithMovementCollisionForCoordinate(movement)))
+		bool samePosition = checkIfMonsterIsStillOnTheSameMapPosition(reference, movement);
+
+		if (samePosition || !map->coordinateHasCollision(movement))
 		{
 			movDef.doMove = true;
 			movDef.movement = movement;
@@ -272,4 +278,14 @@ MovementDefinition AI::movePerfectlyAway(Map* map, glm::vec3 reference, glm::vec
 	}
 
 	return movDef;
+}
+
+bool AI::checkIfMonsterIsStillOnTheSameMapPosition(glm::vec3 currentPosition, glm::vec3 nextPosition)
+{
+	if (floor(currentPosition.x) == floor(nextPosition.x))
+		if (floor(currentPosition.y) == floor(nextPosition.y))
+			if (floor(currentPosition.z) == floor(nextPosition.z))
+				return true;
+
+	return false;
 }

@@ -75,13 +75,18 @@ MovementDefinition MonsterAI::moveToDestination(Map *monsterMovementMap, glm::ve
 		// Get difference vector length
 		float differenceVectorOriginalLength = (float)(glm::length(monsterMovementReference - monsterMovementDestination) - BORDER_MOVEMENT_LIMIT);
 
+		glm::vec3 lastVec = glm::vec3(0, 0, 0);
+
 		// Tests if there is a collision
 		// If a collision is found, start moving randomly
 		while (length(differenceVector) < differenceVectorOriginalLength)
 		{
 			differenceVector = differenceVector * 1.1f;
+			
+			bool sameVector = checkIfMonsterIsStillOnTheSameMapPosition(lastVec, differenceVector);
+			lastVec = differenceVector;
 
-			if (MapTerrainImageLoader::isOfCollisionType(monsterMovementMap->getMapTerrainWithMovementCollisionForCoordinate(monsterMovementReference - differenceVector)))
+			if (!sameVector && monsterMovementMap->coordinateHasCollision(monsterMovementReference - differenceVector))
 			{
 				stopMovingToPosition();
 				if (isMovingRandomly())
@@ -138,7 +143,10 @@ MovementDefinition MonsterAI::nextPositionMovementStep()
 		glm::vec3 moveRange = glm::vec3(directionVector.x * positionMovementRangeSpeed, directionVector.y * positionMovementRangeSpeed, 0);
 		positionMovementReference = positionMovementReference + moveRange;
 		virtualTravelledDistance = virtualTravelledDistance + moveRange;
-		if (!MapTerrainImageLoader::isOfCollisionType(positionMovementMap->getMapTerrainWithMovementCollisionForCoordinate(movement)))
+
+		bool sameVector = checkIfMonsterIsStillOnTheSameMapPosition(movement, positionMovementReference);
+
+		if (sameVector || !positionMovementMap->coordinateHasCollision(positionMovementReference))
 		{
 			movDef.doMove = true;
 			movDef.movement = positionMovementReference;

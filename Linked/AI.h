@@ -36,6 +36,8 @@ public:
 	MovementDefinition nextRandomStep();
 	bool isMovingRandomly();
 	void stopMovingRandomly();
+protected:
+	bool checkIfMonsterIsStillOnTheSameMapPosition(glm::vec3 currentPosition, glm::vec3 nextPosition);
 private:
 	Map* randomMap;
 	glm::vec3 randomReference;

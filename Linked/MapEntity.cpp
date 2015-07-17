@@ -2,16 +2,6 @@
 
 using namespace glm;
 
-MapGameEntityImageLoader::MapGameEntityImageLoader(std::string& filename, int nChannels, GameEntityFactory* gameEntityFactory) : ImageLoader(filename, nChannels)
-{
-	this->gameEntityFactory = gameEntityFactory;
-}
-
-
-MapGameEntityImageLoader::~MapGameEntityImageLoader()
-{
-}
-
 MapGameEntity::MapGameEntity()
 {
 	gameEntity = NULL;
@@ -20,6 +10,23 @@ MapGameEntity::MapGameEntity()
 MapGameEntity::~MapGameEntity()
 {
 
+}
+
+MapGameEntity MapGameEntity::initWithNoGameEntity()
+{
+	MapGameEntity mapGameEntity;
+	mapGameEntity.gameEntityExists = false;
+	return mapGameEntity;
+}
+
+MapGameEntityImageLoader::MapGameEntityImageLoader(std::string& filename, int nChannels, GameEntityFactory* gameEntityFactory) : ImageLoader(filename, nChannels)
+{
+	this->gameEntityFactory = gameEntityFactory;
+}
+
+
+MapGameEntityImageLoader::~MapGameEntityImageLoader()
+{
 }
 
 MapGameEntity MapGameEntityImageLoader::getMapEntity(vec3 coordinateVector)
@@ -50,9 +57,12 @@ MapGameEntity MapGameEntityImageLoader::getMapEntity(vec3 coordinateVector)
 	return mapGameEntity;
 }
 
-MapGameEntity MapGameEntity::initWithNoGameEntity()
+bool MapGameEntityImageLoader::coordinateHasCollision(vec3 coordinate)
 {
-	MapGameEntity mapGameEntity;
-	mapGameEntity.gameEntityExists = false;
-	return mapGameEntity;
+	vec3 rgb = getPixel((int)coordinate.x, (int)coordinate.y);
+
+	if (rgb.r == DEFAULT_ENTITIES_MAP_COLOR_RED && rgb.g == DEFAULT_ENTITIES_MAP_COLOR_GREEN && rgb.b == DEFAULT_ENTITIES_MAP_COLOR_BLUE)
+		return false;
+
+	return true;
 }

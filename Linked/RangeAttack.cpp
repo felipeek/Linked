@@ -108,7 +108,7 @@ bool RangeAttack::monsterCollision(Projectile* projectile, int* hitMonsterIndex)
 			*hitMonsterIndex = i;
 			return true;
 		}
-		if (MapTerrainImageLoader::isOfCollisionType(map->getMapTerrainForCoordinate(projPosition)))
+		if (map->coordinateHasCollision(projPosition))
 		{
 			return true;
 		}

@@ -88,17 +88,19 @@ bool PlayerMovement::moveTo(MovementDirection direction, glm::vec3 currentPositi
 
 	switch (direction)
 	{
-	case NORTH:
-		nextPosition.y = nextPosition.y + range; break;
-	case WEST:
-		nextPosition.x = nextPosition.x - range; break;
-	case EAST:
-		nextPosition.x = nextPosition.x + range; break;
-	case SOUTH:
-		nextPosition.y = nextPosition.y - range; break;
+		case NORTH:
+			nextPosition.y = nextPosition.y + range; break;
+		case WEST:
+			nextPosition.x = nextPosition.x - range; break;
+		case EAST:
+			nextPosition.x = nextPosition.x + range; break;
+		case SOUTH:
+			nextPosition.y = nextPosition.y - range; break;
 	}
 
-	if (!MapTerrainImageLoader::isOfCollisionType(map->getMapTerrainWithMovementCollisionForCoordinate(nextPosition)))
+	bool samePosition = checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, nextPosition);
+
+	if (samePosition || !map->coordinateHasCollision(nextPosition))
 	{
 		endPosition->x = nextPosition.x;
 		endPosition->y = nextPosition.y;
@@ -125,7 +127,7 @@ bool PlayerMovement::moveTo(MovementDirection direction, glm::vec3 currentPositi
 					positionToSlide2.y = positionToSlide2.y + i * range;
 				}
 
-				if (!MapTerrainImageLoader::isOfCollisionType(map->getMapTerrainWithMovementCollisionForCoordinate(positionToSlide1)))
+				if (samePosition || !map->coordinateHasCollision(nextPosition))
 				{
 					if (direction == NORTH || direction == SOUTH)
 					{
@@ -141,7 +143,7 @@ bool PlayerMovement::moveTo(MovementDirection direction, glm::vec3 currentPositi
 					endPosition->z = currentPosition.z;
 					return true;
 				}
-				else if (!MapTerrainImageLoader::isOfCollisionType(map->getMapTerrainWithMovementCollisionForCoordinate(positionToSlide2)))
+				else if (samePosition || !map->coordinateHasCollision(nextPosition))
 				{
 					if (direction == NORTH || direction == SOUTH)
 					{
@@ -160,6 +162,16 @@ bool PlayerMovement::moveTo(MovementDirection direction, glm::vec3 currentPositi
 			}
 		}
 	}
+
+	return false;
+}
+
+bool PlayerMovement::checkIfPlayerIsStillOnTheSameMapPosition(glm::vec3 currentPosition, glm::vec3 nextPosition)
+{
+	if (floor(currentPosition.x) == floor(nextPosition.x))
+		if (floor(currentPosition.y) == floor(nextPosition.y))
+			if (floor(currentPosition.z) == floor(nextPosition.z))
+				return true;
 
 	return false;
 }
