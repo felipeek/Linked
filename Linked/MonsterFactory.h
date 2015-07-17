@@ -2,33 +2,31 @@
 #include <vector>
 #include <string>
 #include "Monster.h"
-#include <vector>
+#include "Factory.h"
 
 #define MONSTERS_DIRECTORY "./res/Monsters/"
-#define FILE_EXTENSION ".xml"
-#define READ_DIRECTORY_ERROR "Error trying to read monster directory"
-#define ROOT_NODE "MONSTER"
-#define NAME_NODE "NAME"
-#define SPRITE_NODE "SPRITE"
-#define SIZE_NODE "SIZE"
-#define COLLISIONRANGE_NODE "COLLISIONRANGE"
-#define MAXHP_NODE "MAXHP"
-#define HP_NODE "HP"
-#define ATTACK_NODE "ATTACK"
-#define DEFENSE_NODE "DEFENSE"
-#define SPEED_NODE "SPEED"
-#define RANGE_NODE "RANGE"
-#define RED_NODE "RED"
-#define GREEN_NODE "GREEN"
-#define BLUE_NODE "BLUE"
-#define STANDARD_POSITION vec3(0, 0, 1.0f)
-#define STANDARD_ANGLE 35
-#define STANDARD_AXIS vec3(1, 0, 0)
-#define STANDARD_SCALE vec3(1, 1, 1)
+#define MONSTERS_ROOT_NODE "MONSTER"
+#define MONSTERS_NAME_NODE "NAME"
+#define MONSTERS_SPRITE_NODE "SPRITE"
+#define MONSTERS_SIZE_NODE "SIZE"
+#define MONSTERS_COLLISIONRANGE_NODE "COLLISIONRANGE"
+#define MONSTERS_MAXHP_NODE "MAXHP"
+#define MONSTERS_HP_NODE "HP"
+#define MONSTERS_ATTACK_NODE "ATTACK"
+#define MONSTERS_DEFENSE_NODE "DEFENSE"
+#define MONSTERS_SPEED_NODE "SPEED"
+#define MONSTERS_RANGE_NODE "RANGE"
+#define MONSTERS_RED_NODE "RED"
+#define MONSTERS_GREEN_NODE "GREEN"
+#define MONSTERS_BLUE_NODE "BLUE"
+#define MONSTERS_STANDARD_POSITION vec3(0, 0, 0)
+#define MONSTERS_STANDARD_ANGLE 35
+#define MONSTERS_STANDARD_AXIS vec3(1, 0, 0)
+#define MONSTERS_STANDARD_SCALE vec3(1, 1, 1)
 
 class MonsterNotFoundException : std::exception{};
 
-class MonsterFactory
+class MonsterFactory : public Factory
 {
 public:
 	MonsterFactory();
@@ -42,7 +40,6 @@ public:
 	Monster* getMonsterOfMapColor(glm::vec3 color);
 	bool isMonsterMapColorValid(glm::vec3 color);
 private:
-	std::vector<std::string> getListOfFilesInDirectory();
 	Monster* parseXmlMonster(char* monsterPath);
 	void parseAllMonstersInDirectory();
 	std::vector<Monster*> monsters;

@@ -14,7 +14,7 @@ MapTerrainImageLoader::~MapTerrainImageLoader()
 
 }
 
-MapTerrain MapTerrainImageLoader::getMapTerrainForPlayerMovement(vec3 coordinateVector){
+MapTerrain MapTerrainImageLoader::getMapTerrainWithMovementCollisionForCoordinate(vec3 coordinateVector){
 	MapTerrain mapObject;
 
 	try
@@ -40,7 +40,7 @@ MapTerrain MapTerrainImageLoader::getMapTerrainForPlayerMovement(vec3 coordinate
 	return mapObject;
 }
 
-MapTerrain MapTerrainImageLoader::getMapTerrainForMapCreation(vec3 coordinateVector)
+MapTerrain MapTerrainImageLoader::getMapTerrainForCoordinate(vec3 coordinateVector)
 {
 	MapTerrain mapObject;
 

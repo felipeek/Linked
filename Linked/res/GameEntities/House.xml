@@ -1,0 +1,10 @@
+<GAMEENTITY>
+  <NAME>House</NAME>
+  <OBJECT>Objects/house.obj</OBJECT>
+  <TEXTURE>Textures/house.png</TEXTURE>
+  <SIZE>7</SIZE>
+  <ANGLE>180</ANGLE>
+  <RED>255</RED>
+  <GREEN>0</GREEN>
+  <BLUE>0</BLUE>
+</GAMEENTITY>

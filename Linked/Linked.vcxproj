@@ -80,7 +80,10 @@
     <ClInclude Include="EntityMap.h" />
     <ClInclude Include="Equipment.h" />
     <ClInclude Include="EquipmentFactory.h" />
+    <ClInclude Include="Factory.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameEntity.h" />
+    <ClInclude Include="GameEntityFactory.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="IndexedModel.h" />
@@ -120,7 +123,10 @@
     <ClCompile Include="EntityMap.cpp" />
     <ClCompile Include="Equipment.cpp" />
     <ClCompile Include="EquipmentFactory.cpp" />
+    <ClCompile Include="Factory.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameEntity.cpp" />
+    <ClCompile Include="GameEntityFactory.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="IndexedModel.cpp" />
@@ -154,6 +160,7 @@
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="res\GameEntities\House.xml" />
     <Xml Include="res\Monsters\BadHoshoyo.xml" />
     <Xml Include="res\Monsters\Cactus.xml" />
     <Xml Include="res\Monsters\Demilord.xml" />

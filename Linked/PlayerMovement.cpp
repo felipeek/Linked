@@ -98,7 +98,7 @@ bool PlayerMovement::moveTo(MovementDirection direction, glm::vec3 currentPositi
 		nextPosition.y = nextPosition.y - range; break;
 	}
 
-	if (!MapTerrainImageLoader::isOfCollisionType(map->getMapCoordinateForPlayerMovement(nextPosition).terrain))
+	if (!MapTerrainImageLoader::isOfCollisionType(map->getMapTerrainWithMovementCollisionForCoordinate(nextPosition)))
 	{
 		endPosition->x = nextPosition.x;
 		endPosition->y = nextPosition.y;
@@ -125,7 +125,7 @@ bool PlayerMovement::moveTo(MovementDirection direction, glm::vec3 currentPositi
 					positionToSlide2.y = positionToSlide2.y + i * range;
 				}
 
-				if (!MapTerrainImageLoader::isOfCollisionType(map->getMapCoordinateForPlayerMovement(positionToSlide1).terrain))
+				if (!MapTerrainImageLoader::isOfCollisionType(map->getMapTerrainWithMovementCollisionForCoordinate(positionToSlide1)))
 				{
 					if (direction == NORTH || direction == SOUTH)
 					{
@@ -141,7 +141,7 @@ bool PlayerMovement::moveTo(MovementDirection direction, glm::vec3 currentPositi
 					endPosition->z = currentPosition.z;
 					return true;
 				}
-				else if (!MapTerrainImageLoader::isOfCollisionType(map->getMapCoordinateForPlayerMovement(positionToSlide2).terrain))
+				else if (!MapTerrainImageLoader::isOfCollisionType(map->getMapTerrainWithMovementCollisionForCoordinate(positionToSlide2)))
 				{
 					if (direction == NORTH || direction == SOUTH)
 					{

@@ -23,6 +23,11 @@ Transform::~Transform()
 {
 }
 
+float Transform::getAngleY()
+{
+	return angleY;
+}
+
 void Transform::translate(float x, float y, float z)
 {
 	mPosition = glm::vec3(x, y, z);

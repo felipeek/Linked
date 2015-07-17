@@ -13,6 +13,7 @@
 #include "EntityMap.h"
 #include "PlayerMovement.h"
 #include "MonsterFactory.h"
+#include "GameEntityFactory.h"
 #include "Projectile.h"
 
 #include "Camera.h"
@@ -38,57 +39,58 @@ Game::Game(int windowsWidth, int windowsHeight)
 	
 	// Criação do player
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f));
-	player = new Entity(new Transform(glm::vec3(534, 500, 1.0f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Textures/clownAtlas.png", 2, 2));
+	player = new Entity(new Transform(glm::vec3(534, 500, 1.0f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Textures/hoshoyo.png", 2, 2));
 	entities.push_back(player);
 	
-	// Criação do Mapa
+	// Criação do Mapa, Monstros e Entidades
 	std::string mapPath = "./res/Maps/teste.png";
-	this->map = new Map(mapPath, mapPath, 3);
-	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, this->map));
+	std::string entitiesMapPath = "./res/Maps/entities.png";
+	std::string monsterMapPath = "./res/Maps/poringMap.png";
+
+	this->monsterFactory = new MonsterFactory();
+	this->gameEntityFactory = new GameEntityFactory();
+	
+	this->map = new Map(mapPath, entitiesMapPath, monsterMapPath, 3, monsterFactory, gameEntityFactory);
+	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, map));
 	this->entityMap = new EntityMap(new Transform(), mapMesh,
 		new Texture("./res/Maps/stonePath.png"),
 		new Texture("./res/Maps/mountain.jpg"),
 		new Texture("./res/Maps/water.jpg"),
 		new Texture("./res/Maps/grassTex.png"),
 		new Texture(mapPath));
-	
-	// Criação dos Monstros
-	std::string monsterMapPath = "./res/Maps/poringMap.png";
-	this->monsterFactory = new MonsterFactory();
-	this->monsterMap = new Map(mapPath, mapPath, monsterMapPath, 3, this->monsterFactory);
-	
-	//bool aux = false;
-	
+
 	for (int i = 0; i < MAP_SIZE; i++)
 		for (int j = 0; j < MAP_SIZE; j++)
 		{
-			MapCoordinate coordinate = monsterMap->getMapCoordinateForMapCreation(glm::vec3(i,j,0));
+			MapCoordinate coordinate = map->getMapCoordinateForCoordinate(glm::vec3(i,j,0));
 			Monster *monster = coordinate.mapMonster.monster;
+			GameEntity *gameEntity = coordinate.mapGameEntity.gameEntity;
 	
-			if (coordinate.mapMonster.monsterExists == true)
+			if (!MapTerrainImageLoader::isOfCollisionType(map->getMapTerrainWithMovementCollisionForCoordinate(glm::vec3(i, j, 0))))
 			{
-				//if (!aux)
-				//{
-				if (!MapTerrainImageLoader::isOfCollisionType(monsterMap->getMapCoordinateForPlayerMovement(glm::vec3(i, j, 0)).terrain))
+				if (coordinate.mapMonster.monsterExists == true)
 				{
 					monster->getTransform()->translate((float)i, (float)j, 1.0f);
 					monsters.push_back(monster);
 				}
-				//aux = true;
-				//}
+				if (coordinate.mapGameEntity.gameEntityExists == true)
+				{
+					gameEntity->getTransform()->translate((float)i, (float)j, 0);
+					gameEntities.push_back(gameEntity);
+				}
 			}
 		}
 
-	Mesh* houseMesh = new Mesh("./res/obj/house1.obj", 0, 0);
-	Texture* houseTexture = new Texture("./res/obj/Textures/house1Texture1.png");
-	Entity* house1 = new Entity(new Transform(glm::vec3(530, 500, 0), 90, glm::vec3(1, 0, 0), glm::vec3(0.6f, 0.6f, 0.6f)), houseMesh, houseTexture);
-	house1->getTransform()->incRotateY(180);
-	entities.push_back(house1);
+	//Mesh* houseMesh = new Mesh("./res/obj/house1.obj", 0, 0);
+	//Texture* houseTexture = new Texture("./res/obj/Textures/house1Texture1.png");
+	//Entity* house1 = new Entity(new Transform(glm::vec3(530, 500, 0), 90, glm::vec3(1, 0, 0), glm::vec3(0.6f, 0.6f, 0.6f)), houseMesh, houseTexture);
+	//house1->getTransform()->incRotateY(180);
+	//entities.push_back(house1);
 		
 	/*for (int i = 0; i < monsters.size(); i++)
 		std::cout << monsters[i]->getName() << std::endl;*/
 
-	std::cout << monsters.size() << std::endl;
+	//std::cout << monsters.size() << std::endl;
 
 	lastTime = 0;
 	
@@ -106,8 +108,8 @@ Game::~Game()
 	delete playerMovement;
 	if (monsterFactory != NULL)
 		delete monsterFactory;
-	if (this->monsterMap != NULL)
-		delete monsterMap;
+	if (this->map != NULL)
+		delete map;
 	for (Monster* monster : monsters)
 		delete monster;
 }
@@ -138,6 +140,15 @@ void Game::render()
 	{
 		try{
 			e->render(shader, light);
+		}
+		catch (...){
+			std::cerr << "Error rendering entity" << std::endl;
+		}
+	}
+	for (Entity* e : gameEntities)
+	{
+		try{
+			e->render(shader);
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
@@ -185,7 +196,7 @@ void Game::input()
 				randomNumberX = std::rand() % 1024;
 				randomNumberY = std::rand() % 1024;
 				newPos = glm::vec3((float)randomNumberX, (float)randomNumberY, 0);
-			} while (map->getMapCoordinateForPlayerMovement(newPos).terrain != NORMAL_FLOOR);
+			} while (map->getMapCoordinateForEntityMovement(newPos).terrain != NORMAL_FLOOR);
 
 			lastTime = Time::getTime();
 			entities[0]->getTransform()->translate(newPos.x, newPos.y, entities[0]->getTransform()->getPosition().z);
