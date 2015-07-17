@@ -40,14 +40,14 @@ void RangeAttack::update()
 		{
 			if (hitMonsterIndex >= 0)
 			{
-				if (ATTACK >= (*monsters)[hitMonsterIndex]->getHp())
+				Monster *hitMonster = (*monsters)[hitMonsterIndex];
+
+				hitMonster->doDamage(ATTACK);
+
+				if (hitMonster->getHp() == 0)
 				{
 					delete (*monsters)[hitMonsterIndex];
 					monsters->erase((*monsters).begin() + hitMonsterIndex);
-				}
-				else
-				{
-					(*monsters)[hitMonsterIndex]->setHp((*monsters)[hitMonsterIndex]->getHp() - ATTACK);
 				}
 			}
 			delete (*attacks)[i];
