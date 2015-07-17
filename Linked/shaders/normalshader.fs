@@ -1,6 +1,10 @@
 #version 330 core
 
 in vec2 uvCoords;
+in vec3 normal;
+in vec3 surfaceToLight;
+in vec3 lightPos;
+in vec3 lightCol;
 
 out vec4 out_Color;
 
@@ -14,5 +18,9 @@ void main(){
 		discard;
 	}
 	
-	out_Color = textureColor;
+	vec3 surfaceToLight2 = vec3(100,100,100);
+	float cosAngle = dot(normalize(normal), normalize(surfaceToLight2));
+	vec3 diffuse = max(cosAngle * lightCol, 0.1);
+	
+	out_Color = textureColor * vec4(diffuse, 1.0);
 }

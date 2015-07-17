@@ -4,6 +4,7 @@
 class Transform;
 class Camera;
 class Texture;
+class Light;
 
 class Shader
 {
@@ -14,7 +15,7 @@ public:
 	GLuint getActiveShader();
 	void useShader();
 	void stopShader();
-	virtual void update(Transform* transform, Texture* texture);
+	virtual void update(Transform* transform, Texture* texture, Light* light);
 
 private:
 	GLuint loadShader(const char*, GLuint);

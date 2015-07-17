@@ -119,7 +119,7 @@ void Game::render()
 	for (Entity* e : entities)
 	{
 		try{
-			e->render(shader);
+			e->render(shader, light);
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
@@ -128,7 +128,7 @@ void Game::render()
 	for (Entity* e : monsters)
 	{
 		try{
-			e->render(shader);
+			e->render(shader, light);
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
@@ -137,7 +137,7 @@ void Game::render()
 	for (Entity* e : attacks)
 	{
 		try{
-			e->render(shader);
+			e->render(shader, light);
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;

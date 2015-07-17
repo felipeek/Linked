@@ -2,6 +2,7 @@
 #include "Transform.h"
 #include "Camera.h"
 #include "Texture.h"
+#include "Light.h"
 #include "glm\glm.hpp"
 #include "glm\gtc\matrix_transform.hpp"
 #include <fstream>
@@ -32,7 +33,7 @@ void Shader::stopShader()
 	glUseProgram(0);
 }
 
-void Shader::update(Transform* transform, Texture* texture)
+void Shader::update(Transform* transform, Texture* texture, Light* light)
 {
 	std::cout << "Shader abstrato update!" << std::endl;
 }

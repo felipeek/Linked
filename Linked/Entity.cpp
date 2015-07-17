@@ -1,5 +1,6 @@
 #include "Entity.h"
 #include "Monster.h"
+#include "Light.h"
 
 Entity::Entity(Transform* transform, Mesh* mesh, Texture* texture)
 {
@@ -23,10 +24,10 @@ Transform* Entity::getTransform()
 	return transform;
 }
 
-void Entity::render(Shader* shader)
+void Entity::render(Shader* shader, Light* light)
 {
 	shader->useShader();
-	shader->update(transform, texture);
+	shader->update(transform, texture, light);
 	bindTextures();
 	mesh->render();
 	shader->stopShader();
