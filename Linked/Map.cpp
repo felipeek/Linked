@@ -30,25 +30,19 @@ MapCoordinate::~MapCoordinate()
 {
 }
 
-MapTerrain Map::getMapTerrainWithMovementCollisionForCoordinate(glm::vec3 coordinate)
+bool Map::coordinateHasCollision(glm::vec3 coordinate)
 {
-	MapTerrain mapTerrain;
+	if (!mapTerrainLoader->coordinateHasCollision(coordinate))
+		if (!mapMonsterLoader->coordinateHasCollision(coordinate))
+			if (!mapGameEntityLoader->coordinateHasCollision(coordinate))
+				return false;
 
-	mapTerrain = mapTerrainLoader->getMapTerrainWithMovementCollisionForCoordinate(coordinate);
-
-	return mapTerrain;
+	return true;
 }
 
-MapTerrain Map::getMapTerrainForCoordinate(glm::vec3 coordinate)
-{
-	MapTerrain mapTerrain;
-
-	mapTerrain = mapTerrainLoader->getMapTerrainForCoordinate(coordinate);
-
-	return mapTerrain;
-}
-
-MapCoordinate Map::getMapCoordinateForCoordinate(glm::vec3 coordinate)
+// Can only be used to Map Creation
+// It will create new monsters/entity whenever called.
+MapCoordinate Map::getMapCoordinateForMapCreation(glm::vec3 coordinate)
 {
 	MapCoordinate mapCoordinates;
 
@@ -65,4 +59,10 @@ MapCoordinate Map::getMapCoordinateForCoordinate(glm::vec3 coordinate)
 		mapCoordinates.mapGameEntity = MapGameEntity::initWithNoGameEntity();
 
 	return mapCoordinates;
+}
+
+// can be done because 'getMapTerrainForCoordinate' does not create anything on heap
+MapTerrain Map::getMapTerrainForCoordinate(glm::vec3 coordinate)
+{
+	return mapTerrainLoader->getMapTerrainForCoordinate(coordinate);
 }

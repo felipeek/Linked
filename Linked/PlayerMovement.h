@@ -25,5 +25,6 @@ private:
 	Map* map;
 	Entity* player;
 	bool moveTo(MovementDirection direction, glm::vec3 currentPosition, float range, bool isOnlyKeyPressed, glm::vec3 *endPosition);
+	bool checkIfPlayerIsStillOnTheSameMapPosition(glm::vec3 currentPosition, glm::vec3 nextPosition);
 };
 
