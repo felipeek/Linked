@@ -53,6 +53,11 @@ void RangeAttack::update()
 			delete (*attacks)[i];
 			attacks->erase((*attacks).begin() + i);
 		}
+		else if (MapTerrainImageLoader::isOfCollisionType(map->getMapTerrainForCoordinate((*attacks)[i]->getTransform()->getPosition())))
+		{
+			delete (*attacks)[i];
+			attacks->erase((*attacks).begin() + i);
+		}
 		else if (now - (*attacks)[i]->spawnTime >= life)
 		{
 			delete (*attacks)[i];
@@ -108,10 +113,7 @@ bool RangeAttack::monsterCollision(Projectile* projectile, int* hitMonsterIndex)
 			*hitMonsterIndex = i;
 			return true;
 		}
-		if (MapTerrainImageLoader::isOfCollisionType(map->getMapTerrainForCoordinate(projPosition)))
-		{
-			return true;
-		}
+		
 	}
 	return false;
 }

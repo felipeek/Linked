@@ -32,7 +32,7 @@
 Game::Game(int windowsWidth, int windowsHeight)
 {	
 	// Câmera luz e shaders
-	this->camera = new Camera(glm::vec3(0, 0, 50), glm::vec3(0, 0, 0), 70.0f, (float)windowsWidth / windowsHeight, 0.1f, 2500.0f);
+	this->camera = new Camera(glm::vec3(0, 0, 50), glm::vec3(0, 0, 0), 70.0f, (float)windowsWidth / windowsHeight, 0.1f, 500.0f);
 	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 1, 1));
 	this->shader = new PrimitiveShader("./shaders/normalshader", camera);
 	this->mapShader = new MapShader("./shaders/mapshader", camera);
@@ -45,7 +45,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	// Criação do Mapa, Monstros e Entidades
 	std::string mapPath = "./res/Maps/teste.png";
 	std::string entitiesMapPath = "./res/Maps/entities.png";
-	std::string monsterMapPath = "./res/Maps/poringMap.png";
+	std::string monsterMapPath = "./res/Maps/1monstro.png";
 
 	this->monsterFactory = new MonsterFactory();
 	this->gameEntityFactory = new GameEntityFactory();
@@ -81,12 +81,6 @@ Game::Game(int windowsWidth, int windowsHeight)
 			}
 		}
 
-	//Mesh* houseMesh = new Mesh("./res/obj/house1.obj", 0, 0);
-	//Texture* houseTexture = new Texture("./res/obj/Textures/house1Texture1.png");
-	//Entity* house1 = new Entity(new Transform(glm::vec3(530, 500, 0), 90, glm::vec3(1, 0, 0), glm::vec3(0.6f, 0.6f, 0.6f)), houseMesh, houseTexture);
-	//house1->getTransform()->incRotateY(180);
-	//entities.push_back(house1);
-		
 	/*for (int i = 0; i < monsters.size(); i++)
 		std::cout << monsters[i]->getName() << std::endl;*/
 
