@@ -74,12 +74,14 @@ GameEntity* GameEntityFactory::generateCopyOfGameEntity(GameEntity* gameEntity)
 	copy->setMesh(gameEntity->getMesh());
 	// Copy Texture (A new texture object must be created for each gameEntity)
 	Texture* gameEntityTexture = gameEntity->getTexture();
-	copy->setTexture(new Texture(gameEntityTexture->getFilename(), 2, 2));
+	copy->setTexture(new Texture(gameEntityTexture->getFilename()));
 	// Copy Transform (A new transform object must be created for each gameEntity)
 	Transform *gameEntityTransform = gameEntity->getTransform();
-	vec3 gameEntityTransformPosition = gameEntityTransform->getPosition();
-	vec3 gameEntityTransformScale = gameEntityTransform->getScale();
-	copy->setTransform(new Transform(gameEntityTransformPosition, STANDARD_ANGLE, STANDARD_AXIS, gameEntityTransformScale));
+	glm::vec3 gameEntityTransformPosition = gameEntityTransform->getPosition();
+	glm::vec3 gameEntityTransformScale = gameEntityTransform->getScale();
+	float gameEntityTransformAngleY = gameEntityTransform->getAngleY();
+	copy->setTransform(new Transform(gameEntityTransformPosition, GAMEENTITY_STANDARD_ANGLE, GAMEENTITY_STANDARD_AXIS, gameEntityTransformScale));
+	copy->getTransform()->incRotateY(gameEntityTransformAngleY);
 
 	return copy;
 }
@@ -92,34 +94,32 @@ GameEntity* GameEntityFactory::parseXmlGameEntity(char* monsterPath)
 	GameEntity* gameEntity = new GameEntity(NULL, NULL, NULL);
 	std::string xmlRootNodeName = std::string(doc.first_node()->name());
 
-	if (xmlRootNodeName == ROOT_NODE)
+	if (xmlRootNodeName == GAMEENTITY_ROOT_NODE)
 	{
 		xml_node<> *rootNode = doc.first_node();
 
-		gameEntity->setTransform(new Transform(STANDARD_POSITION, STANDARD_ANGLE, STANDARD_AXIS, STANDARD_SCALE));
+		gameEntity->setTransform(new Transform(GAMEENTITY_STANDARD_POSITION, GAMEENTITY_STANDARD_ANGLE, GAMEENTITY_STANDARD_AXIS, GAMEENTITY_STANDARD_SCALE));
 
 		for (xml_node<> *child = rootNode->first_node(); child; child = child->next_sibling())
 		{
 			std::string nodeName = std::string(child->name());
 			char* nodeValue = child->value();
 
-			if (nodeName == NAME_NODE)
+			if (nodeName == GAMEENTITY_NAME_NODE)
 				gameEntity->setName(std::string(nodeValue));
-			else if (nodeName == TEXTURE_NODE)
-				gameEntity->setTexture(new Texture(GAMEENTITY_DIRECTORY + std::string(nodeValue), 2, 2));
-			else if (nodeName == OBJECT_NODE)
+			else if (nodeName == GAMEENTITY_TEXTURE_NODE)
+				gameEntity->setTexture(new Texture(GAMEENTITY_DIRECTORY + std::string(nodeValue)));
+			else if (nodeName == GAMEENTITY_OBJECT_NODE)
 				gameEntity->setMesh(new Mesh(GAMEENTITY_DIRECTORY + std::string(nodeValue), 0, 0));
-			else if (nodeName == XSIZE_NODE)
-				gameEntity->getTransform()->scale(std::atoi(nodeValue) / 10.0f, 1, 1);
-			else if (nodeName == YSIZE_NODE)
-				gameEntity->getTransform()->scale(1, std::atoi(nodeValue) / 10.0f, 1);
-			else if (nodeName == ZSIZE_NODE)
-				gameEntity->getTransform()->scale(1, 1, std::atoi(nodeValue) / 10.0f);
-			else if (nodeName == RED_NODE)
+			else if (nodeName == GAMEENTITY_SIZE_NODE)
+				gameEntity->getTransform()->scale(std::atoi(nodeValue) / 10.0f, std::atoi(nodeValue) / 10.0f, std::atoi(nodeValue) / 10.0f);
+			else if (nodeName == GAMEENTITY_ANGLE_NODE)
+				gameEntity->getTransform()->incRotateY(std::stof(nodeValue));
+			else if (nodeName == GAMEENTITY_RED_NODE)
 				gameEntity->setMapColorRed(std::atoi(nodeValue));
-			else if (nodeName == GREEN_NODE)
+			else if (nodeName == GAMEENTITY_GREEN_NODE)
 				gameEntity->setMapColorGreen(std::atoi(nodeValue));
-			else if (nodeName == BLUE_NODE)
+			else if (nodeName == GAMEENTITY_BLUE_NODE)
 				gameEntity->setMapColorBlue(std::atoi(nodeValue));
 		}
 	}

@@ -16,21 +16,21 @@ Grid::Grid(int blockSize, Map* map)
 			float height2 = 0;
 			float height3 = 0;
 			float height4 = 0;
-			if (map->getMapCoordinateForMapCreation(glm::vec3(j, i, 0)).terrain == BLOCKED)
+			if (map->getMapTerrainForCoordinate(glm::vec3(j, i, 0)) == BLOCKED)
 				height1 = height;
-			if (map->getMapCoordinateForMapCreation(glm::vec3(j, i + 1, 0)).terrain == BLOCKED)
+			if (map->getMapTerrainForCoordinate(glm::vec3(j, i + 1, 0)) == BLOCKED)
 				height2 = height;
-			if (map->getMapCoordinateForMapCreation(glm::vec3(j + 1, i, 0)).terrain == BLOCKED)
+			if (map->getMapTerrainForCoordinate(glm::vec3(j + 1, i, 0)) == BLOCKED)
 				height3 = height;
-			if (map->getMapCoordinateForMapCreation(glm::vec3(j + 1, i + 1, 0)).terrain == BLOCKED)
+			if (map->getMapTerrainForCoordinate(glm::vec3(j + 1, i + 1, 0)) == BLOCKED)
 				height4 = height;
-			if (map->getMapCoordinateForMapCreation(glm::vec3(j, i, 0)).terrain == WATER)
+			if (map->getMapTerrainForCoordinate(glm::vec3(j, i, 0)) == WATER)
 				height1 = -height;
-			if (map->getMapCoordinateForMapCreation(glm::vec3(j, i + 1, 0)).terrain == WATER)
+			if (map->getMapTerrainForCoordinate(glm::vec3(j, i + 1, 0)) == WATER)
 				height2 = -height;
-			if (map->getMapCoordinateForMapCreation(glm::vec3(j + 1, i, 0)).terrain == WATER)
+			if (map->getMapTerrainForCoordinate(glm::vec3(j + 1, i, 0)) == WATER)
 				height3 = -height;
-			if (map->getMapCoordinateForMapCreation(glm::vec3(j + 1, i + 1, 0)).terrain == WATER)
+			if (map->getMapTerrainForCoordinate(glm::vec3(j + 1, i + 1, 0)) == WATER)
 				height4 = -height;
 
 			glm::vec3 pos1 = glm::vec3(j, i, height1);

@@ -30,30 +30,29 @@ MapCoordinate::~MapCoordinate()
 {
 }
 
-MapCoordinate Map::getMapCoordinateForPlayerMovement(glm::vec3 coordinate)
+MapTerrain Map::getMapTerrainWithMovementCollisionForCoordinate(glm::vec3 coordinate)
 {
-	MapCoordinate mapCoordinates;
+	MapTerrain mapTerrain;
 
-	mapCoordinates.terrain = mapTerrainLoader->getMapTerrainForPlayerMovement(coordinate);
+	mapTerrain = mapTerrainLoader->getMapTerrainWithMovementCollisionForCoordinate(coordinate);
 
-	if (mapMonsterLoader != NULL)
-		mapCoordinates.mapMonster = mapMonsterLoader->getMonster(coordinate);
-	else
-		mapCoordinates.mapMonster = MapMonster::initWithNoMonster();
-
-	if (mapGameEntityLoader != NULL)
-		mapCoordinates.mapGameEntity = mapGameEntityLoader->getMapEntity(coordinate);
-	else
-		mapCoordinates.mapGameEntity = MapGameEntity::initWithNoGameEntity();
-
-	return mapCoordinates;
+	return mapTerrain;
 }
 
-MapCoordinate Map::getMapCoordinateForMapCreation(glm::vec3 coordinate)
+MapTerrain Map::getMapTerrainForCoordinate(glm::vec3 coordinate)
+{
+	MapTerrain mapTerrain;
+
+	mapTerrain = mapTerrainLoader->getMapTerrainForCoordinate(coordinate);
+
+	return mapTerrain;
+}
+
+MapCoordinate Map::getMapCoordinateForCoordinate(glm::vec3 coordinate)
 {
 	MapCoordinate mapCoordinates;
 
-	mapCoordinates.terrain = mapTerrainLoader->getMapTerrainForMapCreation(coordinate);
+	mapCoordinates.terrain = mapTerrainLoader->getMapTerrainForCoordinate(coordinate);
 	
 	if (mapMonsterLoader != NULL)
 		mapCoordinates.mapMonster = mapMonsterLoader->getMonster(coordinate);

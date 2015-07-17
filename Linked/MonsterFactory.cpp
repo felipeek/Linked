@@ -86,7 +86,7 @@ Monster* MonsterFactory::generateCopyOfMonster(Monster* monster)
 	Transform *monsterTransform = monster->getTransform();
 	vec3 monsterTransformPosition = monsterTransform->getPosition();
 	vec3 monsterTransformScale = monsterTransform->getScale();
-	copy->setTransform(new Transform(monsterTransformPosition, STANDARD_ANGLE, STANDARD_AXIS, monsterTransformScale));
+	copy->setTransform(new Transform(monsterTransformPosition, MONSTERS_STANDARD_ANGLE, MONSTERS_STANDARD_AXIS, monsterTransformScale));
 
 	return copy;
 }
@@ -99,43 +99,43 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 	Monster* monster = new Monster(NULL, NULL, NULL);
 	std::string xmlRootNodeName = std::string(doc.first_node()->name());
 
-	if (xmlRootNodeName == ROOT_NODE)
+	if (xmlRootNodeName == MONSTERS_ROOT_NODE)
 	{
 		xml_node<> *rootNode = doc.first_node();
 
 		monster->setMesh(new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f)));
-		monster->setTransform(new Transform(STANDARD_POSITION, STANDARD_ANGLE, STANDARD_AXIS, STANDARD_SCALE));
+		monster->setTransform(new Transform(MONSTERS_STANDARD_POSITION, MONSTERS_STANDARD_ANGLE, MONSTERS_STANDARD_AXIS, MONSTERS_STANDARD_SCALE));
 
 		for (xml_node<> *child = rootNode->first_node(); child; child = child->next_sibling())
 		{
 			std::string nodeName = std::string(child->name());
 			char* nodeValue = child->value();
 
-			if (nodeName == NAME_NODE)
+			if (nodeName == MONSTERS_NAME_NODE)
 				monster->setName(std::string(nodeValue));
-			else if (nodeName == SPRITE_NODE)
+			else if (nodeName == MONSTERS_SPRITE_NODE)
 				monster->setTexture(new Texture(MONSTERS_DIRECTORY + std::string(nodeValue), 2, 2));
-			else if (nodeName == SIZE_NODE)
+			else if (nodeName == MONSTERS_SIZE_NODE)
 				monster->getTransform()->scale(std::atoi(nodeValue) / 10.0f, std::atoi(nodeValue) / 10.0f, std::atoi(nodeValue) / 10.0f);
-			else if (nodeName == COLLISIONRANGE_NODE)
+			else if (nodeName == MONSTERS_COLLISIONRANGE_NODE)
 				monster->setCollisionRange(std::atoi(nodeValue));
-			else if (nodeName == MAXHP_NODE)
+			else if (nodeName == MONSTERS_MAXHP_NODE)
 				monster->setMaxHp(std::atoi(nodeValue));
-			else if (nodeName == HP_NODE)
+			else if (nodeName == MONSTERS_HP_NODE)
 				monster->setHp(std::atoi(nodeValue));
-			else if (nodeName == ATTACK_NODE)
+			else if (nodeName == MONSTERS_ATTACK_NODE)
 				monster->setAttack(std::atoi(nodeValue));
-			else if (nodeName == DEFENSE_NODE)
+			else if (nodeName == MONSTERS_DEFENSE_NODE)
 				monster->setDefense(std::atoi(nodeValue));
-			else if (nodeName == SPEED_NODE)
+			else if (nodeName == MONSTERS_SPEED_NODE)
 				monster->setSpeed(std::atoi(nodeValue));
-			else if (nodeName == RANGE_NODE)
+			else if (nodeName == MONSTERS_RANGE_NODE)
 				monster->setRange(std::atoi(nodeValue));
-			else if (nodeName == RED_NODE)
+			else if (nodeName == MONSTERS_RED_NODE)
 				monster->setMapColorRed(std::atoi(nodeValue));
-			else if (nodeName == GREEN_NODE)
+			else if (nodeName == MONSTERS_GREEN_NODE)
 				monster->setMapColorGreen(std::atoi(nodeValue));
-			else if (nodeName == BLUE_NODE)
+			else if (nodeName == MONSTERS_BLUE_NODE)
 				monster->setMapColorBlue(std::atoi(nodeValue));
 		}
 	}

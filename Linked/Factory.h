@@ -2,8 +2,8 @@
 #include <vector>
 #include <string>
 
-#define FILE_EXTENSION ".xml"
-#define READ_DIRECTORY_ERROR "Error trying to read directory"
+#define FACTORY_FILE_EXTENSION ".xml"
+#define FACTORY_READ_DIRECTORY_ERROR "Error trying to read directory"
 
 class Factory
 {

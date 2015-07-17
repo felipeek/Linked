@@ -15,6 +15,7 @@ class Monster;
 class RangeAttack;
 class Projectile;
 class GameEntityFactory;
+class GameEntity;
 
 class Game
 {
@@ -27,13 +28,13 @@ public:
 private:
 	std::vector<Entity*> entities;
 	std::vector<Projectile*> attacks;
+	std::vector<GameEntity*> gameEntities;
 	Camera* camera;
 	PrimitiveShader* shader;
 	Light* light;
 	EntityMap* entityMap;
 	MapShader* mapShader;
 	Map* map;
-	Map* monsterMap;
 	PlayerMovement* playerMovement;
 	MonsterFactory* monsterFactory;
 	GameEntityFactory* gameEntityFactory;

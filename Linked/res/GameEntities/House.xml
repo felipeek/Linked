@@ -1,8 +1,9 @@
 <GAMEENTITY>
   <NAME>House</NAME>
-  <XSIZE>100</XSIZE>
-  <YSIZE>100</YSIZE>
-  <ZSIZE>100</ZSIZE>
+  <OBJECT>Objects/house.obj</OBJECT>
+  <TEXTURE>Textures/house.png</TEXTURE>
+  <SIZE>7</SIZE>
+  <ANGLE>180</ANGLE>
   <RED>255</RED>
   <GREEN>0</GREEN>
   <BLUE>0</BLUE>

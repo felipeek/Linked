@@ -107,7 +107,7 @@ MovementDefinition AI::nextRandomStep()
 	movDef.direction = randomDirection;
 	movDef.movement = randomChangedReference;
 
-	if (!MapTerrainImageLoader::isOfCollisionType(randomMap->getMapCoordinateForPlayerMovement(randomChangedReference).terrain))
+	if (!MapTerrainImageLoader::isOfCollisionType(randomMap->getMapTerrainWithMovementCollisionForCoordinate(randomChangedReference)))
 	{
 		movDef.doMove = true;
 		if (length(randomReference - randomChangedReference) >= RANDOM_MOVEMENT_FACTOR)
@@ -176,7 +176,7 @@ MovementDefinition AI::movePerfectlyTo(Map* map, glm::vec3 reference, glm::vec3 
 			movDef.direction = BOTTOM;
 		}
 
-		if (!MapTerrainImageLoader::isOfCollisionType(map->getMapCoordinateForPlayerMovement(movement).terrain))
+		if (!MapTerrainImageLoader::isOfCollisionType(map->getMapTerrainWithMovementCollisionForCoordinate(movement)))
 		{
 			movDef.doMove = true;
 			movDef.movement = movement;
@@ -252,7 +252,7 @@ MovementDefinition AI::movePerfectlyAway(Map* map, glm::vec3 reference, glm::vec
 			movDef.direction = BOTTOM;
 		}
 
-		if (!MapTerrainImageLoader::isOfCollisionType(map->getMapCoordinateForPlayerMovement(movement).terrain))
+		if (!MapTerrainImageLoader::isOfCollisionType(map->getMapTerrainWithMovementCollisionForCoordinate(movement)))
 		{
 			movDef.doMove = true;
 			movDef.movement = movement;

@@ -81,7 +81,7 @@ MovementDefinition MonsterAI::moveToDestination(Map *monsterMovementMap, glm::ve
 		{
 			differenceVector = differenceVector * 1.1f;
 
-			if (MapTerrainImageLoader::isOfCollisionType(monsterMovementMap->getMapCoordinateForPlayerMovement(monsterMovementReference - differenceVector).terrain))
+			if (MapTerrainImageLoader::isOfCollisionType(monsterMovementMap->getMapTerrainWithMovementCollisionForCoordinate(monsterMovementReference - differenceVector)))
 			{
 				stopMovingToPosition();
 				if (isMovingRandomly())
@@ -138,7 +138,7 @@ MovementDefinition MonsterAI::nextPositionMovementStep()
 		glm::vec3 moveRange = glm::vec3(directionVector.x * positionMovementRangeSpeed, directionVector.y * positionMovementRangeSpeed, 0);
 		positionMovementReference = positionMovementReference + moveRange;
 		virtualTravelledDistance = virtualTravelledDistance + moveRange;
-		if (!MapTerrainImageLoader::isOfCollisionType(positionMovementMap->getMapCoordinateForPlayerMovement(movement).terrain))
+		if (!MapTerrainImageLoader::isOfCollisionType(positionMovementMap->getMapTerrainWithMovementCollisionForCoordinate(movement)))
 		{
 			movDef.doMove = true;
 			movDef.movement = positionMovementReference;

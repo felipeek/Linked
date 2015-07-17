@@ -21,7 +21,7 @@ std::vector<std::string> Factory::getListOfFilesInDirectory(char* directory)
 	{
 		while ((ent = readdir(dir)) != NULL) {
 			aux = ent->d_name;
-			if (strstr(aux, FILE_EXTENSION))
+			if (strstr(aux, FACTORY_FILE_EXTENSION))
 				fileNames.push_back(std::string(aux));
 		}
 
@@ -29,7 +29,7 @@ std::vector<std::string> Factory::getListOfFilesInDirectory(char* directory)
 	}
 	else
 	{
-		perror(READ_DIRECTORY_ERROR);
+		perror(FACTORY_READ_DIRECTORY_ERROR);
 	}
 
 	return fileNames;

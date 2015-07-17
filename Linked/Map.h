@@ -18,8 +18,9 @@ public:
 	Map(std::string& mapTerrainFilename, std::string& mapEntityFilename, int nChannels);
 	Map(std::string& mapTerrainFilename, std::string& mapEntityFilename, std::string& mapMonsterFilename, int nChannels, MonsterFactory* monsterFactory, GameEntityFactory* gameEntityFactory);
 	~Map();
-	MapCoordinate getMapCoordinateForPlayerMovement(glm::vec3 coordinate);
-	MapCoordinate getMapCoordinateForMapCreation(glm::vec3 coordinate);
+	MapTerrain getMapTerrainWithMovementCollisionForCoordinate(glm::vec3 coordinate);
+	MapCoordinate getMapCoordinateForCoordinate(glm::vec3 coordinate);
+	MapTerrain getMapTerrainForCoordinate(glm::vec3 coordinate);
 private:
 	MapTerrainImageLoader* mapTerrainLoader;
 	MapGameEntityImageLoader* mapGameEntityLoader;
