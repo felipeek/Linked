@@ -1,5 +1,5 @@
 #include "Primitive.h"
-
+#include <glm\gtc\matrix_transform.hpp>
 
 Primitive::Primitive()
 {
@@ -24,10 +24,11 @@ Quad::Quad(glm::vec3 center, float sizeX, float sizeY)
 	model->positions.push_back(botL);
 	model->positions.push_back(botR);
 
-	model->normals.push_back(glm::vec3(0, 1, 0));
-	model->normals.push_back(glm::vec3(0, 1, 0));
-	model->normals.push_back(glm::vec3(0, 1, 0));
-	model->normals.push_back(glm::vec3(0, 1, 0));
+	glm::vec3 normal = glm::vec3(glm::rotate(glm::mat4(), -ANGLE, glm::vec3(1, 0, 0)) * glm::vec4(0,0,1,1));
+	model->normals.push_back(normal);
+	model->normals.push_back(normal);
+	model->normals.push_back(normal);
+	model->normals.push_back(normal);
 
 	model->texCoords.push_back(glm::vec2(0, 1));
 	model->texCoords.push_back(glm::vec2(1, 1));

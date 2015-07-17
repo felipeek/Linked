@@ -1,6 +1,8 @@
 #pragma once
 #include "IndexedModel.h"
 
+#define ANGLE 30.0f
+
 class Primitive
 {
 public:

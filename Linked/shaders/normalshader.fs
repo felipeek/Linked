@@ -18,8 +18,8 @@ void main(){
 		discard;
 	}
 	
-	vec3 surfaceToLight2 = vec3(100,100,100);
-	float cosAngle = dot(normalize(normal), normalize(surfaceToLight2));
+	//vec3 surfaceToLight2 = vec3(100,100,100);
+	float cosAngle = dot(normalize(normal), normalize(surfaceToLight));
 	vec3 diffuse = max(cosAngle * lightCol, 0.1);
 	
 	out_Color = textureColor * vec4(diffuse, 1.0);

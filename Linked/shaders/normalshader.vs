@@ -25,7 +25,7 @@ void main()
 	uvCoords = vec2(textureCoord.x, textureCoord.y);
 	uvCoords = (uvCoords/textureNumRows) + textureOffset;
 	
-	normal = vec3(Model * vec4(vertexNormal_modelspace, 1.0));
+	normal = vec3(Model * vec4(vertexNormal_modelspace, 0.0));
 	
 	lightPos = lightPosition;
 	lightCol = lightColor;
