@@ -80,6 +80,15 @@ Game::Game(int windowsWidth, int windowsHeight)
 			}
 		}
 
+	//Mesh* houseMesh = new Mesh("./res/obj/house1.obj", 0, 0);
+	//Texture* houseTexture = new Texture("./res/obj/Textures/house1Texture1.png");
+	//Entity* house1 = new Entity(new Transform(glm::vec3(530, 500, 0), 90, glm::vec3(1, 0, 0), glm::vec3(0.6f, 0.6f, 0.6f)), houseMesh, houseTexture);
+	//house1->getTransform()->incRotateY(180);
+	//entities.push_back(house1);
+		
+	/*for (int i = 0; i < monsters.size(); i++)
+		std::cout << monsters[i]->getName() << std::endl;*/
+
 	//std::cout << monsters.size() << std::endl;
 
 	lastTime = 0;

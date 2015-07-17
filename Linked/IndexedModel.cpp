@@ -1,5 +1,6 @@
 #include "IndexedModel.h"
 #include <fstream>
+#include <iostream>
 
 using namespace std;
 
@@ -55,20 +56,28 @@ void ObjModel::loadObjFile(string fileName)
 {
 	ifstream objFile(fileName);
 	string line;
-	while (!objFile.eof())
+	if (objFile.is_open())
 	{
-		getline(objFile, line);
+		while (!objFile.eof())
+		{
+			getline(objFile, line);
 
-		if (line[0] == 'v' && line[1] == ' ')
-			positions.push_back(parseVertex(line));
-		if (line[0] == 'v' && line[1] == 't')
-			texCoords.push_back(parseTexCoord(line));
-		if (line[0] == 'v' && line[1] == 'n')
-			normals.push_back(parseNormal(line));
-		if (line[0] == 'f' && line[1] == ' ')
-			parseTriangles(line);
+			if (line[0] == 'v' && line[1] == ' ')
+				positions.push_back(parseVertex(line));
+			if (line[0] == 'v' && line[1] == 't')
+				texCoords.push_back(parseTexCoord(line));
+			if (line[0] == 'v' && line[1] == 'n')
+				normals.push_back(parseNormal(line));
+			if (line[0] == 'f' && line[1] == ' ')
+				parseTriangles(line);
+		}
+		objFile.close();
 	}
-	objFile.close();
+	else
+	{
+		std::cerr << "File not found: " << fileName << std::endl;
+	}
+	
 }
 
 glm::vec3 ObjModel::parseVertex(string& line)

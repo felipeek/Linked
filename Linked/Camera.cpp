@@ -4,7 +4,7 @@
 Camera::Camera(glm::vec3 position, glm::vec3 orientation, float fov, float aspect, float zNear, float zFar)
 {
 	distance = 20.0f;
-	angle = 3;
+	angle = 2;
 	camPosition = position;
 	camOrientation = orientation;
 	viewMatrix = glm::lookAt(position, orientation, glm::vec3(0, 1, 0));
