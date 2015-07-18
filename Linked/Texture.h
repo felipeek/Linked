@@ -8,6 +8,7 @@ class Texture : public ImageLoader
 public:
 	Texture(std::string fileName);
 	Texture(std::string fileName, int numRows, int index);
+	Texture();
 	~Texture();
 	GLuint textureID;
 	GLuint genGLTexture();
@@ -15,9 +16,21 @@ public:
 	float numRows;
 	glm::vec2 offset;
 	std::string getFilename();
-private:
+	// Implement if necessary
+	//virtual unsigned char* getLoadedImage();
+protected:
 	float index;
 	void calcAtlas();
 	std::string fileName;
 };
 
+class DynamicTexture : public Texture
+{
+public:
+	DynamicTexture(int rows, int index, bool mipmap);
+	~DynamicTexture();
+	// Implement if necessary
+	//virtual unsigned char* getLoadedImage();
+private:
+	GLuint genDynamicGLTexture(bool mipmap);
+};

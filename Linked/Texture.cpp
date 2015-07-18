@@ -19,9 +19,8 @@ Texture::Texture(std::string fileName, int numRows, int index) : ImageLoader(fil
 	textureID = genGLTexture();
 }
 
-Texture::~Texture()
-{
-}
+Texture::Texture(){}
+Texture::~Texture(){}
 
 std::string Texture::getFilename()
 {
@@ -59,4 +58,38 @@ void Texture::setIndex(int i)
 {
 	index = (float)i;
 	calcAtlas();
+}
+
+DynamicTexture::DynamicTexture(int rows, int index, bool mipmap)
+{
+	this->fileName = "";
+	this->numRows = (float)numRows;
+	this->index = (float)index;
+	calcAtlas();
+	textureID = genDynamicGLTexture(mipmap);
+}
+
+DynamicTexture::~DynamicTexture()
+{
+	stbi_image_free(loadedImage);
+}
+
+GLuint DynamicTexture::genDynamicGLTexture(bool mipmap)
+{
+	glGenTextures(1, &textureID);
+
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, loadedImage);
+
+	if (mipmap)
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+
+	return textureID;
 }

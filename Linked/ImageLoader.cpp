@@ -11,6 +11,10 @@ ImageLoader::ImageLoader(std::string& filename, int nChannels)
 	loadedImage = stbi_load(filename.c_str(), &width, &height, &channels, nChannels);
 }
 
+ImageLoader::ImageLoader()
+{
+	loadedImage = NULL;
+}
 
 ImageLoader::~ImageLoader()
 {
@@ -31,4 +35,22 @@ vec3 ImageLoader::getPixel(int x, int y)
 	std::cout << "Y: " << y << std::endl;
 	std::cout << "rgb: (" << rgb_vector.r << ", " << rgb_vector.g << ", " << rgb_vector.b << ")" << std::endl;*/
 	return rgb_vector;
+}
+
+int ImageLoader::getWidth()
+{
+	return width;
+}
+int ImageLoader::getHeight()
+{
+	return height;
+}
+int ImageLoader::getChannels()
+{
+	return channels;
+}
+
+unsigned char* ImageLoader::getLoadedImage()
+{
+	return loadedImage;
 }
