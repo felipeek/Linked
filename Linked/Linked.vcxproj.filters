@@ -207,6 +207,9 @@
     <ClInclude Include="RangeAttack.h">
       <Filter>Header Files\Game\Attack</Filter>
     </ClInclude>
+    <ClInclude Include="Creature.h">
+      <Filter>Header Files\Game\Models</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -334,6 +337,9 @@
     </ClCompile>
     <ClCompile Include="MouseAttack.cpp">
       <Filter>Source Files\Game\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="Creature.cpp">
+      <Filter>Source Files\Game\Models</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

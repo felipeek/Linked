@@ -103,7 +103,7 @@ bool RangeAttack::monsterCollision(Projectile* projectile, int* hitMonsterIndex)
 	for (unsigned int i = 0; i < monsters->size(); i++)
 	{
 		glm::vec3 monsterPos = (*monsters)[i]->getTransform()->getPosition();
-		float monsterSize = (*monsters)[i]->getCollisionRange()/10.0f;
+		float monsterSize = (*monsters)[i]->getTotalCollisionRange()/10.0f;
 		
 		float difference = glm::length(glm::vec2(monsterPos) - glm::vec2(projPosition));
 

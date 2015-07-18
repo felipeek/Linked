@@ -68,15 +68,16 @@ Monster* MonsterFactory::generateCopyOfMonster(Monster* monster)
 	Monster* copy = new Monster(NULL, NULL, NULL);
 
 	// Copy Basic Attributes
-	copy->setAttack(monster->getAttack());
-	copy->setDefense(monster->getDefense());
+	copy->setTotalAttack(monster->getTotalAttack());
+	copy->setTotalDefense(monster->getTotalDefense());
 	copy->setHp(monster->getHp());
-	copy->setMaxHp(monster->getMaxHp());
+	copy->setTotalMaximumHp(monster->getTotalMaximumHp());
 	copy->setMapColor(monster->getMapColor());
 	copy->setName(monster->getName());
-	copy->setSpeed(monster->getSpeed());
-	copy->setRange(monster->getRange());
-	copy->setCollisionRange(monster->getCollisionRange());
+	copy->setTotalSpeed(monster->getTotalSpeed());
+	copy->setTotalRange(monster->getTotalRange());
+	copy->setTotalCollisionRange(monster->getTotalCollisionRange());
+	copy->setTotalAttackSpeed(monster->getTotalAttackSpeed());
 	// Copy Mesh (The same mesh will be setted for all monsters of same class)
 	copy->setMesh(monster->getMesh());
 	// Copy Texture (A new texture object must be created for each monster)
@@ -118,19 +119,21 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 			else if (nodeName == MONSTERS_SIZE_NODE)
 				monster->getTransform()->scale(std::atoi(nodeValue) / 10.0f, std::atoi(nodeValue) / 10.0f, std::atoi(nodeValue) / 10.0f);
 			else if (nodeName == MONSTERS_COLLISIONRANGE_NODE)
-				monster->setCollisionRange(std::atoi(nodeValue));
+				monster->setTotalCollisionRange(std::atoi(nodeValue));
 			else if (nodeName == MONSTERS_MAXHP_NODE)
-				monster->setMaxHp(std::atoi(nodeValue));
+				monster->setTotalMaximumHp(std::atoi(nodeValue));
 			else if (nodeName == MONSTERS_HP_NODE)
 				monster->setHp(std::atoi(nodeValue));
 			else if (nodeName == MONSTERS_ATTACK_NODE)
-				monster->setAttack(std::atoi(nodeValue));
+				monster->setTotalAttack(std::atoi(nodeValue));
 			else if (nodeName == MONSTERS_DEFENSE_NODE)
-				monster->setDefense(std::atoi(nodeValue));
+				monster->setTotalDefense(std::atoi(nodeValue));
 			else if (nodeName == MONSTERS_SPEED_NODE)
-				monster->setSpeed(std::atoi(nodeValue));
+				monster->setTotalSpeed(std::atoi(nodeValue));
 			else if (nodeName == MONSTERS_RANGE_NODE)
-				monster->setRange(std::atoi(nodeValue));
+				monster->setTotalRange(std::atoi(nodeValue));
+			else if (nodeName == MONSTERS_ATTACKSPEED_NODE)
+				monster->setTotalAttackSpeed(std::atoi(nodeValue));
 			else if (nodeName == MONSTERS_RED_NODE)
 				monster->setMapColorRed(std::atoi(nodeValue));
 			else if (nodeName == MONSTERS_GREEN_NODE)

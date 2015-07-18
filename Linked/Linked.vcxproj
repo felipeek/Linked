@@ -75,6 +75,7 @@
   <ItemGroup>
     <ClInclude Include="AI.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Creature.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityMap.h" />
@@ -118,6 +119,7 @@
   <ItemGroup>
     <ClCompile Include="AI.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Creature.cpp" />
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityMap.cpp" />

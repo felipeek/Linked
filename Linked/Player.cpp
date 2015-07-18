@@ -1,23 +1,17 @@
 #include "Player.h"
-#define DEFAULT_NAME "unnamed"
-#define DEFAULT_HP 0
-#define DEFAULT_MAX_HP_BASIS 0
-#define DEFAULT_LIVES 0
-#define DEFAULT_MAX_LIVES_BASIS 0
-#define DEFAULT_ATTACK_BASIS 0
-#define DEFAULT_DEFENSE_BASIS 0
-#define DEFAULT_MAGICAL_POWER_BASIS 0
 
-Player::Player()
+Player::Player(Transform* transform, Mesh* mesh, Texture* texture) : Entity(transform, mesh, texture)
 {
-	name = DEFAULT_NAME;
-	hp = DEFAULT_HP;
-	maximumHpBasis = DEFAULT_MAX_HP_BASIS;
-	lives = DEFAULT_LIVES;
-	maximumLivesBasis = DEFAULT_MAX_LIVES_BASIS;
-	attackBasis = DEFAULT_ATTACK_BASIS;
-	defenseBasis = DEFAULT_DEFENSE_BASIS;
-	magicalPowerBasis = DEFAULT_MAGICAL_POWER_BASIS;
+	setName(PLAYER_DEFAULT_NAME);
+	setHp(PLAYER_DEFAULT_HP);
+	setMaximumHpBasis(PLAYER_DEFAULT_MAX_HP_BASIS);
+	setLives(PLAYER_DEFAULT_LIVES);
+	setMaximumLivesBasis(PLAYER_DEFAULT_MAX_LIVES_BASIS);
+	setAttackBasis(PLAYER_DEFAULT_ATTACK_BASIS);
+	setDefenseBasis(PLAYER_DEFAULT_DEFENSE_BASIS);
+	setMagicalPowerBasis(PLAYER_DEFAULT_MAGICAL_POWER_BASIS);
+	setSpeedBasis(PLAYER_DEFAULT_SPEED_BASIS);
+	setAttackSpeedBasis(PLAYER_DEFAULT_ATTACK_SPEED_BASIS);
 	skills = new std::vector<Skill>();
 	equipments = new std::vector<Equipment>();
 }
@@ -28,23 +22,36 @@ Player::~Player()
 	delete equipments;
 }
 
-/* HP */
-
 std::string Player::getName(){
 	return name;
 }
 void Player::setName(std::string name){
 	this->name = name;
 }
-unsigned int Player::getHp(){
+
+bool Player::isDead(){
+	return getHp() == 0;
+}
+
+/* HP */
+unsigned int Player::getHp()
+{
 	return hp;
 }
-void Player::receiveDamage(unsigned int damage){
+
+void Player::setHp(unsigned int hp)
+{
+	this->hp = hp;
+}
+
+void Player::doDamage(unsigned int damage)
+{
 	if (damage > hp)
 		hp = 0;
 	else
 		hp = hp - damage;
 }
+
 void Player::healHp(unsigned int healingAmount){
 	unsigned int maximumHp = getTotalMaximumHp();
 	if ((healingAmount + hp) > maximumHp)
@@ -63,12 +70,15 @@ void Player::setMaximumHpBasis(unsigned int maximumHpBasis){
 }
 unsigned int Player::getTotalMaximumHp(){
 	// TO DO
-	return 0;
+	return getMaximumHpBasis();
 }
 
 /* LIVES */
 unsigned int Player::getLives(){
 	return lives;
+}
+void Player::setLives(unsigned int lives){
+	this->lives = lives;
 }
 void Player::removeLive(){
 	if (lives > 0)
@@ -84,9 +94,12 @@ void Player::restoreLive(){
 unsigned int Player::getMaximumLivesBasis(){
 	return maximumLivesBasis;
 }
+void Player::setMaximumLivesBasis(unsigned int maximumLivesBasis){
+	this->maximumLivesBasis = maximumLivesBasis;
+}
 unsigned int Player::getTotalMaximumLives(){
 	// TO DO
-	return 0;
+	return getMaximumLivesBasis();
 }
 
 /* ATTACK */
@@ -96,9 +109,9 @@ unsigned int Player::getAttackBasis(){
 void Player::setAttackBasis(unsigned int attackBasis){
 	this->attackBasis = attackBasis;
 }
-unsigned int getTotalAttack(){
+unsigned int Player::getTotalAttack(){
 	// TO DO
-	return 0;
+	return getAttackBasis();
 }
 
 /* DEFENSE */
@@ -110,7 +123,7 @@ void Player::setDefenseBasis(unsigned int defenseBasis){
 }
 unsigned int Player::getTotalDefense(){
 	// TO DO
-	return 0;
+	return getDefenseBasis();
 }
 
 /* MAGICAL POWER */
@@ -122,7 +135,31 @@ void Player::setMagicalPowerBasis(unsigned int magicalPowerBasis){
 }
 unsigned int Player::getTotalMagicalPower(){
 	// TO DO
-	return 0;
+	return getMagicalPowerBasis();
+}
+
+/* SPEED */
+unsigned int Player::getSpeedBasis(){
+	return speedBasis;
+}
+void Player::setSpeedBasis(unsigned int speedBasis){
+	this->speedBasis = speedBasis;
+}
+unsigned int Player::getTotalSpeed(){
+	// TO DO
+	return getSpeedBasis();
+}
+
+/* ATTACK SPEED */
+unsigned int Player::getAttackSpeedBasis(){
+	return attackSpeedBasis;
+}
+void Player::setAttackSpeedBasis(unsigned int attackSpeedBasis){
+	this->attackSpeedBasis = attackSpeedBasis;
+}
+unsigned int Player::getTotalAttackSpeed(){
+	// TO DO
+	return getAttackSpeedBasis();
 }
 
 /* SKILLS */
@@ -136,7 +173,7 @@ Skill* Player::getSkillOfSlot(SkillSlot slot){
 	return NULL;
 }
 bool Player::addNewSkill(Skill skill){
-	if (this->skills->size() < MAXIMUM_SKILLS)
+	if (this->skills->size() < PLAYER_MAXIMUM_SKILLS)
 	{
 		this->skills->push_back(skill);
 		return true;

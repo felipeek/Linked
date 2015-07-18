@@ -2,10 +2,21 @@
 #include "MonsterAI.h"
 #include "Display.h"
 #include "Map.h"
+#include "Time.h"
+#include "Player.h"
+#include <iostream>
 
 Monster::Monster(Transform* transform, Mesh* mesh, Texture* texture) : Entity(transform, mesh, texture)
 {
 	this->ai = new MonsterAI();
+	setName(MONSTER_DEFAULT_NAME);
+	setHp(MONSTER_DEFAULT_HP);
+	setTotalMaximumHp(MONSTER_DEFAULT_TOTAL_MAX_HP);
+	setTotalAttack(MONSTER_DEFAULT_TOTAL_ATTACK);
+	setTotalDefense(MONSTER_DEFAULT_TOTAL_DEFENSE);
+	setTotalMagicalPower(MONSTER_DEFAULT_TOTAL_MAGICAL_POWER);
+	setTotalSpeed(MONSTER_DEFAULT_TOTAL_SPEED);
+	setTotalAttackSpeed(MONSTER_DEFAULT_TOTAL_ATTACK_SPEED);
 }
 
 Monster::~Monster()
@@ -23,9 +34,14 @@ void Monster::setName(std::string name)
 	this->name = name;
 }
 
+bool Monster::isDead()
+{
+	return getHp() == 0;
+}
+
 unsigned int Monster::getHp()
 {
-	return this->hp;
+	return hp;
 }
 
 void Monster::setHp(unsigned int hp)
@@ -33,14 +49,14 @@ void Monster::setHp(unsigned int hp)
 	this->hp = hp;
 }
 
-unsigned int Monster::getMaxHp()
+unsigned int Monster::getTotalMaximumHp()
 {
-	return maxHp;
+	return totalMaximumHp;
 }
 
-void Monster::setMaxHp(unsigned int maxHp)
+void Monster::setTotalMaximumHp(unsigned int totalMaximumHp)
 {
-	this->maxHp = maxHp;
+	this->totalMaximumHp = totalMaximumHp;
 }
 
 void Monster::doDamage(unsigned int damage)
@@ -51,55 +67,75 @@ void Monster::doDamage(unsigned int damage)
 		hp = hp - damage;
 }
 
-unsigned int Monster::getAttack()
+unsigned int Monster::getTotalAttack()
 {
-	return attack;
+	return totalAttack;
 }
 
-void Monster::setAttack(unsigned int attack)
+void Monster::setTotalAttack(unsigned int totalAttack)
 {
-	this->attack = attack;
+	this->totalAttack = totalAttack;
 }
 
-unsigned int Monster::getDefense()
+unsigned int Monster::getTotalDefense()
 {
-	return defense;
+	return totalDefense;
 }
 
-void Monster::setDefense(unsigned int defense)
+void Monster::setTotalDefense(unsigned int totalDefense)
 {
-	this->defense = defense;
+	this->totalDefense = totalDefense;
 }
 
-unsigned int Monster::getSpeed()
+unsigned int Monster::getTotalMagicalPower()
 {
-	return speed;
+	return totalMagicalPower;
 }
 
-void Monster::setSpeed(unsigned int speed)
+void Monster::setTotalMagicalPower(unsigned int totalMagicalPower)
 {
-	this->speed = speed;
+	this->totalMagicalPower = totalMagicalPower;
 }
 
-unsigned int Monster::getRange()
+unsigned int Monster::getTotalSpeed()
 {
-	return range;
+	return totalSpeed;
 }
 
-void Monster::setRange(unsigned int range)
+void Monster::setTotalSpeed(unsigned int totalSpeed)
 {
-	this->ai->setMonsterRange(range);
-	this->range = range;
+	this->totalSpeed = totalSpeed;
 }
 
-unsigned int Monster::getCollisionRange()
+unsigned int Monster::getTotalRange()
 {
-	return this->collisionRange;
+	return totalRange;
 }
 
-void Monster::setCollisionRange(unsigned int collisionRange)
+void Monster::setTotalRange(unsigned int totalRange)
 {
-	this->collisionRange = collisionRange;
+	this->ai->setMonsterRange(totalRange);
+	this->totalRange = totalRange;
+}
+
+unsigned int Monster::getTotalCollisionRange()
+{
+	return this->totalCollisionRange;
+}
+
+void Monster::setTotalCollisionRange(unsigned int totalCollisionRange)
+{
+	this->totalCollisionRange = totalCollisionRange;
+}
+
+unsigned int Monster::getTotalAttackSpeed()
+{
+	return this->totalAttackSpeed;
+}
+
+void Monster::setTotalAttackSpeed(unsigned int totalAttackSpeed)
+{
+	this->totalAttackSpeed = totalAttackSpeed;
 }
 
 glm::vec3 Monster::getMapColor()
@@ -144,7 +180,7 @@ void Monster::setMapColorBlue(int blue)
 
 void Monster::moveTo(Entity* entity, Map* map)
 {
-	float rangeSpeed = speed * (float)Display::frameTime;
+	float rangeSpeed = getTotalSpeed() * (float)Display::frameTime;
 	MovementDefinition movement;
 
 	movement = ai->moveToDestination(map, this->getTransform()->getPosition(), entity->getTransform()->getPosition(), rangeSpeed);
@@ -158,13 +194,52 @@ void Monster::moveTo(Entity* entity, Map* map)
 
 void Monster::moveAway(Entity* entity, Map* map)
 {
-	float rangeSpeed = speed * (float)Display::frameTime;
+	float rangeSpeed = getTotalSpeed() * (float)Display::frameTime;
 
 	MovementDefinition movement = ai->movePerfectlyAway(map, this->getTransform()->getPosition(),
 		entity->getTransform()->getPosition(), rangeSpeed);
 
 	if (movement.doMove)
 		this->getTransform()->translate(movement.movement.x, movement.movement.y, movement.movement.z);
+}
+
+void Monster::moveRandomly(Map* map)
+{
+	float rangeSpeed = getTotalSpeed() * (float)Display::frameTime;
+
+	if (!ai->isMovingRandomly())
+		ai->startRandomMovement(map, this->getTransform()->getPosition(), rangeSpeed);
+
+	MovementDefinition movement = ai->nextRandomStep();
+
+	if (movement.doMove)
+		this->getTransform()->translate(movement.movement.x, movement.movement.y, movement.movement.z);
+}
+
+bool Monster::hasReachedEntity(Entity* entity)
+{
+	float distance = glm::length(this->getTransform()->getPosition() - entity->getTransform()->getPosition());
+
+	if (distance < (getTotalRange() / RANGE_DIVIDER))
+		return true;
+	else
+		return false;
+}
+
+void Monster::attackCreature(Creature* creature)
+{
+	double now = Time::getTime();
+	bool shouldAttack = (now - lastAttackTime) > ((1.0f/getTotalAttackSpeed()) * ASPD_FACTOR);
+
+	if (shouldAttack)
+	{
+		unsigned int damage = (unsigned int)ceil(getTotalAttack()/(creature->getTotalDefense()/10.f));
+		creature->doDamage(damage);
+		lastAttackTime = now;
+
+		/* TEMPORARY (FOR TESTS) */
+		std::cout << "Player Attacked." << std::endl << "Player Current Hp: " << creature->getHp() << std::endl;
+	}
 }
 
 void Monster::changeTextureBasedOnMovementDirection(MovementDirection direction)
@@ -187,5 +262,24 @@ void Monster::changeTextureBasedOnMovementDirection(MovementDirection direction)
 	case BOTTOM_LEFT:
 		this->getTexture()->setIndex(1);
 		break;
+	}
+}
+
+void Monster::update(Map* map, Player* player)
+{
+	if (player->isDead())
+	{
+		this->moveRandomly(map);
+	}
+	else
+	{
+		if (this->hasReachedEntity(player))
+		{
+			this->attackCreature(player);
+		}
+		else
+		{
+			this->moveTo(player, map);
+		}
 	}
 }

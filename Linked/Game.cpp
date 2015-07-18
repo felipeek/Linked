@@ -23,6 +23,8 @@
 
 #include "RangeAttack.h"
 
+#include "Player.h"
+
 #include <string>
 #include <iostream>
 #include <cstdlib>
@@ -39,13 +41,16 @@ Game::Game(int windowsWidth, int windowsHeight)
 	
 	// Criação do player
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f));
-	player = new Entity(new Transform(glm::vec3(534, 500, 1.0f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Textures/hoshoyo.png", 2, 2));
+	player = new Player(new Transform(glm::vec3(534, 500, 1.0f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Textures/hoshoyo.png", 2, 2));
+	player->setMaximumHpBasis(100);
+	player->setHp(100);
+	player->setDefenseBasis(100);
 	entities.push_back(player);
 	
 	// Criação do Mapa
 	std::string mapPath = "./res/Maps/teste.png";
 	std::string entitiesMapPath = "./res/Maps/entities.png";
-	std::string monsterMapPath = "./res/Maps/poringlandia.png";
+	std::string monsterMapPath = "./res/Maps/monsters.png";
 
 	this->monsterFactory = new MonsterFactory();
 	this->gameEntityFactory = new GameEntityFactory();
@@ -153,6 +158,9 @@ void Game::render()
 	}
 }
 
+bool playerDead = false;
+unsigned int lastHp = 0;
+
 void Game::update()
 {
 	// Game input
@@ -171,7 +179,7 @@ void Game::update()
 	rangeAttack->update();
 	
 	for (Monster* monster : monsters)
-		monster->moveTo(player, map);
+		monster->update(map, player);
 }
 
 void Game::input()
