@@ -46,8 +46,9 @@ void RangeAttack::update()
 
 				if (hitMonster->getHp() == 0)
 				{
-					delete (*monsters)[hitMonsterIndex];
-					monsters->erase((*monsters).begin() + hitMonsterIndex);
+					/*delete (*monsters)[hitMonsterIndex];
+					monsters->erase((*monsters).begin() + hitMonsterIndex);*/
+					hitMonster->killMonster();
 				}
 			}
 			delete (*attacks)[i];
@@ -102,16 +103,19 @@ bool RangeAttack::monsterCollision(Projectile* projectile, int* hitMonsterIndex)
 
 	for (unsigned int i = 0; i < monsters->size(); i++)
 	{
-		glm::vec3 monsterPos = (*monsters)[i]->getTransform()->getPosition();
-		float monsterSize = (*monsters)[i]->getTotalCollisionRange()/10.0f;
-		
-		float difference = glm::length(glm::vec2(monsterPos) - glm::vec2(projPosition));
-
-		// TODO : projetil na parede
-		if (difference < monsterSize)
+		if ((*monsters)[i]->isAlive())
 		{
-			*hitMonsterIndex = i;
-			return true;
+			glm::vec3 monsterPos = (*monsters)[i]->getTransform()->getPosition();
+			float monsterSize = (*monsters)[i]->getTotalCollisionRange() / 10.0f;
+
+			float difference = glm::length(glm::vec2(monsterPos) - glm::vec2(projPosition));
+
+			// TODO : projetil na parede
+			if (difference < monsterSize)
+			{
+				*hitMonsterIndex = i;
+				return true;
+			}
 		}
 	}
 	return false;

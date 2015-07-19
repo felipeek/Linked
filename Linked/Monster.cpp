@@ -283,8 +283,7 @@ void Monster::changeTexture(MovementDirection direction)
 			case RECEIVING_DAMAGE:
 				break;
 			case DEAD:
-				this->getTexture()->setIndex(0);
-				this->lastIndexTexture = 0;
+				changeTextureBasedOnDirection(direction, 0, 0);
 				break;
 		}
 
@@ -319,9 +318,10 @@ void Monster::update(Map* map, Player* player)
 	MovementDefinition movementDefinition;
 
 	if (!this->isAlive()){
-		movementDefinition = this->moveRandomly(map);
+		//movementDefinition = this->moveRandomly(map);
 
-		//movementDefinition.direction = DEAD;
+		movementDefinition.doMove = false;
+		currentDirection = DEAD;
 	}
 	else if (!player->isAlive())
 		movementDefinition = this->moveRandomly(map);
