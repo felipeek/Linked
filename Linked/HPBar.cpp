@@ -11,6 +11,7 @@ HPBar::HPBar(Player* player)
 	this->player = player;
 	this->maxBars = NUMBARS;
 	this->numBars = NUMBARS;						// Start with full hp
+	this->prevBars = 0;
 
 	hpBar = new DynamicTexture(maxBars, 1, 1, 0, false);		// Create Texture
 	hpBarImage = new unsigned char[4 * maxBars];	// Allocate memory for image
@@ -49,11 +50,9 @@ void HPBar::update()
 	{
 		prevBars = numBars;
 		setHP(numBars);
+		glBindTexture(GL_TEXTURE_2D, hpBar->textureID);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, maxBars, 1, GL_RGBA, GL_UNSIGNED_BYTE, hpBarImage);
 	}
-	
-	glBindTexture(GL_TEXTURE_2D, hpBar->textureID);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, maxBars, 1, GL_RGBA, GL_UNSIGNED_BYTE, hpBarImage);
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 100, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, hpBarImage);
 }
 
 void HPBar::setHP(unsigned int bars)
