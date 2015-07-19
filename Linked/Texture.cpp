@@ -77,7 +77,7 @@ DynamicTexture::~DynamicTexture()
 	//stbi_image_free(loadedImage);
 }
 
-GLuint DynamicTexture::genDynamicGLTexture(bool mipmap)
+GLuint DynamicTexture::genDynamicGLTexture(int bias)
 {
 	glGenTextures(1, &textureID);
 
@@ -85,14 +85,12 @@ GLuint DynamicTexture::genDynamicGLTexture(bool mipmap)
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, loadedImage);
 
-	if (mipmap)
-	{
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, bias);
+	glGenerateMipmap(GL_TEXTURE_2D);
 
 	return textureID;
 }

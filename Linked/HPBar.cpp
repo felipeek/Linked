@@ -17,9 +17,10 @@ HPBar::HPBar(Player* player)
 
 	hpBar = new DynamicTexture(maxBars, 1, 1, 0, false);		// Create Texture
 	hpBarImage = new unsigned char[4 * maxBars];				// Allocate memory for image
+	hpColor = highHP;
 	setHP(maxBars);
 	hpBar->setLoadedImage(hpBarImage);							// Set loaded image address
-	hpBar->genDynamicGLTexture(true);
+	hpBar->genDynamicGLTexture(MIPMAPBIAS);
 
 	maxHP = player->getTotalMaximumHp();
 
@@ -92,7 +93,7 @@ void HPBar::input()
 		player->healHp(1);
 }
 
-/*
+
 void HPBar::print()
 {
 	for (unsigned int i = 0; i < 4 * maxBars; i++)
@@ -102,4 +103,4 @@ void HPBar::print()
 			std::cout << i/4 <<": "<< std::endl;
 	}
 }
-*/
+

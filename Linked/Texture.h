@@ -31,7 +31,7 @@ public:
 	~DynamicTexture();
 	// Implement if necessary
 	//virtual unsigned char* getLoadedImage();
-	GLuint genDynamicGLTexture(bool mipmap);
+	GLuint genDynamicGLTexture(int bias);
 private:
 	
 };
