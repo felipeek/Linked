@@ -25,7 +25,7 @@ HPBar::HPBar(Player* player)
 
 	Mesh* mesh = new Mesh(new Quad(glm::vec3(0, -0.5, 0), 0.5f, 0.1f));
 	Transform* transform = new Transform(
-		glm::vec3(0, 0, 0), 30, glm::vec3(1, 0, 0), glm::vec3(3,2,3)
+		glm::vec3(0, 0, 0), 30, glm::vec3(1, 0, 0), glm::vec3(3,1.5f,3)
 		);
 	quad = new Entity(transform, mesh, hpBar);
 }
@@ -42,7 +42,7 @@ HPBar::~HPBar()
 void HPBar::update()
 {
 	glm::vec3 playerPos = player->getTransform()->getPosition();
-	quad->getTransform()->translate(playerPos.x, playerPos.y-2, playerPos.z+1);
+	quad->getTransform()->translate(playerPos.x, playerPos.y-1.7f, playerPos.z+1);
 	
 	unsigned int currentHP = player->getHp();
 	float percentHP = (float)currentHP / (float)player->getTotalMaximumHp();
@@ -71,17 +71,17 @@ void HPBar::setHP(unsigned int bars)
 	{
 		if (i/4 < bars)
 		{
-			hpBarImage[i] = (char)hpColor.x;
-			hpBarImage[i + 1] = (char)hpColor.y;
-			hpBarImage[i + 2] = (char)hpColor.z;
+			hpBarImage[i] = (char)hpColor.r;
+			hpBarImage[i + 1] = (char)hpColor.g;
+			hpBarImage[i + 2] = (char)hpColor.b;
 			hpBarImage[i + 3] = 255;
 		}
 		else
 		{
-			hpBarImage[i] = 0;
-			hpBarImage[i + 1] = 0;
-			hpBarImage[i + 2] = 0;
-			hpBarImage[i + 3] = 0;
+			hpBarImage[i] = (char)backgroundHP.r;
+			hpBarImage[i + 1] = (char)backgroundHP.g;
+			hpBarImage[i + 2] = (char)backgroundHP.b;
+			hpBarImage[i + 3] = BACKGROUND;
 		}
 	}
 }
