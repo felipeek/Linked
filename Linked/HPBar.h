@@ -7,6 +7,7 @@ class Entity;
 
 #define NUMBARS 100
 #define BACKGROUND 255		// 255(black) 0(transparent)
+#define MIPMAPBIAS -10
 
 class HPBar
 {
@@ -23,7 +24,7 @@ public:
 	void input();
 	Entity* quad;
 	
-	//void print();
+	void print();
 private:
 	Player* player;
 	DynamicTexture* hpBar;
