@@ -8,6 +8,7 @@
 AI::AI()
 {
 	movingRandomly = false;
+	lastRandomDirection = TOP_RIGHT;
 }
 
 AI::~AI()
@@ -67,8 +68,11 @@ MovementDefinition AI::nextRandomStep()
 	if (!movingRandomly || shouldNotBeMoving)
 	{
 		movDef.doMove = false;
+		movDef.direction = lastRandomDirection;
 		return movDef;
 	}
+
+	lastRandomDirection = randomDirection;
 
 	switch (randomDirection)
 	{

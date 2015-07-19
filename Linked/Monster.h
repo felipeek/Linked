@@ -12,6 +12,7 @@ class Player;
 #define MONSTER_DEFAULT_TOTAL_SPEED 10
 #define MONSTER_DEFAULT_TOTAL_ATTACK_SPEED 10
 
+#define TEXTURE_CHANGE_DELAY 0.2f
 #define ASPD_FACTOR 10
 
 class MonsterAI;
@@ -25,7 +26,8 @@ public:
 	~Monster();
 	std::string getName();
 	void setName(std::string name);
-	bool isDead();
+	bool isAlive();
+	void killMonster();
 	unsigned int getHp();
 	void setHp(unsigned int hp);
 	unsigned int getTotalMaximumHp();
@@ -57,6 +59,7 @@ public:
 	void update(Map* map, Player* player);
 private:
 	std::string name;
+	bool alive;
 	unsigned int hp;
 	unsigned int totalMaximumHp;
 	unsigned int totalAttack;
@@ -68,11 +71,16 @@ private:
 	unsigned int totalCollisionRange;
 	glm::vec3 mapColor;
 	MonsterAI* ai;
-	void changeTextureBasedOnMovementDirection(MovementDirection direction);
+	MovementDirection currentDirection;
+	void changeTexture(MovementDirection direction);
 
-	void moveTo(Entity* entity, Map* map);
-	void moveAway(Entity* entity, Map* map);
-	void moveRandomly(Map* map);
+	// auxiliar variable to help to change textures on the right time
+	double textureChangeTime = 0;
+	unsigned int lastIndexTexture = 0;
+
+	MovementDirection moveTo(Entity* entity, Map* map);
+	MovementDirection moveAway(Entity* entity, Map* map);
+	MovementDirection moveRandomly(Map* map);
 	bool hasReachedEntity(Entity* entity);
 
 	double lastAttackTime = 0;

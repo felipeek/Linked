@@ -31,7 +31,7 @@ public:
 	std::string getName();
 	void setName(std::string name);
 
-	bool isDead();
+	bool isAlive();
 
 	void update();
 	void input();

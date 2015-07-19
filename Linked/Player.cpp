@@ -42,8 +42,8 @@ void Player::setName(std::string name){
 	this->name = name;
 }
 
-bool Player::isDead(){
-	return getHp() == 0;
+bool Player::isAlive(){
+	return getHp() != 0;
 }
 
 /* HP */

@@ -21,6 +21,7 @@ public:
 	void stopMovingToPosition();
 private:
 
+private:
 	Map* positionMovementMap;
 	glm::vec3 positionMovementReference;
 	glm::vec3 positionMovementDestination;

@@ -14,7 +14,10 @@ enum MovementDirection{
 	TOP_LEFT,
 	TOP_RIGHT,
 	BOTTOM_LEFT,
-	BOTTOM_RIGHT
+	BOTTOM_RIGHT,
+	ATTACKING,
+	RECEIVING_DAMAGE,
+	DEAD
 };
 
 class MovementDefinition
@@ -44,6 +47,7 @@ private:
 	glm::vec3 randomChangedReference;
 	float randomRangeSpeed;
 	MovementDirection randomDirection;
+	MovementDirection lastRandomDirection;
 	bool movingRandomly;
 	double timeRandomMovementStarted = 0;
 };

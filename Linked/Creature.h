@@ -13,6 +13,6 @@ public:
 	virtual unsigned int getTotalSpeed() = 0;
 	virtual unsigned int getTotalAttackSpeed() = 0;
 	virtual unsigned int getTotalMagicalPower() = 0;
-	virtual bool isDead() = 0;
+	virtual bool isAlive() = 0;
 };
 
