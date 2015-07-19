@@ -269,6 +269,7 @@ void Monster::update(Map* map, Player* player)
 {
 	if (player->isDead())
 	{
+		this->ai->stopMovingToPosition();
 		this->moveRandomly(map);
 	}
 	else
