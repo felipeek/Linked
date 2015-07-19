@@ -5,25 +5,27 @@
 #include "Primitive.h"
 #include "Input.h"
 
+#include <iostream>
+
 
 HPBar::HPBar(Player* player)
 {
 	this->player = player;
 	this->maxBars = NUMBARS;
-	this->numBars = NUMBARS;						// Start with full hp
+	this->numBars = NUMBARS;									// Start with full hp
 	this->prevBars = 0;
 
 	hpBar = new DynamicTexture(maxBars, 1, 1, 0, false);		// Create Texture
-	hpBarImage = new unsigned char[4 * maxBars];	// Allocate memory for image
+	hpBarImage = new unsigned char[4 * maxBars];				// Allocate memory for image
 	setHP(maxBars);
-	hpBar->setLoadedImage(hpBarImage);				// Set loaded image address
+	hpBar->setLoadedImage(hpBarImage);							// Set loaded image address
 	hpBar->genDynamicGLTexture(true);
 
 	maxHP = player->getTotalMaximumHp();
 
 	Mesh* mesh = new Mesh(new Quad(glm::vec3(0, -0.5, 0), 0.5f, 0.1f));
 	Transform* transform = new Transform(
-		glm::vec3(0, 0, 0), 30, glm::vec3(1, 0, 0), glm::vec3(3,3,3)
+		glm::vec3(0, 0, 0), 30, glm::vec3(1, 0, 0), glm::vec3(3,2,3)
 		);
 	quad = new Entity(transform, mesh, hpBar);
 }
@@ -40,11 +42,18 @@ HPBar::~HPBar()
 void HPBar::update()
 {
 	glm::vec3 playerPos = player->getTransform()->getPosition();
-	quad->getTransform()->translate(playerPos.x, playerPos.y-1, playerPos.z+1);
+	quad->getTransform()->translate(playerPos.x, playerPos.y-2, playerPos.z+1);
 	
 	unsigned int currentHP = player->getHp();
 	float percentHP = (float)currentHP / (float)player->getTotalMaximumHp();
 	numBars = (unsigned int)(percentHP * maxBars);
+
+	if (percentHP > 0.8f)
+		hpColor = highHP;
+	else if (percentHP <= 0.8f && percentHP >= 0.2f)
+		hpColor = mediumHP;
+	else if (percentHP < 0.2f)
+		hpColor = lowHP;
 
 	if (prevBars != numBars)
 	{
@@ -60,7 +69,7 @@ void HPBar::setHP(unsigned int bars)
 
 	for (unsigned int i = 0; i < maxBars*4; i+=4)
 	{
-		if (i/4 <= bars)
+		if (i/4 < bars)
 		{
 			hpBarImage[i] = (char)hpColor.x;
 			hpBarImage[i + 1] = (char)hpColor.y;
@@ -82,3 +91,15 @@ void HPBar::input()
 	if (Input::keyStates['x'])
 		player->healHp(1);
 }
+
+/*
+void HPBar::print()
+{
+	for (unsigned int i = 0; i < 4 * maxBars; i++)
+	{
+		std::cout << (int)hpBarImage[i] << " ";
+		if ((i+1) % 4 == 0)
+			std::cout << i/4 <<": "<< std::endl;
+	}
+}
+*/

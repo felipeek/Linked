@@ -10,12 +10,18 @@ class Entity;
 class HPBar
 {
 public:
-	const glm::vec3 hpColor = glm::vec3(255, 0, 0);
+	glm::vec3 hpColor;
+	const glm::vec3 highHP = glm::vec3(0,255,0);
+	const glm::vec3 mediumHP = glm::vec3(180,255,0);
+	const glm::vec3 lowHP = glm::vec3(255,0,0);
+
 	HPBar(Player* player);
 	~HPBar();
 	void update();
 	void input();
 	Entity* quad;
+	
+	//void print();
 private:
 	Player* player;
 	DynamicTexture* hpBar;

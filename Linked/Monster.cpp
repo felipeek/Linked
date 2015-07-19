@@ -250,7 +250,7 @@ void Monster::attackCreature(Creature* creature)
 		lastAttackTime = now;
 
 		/* TEMPORARY (FOR TESTS) */
-		std::cout << "Player Attacked." << std::endl << "Player Current Hp: " << creature->getHp() << std::endl;
+		//std::cout << "Player Attacked." << std::endl << "Player Current Hp: " << creature->getHp() << std::endl;
 	}
 
 	//this->changeTexture(ATTACKING);
@@ -354,7 +354,7 @@ void Monster::changeTexture(MovementDirection direction)
 
 void Monster::update(Map* map, Player* player)
 {
-	MovementDirection monsterDirection;
+	MovementDirection monsterDirection = TOP_RIGHT;
 
 	if (!this->isAlive()){
 		//monsterDirection = DEAD;
@@ -364,6 +364,7 @@ void Monster::update(Map* map, Player* player)
 	else if (this->hasReachedEntity(player))
 	{
 		this->attackCreature(player);
+		monsterDirection = currentDirection;
 		//monsterDirection = ATTACKING;
 	}	
 	else
