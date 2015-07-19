@@ -268,7 +268,7 @@ void Monster::changeTexture(MovementDirection direction)
 			case TOP:
 			case TOP_LEFT:
 			case TOP_RIGHT:
-				if (!shouldChangeTexture)
+				if (direction != currentDirection)
 				{
 					this->getTexture()->setIndex(5);
 					this->lastIndexTexture = 5;
@@ -286,12 +286,12 @@ void Monster::changeTexture(MovementDirection direction)
 				break;
 			case RIGHT:
 			case BOTTOM_RIGHT:
-				if (!shouldChangeTexture)
+				if (direction != currentDirection)
 				{
 					this->getTexture()->setIndex(15);
 					this->lastIndexTexture = 15;
 				}
-				else
+				else if (shouldChangeTexture)
 				{
 					if (this->lastIndexTexture < 18)
 						this->getTexture()->setIndex(++this->lastIndexTexture);
@@ -303,12 +303,12 @@ void Monster::changeTexture(MovementDirection direction)
 				}
 				break;
 			case BOTTOM:
-				if (!shouldChangeTexture)
+				if (direction != currentDirection)
 				{
 					this->getTexture()->setIndex(20);
 					this->lastIndexTexture = 20;
 				}
-				else
+				else if (shouldChangeTexture)
 				{
 					if (this->lastIndexTexture < 23)
 						this->getTexture()->setIndex(++this->lastIndexTexture);
@@ -321,12 +321,12 @@ void Monster::changeTexture(MovementDirection direction)
 				break;
 			case LEFT:
 			case BOTTOM_LEFT:
-				if (!shouldChangeTexture)
+				if (direction != currentDirection)
 				{
 					this->getTexture()->setIndex(10);
 					this->lastIndexTexture = 10;
 				}
-				else
+				else if (shouldChangeTexture)
 				{
 					if (this->lastIndexTexture < 13)
 						this->getTexture()->setIndex(++this->lastIndexTexture);
