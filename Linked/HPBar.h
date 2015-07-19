@@ -6,7 +6,7 @@ class DynamicTexture;
 class Entity;
 
 #define NUMBARS 100
-#define BACKGROUND 0		// 255(black) 0(transparent)
+#define BACKGROUND 255		// 255(black) 0(transparent)
 
 class HPBar
 {

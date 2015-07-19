@@ -47,8 +47,8 @@ private:
 	glm::vec3 randomChangedReference;
 	float randomRangeSpeed;
 	MovementDirection randomDirection;
-	MovementDirection lastRandomDirection;
 	bool movingRandomly;
 	double timeRandomMovementStarted = 0;
+
 };
 

@@ -166,6 +166,9 @@ MovementDefinition MonsterAI::nextPositionMovementStep()
 				movDef.direction = TOP;
 			else if (positionMovementDestination.x == positionMovementReference.x && positionMovementDestination.y < positionMovementReference.y)
 				movDef.direction = BOTTOM;
+			
+			glm::vec3 auxVector = glm::vec3(1, 0, 0);
+			float angle = acos((glm::dot(moveRange, auxVector) / (length(moveRange)*length(auxVector))));
 		}
 
 		if (length(virtualTravelledDistance) >= KEEP_MOVING_FACTOR / (float)100)

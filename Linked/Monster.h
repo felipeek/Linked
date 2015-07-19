@@ -15,8 +15,16 @@ class Player;
 #define TEXTURE_CHANGE_DELAY 0.2f
 #define ASPD_FACTOR 10
 
+// If MONSTER_FIRST_DIRECTION is changed,
+// MONSTER_FIRST_INDEX_TEXTURE must also be changed.
+// Plus, the texture index must be an index of a texture which
+// direction is the same as defined on MONSTER_FIRST_DIRECTION
+#define MONSTER_FIRST_DIRECTION BOTTOM
+#define MONSTER_FIRST_INDEX_TEXTURE 20
+
 class MonsterAI;
 class Map;
+class MovementDefinition;
 enum MovementDirection;
 
 class Monster : public Entity, public Creature
@@ -73,14 +81,15 @@ private:
 	MonsterAI* ai;
 	MovementDirection currentDirection;
 	void changeTexture(MovementDirection direction);
+	void changeTextureBasedOnDirection(MovementDirection direction, unsigned int initialTextureIndex, unsigned int finalTextureIndex);
 
 	// auxiliar variable to help to change textures on the right time
 	double textureChangeTime = 0;
-	unsigned int lastIndexTexture = 0;
+	unsigned int lastIndexTexture;
 
-	MovementDirection moveTo(Entity* entity, Map* map);
-	MovementDirection moveAway(Entity* entity, Map* map);
-	MovementDirection moveRandomly(Map* map);
+	MovementDefinition moveTo(Entity* entity, Map* map);
+	MovementDefinition moveAway(Entity* entity, Map* map);
+	MovementDefinition moveRandomly(Map* map);
 	bool hasReachedEntity(Entity* entity);
 
 	double lastAttackTime = 0;

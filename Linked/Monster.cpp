@@ -18,8 +18,10 @@ Monster::Monster(Transform* transform, Mesh* mesh, Texture* texture) : Entity(tr
 	setTotalSpeed(MONSTER_DEFAULT_TOTAL_SPEED);
 	setTotalAttackSpeed(MONSTER_DEFAULT_TOTAL_ATTACK_SPEED);
 
-	this->currentDirection = TOP_LEFT;	// initial direction (standard value)
 	this->alive = true;
+
+	this->currentDirection = MONSTER_FIRST_DIRECTION;
+	this->lastIndexTexture = MONSTER_FIRST_INDEX_TEXTURE;
 }
 
 Monster::~Monster()
@@ -186,7 +188,7 @@ void Monster::setMapColorBlue(int blue)
 	this->mapColor.b = (float)blue;
 }
 
-MovementDirection Monster::moveTo(Entity* entity, Map* map)
+MovementDefinition Monster::moveTo(Entity* entity, Map* map)
 {
 	float rangeSpeed = getTotalSpeed() * (float)Display::frameTime;
 
@@ -195,10 +197,10 @@ MovementDirection Monster::moveTo(Entity* entity, Map* map)
 	if (movement.doMove)
 		this->getTransform()->translate(movement.movement.x, movement.movement.y, movement.movement.z);
 
-	return movement.direction;
+	return movement;
 }
 
-MovementDirection Monster::moveAway(Entity* entity, Map* map)
+MovementDefinition Monster::moveAway(Entity* entity, Map* map)
 {
 	float rangeSpeed = getTotalSpeed() * (float)Display::frameTime;
 	this->ai->stopMovingRandomly();
@@ -209,10 +211,10 @@ MovementDirection Monster::moveAway(Entity* entity, Map* map)
 	if (movement.doMove)
 		this->getTransform()->translate(movement.movement.x, movement.movement.y, movement.movement.z);
 
-	return movement.direction;
+	return movement;
 }
 
-MovementDirection Monster::moveRandomly(Map* map)
+MovementDefinition Monster::moveRandomly(Map* map)
 {
 	float rangeSpeed = getTotalSpeed() * (float)Display::frameTime;
 	this->ai->stopMovingToPosition();
@@ -225,7 +227,7 @@ MovementDirection Monster::moveRandomly(Map* map)
 	if (movement.doMove)
 		this->getTransform()->translate(movement.movement.x, movement.movement.y, movement.movement.z);
 
-	return movement.direction;
+	return movement;
 }
 
 bool Monster::hasReachedEntity(Entity* entity)
@@ -248,12 +250,7 @@ void Monster::attackCreature(Creature* creature)
 		unsigned int damage = (unsigned int)ceil(getTotalAttack()/(creature->getTotalDefense()/10.f));
 		creature->doDamage(damage);
 		lastAttackTime = now;
-
-		/* TEMPORARY (FOR TESTS) */
-		//std::cout << "Player Attacked." << std::endl << "Player Current Hp: " << creature->getHp() << std::endl;
 	}
-
-	//this->changeTexture(ATTACKING);
 }
 
 void Monster::changeTexture(MovementDirection direction)
@@ -268,74 +265,18 @@ void Monster::changeTexture(MovementDirection direction)
 			case TOP:
 			case TOP_LEFT:
 			case TOP_RIGHT:
-				if (direction != currentDirection)
-				{
-					this->getTexture()->setIndex(5);
-					this->lastIndexTexture = 5;
-				}
-				else
-				{
-					if (this->lastIndexTexture < 8)
-						this->getTexture()->setIndex(++this->lastIndexTexture);
-					else
-					{
-						this->getTexture()->setIndex(5);
-						this->lastIndexTexture = 5;
-					}
-				}
+				changeTextureBasedOnDirection(direction, 5, 8);
 				break;
 			case RIGHT:
 			case BOTTOM_RIGHT:
-				if (direction != currentDirection)
-				{
-					this->getTexture()->setIndex(15);
-					this->lastIndexTexture = 15;
-				}
-				else if (shouldChangeTexture)
-				{
-					if (this->lastIndexTexture < 18)
-						this->getTexture()->setIndex(++this->lastIndexTexture);
-					else
-					{
-						this->getTexture()->setIndex(15);
-						this->lastIndexTexture = 15;
-					}
-				}
+				changeTextureBasedOnDirection(direction, 15, 18);
 				break;
 			case BOTTOM:
-				if (direction != currentDirection)
-				{
-					this->getTexture()->setIndex(20);
-					this->lastIndexTexture = 20;
-				}
-				else if (shouldChangeTexture)
-				{
-					if (this->lastIndexTexture < 23)
-						this->getTexture()->setIndex(++this->lastIndexTexture);
-					else
-					{
-						this->getTexture()->setIndex(20);
-						this->lastIndexTexture = 20;
-					}
-				}
+				changeTextureBasedOnDirection(direction, 20, 23);
 				break;
 			case LEFT:
 			case BOTTOM_LEFT:
-				if (direction != currentDirection)
-				{
-					this->getTexture()->setIndex(10);
-					this->lastIndexTexture = 10;
-				}
-				else if (shouldChangeTexture)
-				{
-					if (this->lastIndexTexture < 13)
-						this->getTexture()->setIndex(++this->lastIndexTexture);
-					else
-					{
-						this->getTexture()->setIndex(10);
-						this->lastIndexTexture = 10;
-					}
-				}
+				changeTextureBasedOnDirection(direction, 10, 13);
 				break;
 			case ATTACKING:
 				break;
@@ -352,23 +293,50 @@ void Monster::changeTexture(MovementDirection direction)
 	}
 }
 
+void Monster::changeTextureBasedOnDirection(MovementDirection direction, unsigned int initialTextureIndex, unsigned int finalTextureIndex)
+{
+	if (direction != currentDirection)
+	{
+		this->getTexture()->setIndex(initialTextureIndex);
+		this->lastIndexTexture = initialTextureIndex;
+	}
+	else
+	{
+		if (this->lastIndexTexture < finalTextureIndex)
+		{
+			this->getTexture()->setIndex(++this->lastIndexTexture);
+		}
+		else
+		{
+			this->getTexture()->setIndex(initialTextureIndex);
+			this->lastIndexTexture = initialTextureIndex;
+		}
+	}
+}
+
 void Monster::update(Map* map, Player* player)
 {
-	MovementDirection monsterDirection = TOP_RIGHT;
+	MovementDefinition movementDefinition;
 
 	if (!this->isAlive()){
-		//monsterDirection = DEAD;
+		movementDefinition = this->moveRandomly(map);
+
+		//movementDefinition.direction = DEAD;
 	}
 	else if (!player->isAlive())
-		monsterDirection = this->moveRandomly(map);
+		movementDefinition = this->moveRandomly(map);
 	else if (this->hasReachedEntity(player))
 	{
 		this->attackCreature(player);
-		monsterDirection = currentDirection;
-		//monsterDirection = ATTACKING;
+		movementDefinition.doMove = false;
+
+		//movementDefinition.direction = ATTACKING;
 	}	
 	else
-		monsterDirection = this->moveTo(player, map);
+		movementDefinition = this->moveTo(player, map);
 
-	this->changeTexture(monsterDirection);
+	if (movementDefinition.doMove)
+		this->changeTexture(movementDefinition.direction);
+	else
+		this->changeTexture(currentDirection);
 }
