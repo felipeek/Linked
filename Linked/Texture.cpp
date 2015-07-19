@@ -60,18 +60,21 @@ void Texture::setIndex(int i)
 	calcAtlas();
 }
 
-DynamicTexture::DynamicTexture(int rows, int index, bool mipmap)
+DynamicTexture::DynamicTexture(int width, int height, int rows, int index, bool mipmap)
 {
 	this->fileName = "";
-	this->numRows = (float)numRows;
+	this->numRows = (float)rows;
 	this->index = (float)index;
+	this->width = width;
+	this->height = height;
+	this->channels = 4;
 	calcAtlas();
-	textureID = genDynamicGLTexture(mipmap);
+	//textureID = genDynamicGLTexture(mipmap);
 }
 
 DynamicTexture::~DynamicTexture()
 {
-	stbi_image_free(loadedImage);
+	//stbi_image_free(loadedImage);
 }
 
 GLuint DynamicTexture::genDynamicGLTexture(bool mipmap)

@@ -86,6 +86,7 @@
     <ClInclude Include="GameEntity.h" />
     <ClInclude Include="GameEntityFactory.h" />
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="HPBar.h" />
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="IndexedModel.h" />
     <ClInclude Include="Input.h" />
@@ -130,6 +131,7 @@
     <ClCompile Include="GameEntity.cpp" />
     <ClCompile Include="GameEntityFactory.cpp" />
     <ClCompile Include="Grid.cpp" />
+    <ClCompile Include="HPBar.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="IndexedModel.cpp" />
     <ClCompile Include="Input.cpp" />

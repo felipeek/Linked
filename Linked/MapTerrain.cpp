@@ -41,7 +41,7 @@ MapTerrain MapTerrainImageLoader::getMapTerrainForCoordinate(vec3 coordinateVect
 
 	try
 	{
-		vec3 rgb = getPixel(floor(coordinateVector.x), floor(coordinateVector.y));
+		vec3 rgb = getPixel((int)floor(coordinateVector.x), (int)floor(coordinateVector.y));
 		mapObject = transformRgbIntoMapTerrain(rgb);
 	}
 	catch (PixelOutOfBoundsException e)

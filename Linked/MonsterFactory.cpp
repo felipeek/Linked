@@ -82,7 +82,7 @@ Monster* MonsterFactory::generateCopyOfMonster(Monster* monster)
 	copy->setMesh(monster->getMesh());
 	// Copy Texture (A new texture object must be created for each monster)
 	Texture* monsterTexture = monster->getTexture();
-	copy->setTexture(new Texture(monsterTexture->getFilename(), 2, 2));
+	copy->setTexture(new Texture(monsterTexture->getFilename(), 5, 5));
 	// Copy Transform (A new transform object must be created for each monster)
 	Transform *monsterTransform = monster->getTransform();
 	vec3 monsterTransformPosition = monsterTransform->getPosition();
@@ -115,7 +115,7 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 			if (nodeName == MONSTERS_NAME_NODE)
 				monster->setName(std::string(nodeValue));
 			else if (nodeName == MONSTERS_SPRITE_NODE)
-				monster->setTexture(new Texture(MONSTERS_DIRECTORY + std::string(nodeValue), 2, 2));
+				monster->setTexture(new Texture(MONSTERS_DIRECTORY + std::string(nodeValue), 5, 5));
 			else if (nodeName == MONSTERS_SIZE_NODE)
 				monster->getTransform()->scale(std::atoi(nodeValue) / 10.0f, std::atoi(nodeValue) / 10.0f, std::atoi(nodeValue) / 10.0f);
 			else if (nodeName == MONSTERS_COLLISIONRANGE_NODE)
