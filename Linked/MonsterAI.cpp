@@ -150,25 +150,29 @@ MovementDefinition MonsterAI::nextPositionMovementStep()
 		{
 			movDef.doMove = true;
 			movDef.movement = positionMovementReference;
-			if (positionMovementDestination.x > positionMovementReference.x && positionMovementDestination.y > positionMovementReference.y)
-				movDef.direction = TOP_RIGHT;
-			else if (positionMovementDestination.x > positionMovementReference.x && positionMovementDestination.y < positionMovementReference.y)
-				movDef.direction = BOTTOM_RIGHT;
-			else if (positionMovementDestination.x < positionMovementReference.x && positionMovementDestination.y > positionMovementReference.y)
-				movDef.direction = TOP_LEFT;
-			else if (positionMovementDestination.x < positionMovementReference.x && positionMovementDestination.y < positionMovementReference.y)
-				movDef.direction = BOTTOM_LEFT;
-			else if (positionMovementDestination.x > positionMovementReference.x && positionMovementDestination.y == positionMovementReference.y)
-				movDef.direction = RIGHT;
-			else if (positionMovementDestination.x < positionMovementReference.x && positionMovementDestination.y == positionMovementReference.y)
-				movDef.direction = LEFT;
-			else if (positionMovementDestination.x == positionMovementReference.x && positionMovementDestination.y > positionMovementReference.y)
-				movDef.direction = TOP;
-			else if (positionMovementDestination.x == positionMovementReference.x && positionMovementDestination.y < positionMovementReference.y)
-				movDef.direction = BOTTOM;
 			
 			glm::vec3 auxVector = glm::vec3(1, 0, 0);
-			float angle = acos((glm::dot(moveRange, auxVector) / (length(moveRange)*length(auxVector))));
+			float radAngle = acos((glm::dot(moveRange, auxVector) / (length(moveRange)*length(auxVector))));
+			float angle = (180 * radAngle)/PI;
+			if (moveRange.y < 0)
+				angle = -angle;
+
+			if (angle >= -22.5f && angle < 22.5f)
+				movDef.direction = RIGHT;
+			else if (angle >= 22.5f && angle < 67.5f)
+				movDef.direction = TOP_RIGHT;
+			else if (angle >= 67.5f && angle < 112.5f)
+				movDef.direction = TOP;
+			else if (angle >= 112.5f && angle < 157.5f)
+				movDef.direction = TOP_LEFT;
+			else if (angle >= 157.5f && angle <= 180.0f || angle >= -180.0f && angle < -157.5f)
+				movDef.direction = LEFT;
+			else if (angle >= -157.5f && angle < -112.5f)
+				movDef.direction = BOTTOM_LEFT;
+			else if (angle >= -112.5f && angle < -67.5f)
+				movDef.direction = BOTTOM;
+			else if (angle >= -67.5f && angle < -22.5f)
+				movDef.direction = BOTTOM_RIGHT;
 		}
 
 		if (length(virtualTravelledDistance) >= KEEP_MOVING_FACTOR / (float)100)

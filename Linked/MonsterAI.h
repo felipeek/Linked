@@ -22,6 +22,8 @@ public:
 private:
 
 private:
+	const float PI = 3.14159265358979f;
+
 	Map* positionMovementMap;
 	glm::vec3 positionMovementReference;
 	glm::vec3 positionMovementDestination;
