@@ -54,3 +54,7 @@ unsigned char* ImageLoader::getLoadedImage()
 {
 	return loadedImage;
 }
+void ImageLoader::setLoadedImage(unsigned char* image)
+{
+	loadedImage = image;
+}

@@ -24,12 +24,15 @@
 #include "RangeAttack.h"
 
 #include "Player.h"
+#include "HPBar.h"
 
 #include <string>
 #include <iostream>
 #include <cstdlib>
 
 //#define DEBUG
+
+HPBar* hpBar;
 
 Game::Game(int windowsWidth, int windowsHeight)
 {	
@@ -42,10 +45,11 @@ Game::Game(int windowsWidth, int windowsHeight)
 	// Criação do player
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f));
 	player = new Player(new Transform(glm::vec3(534, 500, 1.0f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Textures/hoshoyo.png", 2, 2));
-	player->setMaximumHpBasis(100);
-	player->setHp(100);
+	player->setMaximumHpBasis(1000);
+	player->setHp(1000);
 	player->setDefenseBasis(100);
 	entities.push_back(player);
+	//hpBar = new HPBar(100, player);
 	
 	// Criação do Mapa
 	std::string mapPath = "./res/Maps/teste.png";
@@ -120,6 +124,8 @@ void Game::render()
 {
 	entityMap->render(mapShader, light);
 
+	player->getHPBar()->quad->render(shader, light);
+
 	for (Entity* e : entities)
 	{
 		try{
@@ -177,6 +183,10 @@ void Game::update()
 	// RangeAttack input & update
 	rangeAttack->input();
 	rangeAttack->update();
+
+	// Player input & update
+	player->update();
+	player->input();
 	
 	for (Monster* monster : monsters)
 		monster->update(map, player);

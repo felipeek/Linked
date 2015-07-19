@@ -27,10 +27,11 @@ protected:
 class DynamicTexture : public Texture
 {
 public:
-	DynamicTexture(int rows, int index, bool mipmap);
+	DynamicTexture(int width, int height, int rows, int index, bool mipmap);
 	~DynamicTexture();
 	// Implement if necessary
 	//virtual unsigned char* getLoadedImage();
-private:
 	GLuint genDynamicGLTexture(bool mipmap);
+private:
+	
 };

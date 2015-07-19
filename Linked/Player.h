@@ -19,6 +19,8 @@
 #define PLAYER_DEFAULT_SPEED_BASIS 10
 #define PLAYER_DEFAULT_ATTACK_SPEED_BASIS 10
 
+class HPBar;
+
 class Player : public Entity, public Creature
 {
 public:
@@ -30,6 +32,9 @@ public:
 	void setName(std::string name);
 
 	bool isDead();
+
+	void update();
+	void input();
 
 	/* HP */
 	unsigned int getHp();
@@ -86,7 +91,10 @@ public:
 	Equipment* getEquipmentOfClass(EquipmentClass equipmentClass);
 	Equipment* addNewEquipment(Equipment equipment);
 
+	/* HP BAR*/
+	HPBar* getHPBar();
 private:
+	HPBar* hpBar;
 	std::string name;
 	unsigned int hp;
 	unsigned int maximumHpBasis;

@@ -14,9 +14,11 @@ public:
 	ImageLoader();
 	~ImageLoader();
 	unsigned char* getLoadedImage();
+	void setLoadedImage(unsigned char*);
 	virtual int getWidth();
 	virtual int getHeight();
 	virtual int getChannels();
+
 protected:
 	unsigned char* loadedImage;
 	int width;

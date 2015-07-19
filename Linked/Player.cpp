@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "HPBar.h"
 
 Player::Player(Transform* transform, Mesh* mesh, Texture* texture) : Entity(transform, mesh, texture)
 {
@@ -14,12 +15,24 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture) : Entity(tran
 	setAttackSpeedBasis(PLAYER_DEFAULT_ATTACK_SPEED_BASIS);
 	skills = new std::vector<Skill>();
 	equipments = new std::vector<Equipment>();
+	this->hpBar = new HPBar(this);
 }
 
 Player::~Player()
 {
 	delete skills;
 	delete equipments;
+	delete hpBar;
+}
+
+void Player::update()
+{
+	hpBar->update();
+}
+
+void Player::input()
+{
+	hpBar->input();
 }
 
 std::string Player::getName(){
@@ -207,4 +220,10 @@ Equipment* Player::addNewEquipment(Equipment equipment){
 
 	equipments->push_back(equipment);
 	return NULL;
+}
+
+/* HP BAR */
+HPBar* Player::getHPBar()
+{
+	return hpBar;
 }

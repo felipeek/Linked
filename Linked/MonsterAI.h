@@ -15,11 +15,11 @@ public:
 
 	unsigned int getMonsterRange();
 	void setMonsterRange(unsigned int monsterRange);
-private:
 	void startPositionMovement(Map* map, glm::vec3 reference, glm::vec3 destination, float rangeSpeed);
 	MovementDefinition nextPositionMovementStep();
 	bool isMovingToPosition();
 	void stopMovingToPosition();
+private:
 
 	Map* positionMovementMap;
 	glm::vec3 positionMovementReference;
