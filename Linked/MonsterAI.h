@@ -1,9 +1,9 @@
 #pragma once
 #include "AI.h"
-#define KEEP_MOVING_FACTOR 100
 #define STANDARD_MONSTER_RANGE 50
 #define RANGE_DIVIDER 10.0
 #define BORDER_MOVEMENT_LIMIT 2.0
+#define POSITION_KEEP_MOVING_FACTOR 100
 
 class MonsterAI : public AI
 {
@@ -22,12 +22,11 @@ public:
 private:
 
 private:
-	const float PI = 3.14159265358979f;
-
 	Map* positionMovementMap;
 	glm::vec3 positionMovementReference;
-	glm::vec3 positionMovementDestination;
-	glm::vec3 virtualTravelledDistance;
+	MovementDirection positionMovementDirection;
+	glm::vec3 positionMovementMoveRange;
+	glm::vec3 positionVirtualTravelledDistance;
 	float positionMovementRangeSpeed;
 	bool movingToPosition;
 

@@ -3,7 +3,7 @@
 
 MonsterAI::MonsterAI()
 {
-	virtualTravelledDistance = glm::vec3(0, 0, 0);
+	positionVirtualTravelledDistance = glm::vec3(0, 0, 0);
 	this->monsterRange = STANDARD_MONSTER_RANGE;
 	movingToPosition = false;
 }
@@ -32,26 +32,8 @@ MovementDefinition MonsterAI::moveToDestination(Map *monsterMovementMap, glm::ve
 	glm::vec3 movement = glm::vec3(monsterMovementReference.x, monsterMovementReference.y, monsterMovementReference.z);
 	float distance = glm::length(monsterMovementReference - monsterMovementDestination);
 
-	// If the monster has already reached destination
-//	if (distance < (monsterRange / RANGE_DIVIDER))
-//	{
-//		MovementDefinition movDef = MovementDefinition();
-//		movDef.doMove = false;
-//		stopMovingToPosition();
-//		stopMovingRandomly();
-//		return movDef;
-//	}
-	// If the monster is doing a random movement
-	// Commented so position movement will have preference with regards to random movement
-//	else if (isMovingRandomly())
-//	{
-//		// Let the random movement finishes before continue moving.
-//		MovementDefinition movementDefinition = nextRandomStep();
-//		stopMovingToPosition();
-//		return movementDefinition;
-//	}
 	// If the monster is far away from destination
-	/*else*/ if (distance > LIMIT_DISTANCE)
+	if (distance > LIMIT_DISTANCE)
 	{
 		stopMovingToPosition();
 		// Stop moving to position and start moving randomly.
@@ -123,11 +105,13 @@ void MonsterAI::startPositionMovement(Map* map, glm::vec3 reference, glm::vec3 d
 {
 	positionMovementMap = map;
 	positionMovementReference = reference;
-	positionMovementDestination = destination;
 	positionMovementRangeSpeed = rangeSpeed;
-	virtualTravelledDistance.x = 0;
-	virtualTravelledDistance.y = 0;
-	virtualTravelledDistance.z = 0;
+	glm::vec3 directionVector = glm::normalize(destination - positionMovementReference);
+	positionMovementMoveRange = glm::vec3(directionVector.x * positionMovementRangeSpeed, directionVector.y * positionMovementRangeSpeed, 0);
+	positionMovementDirection = this->getDirectionBasedOnVector(positionMovementMoveRange);
+	positionVirtualTravelledDistance.x = 0;
+	positionVirtualTravelledDistance.y = 0;
+	positionVirtualTravelledDistance.z = 0;
 	movingToPosition = true;
 }
 
@@ -135,55 +119,31 @@ MovementDefinition MonsterAI::nextPositionMovementStep()
 {
 	MovementDefinition movDef = MovementDefinition();
 	movDef.doMove = false;
-	glm::vec3 movement = glm::vec3(positionMovementReference.x, positionMovementReference.y, positionMovementReference.z);
 
 	if (movingToPosition)
 	{
-		glm::vec3 directionVector = glm::normalize(positionMovementDestination - positionMovementReference);
-		glm::vec3 moveRange = glm::vec3(directionVector.x * positionMovementRangeSpeed, directionVector.y * positionMovementRangeSpeed, 0);
-		positionMovementReference = positionMovementReference + moveRange;
-		virtualTravelledDistance = virtualTravelledDistance + moveRange;
+		glm::vec3 oldPositionMovementReference = positionMovementReference;
+		positionMovementReference = positionMovementReference + positionMovementMoveRange;
+		positionVirtualTravelledDistance = positionVirtualTravelledDistance + positionMovementMoveRange;
 
-		bool sameVector = checkIfMonsterIsStillOnTheSameMapPosition(movement, positionMovementReference);
+		bool sameVector = checkIfMonsterIsStillOnTheSameMapPosition(oldPositionMovementReference, positionMovementReference);
 
 		if (sameVector || !positionMovementMap->coordinateHasCollision(positionMovementReference))
 		{
 			movDef.doMove = true;
 			movDef.movement = positionMovementReference;
-			
-			glm::vec3 auxVector = glm::vec3(1, 0, 0);
-			float radAngle = acos((glm::dot(moveRange, auxVector) / (length(moveRange)*length(auxVector))));
-			float angle = (180 * radAngle)/PI;
-			if (moveRange.y < 0)
-				angle = -angle;
-
-			if (angle >= -22.5f && angle < 22.5f)
-				movDef.direction = RIGHT;
-			else if (angle >= 22.5f && angle < 67.5f)
-				movDef.direction = TOP_RIGHT;
-			else if (angle >= 67.5f && angle < 112.5f)
-				movDef.direction = TOP;
-			else if (angle >= 112.5f && angle < 157.5f)
-				movDef.direction = TOP_LEFT;
-			else if (angle >= 157.5f && angle <= 180.0f || angle >= -180.0f && angle < -157.5f)
-				movDef.direction = LEFT;
-			else if (angle >= -157.5f && angle < -112.5f)
-				movDef.direction = BOTTOM_LEFT;
-			else if (angle >= -112.5f && angle < -67.5f)
-				movDef.direction = BOTTOM;
-			else if (angle >= -67.5f && angle < -22.5f)
-				movDef.direction = BOTTOM_RIGHT;
+			movDef.direction = positionMovementDirection;
 		}
 
-		if (length(virtualTravelledDistance) >= KEEP_MOVING_FACTOR / (float)100)
+		if (length(positionVirtualTravelledDistance) >= POSITION_KEEP_MOVING_FACTOR / (float)100)
 			movingToPosition = false;
 	}
 	else
 	{
 		movingToPosition = true;
-		virtualTravelledDistance.x = 0;
-		virtualTravelledDistance.y = 0;
-		virtualTravelledDistance.z = 0;
+		positionVirtualTravelledDistance.x = 0;
+		positionVirtualTravelledDistance.y = 0;
+		positionVirtualTravelledDistance.z = 0;
 	}
 
 	return movDef;

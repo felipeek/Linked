@@ -26,99 +26,65 @@ void AI::stopMovingRandomly()
 
 void AI::startRandomMovement(Map* map, glm::vec3 reference, float rangeSpeed)
 {
-	this->randomMap = map;
-	randomReference = reference;
-	randomChangedReference = reference;
-	randomRangeSpeed = rangeSpeed;
+	int xRandNumber = rand() % 1001;
+	int yRandNumber = rand() % 1001;
+
+	if (rand() % 2)	xRandNumber = -xRandNumber;
+	if (rand() % 2)	yRandNumber = -yRandNumber;
+
+	randomMovementMap = map;
+	randomMovementReference = reference;
+	randomMovementRangeSpeed = rangeSpeed;
+	glm::vec3 directionVector = glm::normalize(glm::vec3(xRandNumber, yRandNumber, 0));
+	randomMovementMoveRange = glm::vec3(directionVector.x * rangeSpeed, directionVector.y * rangeSpeed, 0);
+	randomMovementDirection = this->getDirectionBasedOnVector(randomMovementMoveRange);
 	timeRandomMovementStarted = Time::getTime();
-
-	int randNumber = rand() % 8;
-
-	switch (randNumber)
-	{
-	case 0:
-		randomDirection = TOP_RIGHT; break;
-	case 1:
-		randomDirection = RIGHT; break;
-	case 2:
-		randomDirection = BOTTOM_RIGHT; break;
-	case 3:
-		randomDirection = BOTTOM; break;
-	case 4:
-		randomDirection = BOTTOM_LEFT; break;
-	case 5:
-		randomDirection = LEFT; break;
-	case 6:
-		randomDirection = TOP_LEFT; break;
-	case 7:
-		randomDirection = TOP; break;
-	default:
-		randomDirection = TOP_RIGHT; break;
-	}
-
-	this->movingRandomly = true;
+	randomVirtualTravelledDistance.x = 0;
+	randomVirtualTravelledDistance.y = 0;
+	randomVirtualTravelledDistance.z = 0;
+	randomStandStillFactor = (rand() % (STAND_STILL_RANDOM_FACTOR_MAXIMUM - STAND_STILL_RANDOM_FACTOR_MINIMUM + 1)) + STAND_STILL_RANDOM_FACTOR_MINIMUM;
+	movingRandomly = true;
 }
 
 MovementDefinition AI::nextRandomStep()
 {
 	MovementDefinition movDef = MovementDefinition();
-	bool shouldNotBeMoving = (Time::getTime() - timeRandomMovementStarted) <= (STAND_STILL_RANDOM_FACTOR / (float)10);
+	movDef.doMove = false;
 
-	if (!movingRandomly || shouldNotBeMoving)
-	{
-		movDef.doMove = false;
+	bool shouldNotBeMoving = (Time::getTime() - timeRandomMovementStarted) <= (randomStandStillFactor / (float)10);
+
+	if (shouldNotBeMoving)
 		return movDef;
-	}
 
-	switch (randomDirection)
+	if (movingRandomly)
 	{
-		case TOP_RIGHT:
-			randomChangedReference.x = randomChangedReference.x + randomRangeSpeed;
-			randomChangedReference.y = randomChangedReference.y + randomRangeSpeed;
-			break;
-		case RIGHT:
-			randomChangedReference.x = randomChangedReference.x + randomRangeSpeed;
-			break;
-		case BOTTOM_RIGHT:
-			randomChangedReference.x = randomChangedReference.x + randomRangeSpeed;
-			randomChangedReference.y = randomChangedReference.y - randomRangeSpeed;
-			break;
-		case BOTTOM:
-			randomChangedReference.y = randomChangedReference.y - randomRangeSpeed;
-			break;
-		case BOTTOM_LEFT:
-			randomChangedReference.x = randomChangedReference.x - randomRangeSpeed;
-			randomChangedReference.y = randomChangedReference.y - randomRangeSpeed;
-			break;
-		case LEFT:
-			randomChangedReference.x = randomChangedReference.x - randomRangeSpeed;
-			break;
-		case TOP_LEFT:
-			randomChangedReference.x = randomChangedReference.x - randomRangeSpeed;
-			randomChangedReference.y = randomChangedReference.y + randomRangeSpeed;
-			break;
-		case TOP:
-			randomChangedReference.y = randomChangedReference.y + randomRangeSpeed;
-			break;
-		default:
-			break;
-	}
+		glm::vec3 oldRandomMovementReference = randomMovementReference;
+		randomMovementReference = randomMovementReference + randomMovementMoveRange;
+		randomVirtualTravelledDistance = randomVirtualTravelledDistance + randomMovementMoveRange;
 
-	movDef.direction = randomDirection;
-	movDef.movement = randomChangedReference;
+		bool sameVector = checkIfMonsterIsStillOnTheSameMapPosition(oldRandomMovementReference, randomMovementReference);
 
-	bool samePosition = checkIfMonsterIsStillOnTheSameMapPosition(randomReference, randomChangedReference);
+		if (sameVector || !randomMovementMap->coordinateHasCollision(randomMovementReference))
+		{
+			movDef.doMove = true;
+			movDef.movement = randomMovementReference;
+			movDef.direction = randomMovementDirection;
 
-	if (samePosition || !randomMap->coordinateHasCollision(randomChangedReference))
-	{
-		movDef.doMove = true;
-		if (length(randomReference - randomChangedReference) >= RANDOM_MOVEMENT_FACTOR)
-			this->movingRandomly = false;
+			if (length(randomVirtualTravelledDistance) >= RANDOM_KEEP_MOVING_FACTOR / (float)100)
+				movingRandomly = false;
+		}
+		else
+		{
+			movDef.doMove = false;
+			movingRandomly = false;
+		}
 	}
 	else
 	{
-		movDef.doMove = false;
-		this->movingRandomly = false;
+		movingRandomly = true;
+		randomVirtualTravelledDistance.x = 0;
+		randomVirtualTravelledDistance.y = 0;
+		randomVirtualTravelledDistance.z = 0;
 	}
 
 	return movDef;
@@ -288,4 +254,32 @@ bool AI::checkIfMonsterIsStillOnTheSameMapPosition(glm::vec3 currentPosition, gl
 				return true;
 
 	return false;
+}
+
+MovementDirection AI::getDirectionBasedOnVector(glm::vec3 vector)
+{
+	glm::vec3 auxVector = glm::vec3(1, 0, 0);
+	float radAngle = acos((glm::dot(vector, auxVector) / (length(vector)*length(auxVector))));
+	float angle = (180 * radAngle) / PI;
+	if (vector.y < 0)
+		angle = -angle;
+
+	if (angle >= -22.5f && angle < 22.5f)
+		return RIGHT;
+	else if (angle >= 22.5f && angle < 67.5f)
+		return TOP_RIGHT;
+	else if (angle >= 67.5f && angle < 112.5f)
+		return TOP;
+	else if (angle >= 112.5f && angle < 157.5f)
+		return TOP_LEFT;
+	else if (angle >= 157.5f && angle <= 180.0f || angle >= -180.0f && angle < -157.5f)
+		return LEFT;
+	else if (angle >= -157.5f && angle < -112.5f)
+		return BOTTOM_LEFT;
+	else if (angle >= -112.5f && angle < -67.5f)
+		return BOTTOM;
+	else if (angle >= -67.5f && angle < -22.5f)
+		return BOTTOM_RIGHT;
+
+	return RIGHT;
 }
