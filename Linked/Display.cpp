@@ -127,22 +127,34 @@ void Display::KeyboardUpEvent(unsigned char key, int x, int y)
 {
 	Input::keyStates[key] = false;
 }
+
+
 void Display::MouseEvent(int button, int state, int x, int y)
 {
-	float screenX = (float)x / WWID - 0.5f;
-	float screenY = -((float)y / WHEI - 0.5f);
-
+	//float screenX = (float)x / WWID - 0.5f;
+	//float screenY = -((float)y / WHEI - 0.5f);
+	const float aspect = (float)WWID / WHEI;
+	float screenX = ((float)x / WWID - 0.5f) * aspect;
+	float screenY = -((float)y / WHEI - 0.5f) * aspect;
+	
 	if (button == 0)
 	{
-		Input::attack = true;
+		//Input::attack = true;
+		Input::attack = !Input::attack;
 		Input::mouseAttack.setAttackPos(screenX, screenY);
 	}
 }
 void Display::MouseMotion(int x, int y)
 {
+	//float screenX = (float)x / WWID - 0.5f;
+	//float screenY = -((float)y / WHEI - 0.5f);
+	const float aspect = (float)WWID / WHEI;
+	float screenX = ((float)x / WWID - 0.5f) * aspect;
+	float screenY = -((float)y / WHEI - 0.5f);
 
+	Input::mouseAttack.setAttackPos(screenX, screenY);
 }
 void Display::MousePassive(int x, int y)
 {
-
+	
 }
