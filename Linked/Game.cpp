@@ -202,6 +202,8 @@ void Game::update()
 void Game::input()
 {
 	playerMovement->inputPlayerMovement();
+	if (Input::keyStates['v'])
+		player->setMaximumHpBasis(player->getMaximumHpBasis()+1);
 
 	if (Input::keyStates['v'])
 		player->setMaximumHpBasis(player->getMaximumHpBasis() + 1);
