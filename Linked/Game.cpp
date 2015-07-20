@@ -188,8 +188,15 @@ void Game::update()
 	player->update();
 	player->input();
 	
-	for (Monster* monster : monsters)
-		monster->update(map, player);
+	for (int i = 0; i < monsters.size(); i++)
+	{
+		monsters[i]->update(map, player);
+		if (monsters[i]->checkIfMustBeDeleted())
+		{
+			delete monsters[i];
+			monsters.erase(monsters.begin() + i);
+		}
+	}
 }
 
 void Game::input()

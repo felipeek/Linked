@@ -5,6 +5,7 @@
 #include "Time.h"
 #include "Player.h"
 #include <iostream>
+#include <vector>
 
 Monster::Monster(Transform* transform, Mesh* mesh, Texture* texture) : Entity(transform, mesh, texture)
 {
@@ -44,9 +45,11 @@ bool Monster::isAlive()
 	return this->alive;
 }
 
-void Monster::killMonster()
+void Monster::killMonster(int index)
 {
 	this->alive = false;
+	this->currentDirection = DEAD;
+	this->killTime = Time::getTime();
 }
 
 unsigned int Monster::getHp()
@@ -313,15 +316,22 @@ void Monster::changeTextureBasedOnDirection(MovementDirection direction, unsigne
 	}
 }
 
+bool Monster::checkIfMustBeDeleted()
+{
+	if (!this->isAlive())
+	{
+		double now = Time::getTime();
+		return (now - killTime) > DEATH_TIME;
+	}
+	return false;
+}
+
 void Monster::update(Map* map, Player* player)
 {
 	MovementDefinition movementDefinition;
 
 	if (!this->isAlive()){
-		//movementDefinition = this->moveRandomly(map);
-
 		movementDefinition.doMove = false;
-		currentDirection = DEAD;
 	}
 	else if (!player->isAlive())
 		movementDefinition = this->moveRandomly(map);

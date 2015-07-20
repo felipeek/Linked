@@ -46,9 +46,7 @@ void RangeAttack::update()
 
 				if (hitMonster->getHp() == 0)
 				{
-					/*delete (*monsters)[hitMonsterIndex];
-					monsters->erase((*monsters).begin() + hitMonsterIndex);*/
-					hitMonster->killMonster();
+					hitMonster->killMonster(hitMonsterIndex);
 				}
 			}
 			delete (*attacks)[i];

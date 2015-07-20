@@ -14,6 +14,7 @@ class Player;
 
 #define TEXTURE_CHANGE_DELAY 0.2f
 #define ASPD_FACTOR 10
+#define DEATH_TIME 5.0f
 
 // If MONSTER_FIRST_DIRECTION is changed,
 // MONSTER_FIRST_INDEX_TEXTURE must also be changed.
@@ -35,7 +36,9 @@ public:
 	std::string getName();
 	void setName(std::string name);
 	bool isAlive();
-	void killMonster();
+	void killMonster(int index);
+	bool checkIfMustBeDeleted();
+	bool canBeDeleted();
 	unsigned int getHp();
 	void setHp(unsigned int hp);
 	unsigned int getTotalMaximumHp();
@@ -92,5 +95,6 @@ private:
 	MovementDefinition moveRandomly(Map* map);
 	bool hasReachedEntity(Entity* entity);
 
+	double killTime = 0;
 	double lastAttackTime = 0;
 };
