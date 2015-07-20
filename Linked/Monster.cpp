@@ -45,10 +45,51 @@ bool Monster::isAlive()
 	return this->alive;
 }
 
+bool Monster::isOnScreen()
+{
+	if (!this->isAlive())
+	{
+		double now = Time::getTime();
+		return (now - killTime) <= DEATH_TIME;
+	}
+	return true;
+}
+
+bool Monster::isAttacking()
+{
+	if (this->attacking)
+	{
+		double now = Time::getTime();
+		if ((now - lastAttackTime) > ((1.0f / getTotalAttackSpeed()) * ASPD_FACTOR))
+		{
+			this->attacking = false;
+			return false;
+		}
+		else
+			return true;
+	}
+	return false;
+}
+
+bool Monster::isReceivingDamage()
+{
+	if (this->receivingDamage)
+	{
+		double now = Time::getTime();
+		if ((now - lastReceivedDamageTime) > RECEIVE_DAMAGE_DELAY)
+		{
+			this->receivingDamage = false;
+			return false;
+		}
+		else
+			return true;
+	}
+	return false;
+}
+
 void Monster::killMonster(int index)
 {
 	this->alive = false;
-	this->currentDirection = DEAD;
 	this->killTime = Time::getTime();
 }
 
@@ -78,6 +119,9 @@ void Monster::doDamage(unsigned int damage)
 		hp = 0;
 	else
 		hp = hp - damage;
+
+	this->receivingDamage = true;
+	lastReceivedDamageTime = Time::getTime();
 }
 
 unsigned int Monster::getTotalAttack()
@@ -245,15 +289,10 @@ bool Monster::hasReachedEntity(Entity* entity)
 
 void Monster::attackCreature(Creature* creature)
 {
-	double now = Time::getTime();
-	bool shouldAttack = (now - lastAttackTime) > ((1.0f/getTotalAttackSpeed()) * ASPD_FACTOR);
-
-	if (shouldAttack)
-	{
-		unsigned int damage = (unsigned int)ceil(getTotalAttack()/(creature->getTotalDefense()/10.f));
-		creature->doDamage(damage);
-		lastAttackTime = now;
-	}
+	this->attacking = true;
+	unsigned int damage = (unsigned int)ceil(getTotalAttack()/(creature->getTotalDefense()/10.f));
+	creature->doDamage(damage);
+	lastAttackTime = Time::getTime();
 }
 
 void Monster::changeTexture(MovementDirection direction)
@@ -261,43 +300,56 @@ void Monster::changeTexture(MovementDirection direction)
 	double now = Time::getTime();
 	bool shouldChangeTexture = (now - textureChangeTime) > (TEXTURE_CHANGE_DELAY);
 
-	if (direction != currentDirection || shouldChangeTexture)
+	bool isDead = !this->isAlive();
+	bool isAttacking = this->isAttacking();
+	bool isReceivingDamage = this->isReceivingDamage();
+
+	if (shouldChangeTexture || isDead != lastIsDead || isAttacking != lastIsAttacking || isReceivingDamage != lastIsReceivingDamage)
 	{
-		switch (direction)
+		if (isDead)
+			changeTextureBasedOnDirection(direction, 48, 48);
+		else
 		{
+			switch (direction)
+			{
 			case TOP:
 			case TOP_LEFT:
 			case TOP_RIGHT:
-				changeTextureBasedOnDirection(direction, 5, 8);
+				if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(direction, 0, 3);
+				else if (isAttacking) changeTextureBasedOnDirection(direction, 16, 19);
+				else if (isReceivingDamage) changeTextureBasedOnDirection(direction, 32, 35);
 				break;
 			case RIGHT:
 			case BOTTOM_RIGHT:
-				changeTextureBasedOnDirection(direction, 15, 18);
+				if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(direction, 8, 11);
+				else if (isAttacking) changeTextureBasedOnDirection(direction, 24, 27);
+				else if (isReceivingDamage) changeTextureBasedOnDirection(direction, 40, 43);
 				break;
 			case BOTTOM:
-				changeTextureBasedOnDirection(direction, 20, 23);
+				if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(direction, 12, 15);
+				else if (isAttacking) changeTextureBasedOnDirection(direction, 28, 31);
+				else if (isReceivingDamage) changeTextureBasedOnDirection(direction, 44, 47);
 				break;
 			case LEFT:
 			case BOTTOM_LEFT:
-				changeTextureBasedOnDirection(direction, 10, 13);
+				if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(direction, 4, 7);
+				else if (isAttacking) changeTextureBasedOnDirection(direction, 20, 23);
+				else if (isReceivingDamage) changeTextureBasedOnDirection(direction, 36, 39);
 				break;
-			case ATTACKING:
-				break;
-			case RECEIVING_DAMAGE:
-				break;
-			case DEAD:
-				changeTextureBasedOnDirection(direction, 0, 0);
-				break;
+			}
 		}
 
 		this->currentDirection = direction;
+		this->lastIsAttacking = this->isAttacking();
+		this->lastIsReceivingDamage = this->isReceivingDamage();
+		this->lastIsDead = !this->isAlive();
 		this->textureChangeTime = now;
 	}
 }
 
 void Monster::changeTextureBasedOnDirection(MovementDirection direction, unsigned int initialTextureIndex, unsigned int finalTextureIndex)
 {
-	if (direction != currentDirection)
+	if (direction != currentDirection || this->isAttacking() != lastIsAttacking || this->isReceivingDamage() != lastIsReceivingDamage || !this->isAlive() != lastIsDead)
 	{
 		this->getTexture()->setIndex(initialTextureIndex);
 		this->lastIndexTexture = initialTextureIndex;
@@ -316,35 +368,33 @@ void Monster::changeTextureBasedOnDirection(MovementDirection direction, unsigne
 	}
 }
 
-bool Monster::checkIfMustBeDeleted()
-{
-	if (!this->isAlive())
-	{
-		double now = Time::getTime();
-		return (now - killTime) > DEATH_TIME;
-	}
-	return false;
-}
-
 void Monster::update(Map* map, Player* player)
 {
 	MovementDefinition movementDefinition;
 
-	if (!this->isAlive()){
+	// If the monster is dead, it can't move.
+	if (!this->isAlive())
 		movementDefinition.doMove = false;
-	}
+	// If the monster is attacking, it can't move.
+	else if (this->isAttacking())
+		movementDefinition.doMove = false;
+	// If the monster is receiving damage, it can't move.
+	else if (this->isReceivingDamage())
+		movementDefinition.doMove = false;
+	// If the player is dead, the monster will move randomly.
 	else if (!player->isAlive())
 		movementDefinition = this->moveRandomly(map);
+	// If the monster has reached the player, it will attack the player and not move.
 	else if (this->hasReachedEntity(player))
 	{
 		this->attackCreature(player);
 		movementDefinition.doMove = false;
-
-		//movementDefinition.direction = ATTACKING;
-	}	
+	}
+	// If the monster has not reached the player yet, it will move towards the player.
 	else
 		movementDefinition = this->moveTo(player, map);
 
+	// Change monster's texture.
 	if (movementDefinition.doMove)
 		this->changeTexture(movementDefinition.direction);
 	else

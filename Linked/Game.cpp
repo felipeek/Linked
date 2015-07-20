@@ -195,10 +195,10 @@ void Game::update()
 	player->update();
 	player->input();
 	
-	for (int i = 0; i < monsters.size(); i++)
+	for (unsigned int i = 0; i < monsters.size(); i++)
 	{
 		monsters[i]->update(map, player);
-		if (monsters[i]->checkIfMustBeDeleted())
+		if (!monsters[i]->isOnScreen())
 		{
 			delete monsters[i];
 			monsters.erase(monsters.begin() + i);
@@ -207,7 +207,7 @@ void Game::update()
 }
 
 int i = 0;
-float a = 0;
+double a = 0;
 
 void Game::input()
 {

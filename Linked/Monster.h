@@ -15,6 +15,7 @@ class Player;
 #define TEXTURE_CHANGE_DELAY 0.2f
 #define ASPD_FACTOR 10
 #define DEATH_TIME 5.0f
+#define RECEIVE_DAMAGE_DELAY 0.2f
 
 // If MONSTER_FIRST_DIRECTION is changed,
 // MONSTER_FIRST_INDEX_TEXTURE must also be changed.
@@ -36,8 +37,10 @@ public:
 	std::string getName();
 	void setName(std::string name);
 	bool isAlive();
+	bool isAttacking();
+	bool isReceivingDamage();
 	void killMonster(int index);
-	bool checkIfMustBeDeleted();
+	bool isOnScreen();
 	bool canBeDeleted();
 	unsigned int getHp();
 	void setHp(unsigned int hp);
@@ -69,8 +72,13 @@ public:
 	void attackCreature(Creature* creature);
 	void update(Map* map, Player* player);
 private:
+	MonsterAI* ai;
+
+	/* MONSTER ATTRIBUTES/STATUS */
 	std::string name;
 	bool alive;
+	bool attacking;
+	bool receivingDamage;
 	unsigned int hp;
 	unsigned int totalMaximumHp;
 	unsigned int totalAttack;
@@ -81,20 +89,27 @@ private:
 	unsigned int totalAttackSpeed;
 	unsigned int totalCollisionRange;
 	glm::vec3 mapColor;
-	MonsterAI* ai;
-	MovementDirection currentDirection;
+
+	/* TIME-BASED ATTRIBUTES AUXILIAR VARIABLES */
+	double killTime = 0;
+	double lastAttackTime = 0;
+	double lastReceivedDamageTime = 0;
+
+	/* TEXTURE MANAGEMENT AUXILIAR FUNCTIONS */
 	void changeTexture(MovementDirection direction);
 	void changeTextureBasedOnDirection(MovementDirection direction, unsigned int initialTextureIndex, unsigned int finalTextureIndex);
 
-	// auxiliar variable to help to change textures on the right time
+	/* TEXTURE MANAGEMENT AUXILIAR VARIABLES */
+	MovementDirection currentDirection;
 	double textureChangeTime = 0;
 	unsigned int lastIndexTexture;
+	bool lastIsAttacking = false;
+	bool lastIsReceivingDamage = false;
+	bool lastIsDead = false;
 
+	/* MOVEMENT AUXILIAR FUNCTIONS */
 	MovementDefinition moveTo(Entity* entity, Map* map);
 	MovementDefinition moveAway(Entity* entity, Map* map);
 	MovementDefinition moveRandomly(Map* map);
 	bool hasReachedEntity(Entity* entity);
-
-	double killTime = 0;
-	double lastAttackTime = 0;
 };

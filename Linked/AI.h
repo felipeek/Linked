@@ -15,10 +15,7 @@ enum MovementDirection{
 	TOP_LEFT,
 	TOP_RIGHT,
 	BOTTOM_LEFT,
-	BOTTOM_RIGHT,
-	ATTACKING,
-	RECEIVING_DAMAGE,
-	DEAD
+	BOTTOM_RIGHT
 };
 
 class MovementDefinition
