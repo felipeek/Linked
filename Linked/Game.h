@@ -32,6 +32,7 @@ private:
 	std::vector<GameEntity*> gameEntities;
 	Camera* camera;
 	PrimitiveShader* shader;
+	PrimitiveShader* fontShader;
 	Light* light;
 	EntityMap* entityMap;
 	MapShader* mapShader;

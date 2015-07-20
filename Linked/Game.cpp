@@ -32,7 +32,7 @@
 
 //#define DEBUG
 
-HPBar* hpBar;
+Entity* entity;
 
 Game::Game(int windowsWidth, int windowsHeight)
 {	
@@ -41,6 +41,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 1, 1));
 	this->shader = new PrimitiveShader("./shaders/normalshader", camera);
 	this->mapShader = new MapShader("./shaders/mapshader", camera);
+	this->fontShader = new PrimitiveShader("./shaders/fontshader", camera);
 	
 	// Criação do player
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f));
@@ -49,8 +50,12 @@ Game::Game(int windowsWidth, int windowsHeight)
 	player->setHp(100);
 	player->setDefenseBasis(100);
 	entities.push_back(player);
-	//hpBar = new HPBar(100, player);
-	
+
+	Texture* texture = new Texture("./res/Fonts/fontLinked.png", 16, 16*15);
+	Mesh* mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.1f, 0.1f));
+	Transform* transform = new Transform(player->getTransform()->getPosition(), 0, glm::vec3(0,0,1), glm::vec3(1,1,1));
+	entity = new Entity(transform, mesh, texture);
+
 	// Criação do Mapa
 	std::string mapPath = "./res/Maps/teste.png";
 	std::string entitiesMapPath = "./res/Maps/entities.png";
@@ -126,6 +131,8 @@ void Game::render()
 
 	player->getHPBar()->quad->render(shader, light);
 
+	entity->render(fontShader, light);
+
 	for (Entity* e : entities)
 	{
 		try{
@@ -199,14 +206,25 @@ void Game::update()
 	}
 }
 
+int i = 0;
+float a = 0;
+
 void Game::input()
 {
 	playerMovement->inputPlayerMovement();
+
 	if (Input::keyStates['v'])
 		player->setMaximumHpBasis(player->getMaximumHpBasis()+1);
 
-	if (Input::keyStates['v'])
-		player->setMaximumHpBasis(player->getMaximumHpBasis() + 1);
+	if (Input::keyStates['h'])
+	{
+		if (Time::getTime() - a >= 0.1f)
+		{
+			entity->getTexture()->setIndex(++i);
+			a = Time::getTime();
+		}		
+	}
+		
 
 #ifdef DEBUG
 	if (Input::keyStates['t'])
