@@ -1,6 +1,6 @@
 <MONSTER>
   <NAME>Demilord</NAME>
-  <SPRITE>Sprites/poring5x5.png</SPRITE>
+  <SPRITE>Sprites/poring5x5_2.png</SPRITE>
   <SIZE>10</SIZE>
   <COLLISIONRANGE>10</COLLISIONRANGE>
   <MAXHP>10</MAXHP>

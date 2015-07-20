@@ -22,6 +22,7 @@ void MouseAttack::setAttackPos(float x, float y)
 glm::vec3 MouseAttack::attack()
 {
 	glm::vec3 attackVector = (glm::vec3(screenPos, 1.0f) * glm::vec3(VECTORSIZE, VECTORSIZE, 1));
-	Input::attack = false;
+	//std::cout << attackVector.x << " " << attackVector.y << std::endl;
+	//Input::attack = false;
 	return attackVector;
 }
