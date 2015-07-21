@@ -8,7 +8,7 @@ Text::Text(std::string text)
 	this->text = text;
 	this->length = text.length();
 
-	fontTexture = new Texture("./res/Fonts/fontLinked.png", -10);
+	fontTexture = new Texture("./res/Fonts/fontLinked3.png", -10);
 
 	createQuads();
 }
@@ -39,7 +39,7 @@ void Text::createQuads()
 			offsetz = 0.2f;
 		Transform* transform = new Transform(glm::vec3(offset, offsetz, 0), 0, glm::vec3(1,0,0), glm::vec3(0.1f, 0.1f, 0.1f));
 		//transform->rotate(45, glm::vec3(1, 0, 0));
-		offset += 0.05f;
+		offset += 0.055f;
 		Entity* entity = new Entity(transform, mesh, this->fontTexture);
 		chars.push_back(entity);
 	}

@@ -24,7 +24,6 @@ void PlayerMovement::inputPlayerMovement()
 	if (Input::keyStates['w'])
 	{
 		player->getMesh()->getQuad()->setIndex(3);
-		//player->getTexture()->setIndex(3);
 		if (!Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
 		{
 			if (moveTo(NORTH, player->getTransform()->getPosition(), frameTime, true, &finalPos))
@@ -40,7 +39,6 @@ void PlayerMovement::inputPlayerMovement()
 	if (Input::keyStates['a'])
 	{
 		player->getMesh()->getQuad()->setIndex(1);
-		//player->getTexture()->setIndex(1);
 		if (!Input::keyStates['w'] && !Input::keyStates['s'] && !Input::keyStates['d'])
 		{
 			if (moveTo(WEST, player->getTransform()->getPosition(), frameTime, true, &finalPos))
@@ -56,7 +54,6 @@ void PlayerMovement::inputPlayerMovement()
 	if (Input::keyStates['s'])
 	{
 		player->getMesh()->getQuad()->setIndex(2);
-		//player->getTexture()->setIndex(2);
 		if (!Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['d'])
 		{
 			if (moveTo(SOUTH, player->getTransform()->getPosition(), frameTime, true, &finalPos))
@@ -72,7 +69,6 @@ void PlayerMovement::inputPlayerMovement()
 	if (Input::keyStates['d'])
 	{
 		player->getMesh()->getQuad()->setIndex(0);
-		//player->getTexture()->setIndex(0);
 		if (!Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'])
 		{
 			if (moveTo(EAST, player->getTransform()->getPosition(), frameTime, true, &finalPos))

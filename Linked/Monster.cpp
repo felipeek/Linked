@@ -354,7 +354,6 @@ void Monster::changeTextureBasedOnDirection(MovementDirection direction, unsigne
 	if (direction != currentDirection || this->isAttacking() != lastIsAttacking || this->isReceivingDamage() != lastIsReceivingDamage || !this->isAlive() != lastIsDead)
 	{
 		this->getMesh()->getQuad()->setIndex(initialTextureIndex);
-		//this->getTexture()->setIndex(initialTextureIndex);
 		this->lastIndexTexture = initialTextureIndex;
 	}
 	else
@@ -362,12 +361,10 @@ void Monster::changeTextureBasedOnDirection(MovementDirection direction, unsigne
 		if (this->lastIndexTexture < finalTextureIndex)
 		{
 			this->getMesh()->getQuad()->setIndex(++this->lastIndexTexture);
-			//this->getTexture()->setIndex(++this->lastIndexTexture);
 		}
 		else
 		{
 			this->getMesh()->getQuad()->setIndex(initialTextureIndex);
-			//this->getTexture()->setIndex(initialTextureIndex);
 			this->lastIndexTexture = initialTextureIndex;
 		}
 	}
