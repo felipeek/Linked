@@ -8,7 +8,7 @@ Text::Text(std::string text, float textSize)
 	this->text = text;
 	this->length = text.length();
 
-	fontTexture = new Texture("./res/Fonts/fontLinked3.png", -10);
+	fontTexture = new Texture("./res/Fonts/fontLinked3White.png", -10);
 
 	createQuads(textSize);
 }
@@ -40,7 +40,7 @@ void Text::createQuads(float textSize)
 		totalYoffset = getYoffset(c, textSize);
 		xoffset = getXoffset(c, textSize);
 
-		Transform* transform = new Transform(glm::vec3(totalXoffset + (xoffset / 2) - TEMPXOFFSET, totalYoffset, 0), glm::vec3(textSize * WIDTHFACTOR, textSize, textSize));
+		Transform* transform = new Transform(glm::vec3(totalXoffset + (xoffset / 2) - TEMPXOFFSET, totalYoffset - TEMPYOFFSET, 0), glm::vec3(textSize * WIDTHFACTOR, textSize, textSize));
 
 		totalXoffset += xoffset;
 

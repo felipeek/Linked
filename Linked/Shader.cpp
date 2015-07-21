@@ -32,7 +32,7 @@ void Shader::stopShader()
 	glUseProgram(0);
 }
 
-void Shader::update(Transform* transform, Entity* entity, Light* light)
+void Shader::update(Transform* transform, Entity* entity)
 {
 	std::cout << "Shader abstrato update!" << std::endl;
 }

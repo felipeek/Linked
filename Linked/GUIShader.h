@@ -4,22 +4,19 @@
 class Light;
 class Entity;
 
-class PrimitiveShader : public Shader
+class GUIShader : public Shader
 {
 public:
-	PrimitiveShader(std::string fileName, Camera* camera, Light* light);
-	~PrimitiveShader();
+	GUIShader(std::string fileName);
+	~GUIShader();
 	virtual void update(Transform* transform, Entity* entity);
+	virtual void useShader();
+	virtual void stopShader();
 private:
 	virtual void getUniformLocations();
 	GLuint uniform_TexSampler;
 	GLuint uniform_Model;
-	GLuint uniform_viewProj;
 	GLuint uniform_textureNumRows;
 	GLuint uniform_textureOffset;
-	GLuint uniform_lightPosition;
-	GLuint uniform_lightColor;
-
-	Light* light;
 };
 

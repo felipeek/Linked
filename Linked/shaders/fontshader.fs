@@ -10,6 +10,5 @@ void main(){
 	
 	vec4 textureColor = texture(TextureSampler, uvCoords);
 	
-	
 	out_Color = textureColor;
 }

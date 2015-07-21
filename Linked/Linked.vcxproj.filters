@@ -82,6 +82,12 @@
     <Filter Include="Header Files\Game\Attack">
       <UniqueIdentifier>{15a250aa-e164-42b4-aa45-00c9370fd540}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GUI">
+      <UniqueIdentifier>{a77e877e-d8bc-4264-9454-4aacc89c8274}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI">
+      <UniqueIdentifier>{4adfe57d-6d69-4cf4-b415-afb7f6885bd4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -210,13 +216,19 @@
     <ClInclude Include="Creature.h">
       <Filter>Header Files\Game\Models</Filter>
     </ClInclude>
-    <ClInclude Include="HPBar.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GUIShader.h">
+      <Filter>Header Files\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="Text.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="HPBar.h">
+      <Filter>Header Files\GUI</Filter>
     </ClInclude>
     <ClInclude Include="GUI.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -350,13 +362,19 @@
     <ClCompile Include="Creature.cpp">
       <Filter>Source Files\Game\Models</Filter>
     </ClCompile>
-    <ClCompile Include="HPBar.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="GUIShader.cpp">
+      <Filter>Source Files\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="Text.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="GUI.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="HPBar.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

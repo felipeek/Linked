@@ -6,6 +6,8 @@ class EntityMap;
 class Entity;
 class Camera;
 class PrimitiveShader;
+class CommonShader;
+class GUIShader;
 class MapShader;
 class PlayerMovement;
 class Map;
@@ -30,19 +32,26 @@ private:
 	std::vector<Entity*> entities;
 	std::vector<Projectile*> attacks;
 	std::vector<GameEntity*> gameEntities;
+
 	Camera* camera;
-	PrimitiveShader* shader;
-	PrimitiveShader* fontShader;
 	Light* light;
-	EntityMap* entityMap;
+	CommonShader* commonShader;
+	PrimitiveShader* primitiveShader;
+	GUIShader* fontShader;
 	MapShader* mapShader;
+
+	EntityMap* entityMap;
 	Map* map;
+
 	PlayerMovement* playerMovement;
+	Player* player;
+
 	MonsterFactory* monsterFactory;
 	GameEntityFactory* gameEntityFactory;
 	std::vector<Monster*> monsters;
-	Player* player;
+
 	RangeAttack* rangeAttack;
+
 	double lastTime;
 
 	void input();

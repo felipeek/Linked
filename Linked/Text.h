@@ -10,9 +10,10 @@ class Texture;
 #define ATLASROWS 16
 #define WIDTHFACTOR 0.8f
 // temp
-#define TEMPXOFFSET 1.0f
+#define TEMPXOFFSET 0.96f
+#define TEMPYOFFSET 0.75f
 
-#define _DEFAULT 240;
+#define _DEFAULT 240
 
 #define _A 240
 #define _B 241

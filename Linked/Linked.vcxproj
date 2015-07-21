@@ -75,6 +75,7 @@
   <ItemGroup>
     <ClInclude Include="AI.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CommonShader.h" />
     <ClInclude Include="Creature.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Entity.h" />
@@ -87,6 +88,7 @@
     <ClInclude Include="GameEntityFactory.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="GUIShader.h" />
     <ClInclude Include="HPBar.h" />
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="IndexedModel.h" />
@@ -122,6 +124,7 @@
   <ItemGroup>
     <ClCompile Include="AI.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CommonShader.cpp" />
     <ClCompile Include="Creature.cpp" />
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -134,6 +137,7 @@
     <ClCompile Include="GameEntityFactory.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="GUIShader.cpp" />
     <ClCompile Include="HPBar.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="IndexedModel.cpp" />

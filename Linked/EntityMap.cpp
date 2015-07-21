@@ -17,10 +17,10 @@ EntityMap::~EntityMap()
 		delete mesh;
 }
 
-void EntityMap::render(MapShader* shader, Light* light)
+void EntityMap::render(MapShader* shader)
 {
 	shader->useShader();
-	shader->update(transform, light);
+	shader->update(transform);
 	bindTextures();
 	mesh->render();
 	shader->stopShader();

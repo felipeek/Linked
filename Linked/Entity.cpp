@@ -24,11 +24,11 @@ Transform* Entity::getTransform()
 	return transform;
 }
 
-void Entity::render(Shader* shader, Light* light)
+void Entity::render(Shader* shader)
 {
 	shader->useShader();
 	bindTextures();
-	shader->update(transform, this, light);
+	shader->update(transform, this);
 	mesh->render();
 	shader->stopShader();
 }

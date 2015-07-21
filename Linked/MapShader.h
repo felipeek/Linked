@@ -5,9 +5,9 @@ class Light;
 class MapShader : public Shader
 {
 public:
-	MapShader(std::string fileName, Camera* camera);
+	MapShader(std::string fileName, Camera* camera, Light* light);
 	~MapShader();
-	virtual void update(Transform* transform, Light* light);
+	virtual void update(Transform* transform);
 private:
 	virtual void getUniformLocations();
 
@@ -21,4 +21,6 @@ private:
 
 	GLuint uniform_Model;
 	GLuint uniform_viewProj;
+
+	Light* light;
 };

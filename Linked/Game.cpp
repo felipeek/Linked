@@ -19,6 +19,8 @@
 #include "Camera.h"
 #include "PrimitiveShader.h"
 #include "MapShader.h"
+#include "GUIShader.h"
+#include "CommonShader.h"
 #include "Light.h"
 
 #include "RangeAttack.h"
@@ -35,15 +37,17 @@
 //#define DEBUG
 
 Text* text;
+Entity* gui;
 
 Game::Game(int windowsWidth, int windowsHeight)
 {	
 	// Câmera luz e shaders
 	this->camera = new Camera(glm::vec3(0, 0, 50), glm::vec3(0, 0, 0), 70.0f, (float)windowsWidth / windowsHeight, 0.1f, 100.0f);
 	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 1, 1));
-	this->shader = new PrimitiveShader("./shaders/normalshader", camera);
-	this->mapShader = new MapShader("./shaders/mapshader", camera);
-	this->fontShader = new PrimitiveShader("./shaders/fontshader", camera);
+	this->primitiveShader = new PrimitiveShader("./shaders/normalshader", camera, light);
+	this->commonShader = new CommonShader("./shaders/commonshader", camera, light);
+	this->mapShader = new MapShader("./shaders/mapshader", camera, light);
+	this->fontShader = new GUIShader("./shaders/fontshader");
 	
 	// Criação do player
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 2, 2));
@@ -53,7 +57,10 @@ Game::Game(int windowsWidth, int windowsHeight)
 	player->setDefenseBasis(100);
 	entities.push_back(player);
 
-	text = new Text("Soh zeh? sim soh. Oi", 0.08f);
+	// Temp GUI AND TEXT
+	Mesh* guiMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f));
+	gui = new Entity(new Transform(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)), guiMesh, new Texture("./res/GUI/Linked_GUI.png"));
+	text = new Text("Hoshoyo", 0.03f);
 
 	// Criação do Mapa
 	std::string mapPath = "./res/Maps/teste.png";
@@ -71,8 +78,6 @@ Game::Game(int windowsWidth, int windowsHeight)
 		new Texture("./res/Maps/water.jpg"),
 		new Texture("./res/Maps/grassTex.png"),
 		new Texture(mapPath));
-
-	bool break1 = false;
 
 	// Criação dos Monstros e das Entidades
 	for (int i = 0; i < MAP_SIZE; i++)
@@ -103,7 +108,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	/*for (int i = 0; i < monsters.size(); i++)
 		std::cout << monsters[i]->getName() << std::endl;*/
 
-	std::cout << "QUANTIDADE DE MONSTROS: " << monsters.size() << std::endl;
+	std::cout << "Quantidade de monstros: " << monsters.size() << std::endl;
 
 	lastTime = 0;
 	
@@ -116,7 +121,9 @@ Game::Game(int windowsWidth, int windowsHeight)
 
 Game::~Game()
 {
-	delete shader;
+	// TODO: fix deletions
+
+	delete primitiveShader;
 	delete camera;
 	delete playerMovement;
 	if (monsterFactory != NULL)
@@ -129,56 +136,64 @@ Game::~Game()
 
 void Game::render()
 {
-	entityMap->render(mapShader, light);
+	// Map
+	entityMap->render(mapShader);
 
-	player->getHPBar()->quad->render(shader, light);
+	// Player HP Bar
+	player->getHPBar()->quad->render(primitiveShader);
 
+	// Generic entities (Player only at the moment)
 	for (Entity* e : entities)
 	{
 		try{
-			e->render(shader, light);
+			e->render(primitiveShader);
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
+	// Monsters
 	for (Entity* e : monsters)
 	{
 		try{
-			e->render(shader, light);
+			e->render(primitiveShader);
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
+	// Projectile attacks
 	for (Entity* e : attacks)
 	{
 		try{
-			e->render(shader, light);
+			e->render(commonShader);
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
+	// Common static entities
 	for (Entity* e : gameEntities)
 	{
 		try{
-			e->render(shader, light);
+			e->render(commonShader);
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
 
-	glEnable(GL_BLEND);
-	glDisable(GL_DEPTH_TEST);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	// Render GUI (Order is important)
+	gui->render(fontShader);
 	for (Entity* e : text->getEntities())
 	{
-		e->render(fontShader, light);
+		try{
+			e->render(fontShader);
+		}
+		catch (...){
+			std::cerr << "Error rendering entity" << std::endl;
+		}	
 	}
-	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_BLEND);
 }
 
 bool playerDead = false;
@@ -205,6 +220,7 @@ void Game::update()
 	player->update();
 	player->input();
 	
+	// Monsters update
 	for (unsigned int i = 0; i < monsters.size(); i++)
 	{
 		monsters[i]->update(map, player);
@@ -221,18 +237,10 @@ void Game::input()
 {
 	playerMovement->inputPlayerMovement();
 
-	if (Input::keyStates['v'])
-		player->setMaximumHpBasis(player->getMaximumHpBasis()+1);
-
-	//if (Input::keyStates['h'])
-	//{
-	//	int i = 0;
-	//	std::cin >> i;
-	//	entity->getTexture()->setIndex(i);
-	//}
-		
-
 #ifdef DEBUG
+	if (Input::keyStates['v'])
+		player->setMaximumHpBasis(player->getMaximumHpBasis()+1);		
+
 	if (Input::keyStates['t'])
 	{
 		double now = Time::getTime();

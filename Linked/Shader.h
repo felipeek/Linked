@@ -13,9 +13,9 @@ public:
 	~Shader();
 	GLuint getShader();
 	GLuint getActiveShader();
-	void useShader();
-	void stopShader();
-	virtual void update(Transform* transform, Entity* entity, Light* light);
+	virtual void useShader();
+	virtual void stopShader();
+	virtual void update(Transform* transform, Entity* entity);
 
 private:
 	GLuint loadShader(const char*, GLuint);

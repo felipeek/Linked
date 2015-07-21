@@ -4,8 +4,6 @@
 #include "Shader.h"
 #include "Texture.h"
 
-class Light;
-
 // Remember to delete mesh when extending
 class Entity
 {
@@ -14,7 +12,7 @@ public:
 	~Entity();
 	Transform* getTransform();
 	void setTransform(Transform* transform);
-	virtual void render(Shader* shader, Light* light);
+	virtual void render(Shader* shader);
 	Texture* getTexture();
 	void setMesh(Mesh* mesh);
 
