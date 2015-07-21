@@ -3,14 +3,14 @@
 #include "Entity.h"
 #include <glm\glm.hpp>
 
-Text::Text(std::string text)
+Text::Text(std::string text, float textSize)
 {
 	this->text = text;
 	this->length = text.length();
 
 	fontTexture = new Texture("./res/Fonts/fontLinked3.png", -10);
 
-	createQuads();
+	createQuads(textSize);
 }
 
 Text::~Text()
@@ -24,22 +24,26 @@ Text::~Text()
 	chars.clear();
 }
 
-void Text::createQuads()
+void Text::createQuads(float textSize)
 {
-	float offset = -0.2f;
-	float offsetz = 0;
+	float totalXoffset = 0.0f;
+	float totalYoffset = 0.0f;
+
+	float xoffset = 0.0f;
+
 	for (int i = 0; i < length; i++)
 	{
 		int c = decodeChar(this->text[i]);
 		Quad* quad = new Quad(glm::vec3(0, 0, 0), QUADSIZE, QUADSIZE, ATLASROWS, c);
 		Mesh* mesh = new Mesh(quad);
-		if (c == _y)
-			offsetz = 0.2f-0.023f;
-		else
-			offsetz = 0.2f;
-		Transform* transform = new Transform(glm::vec3(offset, offsetz, 0), 0, glm::vec3(1,0,0), glm::vec3(0.1f, 0.1f, 0.1f));
-		//transform->rotate(45, glm::vec3(1, 0, 0));
-		offset += 0.055f;
+
+		totalYoffset = getYoffset(c, textSize);
+		xoffset = getXoffset(c, textSize);
+
+		Transform* transform = new Transform(glm::vec3(totalXoffset + (xoffset / 2) - TEMPXOFFSET, totalYoffset, 0), glm::vec3(textSize * WIDTHFACTOR, textSize, textSize));
+
+		totalXoffset += xoffset;
+
 		Entity* entity = new Entity(transform, mesh, this->fontTexture);
 		chars.push_back(entity);
 	}
@@ -137,6 +141,198 @@ int Text::decodeChar(char c)
 
 	default:
 		return 0;
+	}
+}
+
+float Text::getYoffset(int c, float textSize)
+{
+	switch (c)
+	{
+	case _A:
+	case _B:
+	case _C:
+	case _D:
+	case _E:
+	case _F:
+	case _G:
+	case _H:
+	case _I:
+	case _J:
+	case _K:
+	case _L:
+	case _M:
+	case _N:
+	case _O:
+	case _P:
+	case _Q:
+	case _R:
+	case _S:
+	case _T:
+	case _U:
+	case _V:
+	case _W:
+	case _X:
+	case _Y:
+	case _Z: return 0.0f; break;
+
+	case _a: return 0.0f; break;
+	case _b: return 0.0f; break;
+	case _c: return 0.0f; break;
+	case _d: return 0.0f; break;
+	case _e: return 0.0f; break;
+	case _f: return 0.0f; break;
+	case _g: return -textSize*alphaY; break;
+	case _h: return 0.0f; break;
+	case _i: return 0.0f; break;
+	case _j: return -textSize*alphaY; break;
+	case _k: return 0.0f; break;
+	case _l: return 0.0f; break;
+	case _m: return 0.0f; break;
+	case _n: return 0.0f; break;
+	case _o: return 0.0f; break;
+	case _p: return -textSize*alphaY; break;
+	case _q: return -textSize*alphaY; break;
+	case _r: return 0.0f; break;
+	case _s: return 0.0f; break;
+	case _t: return 0.0f; break;
+	case _u: return 0.0f; break;
+	case _v: return 0.0f; break;
+	case _w: return 0.0f; break;
+	case _x: return 0.0f; break;
+	case _y: return -textSize*alphaY; break;
+	case _z: return 0.0f; break;
+
+	case _0:
+	case _1:
+	case _2:
+	case _3:
+	case _4:
+	case _5:
+	case _6:
+	case _7:
+	case _8:
+	case _9: return 0.0f; break;
+
+	case _DOT:
+	case _COLON:
+	case _EXCLAMATION:
+	case _INTERROGATION:
+	case _PLUS:
+	case _MINUS:
+	case _EQUAL:
+	case _AMPERSAND:
+	case _CLOSEPARENTHESIS:
+	case _OPENPARENTHESIS:
+	case _PERCENT:
+	case _COMM4:
+	case _SLASH: 
+	case _DOLLAR:
+	case _STAR:
+	case _APOSTROPHE:
+	case _SEMICOLON: return 0.0f; break;
+
+		// Whitespace
+	case ' ': return 0.0f; break;
+
+	default:
+		return 0.0f;
+	}
+}
+
+float Text::getXoffset(int c, float textSize)
+{
+	dividerX = 2.0f;
+	switch (c)
+	{
+	case _A: return textSize * alphaX; break;
+	case _B: return textSize * alphaX; break;
+	case _C: return textSize * alphaX; break;
+	case _D: return textSize * alphaX; break;
+	case _E: return textSize * alphaX; break;
+	case _F: return textSize * alphaX; break;
+	case _G: dividerX = 0.8f; return (textSize / dividerX) * alphaX; break;
+	case _H: return textSize * alphaX; break;
+	case _I: return (textSize / dividerX) * alphaX; break;
+	case _J: return (textSize / dividerX) * alphaX; break;
+	case _K: return textSize * alphaX; break;
+	case _L: return textSize * alphaX; break;
+	case _M: dividerX = 0.7f; return (textSize / dividerX) * alphaX; break;
+	case _N: return textSize * alphaX; break;
+	case _O: dividerX = 0.8f; return (textSize / dividerX) * alphaX; break;
+	case _P: return textSize * alphaX; break;
+	case _Q: dividerX = 0.8f; return (textSize / dividerX) * alphaX; break;
+	case _R: return textSize * alphaX; break;
+	case _S: return textSize * alphaX; break;
+	case _T: return textSize * alphaX; break;
+	case _U: return textSize * alphaX; break;
+	case _V: dividerX = 0.8f; return (textSize / dividerX) * alphaX; break;
+	case _W: dividerX = 0.6f; return (textSize / dividerX) * alphaX; break;
+	case _X: return textSize * alphaX; break;
+	case _Y: return textSize * alphaX; break;
+	case _Z: return textSize * alphaX; break;
+
+	case _a: return textSize * alphaX; break;
+	case _b: return textSize * alphaX; break;
+	case _c: return textSize * alphaX; break;
+	case _d: return textSize * alphaX; break;
+	case _e: return textSize * alphaX; break;
+	case _f: return (textSize / dividerX) * alphaX; break;
+	case _g: return textSize * alphaX; break;
+	case _h: return textSize * alphaX; break;
+	case _i: return (textSize / dividerX) * alphaX; break;
+	case _j: return (textSize / dividerX) * alphaX; break;
+	case _k: return textSize * alphaX; break;
+	case _l: return (textSize / dividerX) * alphaX; break;
+	case _m: dividerX = 0.7f; return (textSize /dividerX) * alphaX; break;
+	case _n: return textSize * alphaX; break;
+	case _o: return textSize * alphaX; break;
+	case _p: return textSize * alphaX; break;
+	case _q: return textSize * alphaX; break;
+	case _r: dividerX = 1.5f; return (textSize / dividerX) * alphaX; break;
+	case _s: return textSize * alphaX; break;
+	case _t: return (textSize / dividerX) * alphaX; break;
+	case _u: return textSize * alphaX; break;
+	case _v: return textSize * alphaX; break;
+	case _w: dividerX = 0.7f; return (textSize / dividerX) * alphaX; break;
+	case _x: return textSize * alphaX; break;
+	case _y: return textSize * alphaX; break;
+	case _z: return textSize * alphaX; break;
+
+	case _0: return textSize * alphaX; break;
+	case _1: dividerX = 1.8f; return (textSize / dividerX) * alphaX; break;
+	case _2: return textSize * alphaX; break;
+	case _3: return textSize * alphaX; break;
+	case _4: return textSize * alphaX; break;
+	case _5: return textSize * alphaX; break;
+	case _6: return textSize * alphaX; break;
+	case _7: return textSize * alphaX; break;
+	case _8: return textSize * alphaX; break;
+	case _9: return textSize * alphaX; break;
+
+
+	case _DOT:				   return (textSize / dividerX) * alphaX; break;
+	case _COLON:			   return (textSize / dividerX) * alphaX; break;
+	case _EXCLAMATION:		   return (textSize / dividerX) * alphaX; break;
+	case _INTERROGATION:	   return textSize * alphaX; break;
+	case _PLUS:				   return textSize * alphaX; break;
+	case _MINUS:			   return textSize * alphaX; break;
+	case _EQUAL:			   return textSize * alphaX; break;
+	case _AMPERSAND:		   return textSize * alphaX; break;
+	case _CLOSEPARENTHESIS:	   return (textSize / dividerX) * alphaX; break;
+	case _OPENPARENTHESIS:	   return (textSize / dividerX) * alphaX; break;
+	case _PERCENT:			   return textSize * alphaX; break;
+	case _COMM4:			   return (textSize / dividerX) * alphaX; break;
+	case _SLASH:			   return textSize * alphaX; break;
+	case _DOLLAR:			   return textSize * alphaX; break;
+	case _STAR:				   return textSize * alphaX; break;
+	case _APOSTROPHE:		   return textSize * alphaX; break;
+	case _SEMICOLON:		   return (textSize / dividerX) * alphaX; break;
+
+		// Whitespace
+	case 0: dividerX = 1.5f; return (textSize / dividerX) * alphaX; break;
+
+	default:
+		return textSize * alphaX;
 	}
 }
 

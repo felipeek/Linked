@@ -6,6 +6,7 @@ class Transform
 {
 public:
 	Transform();
+	Transform(glm::vec3 position, glm::vec3 size);
 	Transform(glm::vec3 position);
 	Transform(glm::vec3 position, float angle, glm::vec3 axis, glm::vec3 scale);
 

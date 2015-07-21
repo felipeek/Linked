@@ -19,6 +19,12 @@ Transform::Transform(glm::vec3 position, float angle, glm::vec3 axis, glm::vec3 
 	updateModel();
 }
 
+Transform::Transform(glm::vec3 position, glm::vec3 size) : Transform(position)
+{
+	scale(size.x, size.y, size.z);
+	updateModel();
+}
+
 Transform::~Transform()
 {
 }

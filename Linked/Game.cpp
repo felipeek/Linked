@@ -53,7 +53,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	player->setDefenseBasis(100);
 	entities.push_back(player);
 
-	text = new Text("Ho Enchant");
+	text = new Text("Soh zeh? sim soh. Oi", 0.08f);
 
 	// Criação do Mapa
 	std::string mapPath = "./res/Maps/teste.png";

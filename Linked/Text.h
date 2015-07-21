@@ -8,6 +8,9 @@ class Texture;
 
 #define QUADSIZE 0.5f
 #define ATLASROWS 16
+#define WIDTHFACTOR 0.8f
+// temp
+#define TEMPXOFFSET 1.0f
 
 #define _DEFAULT 240;
 
@@ -77,27 +80,27 @@ class Texture;
 #define _9 185
 
 #define _DOT 160
-#define _COLON 160
-#define _EXCLAMATION 160
-#define _INTERROGATION 160
-#define _PLUS 160
-#define _MINUS 160
-#define _EQUAL 160
-#define _AMPERSAND 160
-#define _CLOSEPARENTHESIS 160
-#define _OPENPARENTHESIS 160
-#define _PERCENT 160
-#define _COMM4 160
-#define _SLASH 160
-#define _DOLLAR 160
-#define _STAR 160
-#define _APOSTROPHE 160
-#define _SEMICOLON 160
+#define _COLON 161
+#define _EXCLAMATION 162
+#define _INTERROGATION 163
+#define _PLUS 164
+#define _MINUS 165
+#define _EQUAL 166
+#define _AMPERSAND 167
+#define _CLOSEPARENTHESIS 168
+#define _OPENPARENTHESIS 169
+#define _PERCENT 170
+#define _COMM4 171
+#define _SLASH 172
+#define _DOLLAR 173
+#define _STAR 174
+#define _APOSTROPHE 175
+#define _SEMICOLON 144
 
 class Text
 {
 public:
-	Text(std::string text);
+	Text(std::string text, float textSize);
 	~Text();
 
 	std::vector<Entity*>& getEntities();
@@ -107,7 +110,14 @@ private:
 	std::string text;
 	int length;
 
-	void createQuads();
+	void createQuads(float textSize);
 	int decodeChar(char c);
+	float getYoffset(int c, float textSize);
+	float getXoffset(int c, float textSize);
+
+	const float alphaX = 0.55f;
+	float dividerX;
+
+	const float alphaY = 0.25f;
 };
 
