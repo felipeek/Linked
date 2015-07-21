@@ -19,6 +19,7 @@ Monster::Monster(Transform* transform, Mesh* mesh, Texture* texture) : Entity(tr
 	setTotalMagicalPower(MONSTER_DEFAULT_TOTAL_MAGICAL_POWER);
 	setTotalSpeed(MONSTER_DEFAULT_TOTAL_SPEED);
 	setTotalAttackSpeed(MONSTER_DEFAULT_TOTAL_ATTACK_SPEED);
+	setTotalRange(MONSTER_DEFAULT_TOTAL_RANGE);
 
 	this->alive = true;
 
@@ -327,15 +328,15 @@ void Monster::changeTexture(MovementDirection direction)
 				else if (isReceivingDamage) changeTextureBasedOnDirection(direction, 40, 43);
 				break;
 			case BOTTOM:
-				if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(direction, 12, 15);
-				else if (isAttacking) changeTextureBasedOnDirection(direction, 28, 31);
-				else if (isReceivingDamage) changeTextureBasedOnDirection(direction, 44, 47);
-				break;
-			case LEFT:
-			case BOTTOM_LEFT:
 				if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(direction, 4, 7);
 				else if (isAttacking) changeTextureBasedOnDirection(direction, 20, 23);
 				else if (isReceivingDamage) changeTextureBasedOnDirection(direction, 36, 39);
+				break;
+			case LEFT:
+			case BOTTOM_LEFT:
+				if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(direction, 12, 15);
+				else if (isAttacking) changeTextureBasedOnDirection(direction, 28, 31);
+				else if (isReceivingDamage) changeTextureBasedOnDirection(direction, 44, 47);
 				break;
 			}
 		}
@@ -383,8 +384,10 @@ void Monster::update(Map* map, Player* player)
 	else if (this->isAttacking())
 		movementDefinition.doMove = false;
 	// If the monster is receiving damage, it can't move.
+
 	//else if (this->isReceivingDamage())
 	//	movementDefinition.doMove = false;
+
 	// If the player is dead, the monster will move randomly.
 	else if (!player->isAlive())
 		movementDefinition = this->moveRandomly(map);
