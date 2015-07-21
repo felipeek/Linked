@@ -229,7 +229,7 @@
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
     <ClInclude Include="CommonShader.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Shaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -375,7 +375,7 @@
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="CommonShader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Shaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
