@@ -80,7 +80,7 @@ glm::vec2& Quad::getTextureOffset()
 
 void Quad::setIndex(int i)
 {
-	this->index = i;
+	this->index = (float)i;
 	calcAtlas();
 }
 

@@ -15,12 +15,12 @@ HPBar::HPBar(Player* player)
 	this->numBars = NUMBARS;									// Start with full hp
 	this->prevBars = 0;
 
-	hpBar = new DynamicTexture(maxBars, 1, false);		// Create Texture
+	hpBar = new DynamicTexture(maxBars, 1, false, MIPMAPBIAS);		// Create Texture
 	hpBarImage = new unsigned char[4 * maxBars];				// Allocate memory for image
 	hpColor = highHP;
 	setHP(maxBars);
 	hpBar->setLoadedImage(hpBarImage);							// Set loaded image address
-	hpBar->genDynamicGLTexture(MIPMAPBIAS);
+	hpBar->genDynamicGLTexture();
 
 	maxHP = player->getTotalMaximumHp();
 

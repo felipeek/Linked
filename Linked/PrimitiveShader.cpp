@@ -41,11 +41,11 @@ void PrimitiveShader::update(Transform* transform, Entity* entity, Light* light)
 	}
 	else
 	{
-		numRows = entity->getMesh()->getQuad()->getTextureNumRows();
+		numRows = (int)entity->getMesh()->getQuad()->getTextureNumRows();
 		glUniform2fv(uniform_textureOffset, 1, &entity->getMesh()->getQuad()->getTextureOffset()[0]);
 	}
 
-	glUniform1f(uniform_textureNumRows, numRows);
+	glUniform1f(uniform_textureNumRows, (GLfloat)numRows);
 
 	glUniform3fv(uniform_lightPosition, 1, &light->lightPosition[0]);
 	glUniform3fv(uniform_lightColor, 1, &light->lightColor[0]);

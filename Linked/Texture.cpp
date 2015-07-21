@@ -1,8 +1,11 @@
 #include "Texture.h"
 #include "stb_image.h"
 
-Texture::Texture(std::string fileName) : ImageLoader(fileName, 4)
+Texture::Texture(std::string fileName) : Texture(fileName, 0){}
+
+Texture::Texture(std::string fileName, float bias) : ImageLoader(fileName, 4)
 {
+	this->bias = bias;
 	this->fileName = fileName;
 	textureID = genGLTexture();
 }
@@ -29,17 +32,22 @@ GLuint Texture::genGLTexture()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	if (bias < 0)
+	{
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, (GLfloat)bias);
+	}
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	return textureID;
 }
 
-DynamicTexture::DynamicTexture(int width, int height, bool mipmap)
+DynamicTexture::DynamicTexture(int width, int height, bool mipmap, float bias)
 {
 	this->fileName = "";
 	this->width = width;
 	this->height = height;
 	this->channels = 4;
+	this->bias = bias;
 	//textureID = genDynamicGLTexture(mipmap);
 }
 
@@ -48,7 +56,7 @@ DynamicTexture::~DynamicTexture()
 	//stbi_image_free(loadedImage);
 }
 
-GLuint DynamicTexture::genDynamicGLTexture(int bias)
+GLuint DynamicTexture::genDynamicGLTexture()
 {
 	glGenTextures(1, &textureID);
 
@@ -60,7 +68,7 @@ GLuint DynamicTexture::genDynamicGLTexture(int bias)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, (GLfloat)bias);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, (GLfloat)this->bias);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	return textureID;

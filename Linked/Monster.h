@@ -16,7 +16,7 @@ class Player;
 #define TEXTURE_CHANGE_DELAY 0.2f
 #define ASPD_FACTOR 10
 #define DEATH_TIME 5.0f
-#define RECEIVE_DAMAGE_DELAY 0.2f
+#define RECEIVE_DAMAGE_DELAY 0.05f
 
 // If MONSTER_FIRST_DIRECTION is changed,
 // MONSTER_FIRST_INDEX_TEXTURE must also be changed.

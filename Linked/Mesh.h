@@ -15,7 +15,6 @@ public:
 	Mesh(Grid* grid);
 	~Mesh();
 	void render();
-	void renderMap();
 	float reflectivity;
 	float glossiness;
 	static GLuint drawForm;

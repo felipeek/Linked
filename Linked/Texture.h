@@ -7,6 +7,7 @@ class Texture : public ImageLoader
 {
 public:
 	Texture(std::string fileName);
+	Texture(std::string fileName, float bias);
 	Texture();
 	~Texture();
 
@@ -19,15 +20,16 @@ public:
 	//virtual unsigned char* getLoadedImage();
 protected:
 	std::string fileName;
+	float bias;
 };
 
 class DynamicTexture : public Texture
 {
 public:
-	DynamicTexture(int width, int height, bool mipmap);
+	DynamicTexture(int width, int height, bool mipmap, float bias);
 	~DynamicTexture();
 
-	GLuint genDynamicGLTexture(int bias);
+	GLuint genDynamicGLTexture();
 
 	// Implement if necessary
 	//virtual unsigned char* getLoadedImage();

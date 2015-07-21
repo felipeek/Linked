@@ -26,13 +26,15 @@
 #include "Player.h"
 #include "HPBar.h"
 
+#include "Text.h"
+
 #include <string>
 #include <iostream>
 #include <cstdlib>
 
 //#define DEBUG
 
-Entity* entity;
+Text* text;
 
 Game::Game(int windowsWidth, int windowsHeight)
 {	
@@ -51,10 +53,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	player->setDefenseBasis(100);
 	entities.push_back(player);
 
-	//Texture* texture = new Texture("./res/Fonts/fontLinked.png", 16, 16*15);
-	//Mesh* mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.1f, 0.1f));
-	//Transform* transform = new Transform(player->getTransform()->getPosition(), 0, glm::vec3(0,0,1), glm::vec3(1,1,1));
-	//entity = new Entity(transform, mesh, texture);
+	text = new Text("hoshoyo");
 
 	// Criação do Mapa
 	std::string mapPath = "./res/Maps/teste.png";
@@ -134,8 +133,6 @@ void Game::render()
 
 	player->getHPBar()->quad->render(shader, light);
 
-	//entity->render(fontShader, light);
-
 	for (Entity* e : entities)
 	{
 		try{
@@ -172,6 +169,16 @@ void Game::render()
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
+
+	glEnable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	for (Entity* e : text->getEntities())
+	{
+		e->render(fontShader, light);
+	}
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
 }
 
 bool playerDead = false;
