@@ -1,6 +1,6 @@
 <MONSTER>
   <NAME>Poring</NAME>
-  <SPRITE>Sprites/poring4.png</SPRITE>
+  <SPRITE>Sprites/blackwarrior.png</SPRITE>
   <SIZE>20</SIZE>
   <COLLISIONRANGE>10</COLLISIONRANGE>
   <MAXHP>30</MAXHP>
