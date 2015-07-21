@@ -78,11 +78,10 @@ Monster* MonsterFactory::generateCopyOfMonster(Monster* monster)
 	copy->setTotalRange(monster->getTotalRange());
 	copy->setTotalCollisionRange(monster->getTotalCollisionRange());
 	copy->setTotalAttackSpeed(monster->getTotalAttackSpeed());
-	// Copy Mesh (The same mesh will be setted for all monsters of same class)
-	copy->setMesh(monster->getMesh());
-	// Copy Texture (A new texture object must be created for each monster)
-	Texture* monsterTexture = monster->getTexture();
-	copy->setTexture(new Texture(monsterTexture->getFilename()));
+	// Copy Mesh (A new mesh/quad object must be created for each monster)
+	copy->setMesh(new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7)));
+	// Copy Texture (The same texture will be setted for all monsters of same class)
+	copy->setTexture(monster->getTexture());
 	// Copy Transform (A new transform object must be created for each monster)
 	Transform *monsterTransform = monster->getTransform();
 	vec3 monsterTransformPosition = monsterTransform->getPosition();
@@ -104,7 +103,7 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 	{
 		xml_node<> *rootNode = doc.first_node();
 
-		monster->setMesh(new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f)));
+		monster->setMesh(new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7)));
 		monster->setTransform(new Transform(MONSTERS_STANDARD_POSITION, MONSTERS_STANDARD_ANGLE, MONSTERS_STANDARD_AXIS, MONSTERS_STANDARD_SCALE));
 
 		for (xml_node<> *child = rootNode->first_node(); child; child = child->next_sibling())

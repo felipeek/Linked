@@ -384,10 +384,8 @@ void Monster::update(Map* map, Player* player)
 	else if (this->isAttacking())
 		movementDefinition.doMove = false;
 	// If the monster is receiving damage, it can't move.
-
-	//else if (this->isReceivingDamage())
-	//	movementDefinition.doMove = false;
-
+	else if (this->isReceivingDamage())
+		movementDefinition.doMove = false;
 	// If the player is dead, the monster will move randomly.
 	else if (!player->isAlive())
 		movementDefinition = this->moveRandomly(map);

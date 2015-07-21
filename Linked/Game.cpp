@@ -78,7 +78,6 @@ Game::Game(int windowsWidth, int windowsHeight)
 	// Criação dos Monstros e das Entidades
 	for (int i = 0; i < MAP_SIZE; i++)
 	{
-
 		for (int j = 0; j < MAP_SIZE; j++)
 		{
 			MapCoordinate coordinate = map->getMapCoordinateForMapCreation(glm::vec3(i, j, 0));
@@ -217,16 +216,6 @@ void Game::input()
 
 	if (Input::keyStates['v'])
 		player->setMaximumHpBasis(player->getMaximumHpBasis()+1);
-
-	if (Input::keyStates['u'])
-		monsters[0]->getMesh()->getQuad()->setIndex(0);
-	if (Input::keyStates['k'])
-		monsters[0]->getMesh()->getQuad()->setIndex(8);
-	if (Input::keyStates['h'])
-		monsters[0]->getMesh()->getQuad()->setIndex(12);
-	if (Input::keyStates['j'])
-		monsters[0]->getMesh()->getQuad()->setIndex(4);
-
 
 	//if (Input::keyStates['h'])
 	//{

@@ -10,7 +10,7 @@ Primitive::~Primitive()
 {
 }
 
-Quad::Quad(glm::vec3 center, float sizeX, float sizeY) : Quad(center, sizeX, sizeY, 7, 0){}
+Quad::Quad(glm::vec3 center, float sizeX, float sizeY) : Quad(center, sizeX, sizeY, 1, 0){}
 
 Quad::Quad(glm::vec3 center, float sizeX, float sizeY, int textureNumRows, int textureIndex)
 {
