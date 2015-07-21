@@ -44,17 +44,17 @@ Game::Game(int windowsWidth, int windowsHeight)
 	this->fontShader = new PrimitiveShader("./shaders/fontshader", camera);
 	
 	// Criação do player
-	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f));
-	player = new Player(new Transform(glm::vec3(500, 500, 1.0f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Textures/hoshoyo.png", 2, 2));
+	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 2, 2));
+	player = new Player(new Transform(glm::vec3(500, 500, 1.0f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Textures/hoshoyo.png"));
 	player->setMaximumHpBasis(100);
 	player->setHp(100);
 	player->setDefenseBasis(100);
 	entities.push_back(player);
 
-	Texture* texture = new Texture("./res/Fonts/fontLinked.png", 16, 16*15);
-	Mesh* mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.1f, 0.1f));
-	Transform* transform = new Transform(player->getTransform()->getPosition(), 0, glm::vec3(0,0,1), glm::vec3(1,1,1));
-	entity = new Entity(transform, mesh, texture);
+	//Texture* texture = new Texture("./res/Fonts/fontLinked.png", 16, 16*15);
+	//Mesh* mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.1f, 0.1f));
+	//Transform* transform = new Transform(player->getTransform()->getPosition(), 0, glm::vec3(0,0,1), glm::vec3(1,1,1));
+	//entity = new Entity(transform, mesh, texture);
 
 	// Criação do Mapa
 	std::string mapPath = "./res/Maps/teste.png";
@@ -73,14 +73,18 @@ Game::Game(int windowsWidth, int windowsHeight)
 		new Texture("./res/Maps/grassTex.png"),
 		new Texture(mapPath));
 
+	bool break1 = false;
+
 	// Criação dos Monstros e das Entidades
 	for (int i = 0; i < MAP_SIZE; i++)
+	{
+
 		for (int j = 0; j < MAP_SIZE; j++)
 		{
-			MapCoordinate coordinate = map->getMapCoordinateForMapCreation(glm::vec3(i,j,0));
+			MapCoordinate coordinate = map->getMapCoordinateForMapCreation(glm::vec3(i, j, 0));
 			Monster *monster = coordinate.mapMonster.monster;
 			GameEntity *gameEntity = coordinate.mapGameEntity.gameEntity;
-	
+
 			if (coordinate.mapMonster.monsterExists)
 			{
 				if (!map->coordinateHasCollision(glm::vec3(i, j, 0)))
@@ -97,7 +101,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 				gameEntities.push_back(gameEntity);
 			}
 		}
-
+	}
 	/*for (int i = 0; i < monsters.size(); i++)
 		std::cout << monsters[i]->getName() << std::endl;*/
 
@@ -131,7 +135,7 @@ void Game::render()
 
 	player->getHPBar()->quad->render(shader, light);
 
-	entity->render(fontShader, light);
+	//entity->render(fontShader, light);
 
 	for (Entity* e : entities)
 	{
@@ -206,8 +210,6 @@ void Game::update()
 	}
 }
 
-int i = 0;
-double a = 0;
 
 void Game::input()
 {
@@ -216,14 +218,22 @@ void Game::input()
 	if (Input::keyStates['v'])
 		player->setMaximumHpBasis(player->getMaximumHpBasis()+1);
 
+	if (Input::keyStates['u'])
+		monsters[0]->getMesh()->getQuad()->setIndex(0);
+	if (Input::keyStates['k'])
+		monsters[0]->getMesh()->getQuad()->setIndex(8);
 	if (Input::keyStates['h'])
-	{
-		if (Time::getTime() - a >= 0.1f)
-		{
-			entity->getTexture()->setIndex(++i);
-			a = Time::getTime();
-		}		
-	}
+		monsters[0]->getMesh()->getQuad()->setIndex(12);
+	if (Input::keyStates['j'])
+		monsters[0]->getMesh()->getQuad()->setIndex(4);
+
+
+	//if (Input::keyStates['h'])
+	//{
+	//	int i = 0;
+	//	std::cin >> i;
+	//	entity->getTexture()->setIndex(i);
+	//}
 		
 
 #ifdef DEBUG

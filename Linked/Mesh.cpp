@@ -128,3 +128,11 @@ void Mesh::render()
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);
 }
+
+Quad* Mesh::getQuad()
+{
+	if (quad == NULL)
+		return NULL;
+	else
+		return quad;
+}

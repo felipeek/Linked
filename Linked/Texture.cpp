@@ -4,18 +4,6 @@
 Texture::Texture(std::string fileName) : ImageLoader(fileName, 4)
 {
 	this->fileName = fileName;
-	numRows = 1;
-	index = 0;
-	calcAtlas();
-	textureID = genGLTexture();
-}
-
-Texture::Texture(std::string fileName, int numRows, int index) : ImageLoader(fileName, 4)
-{
-	this->fileName = fileName;
-	this->numRows = (float)numRows;
-	this->index = (float)index;
-	calcAtlas();
 	textureID = genGLTexture();
 }
 
@@ -46,29 +34,12 @@ GLuint Texture::genGLTexture()
 	return textureID;
 }
 
-void Texture::calcAtlas()
-{
-	int column = (int)index % (int)numRows;
-	offset.x = (float)column / (float)numRows;
-	int row = (int)index / (int)numRows;
-	offset.y = (float)row / (float)numRows;
-}
-
-void Texture::setIndex(int i)
-{
-	index = (float)i;
-	calcAtlas();
-}
-
-DynamicTexture::DynamicTexture(int width, int height, int rows, int index, bool mipmap)
+DynamicTexture::DynamicTexture(int width, int height, bool mipmap)
 {
 	this->fileName = "";
-	this->numRows = (float)rows;
-	this->index = (float)index;
 	this->width = width;
 	this->height = height;
 	this->channels = 4;
-	calcAtlas();
 	//textureID = genDynamicGLTexture(mipmap);
 }
 

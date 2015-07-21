@@ -28,7 +28,7 @@ void Entity::render(Shader* shader, Light* light)
 {
 	shader->useShader();
 	bindTextures();
-	shader->update(transform, texture, light);
+	shader->update(transform, this, light);
 	mesh->render();
 	shader->stopShader();
 }

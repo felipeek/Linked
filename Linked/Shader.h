@@ -3,7 +3,7 @@
 #include <string>
 class Transform;
 class Camera;
-class Texture;
+class Entity;
 class Light;
 
 class Shader
@@ -15,7 +15,7 @@ public:
 	GLuint getActiveShader();
 	void useShader();
 	void stopShader();
-	virtual void update(Transform* transform, Texture* texture, Light* light);
+	virtual void update(Transform* transform, Entity* entity, Light* light);
 
 private:
 	GLuint loadShader(const char*, GLuint);

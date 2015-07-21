@@ -1,14 +1,15 @@
 #pragma once
 #include "Shader.h"
-class Texture;
+
 class Light;
+class Entity;
 
 class PrimitiveShader : public Shader
 {
 public:
 	PrimitiveShader(std::string fileName, Camera* camera);
 	~PrimitiveShader();
-	virtual void update(Transform* transform, Texture* texture, Light* light);
+	virtual void update(Transform* transform, Entity* entity, Light* light);
 private:
 	virtual void getUniformLocations();
 	GLuint uniform_TexSampler;

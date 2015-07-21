@@ -4,6 +4,7 @@
 #include "Map.h"
 #include "Time.h"
 #include "Player.h"
+#include "Primitive.h"
 #include <iostream>
 #include <vector>
 
@@ -351,18 +352,21 @@ void Monster::changeTextureBasedOnDirection(MovementDirection direction, unsigne
 {
 	if (direction != currentDirection || this->isAttacking() != lastIsAttacking || this->isReceivingDamage() != lastIsReceivingDamage || !this->isAlive() != lastIsDead)
 	{
-		this->getTexture()->setIndex(initialTextureIndex);
+		this->getMesh()->getQuad()->setIndex(initialTextureIndex);
+		//this->getTexture()->setIndex(initialTextureIndex);
 		this->lastIndexTexture = initialTextureIndex;
 	}
 	else
 	{
 		if (this->lastIndexTexture < finalTextureIndex)
 		{
-			this->getTexture()->setIndex(++this->lastIndexTexture);
+			this->getMesh()->getQuad()->setIndex(++this->lastIndexTexture);
+			//this->getTexture()->setIndex(++this->lastIndexTexture);
 		}
 		else
 		{
-			this->getTexture()->setIndex(initialTextureIndex);
+			this->getMesh()->getQuad()->setIndex(initialTextureIndex);
+			//this->getTexture()->setIndex(initialTextureIndex);
 			this->lastIndexTexture = initialTextureIndex;
 		}
 	}
@@ -379,8 +383,8 @@ void Monster::update(Map* map, Player* player)
 	else if (this->isAttacking())
 		movementDefinition.doMove = false;
 	// If the monster is receiving damage, it can't move.
-	else if (this->isReceivingDamage())
-		movementDefinition.doMove = false;
+	//else if (this->isReceivingDamage())
+	//	movementDefinition.doMove = false;
 	// If the player is dead, the monster will move randomly.
 	else if (!player->isAlive())
 		movementDefinition = this->moveRandomly(map);

@@ -1,6 +1,6 @@
 #include "PrimitiveShader.h"
-#include "Texture.h"
-#include "Transform.h"
+#include "Entity.h"
+#include "Primitive.h"
 #include "Camera.h"
 #include "Light.h"
 
@@ -25,15 +25,27 @@ void PrimitiveShader::getUniformLocations()
 	uniform_lightColor = glGetUniformLocation(shader, "lightColor");
 }
 
-void PrimitiveShader::update(Transform* transform, Texture* texture, Light* light)
+void PrimitiveShader::update(Transform* transform, Entity* entity, Light* light)
 {
 	glActiveTexture(GL_TEXTURE0);
 	glUniform1i(uniform_TexSampler, 0);
 	glUniformMatrix4fv(uniform_Model, 1, GL_FALSE, &transform->model[0][0]);
 	glUniformMatrix4fv(uniform_viewProj, 1, GL_FALSE, &camera->viewProj[0][0]);
 
-	glUniform1f(uniform_textureNumRows, texture->numRows);
-	glUniform2fv(uniform_textureOffset, 1, &texture->offset[0]);
+	glm::vec2 offset = glm::vec2(0, 0);
+	int numRows;
+	if (entity->getMesh()->getQuad() == NULL)
+	{
+		numRows = 1;
+		glUniform2fv(uniform_textureOffset, 1, &offset[0]);
+	}
+	else
+	{
+		numRows = entity->getMesh()->getQuad()->getTextureNumRows();
+		glUniform2fv(uniform_textureOffset, 1, &entity->getMesh()->getQuad()->getTextureOffset()[0]);
+	}
+
+	glUniform1f(uniform_textureNumRows, numRows);
 
 	glUniform3fv(uniform_lightPosition, 1, &light->lightPosition[0]);
 	glUniform3fv(uniform_lightColor, 1, &light->lightColor[0]);

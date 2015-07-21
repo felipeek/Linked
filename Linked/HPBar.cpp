@@ -15,7 +15,7 @@ HPBar::HPBar(Player* player)
 	this->numBars = NUMBARS;									// Start with full hp
 	this->prevBars = 0;
 
-	hpBar = new DynamicTexture(maxBars, 1, 1, 0, false);		// Create Texture
+	hpBar = new DynamicTexture(maxBars, 1, false);		// Create Texture
 	hpBarImage = new unsigned char[4 * maxBars];				// Allocate memory for image
 	hpColor = highHP;
 	setHP(maxBars);

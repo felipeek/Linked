@@ -10,9 +10,16 @@ Primitive::~Primitive()
 {
 }
 
-Quad::Quad(glm::vec3 center, float sizeX, float sizeY)
+Quad::Quad(glm::vec3 center, float sizeX, float sizeY) : Quad(center, sizeX, sizeY, 7, 0){}
+
+Quad::Quad(glm::vec3 center, float sizeX, float sizeY, int textureNumRows, int textureIndex)
 {
 	model = new IndexedModel();
+
+	this->index = (float)textureIndex;
+	this->numRows = (float)textureNumRows;
+
+	calcAtlas();
 
 	glm::vec3 topL = glm::vec3(center.x - sizeX, center.y + sizeY, 0);	// 0
 	glm::vec3 topR = glm::vec3(center.x + sizeX, center.y + sizeY, 0);	// 1
@@ -43,9 +50,38 @@ Quad::Quad(glm::vec3 center, float sizeX, float sizeY)
 	model->indices.push_back(3);
 }
 
+void Quad::calcAtlas()
+{
+	int column = (int)index % (int)numRows;
+	offset.x = (float)column / (float)numRows;
+	int row = (int)index / (int)numRows;
+	offset.y = (float)row / (float)numRows;
+}
+
 Quad::~Quad()
 {
 	delete model;
+}
+
+float Quad::getTextureIndex()
+{
+	return index;
+}
+
+float Quad::getTextureNumRows()
+{
+	return numRows;
+}
+
+glm::vec2& Quad::getTextureOffset()
+{
+	return offset;
+}
+
+void Quad::setIndex(int i)
+{
+	this->index = i;
+	calcAtlas();
 }
 
 IndexedModel* Quad::getIndexedModel()

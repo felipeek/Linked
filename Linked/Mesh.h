@@ -19,6 +19,9 @@ public:
 	float reflectivity;
 	float glossiness;
 	static GLuint drawForm;
+
+	// returns NULL if quad does not exist
+	Quad* getQuad();
 private:
 	Quad* quad;
 	Grid* grid;
