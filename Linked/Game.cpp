@@ -11,7 +11,6 @@
 #include "Mesh.h"
 #include "Grid.h"
 #include "EntityMap.h"
-#include "PlayerMovement.h"
 #include "MonsterFactory.h"
 #include "GameEntityFactory.h"
 #include "Projectile.h"
@@ -49,9 +48,21 @@ Game::Game(int windowsWidth, int windowsHeight)
 	this->mapShader = new MapShader("./shaders/mapshader", camera, light);
 	this->fontShader = new GUIShader("./shaders/fontshader");
 	
+	// Criação do Mapa
+	std::string mapPath = "./res/Maps/teste.png";
+	std::string entitiesMapPath = "./res/Maps/entities.png";
+	std::string monsterMapPath = "./res/Maps/monsters.png";
+
+	this->monsterFactory = new MonsterFactory();
+	this->gameEntityFactory = new GameEntityFactory();
+
+	this->map = new Map(mapPath, entitiesMapPath, monsterMapPath, 3, monsterFactory, gameEntityFactory);
+
 	// Criação do player
-	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 2, 2));
-	player = new Player(new Transform(glm::vec3(500, 500, 1.0f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Textures/hoshoyo.png"));
+	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7));
+	player = new Player(new Transform(glm::vec3(520, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
+	this->rangeAttack = new RangeAttack(player, &attacks, &monsters, map);
+	player->setRangeAttack(this->rangeAttack);
 	player->setMaximumHpBasis(100);
 	player->setHp(100);
 	player->setDefenseBasis(100);
@@ -62,15 +73,6 @@ Game::Game(int windowsWidth, int windowsHeight)
 	gui = new Entity(new Transform(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)), guiMesh, new Texture("./res/GUI/Linked_GUI.png"));
 	text = new Text("Hoshoyo", 0.03f);
 
-	// Criação do Mapa
-	std::string mapPath = "./res/Maps/teste.png";
-	std::string entitiesMapPath = "./res/Maps/entities.png";
-	std::string monsterMapPath = "./res/Maps/monsters.png";
-
-	this->monsterFactory = new MonsterFactory();
-	this->gameEntityFactory = new GameEntityFactory();
-	
-	this->map = new Map(mapPath, entitiesMapPath, monsterMapPath, 3, monsterFactory, gameEntityFactory);
 	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, map));
 	this->entityMap = new EntityMap(new Transform(), mapMesh,
 		new Texture("./res/Maps/stonePath.png"),
@@ -111,12 +113,6 @@ Game::Game(int windowsWidth, int windowsHeight)
 	std::cout << "Quantidade de monstros: " << monsters.size() << std::endl;
 
 	lastTime = 0;
-	
-	// Movimento
-	playerMovement = new PlayerMovement(this->map, player);
-	
-	// Ataque à distancia
-	rangeAttack = new RangeAttack(player, &attacks, &monsters, map);
 }
 
 Game::~Game()
@@ -125,7 +121,6 @@ Game::~Game()
 
 	delete primitiveShader;
 	delete camera;
-	delete playerMovement;
 	if (monsterFactory != NULL)
 		delete monsterFactory;
 	if (this->map != NULL)
@@ -212,31 +207,25 @@ void Game::update()
 	light->input();
 	light->update(player->getTransform()->getPosition());
 
-	// RangeAttack input & update
-	rangeAttack->input();
-	rangeAttack->update();
-
 	// Player input & update
+	player->input(this->map);
 	player->update();
-	player->input();
 	
 	// Monsters update
 	for (unsigned int i = 0; i < monsters.size(); i++)
-	{
 		monsters[i]->update(map, player);
+
+	for (unsigned int i = 0; i < monsters.size(); i++)
 		if (!monsters[i]->isOnScreen())
 		{
 			delete monsters[i];
 			monsters.erase(monsters.begin() + i);
 		}
-	}
 }
 
 
 void Game::input()
 {
-	playerMovement->inputPlayerMovement();
-
 #ifdef DEBUG
 	if (Input::keyStates['v'])
 		player->setMaximumHpBasis(player->getMaximumHpBasis()+1);		

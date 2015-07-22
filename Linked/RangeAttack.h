@@ -9,7 +9,7 @@
 #define SPEED 0.2f
 
 class Projectile;
-class Entity;
+class Player;
 class Texture;
 class Monster;
 class Map;
@@ -18,7 +18,7 @@ class Mesh;
 class RangeAttack
 {
 public:
-	RangeAttack(Entity* player, std::vector<Projectile*>* attacks, std::vector<Monster*>* monsters, Map* map);
+	RangeAttack(Player* player, std::vector<Projectile*>* attacks, std::vector<Monster*>* monsters, Map* map);
 	~RangeAttack();
 
 	void setSpeed(float value);
@@ -37,7 +37,7 @@ private:
 
 	bool monsterCollision(Projectile* projectile, int* hitMonsterIndex);
 
-	Entity* player;
+	Player* player;
 	Texture* texture;
 	Mesh* mesh;
 };

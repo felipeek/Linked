@@ -9,7 +9,6 @@ class PrimitiveShader;
 class CommonShader;
 class GUIShader;
 class MapShader;
-class PlayerMovement;
 class Map;
 class Light;
 class MonsterFactory;
@@ -43,7 +42,6 @@ private:
 	EntityMap* entityMap;
 	Map* map;
 
-	PlayerMovement* playerMovement;
 	Player* player;
 
 	MonsterFactory* monsterFactory;

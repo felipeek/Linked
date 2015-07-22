@@ -7,10 +7,11 @@
 #include "Monster.h"
 #include "Map.h"
 #include "Mesh.h"
+#include "Player.h"
 
 #include <iostream>
 
-RangeAttack::RangeAttack(Entity* player, std::vector<Projectile*>* attacks, std::vector<Monster*>* monsters, Map* map)
+RangeAttack::RangeAttack(Player* player, std::vector<Projectile*>* attacks, std::vector<Monster*>* monsters, Map* map)
 {
 	this->mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.3f));
 	this->player = player;
@@ -28,7 +29,6 @@ RangeAttack::~RangeAttack()
 
 void RangeAttack::update()
 {
-
 	double now = Time::getTime();
 	int hitMonsterIndex;
 
@@ -80,7 +80,6 @@ void RangeAttack::attack()
 		(*attacks).push_back(entityD);
 		lastTimeCreate = now;
 	}
-	
 }
 
 void RangeAttack::setSpeed(float value)
@@ -121,10 +120,11 @@ bool RangeAttack::monsterCollision(Projectile* projectile, int* hitMonsterIndex)
 
 void RangeAttack::input()
 {
-	if (Input::attack)
+	if (Input::attack && player->isAlive())
 	{
 		setLife(LIFE);
 		setSpeed(SPEED);
 		attack();
+		player->attack();
 	}
 }

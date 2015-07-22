@@ -106,9 +106,9 @@
     <ClInclude Include="MonsterAI.h" />
     <ClInclude Include="MonsterFactory.h" />
     <ClInclude Include="MouseAttack.h" />
+    <ClInclude Include="Movement.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerFactory.h" />
-    <ClInclude Include="PlayerMovement.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="PrimitiveShader.h" />
     <ClInclude Include="Projectile.h" />
@@ -156,9 +156,9 @@
     <ClCompile Include="MonsterAI.cpp" />
     <ClCompile Include="MonsterFactory.cpp" />
     <ClCompile Include="MouseAttack.cpp" />
+    <ClCompile Include="Movement.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerFactory.cpp" />
-    <ClCompile Include="PlayerMovement.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="PrimitiveShader.cpp" />
     <ClCompile Include="Projectile.cpp" />

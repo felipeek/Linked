@@ -1,5 +1,11 @@
 #include "Player.h"
 #include "HPBar.h"
+#include "Time.h"
+#include "Input.h"
+#include "Primitive.h"
+#include "Display.h"
+#include "RangeAttack.h"
+#include "Map.h"
 
 Player::Player(Transform* transform, Mesh* mesh, Texture* texture) : Entity(transform, mesh, texture)
 {
@@ -18,6 +24,11 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture) : Entity(tran
 	this->hpBar = new HPBar(this);
 }
 
+Player::Player(Transform* transform, Mesh* mesh, Texture* texture, RangeAttack* rangeAttack) : Player(transform, mesh, texture)
+{
+	this->rangeAttack = rangeAttack;
+}
+
 Player::~Player()
 {
 	delete skills;
@@ -25,14 +36,42 @@ Player::~Player()
 	delete hpBar;
 }
 
-void Player::update()
+void Player::attack()
 {
-	hpBar->update();
+	this->attacking = true;
+	lastAttackTime = Time::getTime();
 }
 
-void Player::input()
+bool Player::isAttacking()
 {
-	hpBar->input();
+	if (this->attacking)
+	{
+		double now = Time::getTime();
+		if ((now - lastAttackTime) > ((1.0f / getTotalAttackSpeed()) * 10.0f))
+		{
+			this->attacking = false;
+			return false;
+		}
+		else
+			return true;
+	}
+	return false;
+}
+
+bool Player::isReceivingDamage()
+{
+	if (this->receivingDamage)
+	{
+		double now = Time::getTime();
+		if ((now - lastReceivedDamageTime) > PLAYER_RECEIVE_DAMAGE_DELAY)
+		{
+			this->receivingDamage = false;
+			return false;
+		}
+		else
+			return true;
+	}
+	return false;
 }
 
 std::string Player::getName(){
@@ -63,6 +102,9 @@ void Player::doDamage(unsigned int damage)
 		hp = 0;
 	else
 		hp = hp - damage;
+
+	this->receivingDamage = true;
+	lastReceivedDamageTime = Time::getTime();
 }
 
 void Player::healHp(unsigned int healingAmount){
@@ -226,4 +268,202 @@ Equipment* Player::addNewEquipment(Equipment equipment){
 HPBar* Player::getHPBar()
 {
 	return hpBar;
+}
+
+/* RANGE ATTACK */
+RangeAttack* Player::getRangeAttack()
+{
+	return this->rangeAttack;
+}
+
+void Player::setRangeAttack(RangeAttack* rangeAttack)
+{
+	this->rangeAttack = rangeAttack;
+}
+
+/* INPUT & UPDATE */
+void Player::update()
+{
+	this->hpBar->update();
+	this->refreshTexture();
+	this->rangeAttack->update();
+}
+
+void Player::input(Map* map)
+{
+	this->hpBar->input();
+	this->rangeAttack->input();
+
+	glm::vec3 currentPosition = this->getTransform()->getPosition();
+
+	if (this->isAlive())
+	{
+		if (Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
+		{
+			glm::vec3 deltaVector = this->getDeltaVectorToDirection(TOP);
+			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
+				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+			this->currentDirection = TOP;
+		}
+		else if (Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && Input::keyStates['d'])
+		{
+			glm::vec3 deltaVector = this->getDeltaVectorToDirection(TOP_RIGHT);
+			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
+				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+			this->currentDirection = TOP_RIGHT;
+		}
+		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && Input::keyStates['d'])
+		{
+			glm::vec3 deltaVector = this->getDeltaVectorToDirection(RIGHT);
+			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
+				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+			this->currentDirection = RIGHT;
+		}
+		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && Input::keyStates['s'] && Input::keyStates['d'])
+		{
+			glm::vec3 deltaVector = this->getDeltaVectorToDirection(BOTTOM_RIGHT);
+			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
+				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+			this->currentDirection = BOTTOM_RIGHT;
+		}
+		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && Input::keyStates['s'] && !Input::keyStates['d'])
+		{
+			glm::vec3 deltaVector = this->getDeltaVectorToDirection(BOTTOM);
+			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
+				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+			this->currentDirection = BOTTOM;
+		}
+		else if (!Input::keyStates['w'] && Input::keyStates['a'] && Input::keyStates['s'] && !Input::keyStates['d'])
+		{
+			glm::vec3 deltaVector = this->getDeltaVectorToDirection(BOTTOM_LEFT);
+			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
+				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+			this->currentDirection = BOTTOM_LEFT;
+		}
+		else if (!Input::keyStates['w'] && Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
+		{
+			glm::vec3 deltaVector = this->getDeltaVectorToDirection(LEFT);
+			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
+				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+			this->currentDirection = LEFT;
+		}
+		else if (Input::keyStates['w'] && Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
+		{
+			glm::vec3 deltaVector = this->getDeltaVectorToDirection(TOP_LEFT);
+			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
+				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+			this->currentDirection = TOP_LEFT;
+		}
+	}
+}
+
+void Player::refreshTexture()
+{
+	double now = Time::getTime();
+	bool shouldChangeTexture = (now - textureChangeTime) > PLAYER_TEXTURE_CHANGE_DELAY;
+
+	bool isDead = !this->isAlive();
+	bool isAttacking = this->isAttacking();
+	bool isReceivingDamage = this->isReceivingDamage();
+
+	if (shouldChangeTexture || this->currentDirection != this->lastDirection || isDead != lastIsDead || isAttacking != lastIsAttacking || isReceivingDamage != lastIsReceivingDamage)
+	{
+		if (isDead)
+			changeTextureBasedOnDirection(this->currentDirection, 48, 48);
+		else
+		{
+			switch (this->currentDirection)
+			{
+				case TOP:
+				case TOP_LEFT:		// TO DO
+				case TOP_RIGHT:		// TO DO
+					if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 0, 3);
+					else if (isAttacking) changeTextureBasedOnDirection(this->currentDirection, 16, 19);
+					else if (isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 32, 35);
+					break;
+				case RIGHT:
+				case BOTTOM_RIGHT:	// TO DO
+					if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 8, 11);
+					else if (isAttacking) changeTextureBasedOnDirection(this->currentDirection, 24, 27);
+					else if (isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 40, 43);
+					break;
+				case BOTTOM:
+					if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 4, 7);
+					else if (isAttacking) changeTextureBasedOnDirection(this->currentDirection, 20, 23);
+					else if (isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 36, 39);
+					break;
+				case LEFT:
+				case BOTTOM_LEFT:	// TO DO
+					if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 12, 15);
+					else if (isAttacking) changeTextureBasedOnDirection(this->currentDirection, 28, 31);
+					else if (isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 44, 47);
+					break;
+			}
+		}
+
+		this->lastDirection = this->currentDirection;
+		this->lastIsAttacking = this->isAttacking();
+		this->lastIsReceivingDamage = this->isReceivingDamage();
+		this->lastIsDead = !this->isAlive();
+		this->textureChangeTime = now;
+	}
+}
+
+void Player::changeTextureBasedOnDirection(MovementDirection direction, unsigned int initialTextureIndex, unsigned int finalTextureIndex)
+{
+	if (direction != this->lastDirection || this->isAttacking() != lastIsAttacking || this->isReceivingDamage() != lastIsReceivingDamage || !this->isAlive() != lastIsDead)
+	{
+		this->getMesh()->getQuad()->setIndex(initialTextureIndex);
+		this->lastIndexTexture = initialTextureIndex;
+	}
+	else
+	{
+		if (this->lastIndexTexture < finalTextureIndex)
+		{
+			this->getMesh()->getQuad()->setIndex(++this->lastIndexTexture);
+		}
+		else
+		{
+			this->getMesh()->getQuad()->setIndex(initialTextureIndex);
+			this->lastIndexTexture = initialTextureIndex;
+		}
+	}
+}
+
+bool Player::checkIfPlayerIsStillOnTheSameMapPosition(glm::vec3 currentPosition, glm::vec3 nextPosition)
+{
+	if (floor(currentPosition.x) == floor(nextPosition.x))
+		if (floor(currentPosition.y) == floor(nextPosition.y))
+			if (floor(currentPosition.z) == floor(nextPosition.z))
+				return true;
+
+	return false;
+}
+
+glm::vec3 Player::getDeltaVectorToDirection(MovementDirection direction)
+{
+	float frameTime = (float)Display::frameTime;
+	float range = frameTime * this->getTotalSpeed();
+
+	switch (direction)
+	{
+	case TOP:
+		return glm::vec3(0, range, 0);
+	case TOP_RIGHT:
+		return glm::vec3(range / SQRT2, range / SQRT2, 0);
+	case RIGHT:
+		return glm::vec3(range, 0, 0);
+	case BOTTOM_RIGHT:
+		return glm::vec3(range / SQRT2, -range / SQRT2, 0);
+	case BOTTOM:
+		return glm::vec3(0, -range, 0);
+	case BOTTOM_LEFT:
+		return glm::vec3(-range / SQRT2, -range / SQRT2, 0);
+	case LEFT:
+		return glm::vec3(-range, 0, 0);
+	case TOP_LEFT:
+		return glm::vec3(-range / SQRT2, range / SQRT2, 0);
+	default:
+		return glm::vec3(0, 0, 0);
+	}
 }

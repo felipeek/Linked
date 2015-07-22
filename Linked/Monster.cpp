@@ -306,7 +306,7 @@ void Monster::changeTexture(MovementDirection direction)
 	bool isAttacking = this->isAttacking();
 	bool isReceivingDamage = this->isReceivingDamage();
 
-	if (shouldChangeTexture || isDead != lastIsDead || isAttacking != lastIsAttacking || isReceivingDamage != lastIsReceivingDamage)
+	if (shouldChangeTexture || direction != this->currentDirection || isDead != lastIsDead || isAttacking != lastIsAttacking || isReceivingDamage != lastIsReceivingDamage)
 	{
 		if (isDead)
 			changeTextureBasedOnDirection(direction, 48, 48);

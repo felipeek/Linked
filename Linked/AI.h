@@ -1,30 +1,12 @@
 #pragma once
 #include "glm\glm.hpp"
+#include "Movement.h"
 class Map;
 
 #define LIMIT_DISTANCE 25
 #define STAND_STILL_RANDOM_FACTOR_MINIMUM 6
 #define STAND_STILL_RANDOM_FACTOR_MAXIMUM 10
 #define RANDOM_KEEP_MOVING_FACTOR 1000
-
-enum MovementDirection{
-	TOP,
-	LEFT,
-	RIGHT,
-	BOTTOM,
-	TOP_LEFT,
-	TOP_RIGHT,
-	BOTTOM_LEFT,
-	BOTTOM_RIGHT
-};
-
-class MovementDefinition
-{
-public:
-	glm::vec3 movement;
-	MovementDirection direction;
-	bool doMove;
-};
 
 class AI
 {
