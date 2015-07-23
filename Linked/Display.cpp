@@ -1,98 +1,124 @@
 #include "Display.h"
 #include "Input.h"
 #include "Time.h"
-#include <Windows.h>
-
-#include <GL\glew.h>
-#include <GL\glut.h>
 #include <iostream>
 #include "Game.h"
 
+// Window and Monitor
+GLFWwindow* Display::window = NULL;
+GLFWmonitor* Display::monitor = NULL;
+int Display::monitorWidth = 0;
+int Display::monitorHeight = 0;
+
+// Game
 Game* Display::game = NULL;
-const double Display::frameTime = 1.0 / FRAMECAP;
-double Display::unprocessedTime = 0;
-double Display::frameCounter = 0;
-double Display::passedTime = 0;
-double Display::lastTime;
-int Display::frames = 0;
+
+// Time
+const double Display::frameTime = 1.0 / GAMESPEED;
+double Display::totalTime = 0;
+double Display::timeSinceLastUpdate = 0;
+double Display::elapsedTime = 0;
+double Display::sumTime = 0;
+double Display::gameTime = 0;
 
 Display::Display(int* argc, char** argv, std::string name)
 {
-	startGlut(argc, argv, name);
+	startGlfw(argc, argv, name);
 }
 
 Display::~Display()
 {
 	if (game != NULL)
 		delete game;
+	glfwDestroyWindow(window);
+	glfwTerminate();
 }
 
-void Display::startGlut(int* argc, char** argv, std::string titulo)
+void Display::startGlfw(int* argc, char** argv, std::string titulo)
 {
-	glutInit(argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
-	glutInitWindowSize(WWID, WHEI);
-	glutInitWindowPosition((HWID - WWID) / 2, (HHEI - WHEI) / 2);
-	glutCreateWindow(titulo.c_str());
+	if (glfwInit() == GL_FALSE)
+	{
+		std::cerr << "Error initializing glfw!" << std::endl;
+		return;
+	}
 
-	glewExperimental = true;
+	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_CORE_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	if (glewExperimental)
-		std::cout << "Using glew experimental." << std::endl;
+	window = glfwCreateWindow(WWID, WHEI, titulo.c_str(), NULL, NULL);
 
+	if (!window)
+	{
+		std::cerr << "Error creating the window!" << std::endl;
+		glfwTerminate();
+		return;
+	}
+	
+	// Get monitor size
+	getSystemInfo();
+
+	// Set window starting position
+	glfwSetWindowPos(window, WINDOW_START_X, WINDOW_START_Y);
+
+	glfwMakeContextCurrent(window);
+
+	// Set callbacks for input
+	glfwSetKeyCallback(window, keyCallBack);
+	glfwSetMouseButtonCallback(window, mouseCallBack);
+	glfwSetScrollCallback(window, wheelCallBack);
+	glfwSetCursorPosCallback(window, mousePosCallBack);
+	glfwSetWindowFocusCallback(window, focusedCallBack);
+
+	// TODO : check if needed
+	//glewExperimental = true;
+	//
+	//if (glewExperimental)
+	//	std::cout << "Using glew experimental." << std::endl;
+
+	// Start glew
 	GLenum result = glewInit();
 	if (result != GLEW_OK) {
 		std::cerr << "Erro na chamada de glewInit()" << std::endl;
 	}
 
-	printf("OpenGL %s, GLSL %s\n",
-		glGetString(GL_VERSION),
-		glGetString(GL_SHADING_LANGUAGE_VERSION));
-
-
-	glutDisplayFunc(MainLoop);												// Indica a função a ser utilizada em caso de mudança na janela
-	glutIdleFunc(MainLoop);													// Função utilizada enquanto a janela não precisa responder eventos	
-	//glutIgnoreKeyRepeat(1);
-	glutKeyboardFunc(KeyboardDownEvent);
-	glutKeyboardUpFunc(KeyboardUpEvent);
-	glutMouseFunc(MouseEvent);
-	glutMotionFunc(MouseMotion);
-	glutPassiveMotionFunc(MousePassive);
+	printOpenGLandGLSLversions();
 
 	initOpenGL();
-	glutMainLoop();
+
+	MainLoop(window);
 }
 
-void Display::MainLoop()
+void Display::MainLoop(GLFWwindow* window)
 {
-	bool mustRender = false;
-	double startTime = Time::getTime();
-	passedTime = startTime - lastTime;
-	lastTime = startTime;
-	
-	unprocessedTime += passedTime;
-	frameCounter += passedTime;
+	do{
+		totalTime = glfwGetTime();
 
-	if (frameCounter >= 1.0)
-	{
-		std::cout << frames << std::endl;
-		frames = 0;
-		frameCounter = 0;
-	}
-	while (unprocessedTime > frameTime)
-	{
-		mustRender = true;
-		game->update();
-		unprocessedTime -= frameTime;
-	}
+		if (timeSinceLastUpdate == 0)
+			timeSinceLastUpdate = totalTime;
 
-	if (mustRender)
-	{
-		render();
-		frames++;
-	}
-	//else
-		//Sleep(1);
+		elapsedTime = totalTime - timeSinceLastUpdate;
+
+		timeSinceLastUpdate = totalTime;
+
+		sumTime += elapsedTime;
+		gameTime += elapsedTime;
+
+		if (gameTime >= 1.0 / GAMESPEED)			// Updates GAMESPEED times per second
+		{
+			game->update();
+			glfwPollEvents();
+			gameTime = 0;
+		}
+		if (sumTime >= 1.0 / FRAMECAP)				// Renders at most FRAMECAP times per second
+		{
+			sumTime = 0;
+			render();	
+		}
+
+	} while (glfwWindowShouldClose(window) == false);
 }
 
 void Display::render()
@@ -100,7 +126,7 @@ void Display::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	game->render();
-	glutSwapBuffers();
+	glfwSwapBuffers(window);
 }
 
 void Display::initOpenGL()
@@ -112,31 +138,45 @@ void Display::initOpenGL()
 	glFrontFace(GL_CCW);
 
 	game = new Game(WWID, WHEI);
-
-	//Time
-	lastTime = Time::getTime();
-	frameCounter = 0;
-	unprocessedTime = 0;
-	frames = 0;
 }
 
-void Display::KeyboardDownEvent(unsigned char key, int x, int y)
+void Display::getSystemInfo()
 {
-	Input::keyStates[key] = true;
-}
-void Display::KeyboardUpEvent(unsigned char key, int x, int y)
-{
-	Input::keyStates[key] = false;
+	monitor = glfwGetPrimaryMonitor();
+	GLFWvidmode* mode = (GLFWvidmode*)glfwGetVideoMode(monitor);
+	monitorWidth = mode->width;
+	monitorHeight = mode->height;
 }
 
-
-void Display::MouseEvent(int button, int state, int x, int y)
+void Display::printOpenGLandGLSLversions()
 {
-	//float screenX = (float)x / WWID - 0.5f;
-	//float screenY = -((float)y / WHEI - 0.5f);
-	const float aspect = (float)WWID / WHEI;
-	float screenX = ((float)x / WWID - 0.5f) * aspect;
-	float screenY = -((float)y / WHEI - 0.5f) * aspect;
+	std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl << "GLSL " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+}
+
+void Display::keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	bool value = false;
+	if (action != 0)
+		value = true;
+
+	Input::keyStates[key] = value;
+	if (key >= 'A' && key <= 'Z')
+	{
+		Input::keyStates[key + 32] = value;
+	}
+}
+
+void Display::mouseCallBack(GLFWwindow* window, int button, int action, int mods)
+{
+	double x, y;
+	glfwGetCursorPos(window, &x, &y);
+
+	int width, height;
+	glfwGetWindowSize(window, &width, &height);
+
+	const float aspect = (float)width / height;
+	float screenX = ((float)x / width - 0.5f) * aspect;
+	float screenY = -((float)y / height - 0.5f) * aspect;
 	
 	if (button == 0)
 	{
@@ -144,18 +184,29 @@ void Display::MouseEvent(int button, int state, int x, int y)
 		Input::attack = !Input::attack;
 		Input::mouseAttack.setAttackPos(screenX, screenY);
 	}
+	Input::mouseAttack.setAttackPos(screenX, screenY);
 }
-void Display::MouseMotion(int x, int y)
+
+void Display::mousePosCallBack(GLFWwindow* window, double x, double y)
 {
-	//float screenX = (float)x / WWID - 0.5f;
-	//float screenY = -((float)y / WHEI - 0.5f);
-	const float aspect = (float)WWID / WHEI;
-	float screenX = ((float)x / WWID - 0.5f) * aspect;
-	float screenY = -((float)y / WHEI - 0.5f);
+	int width, height;
+	glfwGetWindowSize(window, &width, &height);
+
+	const float aspect = (float)width / height;
+	float screenX = ((float)x / width - 0.5f) * aspect;
+	float screenY = -((float)y / height - 0.5f);
 
 	Input::mouseAttack.setAttackPos(screenX, screenY);
 }
-void Display::MousePassive(int x, int y)
+
+void Display::wheelCallBack(GLFWwindow* window, double xoffset, double yoffset)
 {
-	
+	Input::wheel = (int)yoffset;
+}
+
+void Display::focusedCallBack(GLFWwindow* window, int focused)
+{
+	if (focused != 1)
+		Input::clear();
+
 }

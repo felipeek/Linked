@@ -2,7 +2,7 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 
-#define ZOOMSPEED 0.5f
+#define ZOOMSPEED 2.5f
 #define MINDISTANCE 10
 #define MAXDISTANCE 50
 

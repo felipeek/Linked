@@ -6,7 +6,7 @@
 #define ASPD 0.1f
 #define ATTACK 20
 #define LIFE 1.0f
-#define SPEED 0.2f
+#define SPEED 0.4f
 
 class Projectile;
 class Player;

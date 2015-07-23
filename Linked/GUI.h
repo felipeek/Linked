@@ -1,8 +1,13 @@
 #pragma once
+
+class Player;
+
 class GUI
 {
 public:
-	GUI();
+	GUI(Player* player);
 	~GUI();
+private:
+	Player* player;
 };
 

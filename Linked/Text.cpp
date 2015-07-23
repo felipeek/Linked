@@ -8,7 +8,7 @@ Text::Text(std::string text, float textSize)
 	this->text = text;
 	this->length = text.length();
 
-	fontTexture = new Texture("./res/Fonts/fontLinked3White.png", -10);
+	fontTexture = new Texture("./res/Fonts/fontLinkedFinal.png", -10);
 
 	createQuads(textSize);
 }

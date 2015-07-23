@@ -8,10 +8,10 @@ class Texture;
 
 #define QUADSIZE 0.5f
 #define ATLASROWS 16
-#define WIDTHFACTOR 0.8f
+#define WIDTHFACTOR 0.6f
 // temp
-#define TEMPXOFFSET 0.96f
-#define TEMPYOFFSET 0.75f
+#define TEMPXOFFSET 0.87f
+#define TEMPYOFFSET 0.733f
 
 #define _DEFAULT 240
 
@@ -116,7 +116,7 @@ private:
 	float getYoffset(int c, float textSize);
 	float getXoffset(int c, float textSize);
 
-	const float alphaX = 0.55f;
+	const float alphaX = 0.43f;
 	float dividerX;
 
 	const float alphaY = 0.25f;

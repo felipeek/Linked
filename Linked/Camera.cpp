@@ -57,13 +57,25 @@ void Camera::decDistance()
 
 void Camera::input()
 {
-	if (Input::keyStates['-'])
+	//if (Input::keyStates['-'])
+	//{
+	//	incDistance();
+	//}
+	//
+	//if (Input::keyStates['='])
+	//{
+	//	decDistance();
+	//}
+	if (Input::wheel > 0)
 	{
 		incDistance();
+		Input::wheel = 0;
 	}
-
-	if (Input::keyStates['='])
+		
+	if (Input::wheel < 0)
 	{
 		decDistance();
+		Input::wheel = 0;
 	}
+		
 }

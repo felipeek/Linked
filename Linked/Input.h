@@ -9,6 +9,9 @@ public:
 	static bool keyStates[KEYSTATES];
 	static bool attack;
 	static MouseAttack mouseAttack;
+	static int wheel;
+
+	static void clear();
 
 };
 

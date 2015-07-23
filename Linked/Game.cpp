@@ -70,8 +70,8 @@ Game::Game(int windowsWidth, int windowsHeight)
 
 	// Temp GUI AND TEXT
 	Mesh* guiMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f));
-	gui = new Entity(new Transform(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)), guiMesh, new Texture("./res/GUI/Linked_GUI.png"));
-	text = new Text("Hoshoyo", 0.03f);
+	gui = new Entity(new Transform(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)), guiMesh, new Texture("./res/GUI/Linked_GUI3.png"));
+	text = new Text("Health: 90/100", 0.023f);
 
 	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, map));
 	this->entityMap = new EntityMap(new Transform(), mapMesh,
