@@ -73,10 +73,10 @@ void Display::startGlfw(int* argc, char** argv, std::string titulo)
 	glfwSetWindowFocusCallback(window, focusedCallBack);
 
 	// TODO : check if needed
-	//glewExperimental = true;
-	//
-	//if (glewExperimental)
-	//	std::cout << "Using glew experimental." << std::endl;
+	glewExperimental = true;
+	
+	if (glewExperimental)
+		std::cout << "Using glew experimental." << std::endl;
 
 	// Start glew
 	GLenum result = glewInit();
@@ -90,6 +90,10 @@ void Display::startGlfw(int* argc, char** argv, std::string titulo)
 
 	MainLoop(window);
 }
+
+int frames = 0;
+double maxFrames = 60;
+double hoEnchant = 0;
 
 void Display::MainLoop(GLFWwindow* window)
 {
@@ -105,6 +109,7 @@ void Display::MainLoop(GLFWwindow* window)
 
 		sumTime += elapsedTime;
 		gameTime += elapsedTime;
+		hoEnchant += elapsedTime;
 
 		if (gameTime >= 1.0 / GAMESPEED)			// Updates GAMESPEED times per second
 		{
@@ -112,10 +117,18 @@ void Display::MainLoop(GLFWwindow* window)
 			glfwPollEvents();
 			gameTime = 0;
 		}
-		if (sumTime >= 1.0 / FRAMECAP)				// Renders at most FRAMECAP times per second
+		if (hoEnchant >= 1.0)
+		{
+			std::cout << frames << std::endl;
+			maxFrames = frames;
+			frames = 0;
+			hoEnchant = 0;
+		}
+		if (sumTime >= 1.0 / maxFrames)				// Renders at most FRAMECAP times per second
 		{
 			sumTime = 0;
-			render();	
+			render();
+			frames++;
 		}
 
 	} while (glfwWindowShouldClose(window) == false);
