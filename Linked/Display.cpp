@@ -10,6 +10,7 @@ GLFWmonitor* Display::monitor = NULL;
 int Display::monitorWidth = 0;
 int Display::monitorHeight = 0;
 
+
 // Game
 Game* Display::game = NULL;
 
@@ -20,6 +21,8 @@ double Display::timeSinceLastUpdate = 0;
 double Display::elapsedTime = 0;
 double Display::sumTime = 0;
 double Display::gameTime = 0;
+double Display::frameCount = 0;
+int Display::frames = 0;
 
 Display::Display(int* argc, char** argv, std::string name)
 {
@@ -65,6 +68,9 @@ void Display::startGlfw(int* argc, char** argv, std::string titulo)
 
 	glfwMakeContextCurrent(window);
 
+	// Disable vsync
+	glfwSwapInterval(0);
+
 	// Set callbacks for input
 	glfwSetKeyCallback(window, keyCallBack);
 	glfwSetMouseButtonCallback(window, mouseCallBack);
@@ -105,6 +111,7 @@ void Display::MainLoop(GLFWwindow* window)
 
 		sumTime += elapsedTime;
 		gameTime += elapsedTime;
+		frameCount += elapsedTime;
 
 		if (gameTime >= 1.0 / GAMESPEED)			// Updates GAMESPEED times per second
 		{
@@ -116,6 +123,13 @@ void Display::MainLoop(GLFWwindow* window)
 		{
 			sumTime = 0;
 			render();
+			frames++;
+		}
+		if (frameCount >= 1.0)
+		{
+			std::cout << frames << std::endl;
+			frameCount = 0;
+			frames = 0;
 		}
 
 	} while (glfwWindowShouldClose(window) == false);

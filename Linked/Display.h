@@ -49,6 +49,8 @@ private:
 	static double elapsedTime;
 	static double sumTime;
 	static double gameTime;
+	static double frameCount;
+	static int frames;
 
 	static void printOpenGLandGLSLversions();
 };
