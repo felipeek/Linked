@@ -117,7 +117,7 @@ void Display::MainLoop(GLFWwindow* window)
 		{
 			game->update();
 			glfwPollEvents();
-			gameTime = 0;
+			gameTime = gameTime - (1.0/GAMESPEED);
 		}
 		if (sumTime >= 1.0 / FRAMECAP)				// Renders at most FRAMECAP times per second
 		{
