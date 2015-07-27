@@ -101,7 +101,7 @@ class Texture;
 class Text
 {
 public:
-	Text(std::string text, float textSize);
+	Text(std::string text, float textSize, float xoffset, float yoffset, Texture* fontTexture);
 	~Text();
 
 	std::vector<Entity*>& getEntities();
@@ -118,6 +118,9 @@ private:
 
 	const float alphaX = 0.43f;
 	float dividerX;
+
+	float xoffset;
+	float yoffset;
 
 	const float alphaY = 0.25f;
 };

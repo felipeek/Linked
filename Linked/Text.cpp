@@ -3,19 +3,22 @@
 #include "Entity.h"
 #include <glm\glm.hpp>
 
-Text::Text(std::string text, float textSize)
+Text::Text(std::string text, float textSize, float xoffset, float yoffset, Texture* fontTexture)
 {
 	this->text = text;
 	this->length = text.length();
+	this->xoffset = xoffset;
+	this->yoffset = yoffset;
+	this->fontTexture = fontTexture;
 
-	fontTexture = new Texture("./res/Fonts/fontLinkedFinal.png", -10);
+	//fontTexture = new Texture("./res/Fonts/fontLinkedFinal.png", -10);
 
 	createQuads(textSize);
 }
 
 Text::~Text()
 {
-	delete fontTexture;
+	//delete fontTexture;
 
 	for (int i = 0; i < length; i++)
 	{
@@ -40,7 +43,7 @@ void Text::createQuads(float textSize)
 		totalYoffset = getYoffset(c, textSize);
 		xoffset = getXoffset(c, textSize);
 
-		Transform* transform = new Transform(glm::vec3(totalXoffset + (xoffset / 2) - TEMPXOFFSET, totalYoffset - TEMPYOFFSET, 0), glm::vec3(textSize * WIDTHFACTOR, textSize, textSize));
+		Transform* transform = new Transform(glm::vec3(totalXoffset + (xoffset / 2) - this->xoffset, totalYoffset - this->yoffset, 0), glm::vec3(textSize * WIDTHFACTOR, textSize, textSize));
 
 		totalXoffset += xoffset;
 

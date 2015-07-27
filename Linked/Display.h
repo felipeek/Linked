@@ -15,7 +15,7 @@ class Game;
 #define CLEARCOLOR_B 0.93f
 #define CLEARCOLOR_A 1.0f
 
-#define FRAMECAP 1000.0
+#define FRAMECAP 60.0
 #define GAMESPEED 60.0
 
 class Display

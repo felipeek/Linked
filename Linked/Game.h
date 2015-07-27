@@ -18,6 +18,7 @@ class Projectile;
 class GameEntityFactory;
 class GameEntity;
 class Player;
+class GUI;
 
 class Game
 {
@@ -49,6 +50,8 @@ private:
 	std::vector<Monster*> monsters;
 
 	RangeAttack* rangeAttack;
+
+	GUI* gui;
 
 	double lastTime;
 

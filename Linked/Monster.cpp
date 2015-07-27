@@ -393,8 +393,8 @@ void Monster::update(Map* map, Player* player)
 		movementDefinition.doMove = false;
 	}
 	// If the monster has not reached the player yet, it will move towards the player.
-	/*else
-		movementDefinition = this->moveTo(player, map);*/
+	//else
+	//	movementDefinition = this->moveTo(player, map);
 
 	// Change monster's texture.
 	if (movementDefinition.doMove)

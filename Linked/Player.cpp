@@ -291,6 +291,7 @@ void Player::update()
 
 void Player::input(Map* map)
 {
+
 	this->hpBar->input();
 	this->rangeAttack->input();
 
@@ -298,6 +299,7 @@ void Player::input(Map* map)
 
 	if (this->isAlive())
 	{
+		
 		if (Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
 		{
 			glm::vec3 deltaVector = this->getDeltaVectorToDirection(TOP);

@@ -26,6 +26,7 @@
 
 #include "Player.h"
 #include "HPBar.h"
+#include "GUI.h"
 
 #include "Text.h"
 
@@ -34,9 +35,6 @@
 #include <cstdlib>
 
 //#define DEBUG
-
-Text* text;
-Entity* gui;
 
 Game::Game(int windowsWidth, int windowsHeight)
 {	
@@ -66,12 +64,12 @@ Game::Game(int windowsWidth, int windowsHeight)
 	player->setMaximumHpBasis(100);
 	player->setHp(100);
 	player->setDefenseBasis(100);
+	player->setMagicalPowerBasis(20);
 	entities.push_back(player);
 
-	// Temp GUI AND TEXT
-	Mesh* guiMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f));
-	gui = new Entity(new Transform(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)), guiMesh, new Texture("./res/GUI/Linked_GUI3.png"));
-	text = new Text("Health: 90/100", 0.023f);
+	// GUI
+
+	this->gui = new GUI(player);
 
 	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, map));
 	this->entityMap = new EntityMap(new Transform(), mapMesh,
@@ -180,15 +178,7 @@ void Game::render()
 
 	// Render GUI (Order is important)
 	gui->render(fontShader);
-	for (Entity* e : text->getEntities())
-	{
-		try{
-			e->render(fontShader);
-		}
-		catch (...){
-			std::cerr << "Error rendering entity" << std::endl;
-		}	
-	}
+
 }
 
 bool playerDead = false;
@@ -221,6 +211,9 @@ void Game::update()
 			delete monsters[i];
 			monsters.erase(monsters.begin() + i);
 		}
+
+	// GUI update
+	gui->update();
 }
 
 
