@@ -65,6 +65,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	player->setHp(100);
 	player->setDefenseBasis(100);
 	player->setMagicalPowerBasis(20);
+	player->setName("JaOwnes");
 	entities.push_back(player);
 
 	// GUI
