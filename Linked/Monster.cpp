@@ -89,7 +89,7 @@ bool Monster::isReceivingDamage()
 	return false;
 }
 
-void Monster::killMonster(int index)
+void Monster::killMonster()
 {
 	this->alive = false;
 	this->killTime = Time::getTime();

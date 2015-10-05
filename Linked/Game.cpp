@@ -27,6 +27,7 @@
 #include "Player.h"
 #include "HPBar.h"
 #include "GUI.h"
+#include "ZurikiRageSkill.h"
 
 #include "Text.h"
 
@@ -61,11 +62,17 @@ Game::Game(int windowsWidth, int windowsHeight)
 	player = new Player(new Transform(glm::vec3(520, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
 	this->rangeAttack = new RangeAttack(player, &attacks, &monsters, map);
 	player->setRangeAttack(this->rangeAttack);
+	player->setSpeedBasis(26);
 	player->setMaximumHpBasis(100);
 	player->setHp(100);
 	player->setDefenseBasis(100);
 	player->setMagicalPowerBasis(20);
 	player->setName("JaOwnes");
+
+	Skill* zurikiRageSkill = new ZurikiRageSkill(&monsters);
+	zurikiRageSkill->setSlot(SLOT_1);
+	player->addNewSkill(zurikiRageSkill);
+
 	entities.push_back(player);
 
 	// GUI
@@ -177,9 +184,25 @@ void Game::render()
 		}
 	}
 
+	for (Skill* skill : player->getSkills())
+	{
+		try{
+			if (skill->isActive())
+			{
+				skill->render(primitiveShader);
+
+				// temporary (just 4fun)
+				for (Entity* e : skill->getSkillText()->getEntities())
+					e->render(fontShader);
+			}		
+		}
+		catch (...){
+			std::cerr << "Error rendering entity" << std::endl;
+		}
+	}
+
 	// Render GUI (Order is important)
 	gui->render(fontShader);
-
 }
 
 bool playerDead = false;

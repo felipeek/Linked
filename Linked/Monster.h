@@ -40,7 +40,7 @@ public:
 	bool isAlive();
 	bool isAttacking();
 	bool isReceivingDamage();
-	void killMonster(int index);
+	void killMonster();
 	bool isOnScreen();
 	bool canBeDeleted();
 	unsigned int getHp();

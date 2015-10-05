@@ -88,6 +88,12 @@
     <Filter Include="Source Files\GUI">
       <UniqueIdentifier>{4adfe57d-6d69-4cf4-b415-afb7f6885bd4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game\Models\Skillls">
+      <UniqueIdentifier>{c29f5dde-bba6-4080-a3bf-997cd6a36953}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game\Models\Skills">
+      <UniqueIdentifier>{d56068ce-1f5b-4ba1-874a-4251313cbee6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -230,6 +236,9 @@
     </ClInclude>
     <ClInclude Include="Movement.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ZurikiRageSkill.h">
+      <Filter>Header Files\Game\Models\Skills</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -376,6 +385,9 @@
     </ClCompile>
     <ClCompile Include="Movement.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ZurikiRageSkill.cpp">
+      <Filter>Source Files\Game\Models\Skillls</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

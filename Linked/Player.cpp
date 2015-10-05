@@ -19,8 +19,8 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture) : Entity(tran
 	setMagicalPowerBasis(PLAYER_DEFAULT_MAGICAL_POWER_BASIS);
 	setSpeedBasis(PLAYER_DEFAULT_SPEED_BASIS);
 	setAttackSpeedBasis(PLAYER_DEFAULT_ATTACK_SPEED_BASIS);
-	skills = new std::vector<Skill>();
-	equipments = new std::vector<Equipment>();
+	skills = std::vector<Skill*>();
+	equipments = std::vector<Equipment*>();
 	this->hpBar = new HPBar(this);
 }
 
@@ -31,8 +31,6 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture, RangeAttack* 
 
 Player::~Player()
 {
-	delete skills;
-	delete equipments;
 	delete hpBar;
 }
 
@@ -218,19 +216,20 @@ unsigned int Player::getTotalAttackSpeed(){
 }
 
 /* SKILLS */
-std::vector<Skill>* Player::getSkills(){
+std::vector<Skill*> Player::getSkills(){
 	return skills;
 }
 Skill* Player::getSkillOfSlot(SkillSlot slot){
-	for (unsigned int i = 0; i < skills->size(); i++)
-		if ((*skills)[i].getSlot() == slot)
-			return &(*skills)[i];
+	for (unsigned int i = 0; i < skills.size(); i++)
+		if (skills[i]->getSlot() == slot)
+			return skills[i];
 	return NULL;
 }
-bool Player::addNewSkill(Skill skill){
-	if (this->skills->size() < PLAYER_MAXIMUM_SKILLS)
+bool Player::addNewSkill(Skill* skill){
+	if (this->skills.size() < PLAYER_MAXIMUM_SKILLS)
 	{
-		this->skills->push_back(skill);
+		skill->setEntity(this);
+		this->skills.push_back(skill);
 		return true;
 	}
 	else
@@ -238,29 +237,29 @@ bool Player::addNewSkill(Skill skill){
 }
 
 /* EQUIPMENTS */
-std::vector<Equipment>* Player::getEquipments(){
+std::vector<Equipment*> Player::getEquipments(){
 	return equipments;
 }
 Equipment* Player::getEquipmentOfClass(EquipmentClass equipmentClass){
 
-	for (unsigned int i = 0; i < equipments->size(); i++)
-		if ((*equipments)[i].getEquipmentClass() == equipmentClass)
-			return &(*equipments)[i];
+	for (unsigned int i = 0; i < equipments.size(); i++)
+		if (equipments[i]->getEquipmentClass() == equipmentClass)
+			return equipments[i];
 
 	return NULL;
 }
-Equipment* Player::addNewEquipment(Equipment equipment){
-	for (unsigned int i = 0; i < equipments->size(); i++)
+Equipment* Player::addNewEquipment(Equipment* equipment){
+	for (unsigned int i = 0; i < equipments.size(); i++)
 	{
-		if ((*equipments)[i].getEquipmentClass() == equipment.getEquipmentClass())
+		if (equipments[i]->getEquipmentClass() == equipment->getEquipmentClass())
 		{
-			equipments->erase(equipments->begin() + i);
-			equipments->push_back(equipment);
-			return &(*equipments)[i];
+			equipments.erase(equipments.begin() + i);
+			equipments.push_back(equipment);
+			return equipments[i];
 		}
 	}
 
-	equipments->push_back(equipment);
+	equipments.push_back(equipment);
 	return NULL;
 }
 
@@ -287,6 +286,9 @@ void Player::update()
 	this->hpBar->update();
 	this->refreshTexture();
 	this->rangeAttack->update();
+
+	for (Skill* skill : this->skills)
+		skill->update();
 }
 
 void Player::input(Map* map)
@@ -299,7 +301,6 @@ void Player::input(Map* map)
 
 	if (this->isAlive())
 	{
-		
 		if (Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
 		{
 			glm::vec3 deltaVector = this->getDeltaVectorToDirection(TOP);
@@ -356,6 +357,9 @@ void Player::input(Map* map)
 				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
 			this->currentDirection = TOP_LEFT;
 		}
+
+		if (Input::keyStates['q'])
+			this->getSkillOfSlot(SLOT_1)->use(this->currentDirection);
 	}
 }
 

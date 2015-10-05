@@ -92,14 +92,14 @@ public:
 	unsigned int getTotalAttackSpeed();
 
 	/* SKILLS */
-	std::vector<Skill>* getSkills();
+	std::vector<Skill*> getSkills();
 	Skill* getSkillOfSlot(SkillSlot slot);
-	bool addNewSkill(Skill skill);
+	bool addNewSkill(Skill* skill);
 
 	/* EQUIPMENTS */
-	std::vector<Equipment>* getEquipments();
+	std::vector<Equipment*> getEquipments();
 	Equipment* getEquipmentOfClass(EquipmentClass equipmentClass);
-	Equipment* addNewEquipment(Equipment equipment);
+	Equipment* addNewEquipment(Equipment* equipment);
 
 	/* HP BAR */
 	HPBar* getHPBar();
@@ -129,8 +129,8 @@ private:
 	unsigned int magicalPowerBasis;
 	unsigned int speedBasis;
 	unsigned int attackSpeedBasis;
-	std::vector<Skill>* skills;
-	std::vector<Equipment>* equipments;
+	std::vector<Skill*> skills;
+	std::vector<Equipment*> equipments;
 
 	/* TIME-BASED ATTRIBUTES AUXILIAR VARIABLES */
 	double lastAttackTime = 0;

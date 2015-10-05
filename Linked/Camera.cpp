@@ -38,7 +38,7 @@ void Camera::setCamOrientation(glm::vec3& ori)
 void Camera::update(glm::vec3& playerPosition)
 {
 	glm::vec3 camOri = glm::vec3(playerPosition.x , playerPosition.y, 0);
-	glm::vec3 camPos = glm::vec3(playerPosition.x, playerPosition.y - (distance/angle), distance);
+	glm::vec3 camPos = glm::vec3(playerPosition.x, playerPosition.y - (distance / angle), distance);
 
 	setCamPosition(camPos);
 	setCamOrientation(camOri);
