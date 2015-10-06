@@ -40,7 +40,8 @@
 Game::Game(int windowsWidth, int windowsHeight)
 {	
 	// Câmera luz e shaders
-	this->camera = new Camera(glm::vec3(0, 0, 50), glm::vec3(0, 0, 0), 70.0f, (float)windowsWidth / windowsHeight, 0.1f, 100.0f);
+	this->camera = new Camera(glm::vec3(0, 0, 50), glm::vec3(0, 0, 0), 70.0f, (float)windowsWidth / windowsHeight, 0.1f, 1000.0f);
+	Input::mouseAttack.setCamera(this->camera);
 	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 1, 1));
 	this->primitiveShader = new PrimitiveShader("./shaders/normalshader", camera, light);
 	this->commonShader = new CommonShader("./shaders/commonshader", camera, light);
@@ -212,6 +213,7 @@ void Game::update()
 {
 	// Game input
 	input();
+	Input::mouseAttack.update();
 
 	// Camera input & update
 	camera->input();
@@ -243,6 +245,19 @@ void Game::update()
 
 void Game::input()
 {
+	if (Input::keyStates['b'])
+	{
+		glm::vec3 pp = player->getTransform()->getPosition();
+		glm::vec3 mi = Input::mouseAttack.getMouseIntersection();
+
+	
+		mi.z = 1.0f;
+	
+		Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7));
+		Entity* e = new Entity(new Transform(mi), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
+		entities.push_back(e);
+	}
+
 #ifdef DEBUG
 	if (Input::keyStates['v'])
 		player->setMaximumHpBasis(player->getMaximumHpBasis()+1);		

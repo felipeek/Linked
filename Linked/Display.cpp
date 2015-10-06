@@ -197,8 +197,10 @@ void Display::mouseCallBack(GLFWwindow* window, int button, int action, int mods
 		//Input::attack = true;
 		Input::attack = !Input::attack;
 		Input::mouseAttack.setAttackPos(screenX, screenY);
+		Input::mouseAttack.setMouseCoords(x, y);
 	}
 	Input::mouseAttack.setAttackPos(screenX, screenY);
+	Input::mouseAttack.setMouseCoords(x, y);
 }
 
 void Display::mousePosCallBack(GLFWwindow* window, double x, double y)
@@ -211,6 +213,7 @@ void Display::mousePosCallBack(GLFWwindow* window, double x, double y)
 	float screenY = -((float)y / height - 0.5f);
 
 	Input::mouseAttack.setAttackPos(screenX, screenY);
+	Input::mouseAttack.setMouseCoords(x, y);
 }
 
 void Display::wheelCallBack(GLFWwindow* window, double xoffset, double yoffset)

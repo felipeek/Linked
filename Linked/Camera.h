@@ -21,6 +21,11 @@ public:
 	void decDistance();
 
 	glm::mat4 viewProj;
+
+	glm::mat4& getView();
+	glm::mat4& getProjection();
+	glm::vec3& getPosition();
+	
 private:
 	glm::mat4 viewMatrix;
 	glm::mat4 projectionMatrix;
