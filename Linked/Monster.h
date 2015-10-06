@@ -13,7 +13,7 @@ class Player;
 #define MONSTER_DEFAULT_TOTAL_ATTACK_SPEED 10
 #define MONSTER_DEFAULT_TOTAL_RANGE 10
 
-#define TEXTURE_CHANGE_DELAY 0.2f
+#define TEXTURE_CHANGE_DELAY 0.15f
 #define ASPD_FACTOR 10
 #define DEATH_TIME 5.0f
 #define RECEIVE_DAMAGE_DELAY 0.3f
@@ -40,6 +40,7 @@ public:
 	bool isAlive();
 	bool isAttacking();
 	bool isReceivingDamage();
+	bool isMoving();
 	void killMonster();
 	bool isOnScreen();
 	bool canBeDeleted();
@@ -80,6 +81,7 @@ private:
 	bool alive;
 	bool attacking;
 	bool receivingDamage;
+	bool moving;
 	unsigned int hp;
 	unsigned int totalMaximumHp;
 	unsigned int totalAttack;
@@ -99,6 +101,7 @@ private:
 	/* TEXTURE MANAGEMENT AUXILIAR FUNCTIONS */
 	void changeTexture(MovementDirection direction);
 	void changeTextureBasedOnDirection(MovementDirection direction, unsigned int initialTextureIndex, unsigned int finalTextureIndex);
+	int decodeMonsterIndex(int index);
 
 	/* TEXTURE MANAGEMENT AUXILIAR VARIABLES */
 	MovementDirection currentDirection;
@@ -107,6 +110,7 @@ private:
 	bool lastIsAttacking = false;
 	bool lastIsReceivingDamage = false;
 	bool lastIsDead = false;
+	bool lastIsMoving = false;
 
 	/* MOVEMENT AUXILIAR FUNCTIONS */
 	MovementDefinition moveTo(Entity* entity, Map* map);

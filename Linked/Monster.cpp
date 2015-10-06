@@ -89,6 +89,11 @@ bool Monster::isReceivingDamage()
 	return false;
 }
 
+bool Monster::isMoving()
+{
+	return this->moving;
+}
+
 void Monster::killMonster()
 {
 	this->alive = false;
@@ -305,38 +310,43 @@ void Monster::changeTexture(MovementDirection direction)
 	bool isDead = !this->isAlive();
 	bool isAttacking = this->isAttacking();
 	bool isReceivingDamage = this->isReceivingDamage();
+	bool isMoving = this->isMoving();
 
-	if (shouldChangeTexture || direction != this->currentDirection || isDead != lastIsDead || isAttacking != lastIsAttacking || isReceivingDamage != lastIsReceivingDamage)
+	if (shouldChangeTexture || direction != this->currentDirection || isDead != lastIsDead || isAttacking != lastIsAttacking || isReceivingDamage != lastIsReceivingDamage || isMoving != lastIsMoving)
 	{
 		if (isDead)
-			changeTextureBasedOnDirection(direction, 48, 48);
+			changeTextureBasedOnDirection(direction, 0, 0);
 		else
 		{
 			switch (direction)
 			{
 			case TOP:
 			case TOP_LEFT:
-			case TOP_RIGHT:
-				if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(direction, 0, 3);
-				else if (isAttacking) changeTextureBasedOnDirection(direction, 16, 19);
-				else if (isReceivingDamage) changeTextureBasedOnDirection(direction, 32, 35);
+				if (!isAttacking && !isReceivingDamage && isMoving) changeTextureBasedOnDirection(direction, 31, 33);
+				else if (isAttacking) changeTextureBasedOnDirection(direction, 7, 9);
+				else if (isReceivingDamage) changeTextureBasedOnDirection(direction, 19, 21);
+				else if (!isMoving) changeTextureBasedOnDirection(direction, 43, 45);
 				break;
 			case RIGHT:
-			case BOTTOM_RIGHT:
-				if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(direction, 8, 11);
-				else if (isAttacking) changeTextureBasedOnDirection(direction, 24, 27);
-				else if (isReceivingDamage) changeTextureBasedOnDirection(direction, 40, 43);
-				break;
 			case BOTTOM:
-				if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(direction, 4, 7);
-				else if (isAttacking) changeTextureBasedOnDirection(direction, 20, 23);
-				else if (isReceivingDamage) changeTextureBasedOnDirection(direction, 36, 39);
+			case BOTTOM_RIGHT:
+				if (!isAttacking && !isReceivingDamage && isMoving) changeTextureBasedOnDirection(direction, 28, 30);
+				else if (isAttacking) changeTextureBasedOnDirection(direction, 4, 6);
+				else if (isReceivingDamage) changeTextureBasedOnDirection(direction, 16, 18);
+				else if (!isMoving) changeTextureBasedOnDirection(direction, 40, 42);
+				break;
+			case TOP_RIGHT:
+				if (!isAttacking && !isReceivingDamage && isMoving) changeTextureBasedOnDirection(direction, 34, 36);
+				else if (isAttacking) changeTextureBasedOnDirection(direction, 10, 12);
+				else if (isReceivingDamage) changeTextureBasedOnDirection(direction, 22, 24);
+				else if (!isMoving) changeTextureBasedOnDirection(direction, 46, 48);
 				break;
 			case LEFT:
 			case BOTTOM_LEFT:
-				if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(direction, 12, 15);
-				else if (isAttacking) changeTextureBasedOnDirection(direction, 28, 31);
-				else if (isReceivingDamage) changeTextureBasedOnDirection(direction, 44, 47);
+				if (!isAttacking && !isReceivingDamage && isMoving) changeTextureBasedOnDirection(direction, 25, 27);
+				else if (isAttacking) changeTextureBasedOnDirection(direction, 1, 3);
+				else if (isReceivingDamage) changeTextureBasedOnDirection(direction, 13, 15);
+				else if (!isMoving) changeTextureBasedOnDirection(direction, 37, 39);
 				break;
 			}
 		}
@@ -345,26 +355,28 @@ void Monster::changeTexture(MovementDirection direction)
 		this->lastIsAttacking = this->isAttacking();
 		this->lastIsReceivingDamage = this->isReceivingDamage();
 		this->lastIsDead = !this->isAlive();
+		this->lastIsMoving = this->isMoving();
 		this->textureChangeTime = now;
 	}
 }
 
 void Monster::changeTextureBasedOnDirection(MovementDirection direction, unsigned int initialTextureIndex, unsigned int finalTextureIndex)
 {
-	if (direction != currentDirection || this->isAttacking() != lastIsAttacking || this->isReceivingDamage() != lastIsReceivingDamage || !this->isAlive() != lastIsDead)
+	if (direction != currentDirection || this->isAttacking() != lastIsAttacking || this->isReceivingDamage() != lastIsReceivingDamage || !this->isAlive() != lastIsDead || this->isMoving() != lastIsMoving)
 	{
-		this->getMesh()->getQuad()->setIndex(initialTextureIndex);
+		this->getMesh()->getQuad()->setIndex(this->decodeMonsterIndex(initialTextureIndex));
 		this->lastIndexTexture = initialTextureIndex;
 	}
 	else
 	{
 		if (this->lastIndexTexture < finalTextureIndex)
 		{
-			this->getMesh()->getQuad()->setIndex(++this->lastIndexTexture);
+			this->lastIndexTexture++;
+			this->getMesh()->getQuad()->setIndex(this->decodeMonsterIndex(this->lastIndexTexture));
 		}
 		else
 		{
-			this->getMesh()->getQuad()->setIndex(initialTextureIndex);
+			this->getMesh()->getQuad()->setIndex(this->decodeMonsterIndex(initialTextureIndex));
 			this->lastIndexTexture = initialTextureIndex;
 		}
 	}
@@ -398,7 +410,72 @@ void Monster::update(Map* map, Player* player)
 
 	// Change monster's texture.
 	if (movementDefinition.doMove)
+	{
+		this->moving = true;
 		this->changeTexture(movementDefinition.direction);
+	}
 	else
+	{
+		this->moving = false;
 		this->changeTexture(currentDirection);
+	}
+}
+
+// takes logical index and transforms in real index
+// this is needed because the sprite architeture was bad planned (my bad)
+int Monster::decodeMonsterIndex(int index)
+{
+	switch (index)
+	{
+	case 0: return 6;
+	case 1: return 5;
+	case 2: return 4;
+	case 3: return 3;
+	case 4: return 2;
+	case 5: return 1;
+	case 6: return 0;
+	case 7: return 13;
+	case 8: return 12;
+	case 9: return 11;
+	case 10: return 10;
+	case 11: return 9;
+	case 12: return 8;
+	case 13: return 7;
+	case 14: return 20;
+	case 15: return 19;
+	case 16: return 18;
+	case 17: return 17;
+	case 18: return 16;
+	case 19: return 15;
+	case 20: return 14;
+	case 21: return 27;
+	case 22: return 26;
+	case 23: return 25;
+	case 24: return 24;
+	case 25: return 23;
+	case 26: return 22;
+	case 27: return 21;
+	case 28: return 34;
+	case 29: return 33;
+	case 30: return 32;
+	case 31: return 31;
+	case 32: return 30;
+	case 33: return 29;
+	case 34: return 28;
+	case 35: return 41;
+	case 36: return 40;
+	case 37: return 39;
+	case 38: return 38;
+	case 39: return 37;
+	case 40: return 36;
+	case 41: return 35;
+	case 42: return 48;
+	case 43: return 47;
+	case 44: return 46;
+	case 45: return 45;
+	case 46: return 44;
+	case 47: return 43;
+	case 48: return 42;
+	default: return 0;
+	}
 }
