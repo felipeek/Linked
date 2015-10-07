@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "network\UDPClient.h"
+#include <glm\glm.hpp>
 
 #define MAP_SIZE 1024
 
@@ -30,6 +31,8 @@ public:
 	~Game();
 	void render();
 	void update();
+
+	static glm::vec3 pos;
 private:
 	std::vector<Entity*> entities;
 	std::vector<Projectile*> attacks;
@@ -46,7 +49,7 @@ private:
 	Map* map;
 
 	Player* player;
-	Player* secondPlayer;
+	Entity* secondPlayer;
 
 	MonsterFactory* monsterFactory;
 	GameEntityFactory* gameEntityFactory;

@@ -108,6 +108,7 @@
     <ClInclude Include="MonsterFactory.h" />
     <ClInclude Include="MouseAttack.h" />
     <ClInclude Include="Movement.h" />
+    <ClInclude Include="network\ClientPacket.h" />
     <ClInclude Include="network\Packet.h" />
     <ClInclude Include="network\UDPClient.h" />
     <ClInclude Include="Player.h" />
@@ -163,6 +164,7 @@
     <ClCompile Include="MonsterFactory.cpp" />
     <ClCompile Include="MouseAttack.cpp" />
     <ClCompile Include="Movement.cpp" />
+    <ClCompile Include="network\ClientPacket.cpp" />
     <ClCompile Include="network\Packet.cpp" />
     <ClCompile Include="network\UDPClient.cpp" />
     <ClCompile Include="Player.cpp" />

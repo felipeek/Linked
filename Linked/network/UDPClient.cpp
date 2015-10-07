@@ -1,5 +1,7 @@
 #include "UDPClient.h"
 #include "Packet.h"
+#include "ClientPacket.h"
+#include "../Game.h"
 #include <iostream>
 
 #define DEBUG
@@ -35,10 +37,11 @@ void UDPClient::receivePackets()
 		}
 		return;
 	}
+	ClientPacket *cp = new ClientPacket(buffer);
+	cp->printPacket();
+	Game::pos = glm::vec3(((float*)cp->data)[0], ((float*)cp->data)[1], ((float*)cp->data)[2]);
 	#ifdef DEBUG
 	cout << "Servidor: " << ((int*)buffer)[0] << endl;
-	if (((int*)buffer)[0] == 193)
-		sendPackets(Packet(1,0,0));
 	#endif
 }
 
