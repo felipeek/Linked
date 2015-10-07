@@ -139,7 +139,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 		}
 	}
 
-	udpClient = new UDPClient(9090, "127.0.0.1");
+	udpClient = new UDPClient(9090, "localhost");
 	udpClient->virtualConnection();
 
 	lastTime = 0;
@@ -248,19 +248,11 @@ void Game::update()
 
 	// GUI update
 	gui->update();
-
-	secondPlayer->getTransform()->translate(pos.x, pos.y, pos.z);
 }
 
 
 void Game::input()
-{
-	if (Input::keyStates['2'])
-	{
-		udpClient->virtualConnection();
-		std::cin.get();
-	}
-		
+{		
 
 #ifdef DEBUG
 	if (Input::keyStates['b'])
