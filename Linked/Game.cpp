@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include <iostream>
 #include "Display.h"
 #include "Time.h"
 #include "Input.h"
@@ -31,6 +31,8 @@
 #include "HoshoyoExplosionSkill.h"
 
 #include "Text.h"
+
+#include "network\Packet.h"
 
 #include <string>
 #include <iostream>
@@ -130,10 +132,9 @@ Game::Game(int windowsWidth, int windowsHeight)
 			}
 		}
 	}
-	/*for (int i = 0; i < monsters.size(); i++)
-		std::cout << monsters[i]->getName() << std::endl;*/
 
-	std::cout << "Quantidade de monstros: " << monsters.size() << std::endl;
+	udpClient = new UDPClient(9090, "201.21.41.231");
+	udpClient->virtualConnection();
 
 	lastTime = 0;
 }
@@ -210,6 +211,8 @@ unsigned int lastHp = 0;
 
 void Game::update()
 {
+	udpClient->receivePackets();
+
 	// Game input
 	input();
 	Input::mouseAttack.update();
@@ -244,20 +247,27 @@ void Game::update()
 
 void Game::input()
 {
+	if (Input::keyStates['2'])
+	{
+		udpClient->virtualConnection();
+		std::cin.get();
+	}
+		
+
+#ifdef DEBUG
 	if (Input::keyStates['b'])
 	{
 		glm::vec3 pp = player->getTransform()->getPosition();
 		glm::vec3 mi = Input::mouseAttack.getMouseIntersection();
 
-	
+
 		mi.z = 1.0f;
-	
+
 		Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7));
 		Entity* e = new Entity(new Transform(mi), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
 		entities.push_back(e);
 	}
 
-#ifdef DEBUG
 	if (Input::keyStates['v'])
 		player->setMaximumHpBasis(player->getMaximumHpBasis()+1);		
 
