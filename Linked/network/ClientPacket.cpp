@@ -6,7 +6,6 @@ using namespace std;
 
 ClientPacket::ClientPacket(char* rawPacket)
 {
-	this->rawPacket = rawPacket;
 	decodePacket(rawPacket);
 }
 
@@ -24,7 +23,7 @@ void ClientPacket::decodePacket(char* rawPacket)
 
 	// Decode Data
 
-	int sizeData = -1;
+	sizeData = -1;
 	switch (type)
 	{
 	case P_SINGLE_BYTE:
@@ -104,7 +103,26 @@ void ClientPacket::decodePacket(char* rawPacket)
 	std::memcpy(data, &rawPacket[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE], sizeData);
 }
 
-#define DEBUG
+short ClientPacket::getType()
+{
+	return type;
+}
+int ClientPacket::getID()
+{
+	return ID;
+}
+int ClientPacket::getXID()
+{
+	return xID;
+}
+int ClientPacket::getDataSize()
+{
+	return sizeData;
+}
+void* ClientPacket::getData()
+{
+	return data;
+}
 
 #ifdef DEBUG
 void ClientPacket::printPacket()

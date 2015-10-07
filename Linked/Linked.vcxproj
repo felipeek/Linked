@@ -111,6 +111,7 @@
     <ClInclude Include="network\ClientPacket.h" />
     <ClInclude Include="network\Packet.h" />
     <ClInclude Include="network\UDPClient.h" />
+    <ClInclude Include="PacketController.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerFactory.h" />
     <ClInclude Include="Primitive.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="network\ClientPacket.cpp" />
     <ClCompile Include="network\Packet.cpp" />
     <ClCompile Include="network\UDPClient.cpp" />
+    <ClCompile Include="PacketController.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerFactory.cpp" />
     <ClCompile Include="Primitive.cpp" />

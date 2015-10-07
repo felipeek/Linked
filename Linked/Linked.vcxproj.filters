@@ -261,6 +261,9 @@
     <ClInclude Include="network\ClientPacket.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
+    <ClInclude Include="PacketController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -424,6 +427,9 @@
     </ClCompile>
     <ClCompile Include="network\ClientPacket.cpp">
       <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketController.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

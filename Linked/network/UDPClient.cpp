@@ -1,10 +1,11 @@
 #include "UDPClient.h"
 #include "Packet.h"
 #include "ClientPacket.h"
+#include "../PacketController.h"
 #include "../Game.h"
 #include <iostream>
 
-#define DEBUG
+//#define DEBUG
 
 using namespace std;
 
@@ -38,8 +39,8 @@ void UDPClient::receivePackets()
 		return;
 	}
 	ClientPacket *cp = new ClientPacket(buffer);
-	cp->printPacket();
-	Game::pos = glm::vec3(((float*)cp->data)[0], ((float*)cp->data)[1], ((float*)cp->data)[2]);
+	PacketController::dispatch(cp);
+	delete cp;
 	#ifdef DEBUG
 	cout << "Servidor: " << ((int*)buffer)[0] << endl;
 	#endif
