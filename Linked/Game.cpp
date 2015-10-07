@@ -28,6 +28,7 @@
 #include "HPBar.h"
 #include "GUI.h"
 #include "ZurikiRageSkill.h"
+#include "HoshoyoExplosionSkill.h"
 
 #include "Text.h"
 
@@ -59,6 +60,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	this->map = new Map(mapPath, entitiesMapPath, monsterMapPath, 3, monsterFactory, gameEntityFactory);
 
 	// Criação do player
+	// Player n fica na lista de entidades para renderização. Tem sua função própria de renderização (onde tbm renderiza suas skills, barra de HP e etc)
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7));
 	player = new Player(new Transform(glm::vec3(520, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
 	this->rangeAttack = new RangeAttack(player, &attacks, &monsters, map);
@@ -70,15 +72,29 @@ Game::Game(int windowsWidth, int windowsHeight)
 	player->setMagicalPowerBasis(20);
 	player->setName("JaOwnes");
 
-	Skill* zurikiRageSkill = new ZurikiRageSkill(&monsters);
-	zurikiRageSkill->setSlot(SLOT_1);
-	player->addNewSkill(zurikiRageSkill);
+	Skill* skill1 = new HoshoyoExplosionSkill(&monsters);
+	skill1->setSlot(SLOT_1);
+	player->addNewSkill(skill1);
 
-	entities.push_back(player);
+	Skill* skill2 = new ZurikiRageSkill(&monsters);
+	skill2->setSlot(SLOT_2);
+	player->addNewSkill(skill2);
+
+	Skill* skill3 = new HoshoyoExplosionSkill(&monsters);
+	skill3->setSlot(SLOT_3);
+	player->addNewSkill(skill3);
+
+	Skill* skill4 = new HoshoyoExplosionSkill(&monsters);
+	skill4->setSlot(SLOT_4);
+	player->addNewSkill(skill4);
 
 	// GUI
 
 	this->gui = new GUI(player);
+	this->gui->addSkillIcon(skill1->getSkillIcon());
+	this->gui->addSkillIcon(skill2->getSkillIcon());
+	this->gui->addSkillIcon(skill3->getSkillIcon());
+	this->gui->addSkillIcon(skill4->getSkillIcon());
 
 	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, map));
 	this->entityMap = new EntityMap(new Transform(), mapMesh,
@@ -141,8 +157,8 @@ void Game::render()
 	// Map
 	entityMap->render(mapShader);
 
-	// Player HP Bar
-	player->getHPBar()->quad->render(primitiveShader);
+	// Player
+	player->render(primitiveShader, fontShader);
 
 	// Generic entities (Player only at the moment)
 	for (Entity* e : entities)
@@ -179,23 +195,6 @@ void Game::render()
 	{
 		try{
 			e->render(commonShader);
-		}
-		catch (...){
-			std::cerr << "Error rendering entity" << std::endl;
-		}
-	}
-
-	for (Skill* skill : player->getSkills())
-	{
-		try{
-			if (skill->isActive())
-			{
-				skill->render(primitiveShader);
-
-				// temporary (just 4fun)
-				for (Entity* e : skill->getSkillText()->getEntities())
-					e->render(fontShader);
-			}		
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;

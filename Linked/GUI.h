@@ -1,5 +1,6 @@
 #pragma once
 #include "Text.h"
+#include "Skill.h"
 #include <vector>
 
 class Player;
@@ -9,6 +10,7 @@ class Shader;
 enum leftGUIAttribs;
 
 #define LEFTGUI_PATH "./res/GUI/Linked_GUI3.png"
+#define NOSKILLICON_PATH "./res/GUI/no_skillicon.png"
 
 class GUI
 {
@@ -18,6 +20,8 @@ public:
 
 	void render(Shader* shader);
 	void update();
+
+	void addSkillIcon(SkillIcon* skillIcon);
 
 private:
 	Player* player;
@@ -30,6 +34,7 @@ private:
 
 	void initLeftGUI();
 	void initLeftGUIText(int attribsHint);
+	void initLeftGUISkills();
 
 	// Player attribs
 	unsigned int playerHealth;
@@ -52,6 +57,13 @@ private:
 	const float yoffset = 0.035f;
 	const float xoffset = 0.875f;
 	
+	// Skill Icons
+	SkillIcon* skillIconSlot1;
+	SkillIcon* skillIconSlot2;
+	SkillIcon* skillIconSlot3;
+	SkillIcon* skillIconSlot4;
+
+	void renderSkillIcons(Shader* shader);
 };
 
 enum leftGUIAttribs

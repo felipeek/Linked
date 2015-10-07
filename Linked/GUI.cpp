@@ -4,6 +4,7 @@
 #include "Primitive.h"
 #include "Texture.h"
 #include "Shader.h"
+#include "SkillIcon.h"
 
 #include <sstream>
 #include <string>
@@ -47,6 +48,7 @@ void GUI::initLeftGUI()
 	leftGUITexture = new Texture(LEFTGUI_PATH);
 	leftGUIEntity = new Entity(new Transform(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)), leftGUIMesh, leftGUITexture);
 	initLeftGUIText(1);
+	initLeftGUISkills();
 }
 
 void GUI::initLeftGUIText(int attribsHint)
@@ -88,12 +90,17 @@ void GUI::initLeftGUIText(int attribsHint)
 	leftGUIText.push_back(magpower);
 	leftGUIText.push_back(attspeed);
 	leftGUIText.push_back(speed);
+}
+
+void GUI::initLeftGUISkills()
+{
 
 }
 
 void GUI::render(Shader* shader)
 {
 	leftGUIEntity->render(shader);
+	renderSkillIcons(shader);
 	for (Text* t : leftGUIText)
 	{
 		for (Entity* e : t->getEntities())
@@ -105,7 +112,7 @@ void GUI::render(Shader* shader)
 				std::cerr << "Error rendering entity" << std::endl;
 			}
 		}
-	}	
+	}
 }
 
 void GUI::setPlayerHealth(unsigned int health, unsigned int maxHealth)
@@ -189,4 +196,25 @@ void GUI::update()
 
 	if (player->getTotalSpeed() != playerSpeed)
 		setPlayerSpeed(player->getTotalSpeed());
+}
+
+void GUI::addSkillIcon(SkillIcon* skillIcon)
+{
+	SkillSlot slot = skillIcon->getSlot();
+
+	switch (slot)
+	{
+		case SLOT_1: this->skillIconSlot1 = skillIcon; break;
+		case SLOT_2: this->skillIconSlot2 = skillIcon; break;
+		case SLOT_3: this->skillIconSlot3 = skillIcon; break;
+		case SLOT_4: this->skillIconSlot4 = skillIcon; break;
+	}
+}
+
+void GUI::renderSkillIcons(Shader* shader)
+{
+	if (this->skillIconSlot1 != NULL) this->skillIconSlot1->render(shader);
+	if (this->skillIconSlot2 != NULL) this->skillIconSlot2->render(shader);
+	if (this->skillIconSlot3 != NULL) this->skillIconSlot3->render(shader);
+	if (this->skillIconSlot4 != NULL) this->skillIconSlot4->render(shader);
 }

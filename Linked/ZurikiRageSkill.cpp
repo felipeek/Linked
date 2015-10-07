@@ -4,6 +4,7 @@
 #include "Primitive.h"
 #include "Creature.h"
 #include "Monster.h"
+#include "SkillIcon.h"
 
 #include "Text.h"
 
@@ -38,6 +39,11 @@ ZurikiRageSkill::ZurikiRageSkill(std::vector<Monster*>* monsters) : Skill(monste
 	this->setMesh(zurikiRageMesh);
 	this->setTransform(zurikiRageTransform);
 	this->setTexture(zurikiRageTexture);
+
+	/* SKILL ICON */
+	Texture* enabledSkillIconTexture = new Texture("./res/Skills/zurikiicon.png");
+	Texture* disabledSkillIconTexture = new Texture("./res/Skills/zurikiicon_black.png");
+	this->skillIcon = new SkillIcon(enabledSkillIconTexture, disabledSkillIconTexture, SLOT_1);
 	
 	// temporary (just 4fun)
 	this->skillText = new Text("Zuriki's Rage !!", 0.03f, 0.085f, -0.24f, new Texture("./res/Fonts/fontLinkedFinal.png", -10));
@@ -46,11 +52,15 @@ ZurikiRageSkill::ZurikiRageSkill(std::vector<Monster*>* monsters) : Skill(monste
 
 ZurikiRageSkill::~ZurikiRageSkill()
 {
+
 }
 
-Text* ZurikiRageSkill::getSkillText()
+void ZurikiRageSkill::render(Shader* primitiveShader, Shader* fontShader)
 {
-	return this->skillText;
+	Entity::render(primitiveShader);
+	// temporary (just 4fun)
+	for (Entity* e : this->getSkillText()->getEntities())
+		e->render(fontShader);
 }
 
 void ZurikiRageSkill::use(MovementDirection direction)
@@ -63,6 +73,7 @@ void ZurikiRageSkill::use(MovementDirection direction)
 		this->usedTime = Time::getTime();
 		this->lastTextureIndex = 12;
 		this->skillDirection = direction;
+		this->getSkillIcon()->disableIcon();
 
 		// rotate the entity depending on the direction the player is looking at.
 		// supplementaryAngle is needed so when the skill is over it can be added to the angle (so the angle will be 0º again)
@@ -80,6 +91,11 @@ void ZurikiRageSkill::use(MovementDirection direction)
 	}
 }
 
+bool ZurikiRageSkill::cancelIfPossible()
+{
+	return false;
+}
+
 void ZurikiRageSkill::update()
 {
 	if (this->isActive())
@@ -92,6 +108,7 @@ void ZurikiRageSkill::update()
 		if ((now - this->usedTime) > SKILL_DELAY)
 		{
 			this->active = false;
+			this->getSkillIcon()->enableIcon();
 			this->getTransform()->rotate(supplementaryAngle, glm::vec3(0, 0, 1));
 		}
 	}
@@ -161,8 +178,6 @@ void ZurikiRageSkill::attackMonsters()
 		if (hit)
 		{
 			monster->doDamage(SKILL_DAMAGE_PER_HIT);
-			if (monster->getHp() == 0)
-				monster->killMonster();
 		}
 	}
 

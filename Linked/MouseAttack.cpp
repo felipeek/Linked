@@ -35,6 +35,7 @@ void MouseAttack::setMouseCoords(int mouseX, int mouseY)
 	ray_eye = glm::vec4(ray_eye.x, ray_eye.y, -1.0f, 0.0f);
 	glm::vec3 ray_world = glm::vec3(glm::inverse(camera->getView()) * ray_eye);
 	ray_world = glm::normalize(ray_world);
+	this->rayWorld = ray_world;
 	calculateIntersection(ray_world, camera->getPosition());
 	//std::cout << ray_world.x << " " << ray_world.y << " " << ray_world.z << std::endl;
 }
@@ -53,7 +54,7 @@ void MouseAttack::setCamera(Camera* camera)
 
 void MouseAttack::update()
 {
-
+	this->calculateIntersection(rayWorld, camera->getPosition());
 }
 
 void MouseAttack::calculateIntersection(glm::vec3& worldRay, glm::vec3& cameraPosition)

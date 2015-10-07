@@ -6,6 +6,9 @@
 #include "Display.h"
 #include "RangeAttack.h"
 #include "Map.h"
+#include "Text.h"
+
+#include <iostream>
 
 Player::Player(Transform* transform, Mesh* mesh, Texture* texture) : Entity(transform, mesh, texture)
 {
@@ -32,6 +35,23 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture, RangeAttack* 
 Player::~Player()
 {
 	delete hpBar;
+}
+
+void Player::render(Shader* primitiveShader, Shader* fontShader)
+{
+	Entity::render(primitiveShader);
+	this->getHPBar()->quad->render(primitiveShader);
+
+	for (Skill* skill : this->getSkills())
+	{
+		try{
+			if (skill->isActive())
+				skill->render(primitiveShader, fontShader);
+		}
+		catch (...){
+			std::cerr << "Error rendering entity" << std::endl;
+		}
+	}
 }
 
 void Player::attack()
@@ -235,6 +255,21 @@ bool Player::addNewSkill(Skill* skill){
 	else
 		return false;
 }
+bool Player::isPlayerUsingASkill()
+{
+	if (this->getSkillOfSlot(SLOT_1) != nullptr && this->getSkillOfSlot(SLOT_1)->isActive()) return true;
+	if (this->getSkillOfSlot(SLOT_2) != nullptr && this->getSkillOfSlot(SLOT_2)->isActive()) return true;
+	if (this->getSkillOfSlot(SLOT_3) != nullptr && this->getSkillOfSlot(SLOT_3)->isActive()) return true;
+	if (this->getSkillOfSlot(SLOT_4) != nullptr && this->getSkillOfSlot(SLOT_4)->isActive()) return true;
+
+	return false;
+}
+bool Player::isPlayerUsingSkillOfSlot(SkillSlot slot)
+{
+	if (this->getSkillOfSlot(slot) == NULL)
+		return false;
+	return this->getSkillOfSlot(slot)->isActive();
+}
 
 /* EQUIPMENTS */
 std::vector<Equipment*> Player::getEquipments(){
@@ -358,8 +393,26 @@ void Player::input(Map* map)
 			this->currentDirection = TOP_LEFT;
 		}
 
-		if (Input::keyStates['q'])
+		if (Input::keyStates['z'] && this->getSkillOfSlot(SLOT_1) != NULL && !this->isPlayerUsingASkill())
 			this->getSkillOfSlot(SLOT_1)->use(this->currentDirection);
+		else if (Input::keyStates['x'] && this->getSkillOfSlot(SLOT_2) != NULL && !this->isPlayerUsingASkill())
+			this->getSkillOfSlot(SLOT_2)->use(this->currentDirection);
+		else if (Input::keyStates['c'] && this->getSkillOfSlot(SLOT_3) != NULL && !this->isPlayerUsingASkill())
+			this->getSkillOfSlot(SLOT_3)->use(this->currentDirection);
+		else if (Input::keyStates['v'] && this->getSkillOfSlot(SLOT_4) != NULL && !this->isPlayerUsingASkill())
+			this->getSkillOfSlot(SLOT_4)->use(this->currentDirection);
+
+		if (Input::keyStates['p'])
+		{
+			if (this->isPlayerUsingSkillOfSlot(SLOT_1))
+				this->getSkillOfSlot(SLOT_1)->cancelIfPossible();
+			else if (this->isPlayerUsingSkillOfSlot(SLOT_2))
+				this->getSkillOfSlot(SLOT_2)->cancelIfPossible();
+			else if (this->isPlayerUsingSkillOfSlot(SLOT_3))
+				this->getSkillOfSlot(SLOT_3)->cancelIfPossible();
+			else if (this->isPlayerUsingSkillOfSlot(SLOT_4))
+				this->getSkillOfSlot(SLOT_4)->cancelIfPossible();
+		}
 	}
 }
 

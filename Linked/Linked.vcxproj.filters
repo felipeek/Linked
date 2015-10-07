@@ -240,6 +240,12 @@
     <ClInclude Include="ZurikiRageSkill.h">
       <Filter>Header Files\Game\Models\Skills</Filter>
     </ClInclude>
+    <ClInclude Include="HoshoyoExplosionSkill.h">
+      <Filter>Header Files\Game\Models\Skills</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillIcon.h">
+      <Filter>Header Files\Game\Models</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -388,6 +394,12 @@
     </ClCompile>
     <ClCompile Include="ZurikiRageSkill.cpp">
       <Filter>Source Files\Game\Models\Skillls</Filter>
+    </ClCompile>
+    <ClCompile Include="HoshoyoExplosionSkill.cpp">
+      <Filter>Source Files\Game\Models\Skillls</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillIcon.cpp">
+      <Filter>Source Files\Game\Models</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
