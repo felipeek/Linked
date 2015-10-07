@@ -94,6 +94,12 @@
     <Filter Include="Header Files\Game\Models\Skills">
       <UniqueIdentifier>{d56068ce-1f5b-4ba1-874a-4251313cbee6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Network">
+      <UniqueIdentifier>{1f7f68d6-d60a-4205-a95d-dc39c8b5bae7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Network">
+      <UniqueIdentifier>{19a579e9-15e5-4891-b651-ea8ac6a21630}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -245,6 +251,12 @@
     </ClInclude>
     <ClInclude Include="SkillIcon.h">
       <Filter>Header Files\Game\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="network\UDPClient.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\Packet.h">
+      <Filter>Header Files\Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -400,6 +412,12 @@
     </ClCompile>
     <ClCompile Include="SkillIcon.cpp">
       <Filter>Source Files\Game\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="network\UDPClient.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\Packet.cpp">
+      <Filter>Source Files\Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include "network\UDPClient.h"
+
 #define MAP_SIZE 1024
 
 class EntityMap;
@@ -53,6 +55,8 @@ private:
 	RangeAttack* rangeAttack;
 
 	GUI* gui;
+
+	UDPClient* udpClient;
 
 	double lastTime;
 
