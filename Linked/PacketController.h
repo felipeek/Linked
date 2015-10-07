@@ -4,6 +4,7 @@
 
 class ClientPacket;
 class Entity;
+class UDPClient;
 
 // Entity's IDs
 // Second Player 0
@@ -13,8 +14,11 @@ class PacketController
 public:
 	static void dispatch(ClientPacket* cp);
 
+	static UDPClient* udpClient;
+
 	//TODO: change to Player entity
 	static Entity* secondPlayer;
+
 private:
 	static void dispatchByteArray(int id, int xid, char* data, int dataSize);
 	static void dispatchShortArray(int id, int xid, short* data, int dataSize);

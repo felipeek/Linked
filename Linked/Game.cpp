@@ -142,6 +142,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	}
 
 	udpClient = new UDPClient(9090, "201.21.41.231");
+	PacketController::udpClient = udpClient;
 	udpClient->virtualConnection();
 
 	lastTime = 0;
