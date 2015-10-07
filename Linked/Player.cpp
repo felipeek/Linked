@@ -402,7 +402,7 @@ void Player::input(Map* map)
 		else if (Input::keyStates['v'] && this->getSkillOfSlot(SLOT_4) != NULL && !this->isPlayerUsingASkill())
 			this->getSkillOfSlot(SLOT_4)->use(this->currentDirection);
 
-		if (Input::keyStates['p'])
+		if (Input::leftMouseButton)
 		{
 			if (this->isPlayerUsingSkillOfSlot(SLOT_1))
 				this->getSkillOfSlot(SLOT_1)->cancelIfPossible();
@@ -412,6 +412,8 @@ void Player::input(Map* map)
 				this->getSkillOfSlot(SLOT_3)->cancelIfPossible();
 			else if (this->isPlayerUsingSkillOfSlot(SLOT_4))
 				this->getSkillOfSlot(SLOT_4)->cancelIfPossible();
+
+			Input::leftMouseButton = false;
 		}
 	}
 }

@@ -44,6 +44,7 @@ private:
 	Map* map;
 
 	Player* player;
+	Player* secondPlayer;
 
 	MonsterFactory* monsterFactory;
 	GameEntityFactory* gameEntityFactory;

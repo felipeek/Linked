@@ -199,6 +199,10 @@ void Display::mouseCallBack(GLFWwindow* window, int button, int action, int mods
 		Input::mouseAttack.setAttackPos(screenX, screenY);
 		Input::mouseAttack.setMouseCoords(x, y);
 	}
+
+	if (button == 1)
+		Input::leftMouseButton = true;
+
 	Input::mouseAttack.setAttackPos(screenX, screenY);
 	Input::mouseAttack.setMouseCoords(x, y);
 }

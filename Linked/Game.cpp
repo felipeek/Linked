@@ -88,6 +88,13 @@ Game::Game(int windowsWidth, int windowsHeight)
 	skill4->setSlot(SLOT_4);
 	player->addNewSkill(skill4);
 
+	Mesh* secondPlayerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7));
+	this->secondPlayer = new Player(new Transform(glm::vec3(520, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), secondPlayerMesh, new Texture("./res/Monsters/Sprites/orangewarrior.png"));
+	this->secondPlayer->setMaximumHpBasis(1000);
+	this->secondPlayer->setHp(1000);
+	this->secondPlayer->setDefenseBasis(100);
+	this->secondPlayer->setRangeAttack(new RangeAttack(player, &attacks, &monsters, map));
+
 	// GUI
 
 	this->gui = new GUI(player);
@@ -159,6 +166,7 @@ void Game::render()
 
 	// Player
 	player->render(primitiveShader, fontShader);
+	secondPlayer->render(primitiveShader, fontShader);
 
 	// Generic entities (Player only at the moment)
 	for (Entity* e : entities)
@@ -225,10 +233,12 @@ void Game::update()
 	// Player input & update
 	player->input(this->map);
 	player->update();
+
+	secondPlayer->update();
 	
 	// Monsters update
 	for (unsigned int i = 0; i < monsters.size(); i++)
-		monsters[i]->update(map, player);
+		monsters[i]->update(map, secondPlayer);
 
 	for (unsigned int i = 0; i < monsters.size(); i++)
 		if (!monsters[i]->isOnScreen())

@@ -8,6 +8,7 @@ class Input
 public:
 	static bool keyStates[KEYSTATES];
 	static bool attack;
+	static bool leftMouseButton;
 	static MouseAttack mouseAttack;
 	static int wheel;
 

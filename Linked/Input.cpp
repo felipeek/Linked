@@ -3,6 +3,7 @@
 bool Input::keyStates[KEYSTATES] = { 0 };
 int Input::wheel = 0;
 bool Input::attack = false;
+bool Input::leftMouseButton = false;	
 MouseAttack Input::mouseAttack;
 
 void Input::clear()
