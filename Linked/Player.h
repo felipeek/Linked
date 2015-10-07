@@ -36,6 +36,8 @@ public:
 	Player(Transform* transform, Mesh* mesh, Texture* texture);
 	~Player();
 
+	void render(Shader* primitiveShader, Shader* fontShader);
+
 	/* NAME */
 	std::string getName();
 	void setName(std::string name);
@@ -95,6 +97,8 @@ public:
 	std::vector<Skill*> getSkills();
 	Skill* getSkillOfSlot(SkillSlot slot);
 	bool addNewSkill(Skill* skill);
+	bool isPlayerUsingASkill();
+	bool isPlayerUsingSkillOfSlot(SkillSlot slot);
 
 	/* EQUIPMENTS */
 	std::vector<Equipment*> getEquipments();

@@ -1,5 +1,7 @@
 #include "Skill.h"
 #include "Entity.h"
+#include "Text.h"
+#include "SkillIcon.h"
 
 Skill::Skill(std::vector<Monster*> *monsters) : Entity(nullptr, nullptr, nullptr)
 {
@@ -15,6 +17,10 @@ Skill::~Skill()
 		delete mesh;
 	if (texture != nullptr)
 		delete texture;
+	if (skillText != nullptr)
+		delete skillText;
+	if (skillIcon != nullptr)
+		delete skillIcon;
 }
 
 SkillSlot Skill::getSlot()
@@ -25,11 +31,11 @@ SkillSlot Skill::getSlot()
 void Skill::setSlot(SkillSlot slot)
 {
 	this->slot = slot;
+	if (skillIcon != NULL) skillIcon->setSlot(slot);
 }
 
 bool Skill::isActive()
 {
-	// TO DO
 	return active;
 }
 
@@ -41,4 +47,14 @@ Entity* Skill::getEntity()
 void Skill::setEntity(Entity* entity)
 {
 	this->entity = entity;
+}
+
+Text* Skill::getSkillText()
+{
+	return this->skillText;
+}
+
+SkillIcon* Skill::getSkillIcon()
+{
+	return this->skillIcon;
 }

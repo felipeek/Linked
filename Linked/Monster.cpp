@@ -123,7 +123,10 @@ void Monster::setTotalMaximumHp(unsigned int totalMaximumHp)
 void Monster::doDamage(unsigned int damage)
 {
 	if (damage > hp)
+	{
 		hp = 0;
+		this->killMonster();
+	}
 	else
 		hp = hp - damage;
 

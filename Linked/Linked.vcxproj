@@ -89,6 +89,7 @@
     <ClInclude Include="Grid.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="GUIShader.h" />
+    <ClInclude Include="HoshoyoExplosionSkill.h" />
     <ClInclude Include="HPBar.h" />
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="IndexedModel.h" />
@@ -116,6 +117,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="SkillFactory.h" />
+    <ClInclude Include="SkillIcon.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Time.h" />
@@ -139,6 +141,7 @@
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="GUIShader.cpp" />
+    <ClCompile Include="HoshoyoExplosionSkill.cpp" />
     <ClCompile Include="HPBar.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="IndexedModel.cpp" />
@@ -167,6 +170,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SkillFactory.cpp" />
+    <ClCompile Include="SkillIcon.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Time.cpp" />
