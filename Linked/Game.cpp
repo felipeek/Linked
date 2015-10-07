@@ -33,6 +33,7 @@
 #include "Text.h"
 
 #include "network\Packet.h"
+#include "PacketController.h"
 
 #include <string>
 #include <iostream>
@@ -94,6 +95,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 
 	Mesh* secondPlayerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7));
 	this->secondPlayer = new Entity(new Transform(glm::vec3(520, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), secondPlayerMesh, new Texture("./res/Monsters/Sprites/orangewarrior.png"));
+	PacketController::secondPlayer = this->secondPlayer;
 	this->entities.push_back(this->secondPlayer);
 
 	// GUI
@@ -139,7 +141,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 		}
 	}
 
-	udpClient = new UDPClient(9090, "localhost");
+	udpClient = new UDPClient(9090, "201.21.41.231");
 	udpClient->virtualConnection();
 
 	lastTime = 0;

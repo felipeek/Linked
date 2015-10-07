@@ -1,6 +1,7 @@
 #include "UDPClient.h"
 #include "Packet.h"
 #include "ClientPacket.h"
+#include "../PacketController.h"
 #include "../Game.h"
 #include <iostream>
 
@@ -38,7 +39,9 @@ void UDPClient::receivePackets()
 		return;
 	}
 	ClientPacket *cp = new ClientPacket(buffer);
-
+	PacketController::dispatch(cp);
+	delete cp;
+	sendPackets(Packet(1, 0, 0));
 	#ifdef DEBUG
 	cout << "Servidor: " << ((int*)buffer)[0] << endl;
 	#endif

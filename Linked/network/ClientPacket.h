@@ -26,16 +26,16 @@ public:
 	short getType();
 	int getID();
 	int getXID();
-
-	void dispatch();
+	int getDataSize();
+	void* getData();
 private:
 
 	// Data
 	short type;
 	int ID;
 	int xID;
+	int sizeData;
 	void* data;
-	int dispatchType;
 
 #ifdef DEBUG
 	void printPacket();
