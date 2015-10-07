@@ -68,8 +68,9 @@ void RangeAttack::update()
 void RangeAttack::attack()
 {
 	glm::vec3 playerPos = player->getTransform()->getPosition();
-	glm::vec3 direction = Input::mouseAttack.attack();
-	direction.z = 0;
+	playerPos.z = 0;
+	glm::vec3 direction = Input::mouseAttack.getMouseIntersection() - playerPos;
+	direction.z = 1.0f;
 	direction = glm::normalize(direction);
 
 	double now = Time::getTime();
