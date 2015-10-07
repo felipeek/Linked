@@ -1,11 +1,11 @@
 <MONSTER>
   <NAME>Poring</NAME>
-  <SPRITE>Sprites/blackwarrior.png</SPRITE>
+  <SPRITE>Sprites/baby_desert_wolf2.png</SPRITE>
   <SIZE>25</SIZE>
   <COLLISIONRANGE>10</COLLISIONRANGE>
   <MAXHP>1000</MAXHP>
-  <HP>1</HP>
-  <ATTACK>57</ATTACK>
+  <HP>100</HP>
+  <ATTACK>100</ATTACK>
   <DEFENSE>8</DEFENSE>
   <SPEED>12</SPEED>
   <RANGE>25</RANGE>

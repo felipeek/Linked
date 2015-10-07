@@ -139,7 +139,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 		}
 	}
 
-	udpClient = new UDPClient(9090, "127.0.0.1");
+	udpClient = new UDPClient(9090, "186.215.59.255");
 	udpClient->virtualConnection();
 
 	lastTime = 0;
