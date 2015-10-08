@@ -28,7 +28,6 @@
 class HPBar;
 class RangeAttack;
 class Map;
-class AI;
 
 class Player : public Entity, public Creature
 {
@@ -114,10 +113,8 @@ public:
 	void setRangeAttack(RangeAttack* rangeAttack);
 
 	/* INPUT & UPDATE */
-	void update(Map* map);
+	void update();
 	void input(Map* map);
-
-	void startMovementTo(glm::vec3 destination);
 
 private:
 	HPBar* hpBar;
@@ -159,13 +156,5 @@ private:
 	bool lastIsAttacking = false;
 	bool lastIsReceivingDamage = false;
 	bool lastIsDead = false;
-
-	/* AI MOVEMENT ATTRIBUTES */
-	AI* ai;
-	bool isMovingToDestination;
-	glm::vec3 destination;
-
-	/* AI MOVEMENT FUNCTIONS */
-	MovementDefinition moveTo(glm::vec3 position, Map* map);
 };
 

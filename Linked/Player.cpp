@@ -7,7 +7,6 @@
 #include "RangeAttack.h"
 #include "Map.h"
 #include "Text.h"
-#include "AI.h"
 
 #include <iostream>
 
@@ -26,7 +25,6 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture) : Entity(tran
 	skills = std::vector<Skill*>();
 	equipments = std::vector<Equipment*>();
 	this->hpBar = new HPBar(this);
-	this->ai = new AI();
 }
 
 Player::Player(Transform* transform, Mesh* mesh, Texture* texture, RangeAttack* rangeAttack) : Player(transform, mesh, texture)
@@ -318,7 +316,7 @@ void Player::setRangeAttack(RangeAttack* rangeAttack)
 }
 
 /* INPUT & UPDATE */
-void Player::update(Map* map)
+void Player::update()
 {
 	this->hpBar->update();
 	this->refreshTexture();
@@ -326,9 +324,6 @@ void Player::update(Map* map)
 
 	for (Skill* skill : this->skills)
 		skill->update();
-
-	if (isMovingToDestination)
-		this->moveTo(destination, map);
 }
 
 void Player::input(Map* map)
@@ -347,7 +342,6 @@ void Player::input(Map* map)
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
 				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
 			this->currentDirection = TOP;
-			this->isMovingToDestination = false;
 		}
 		else if (Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && Input::keyStates['d'])
 		{
@@ -355,7 +349,6 @@ void Player::input(Map* map)
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
 				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
 			this->currentDirection = TOP_RIGHT;
-			this->isMovingToDestination = false;
 		}
 		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && Input::keyStates['d'])
 		{
@@ -363,7 +356,6 @@ void Player::input(Map* map)
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
 				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
 			this->currentDirection = RIGHT;
-			this->isMovingToDestination = false;
 		}
 		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && Input::keyStates['s'] && Input::keyStates['d'])
 		{
@@ -371,7 +363,6 @@ void Player::input(Map* map)
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
 				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
 			this->currentDirection = BOTTOM_RIGHT;
-			this->isMovingToDestination = false;
 		}
 		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && Input::keyStates['s'] && !Input::keyStates['d'])
 		{
@@ -379,7 +370,6 @@ void Player::input(Map* map)
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
 				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
 			this->currentDirection = BOTTOM;
-			this->isMovingToDestination = false;
 		}
 		else if (!Input::keyStates['w'] && Input::keyStates['a'] && Input::keyStates['s'] && !Input::keyStates['d'])
 		{
@@ -387,7 +377,6 @@ void Player::input(Map* map)
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
 				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
 			this->currentDirection = BOTTOM_LEFT;
-			this->isMovingToDestination = false;
 		}
 		else if (!Input::keyStates['w'] && Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
 		{
@@ -395,7 +384,6 @@ void Player::input(Map* map)
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
 				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
 			this->currentDirection = LEFT;
-			this->isMovingToDestination = false;
 		}
 		else if (Input::keyStates['w'] && Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
 		{
@@ -403,7 +391,6 @@ void Player::input(Map* map)
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
 				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
 			this->currentDirection = TOP_LEFT;
-			this->isMovingToDestination = false;
 		}
 
 		if (Input::keyStates['z'] && this->getSkillOfSlot(SLOT_1) != NULL && !this->isPlayerUsingASkill())
@@ -540,29 +527,4 @@ glm::vec3 Player::getDeltaVectorToDirection(MovementDirection direction)
 	default:
 		return glm::vec3(0, 0, 0);
 	}
-}
-
-MovementDefinition Player::moveTo(glm::vec3 position, Map* map)
-{
-	float rangeSpeed = getTotalSpeed() * (float)Display::frameTime;
-
-	MovementDefinition movement = ai->movePerfectlyTo(map, this->getTransform()->getPosition(), position, rangeSpeed);
-	if (movement.doMove)
-	{
-		this->getTransform()->translate(movement.movement.x, movement.movement.y, movement.movement.z);
-		if (length(this->getTransform()->getPosition() - position) < 0.1f) this->isMovingToDestination = false;
-	}
-	else
-	{
-		this->getTransform()->translate(position.x, position.y, position.z);
-		this->isMovingToDestination = false;
-	}
-
-	return movement;
-}
-
-void Player::startMovementTo(glm::vec3 destination)
-{
-	this->isMovingToDestination = true;
-	this->destination = destination;
 }

@@ -135,6 +135,6 @@ void UDPClient::virtualConnection()
 
 void UDPClient::virtualDisconnection()
 {
-	Packet virtualDisconnection(2, 0, 0);
+	Packet virtualDisconnection(2, 0, myID);
 	sendPackets(virtualDisconnection);
 }
