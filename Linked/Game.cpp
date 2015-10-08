@@ -20,6 +20,7 @@
 #include "MapShader.h"
 #include "GUIShader.h"
 #include "CommonShader.h"
+#include "TextShader.h"
 #include "Light.h"
 
 #include "RangeAttack.h"
@@ -35,13 +36,13 @@
 #include "network\Packet.h"
 #include "PacketController.h"
 
+#include "TextRenderer.h"
+
 #include <string>
 #include <iostream>
 #include <cstdlib>
 
 //#define DEBUG
-
-glm::vec3 Game::pos = glm::vec3(0,0,0);
 
 Game::Game(int windowsWidth, int windowsHeight)
 {	
@@ -51,8 +52,10 @@ Game::Game(int windowsWidth, int windowsHeight)
 	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 1, 1));
 	this->primitiveShader = new PrimitiveShader("./shaders/normalshader", camera, light);
 	this->commonShader = new CommonShader("./shaders/commonshader", camera, light);
+	this->projectileShader = new CommonShader("./shaders/projectile", camera, light);
 	this->mapShader = new MapShader("./shaders/mapshader", camera, light);
 	this->fontShader = new GUIShader("./shaders/fontshader");
+	this->textShader = new TextShader("./shaders/textshader");
 	
 	// Criação do Mapa
 	std::string mapPath = "./res/Maps/teste.png";
@@ -107,6 +110,8 @@ Game::Game(int windowsWidth, int windowsHeight)
 	secondPlayer->addNewSkill(sps1);*/
 
 	// GUI
+
+	textRenderer = new TextRenderer(textShader, "fonts/bluebold.ttf");
 
 	this->gui = new GUI(player);
 	this->gui->addSkillIcon(skill1->getSkillIcon());
@@ -203,13 +208,15 @@ void Game::render()
 	for (Entity* e : attacks)
 	{
 		try{
-			e->render(commonShader);
+			textShader->useShader();
+			e->render(projectileShader);
+			textShader->stopShader();
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
-	
+
 	for (Entity* e : secondPlayerAttacks)
 	{
 		try{
@@ -230,9 +237,10 @@ void Game::render()
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
-
+	
 	// Render GUI (Order is important)
 	gui->render(fontShader);
+	textRenderer->renderText("Linked Client Alpha v1.3", 1320.0f, 5.0f, 0.25f, glm::vec3(0, 0, 0));
 }
 
 bool playerDead = false;

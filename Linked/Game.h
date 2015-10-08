@@ -12,6 +12,7 @@ class PrimitiveShader;
 class CommonShader;
 class GUIShader;
 class MapShader;
+class TextShader;
 class Map;
 class Light;
 class MonsterFactory;
@@ -22,6 +23,7 @@ class GameEntityFactory;
 class GameEntity;
 class Player;
 class GUI;
+class TextRenderer;
 
 class Game
 {
@@ -45,6 +47,8 @@ private:
 	PrimitiveShader* primitiveShader;
 	GUIShader* fontShader;
 	MapShader* mapShader;
+	TextShader* textShader;
+	CommonShader* projectileShader;
 
 	EntityMap* entityMap;
 	Map* map;
@@ -59,6 +63,7 @@ private:
 	RangeAttack* rangeAttack;
 
 	GUI* gui;
+	TextRenderer* textRenderer;
 
 	UDPClient* udpClient;
 
