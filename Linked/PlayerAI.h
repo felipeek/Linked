@@ -1,6 +1,6 @@
 #include "AI.h"
 
-#define REACH_DESTINATION_ERROR 0.1f
+#define REACH_DESTINATION_ERROR 0.5f
 
 #pragma once
 class PlayerAI : public AI
