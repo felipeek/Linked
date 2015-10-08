@@ -141,7 +141,8 @@ Game::Game(int windowsWidth, int windowsHeight)
 		}
 	}
 
-	udpClient = new UDPClient(9090, "201.21.41.231");
+	//udpClient = new UDPClient(9090, "201.21.41.231");
+	udpClient = new UDPClient(9090, "localhost");
 	PacketController::udpClient = udpClient;
 	udpClient->virtualConnection();
 
@@ -160,6 +161,8 @@ Game::~Game()
 		delete map;
 	for (Monster* monster : monsters)
 		delete monster;
+
+	udpClient->virtualDisconnection();
 }
 
 void Game::render()

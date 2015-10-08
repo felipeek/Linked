@@ -23,6 +23,10 @@ public:
 	void receivePackets();
 	void sendPackets(Packet& packet);
 	void virtualConnection();
+	void virtualDisconnection();
+
+	static int myID;
+
 private:
 	int port;
 	WSADATA wsaData;

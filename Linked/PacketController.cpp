@@ -3,6 +3,7 @@
 #include "network\Packet.h"
 #include "Entity.h"
 #include "network\UDPClient.h"
+#include <iostream>
 
 Entity* PacketController::secondPlayer = NULL;
 UDPClient* PacketController::udpClient = NULL;
@@ -48,6 +49,14 @@ void PacketController::dispatch(ClientPacket* cp)
 	{
 		dispatchVec2fArray(cp->getID(), cp->getXID(), (glm::vec2*)cp->getData(), cp->getDataSize());
 	}
+	else if (type == P_PING)
+	{
+		dispatchPing(cp->getID(), cp->getXID());
+	}
+	else if (type == P_PONG)
+	{
+		dispatchPong(cp->getID(), cp->getXID());
+	}
 }
 
 void PacketController::dispatchByteArray(int id, int xid, char* data, int dataSize)
@@ -60,7 +69,12 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 }
 void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize)
 {
-
+	if (data[0] == 1 && id == 0 && dataSize == sizeof(int))
+	{
+		// Connection ID back
+		UDPClient::myID = xid;
+		std::cout << UDPClient::myID << std::endl;
+	}
 }
 void PacketController::dispatchFloatArray(int id, int xid, float* data, int dataSize)
 {
@@ -97,6 +111,15 @@ void PacketController::dispatchVec3fArray(int id, int xid, glm::vec3* data, int 
 	}
 }
 void PacketController::dispatchVec2fArray(int id, int xid, glm::vec2* data, int dataSize)
+{
+
+}
+
+void PacketController::dispatchPing(int id, int xid)
+{
+	udpClient->sendPackets(Packet(ID_PONG, UDPClient::myID));
+}
+void PacketController::dispatchPong(int id, int xid)
 {
 
 }

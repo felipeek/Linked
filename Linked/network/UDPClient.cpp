@@ -9,6 +9,8 @@
 
 using namespace std;
 
+int UDPClient::myID = -1;
+
 UDPClient::UDPClient(int port, string ipAddress)
 {
 	this->port = port;
@@ -127,37 +129,12 @@ void UDPClient::updateServerInfo(string ipAddress)
 
 void UDPClient::virtualConnection()
 {
-	char charArray[3] = { 1, 2, 3 };
-	short shortArray[3] = { 1, 2, 3 };
-	int intArray[3] = { 1, 2, 3 };
-	float floatArray[3] = { 1, 2, 3 };
-	long longArray[3] = { 1, 2, 3 };
-	double doubleArray[3] = { 1, 2, 3 };
-	glm::vec3 arranjo[2] = { glm::vec3(1, 2, 3), glm::vec3(5, 6, 7) };
-	glm::vec4 arranjo1[2] = { glm::vec4(1.5f, 2.5f, 3.5f,7.5f), glm::vec4(5.5f, 6.5f, 7.5f,8.5f) };
-	glm::vec2 arranjo2[2] = { glm::vec2(1, 3), glm::vec2(5, 7) };
-
-	Packet virtualConnection(arranjo, 2, 0, 0);
-	Packet virtualConnection1(arranjo1, 2, 0, 0);
-	Packet virtualConnection2(arranjo2, 2, 0, 0);
-
-	Packet virtualConnection3(charArray, 3, 7, 0);
-	Packet virtualConnection4(shortArray, 3, 7, 0);
-	Packet virtualConnection5(intArray, 3, 7, 0);
-	Packet virtualConnection6(floatArray, 3, 7, 0);
-	Packet virtualConnection7(longArray, 3, 7, 0);
-	Packet virtualConnection8(doubleArray, 3, 7, 0);
-
-
+	Packet virtualConnection(1, 0, 0);
 	sendPackets(virtualConnection);
-	//sendPackets(virtualConnection1);
-	//sendPackets(virtualConnection2);
-	//
-	//sendPackets(virtualConnection3);
-	//sendPackets(virtualConnection4);
-	//sendPackets(virtualConnection5);
-	//sendPackets(virtualConnection6);
-	//sendPackets(virtualConnection7);
-	//sendPackets(virtualConnection8);
+}
 
+void UDPClient::virtualDisconnection()
+{
+	Packet virtualDisconnection(2, 0, 0);
+	sendPackets(virtualDisconnection);
 }
