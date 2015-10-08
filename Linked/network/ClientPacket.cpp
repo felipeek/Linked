@@ -100,7 +100,8 @@ void ClientPacket::decodePacket(char* rawPacket)
 			data = new glm::vec2[sizeData];
 		}
 	}
-	std::memcpy(data, &rawPacket[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE], sizeData);
+	if (type >= P_SINGLE_BYTE && type < P_PING)
+		std::memcpy(data, &rawPacket[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE], sizeData);
 }
 
 short ClientPacket::getType()

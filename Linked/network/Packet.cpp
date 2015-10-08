@@ -41,12 +41,6 @@ void Packet::fillDataBuffers(int sizeOfType, int sizeData, int typeIndex, T data
 	}
 }
 
-Packet::Packet(int ID, int xID)
-{
-	this->ID = ID;
-	this->xID = xID;
-}
-
 Packet::Packet(char* bufferByte, int size, int ID, int xID) : Packet(ID, xID)
 {
 	fillDataBuffers(sizeof(char), size, P_SINGLE_BYTE + size - 1, bufferByte);
@@ -285,6 +279,24 @@ Packet::Packet(glm::vec2 uVector2f, int ID, int xID) : Packet(ID, xID)
 	for (int i = sizeof(float), j = 0; i < sizeof(float) * 2; i++, j++)
 	{
 		buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i] = *((char*)&y + j);
+	}
+}
+
+Packet::Packet(int id, int xid)
+{
+	this->ID = id;
+	this->xID = xid;
+
+	switch (id)
+	{
+	case 0:
+		// PING ID
+		uniquePacketSetup(P_PING, 0);
+		break;
+	case 1:
+		// PONG ID
+		uniquePacketSetup(P_PONG, 0);
+		break;
 	}
 }
 

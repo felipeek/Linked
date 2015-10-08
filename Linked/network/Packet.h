@@ -89,3 +89,8 @@ private:
 	
 };
 
+enum PacketID{
+	ID_PING,
+	ID_PONG,
+	ID_MAX
+};

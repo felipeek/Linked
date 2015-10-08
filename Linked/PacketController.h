@@ -30,6 +30,7 @@ private:
 	static void dispatchVec4fArray(int id, int xid, glm::vec4* data, int dataSize);
 	static void dispatchVec3fArray(int id, int xid, glm::vec3* data, int dataSize);
 	static void dispatchVec2fArray(int id, int xid, glm::vec2* data, int dataSize);
-
+	static void dispatchPing(int id, int xid);
+	static void dispatchPong(int id, int xid);
 };
 
