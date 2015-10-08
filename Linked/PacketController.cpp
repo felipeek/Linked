@@ -65,7 +65,23 @@ void PacketController::dispatchByteArray(int id, int xid, char* data, int dataSi
 }
 void PacketController::dispatchShortArray(int id, int xid, short* data, int dataSize)
 {
+	switch (id)
+	{
+		// Second Player control
+		case 0:
+			if (xid == 1)	// Change Second Player Position
+				if (PacketController::secondPlayer != NULL)
+				{
+					short maxHp = data[0];
+					short attack = data[1];
+					short defense = data[2];
+					short magPower = data[3];
+					short speed = data[4];
+					short aspd = data[5];
+				}
 
+			break;
+	}
 }
 void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize)
 {
