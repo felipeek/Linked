@@ -94,9 +94,9 @@ Game::Game(int windowsWidth, int windowsHeight)
 	player->addNewSkill(skill4);
 
 	Mesh* secondPlayerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7));
-	this->secondPlayer = new Entity(new Transform(glm::vec3(520, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), secondPlayerMesh, new Texture("./res/Monsters/Sprites/orangewarrior.png"));
+	this->secondPlayer = new Player(new Transform(glm::vec3(520, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), secondPlayerMesh, new Texture("./res/Monsters/Sprites/orangewarrior.png"));
+	this->secondPlayer->setRangeAttack(new RangeAttack(this->secondPlayer, &attacks, &monsters, map));
 	PacketController::secondPlayer = this->secondPlayer;
-	this->entities.push_back(this->secondPlayer);
 
 	// GUI
 
@@ -141,7 +141,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 		}
 	}
 
-	udpClient = new UDPClient(9090, "201.21.41.231");
+	udpClient = new UDPClient(9090, "127.0.0.1");
 	PacketController::udpClient = udpClient;
 	udpClient->virtualConnection();
 
@@ -169,6 +169,7 @@ void Game::render()
 
 	// Player
 	player->render(primitiveShader, fontShader);
+	secondPlayer->render(primitiveShader, fontShader);
 
 	// Generic entities (Player only at the moment)
 	for (Entity* e : entities)
@@ -236,7 +237,9 @@ void Game::update()
 
 	// Player input & update
 	player->input(this->map);
-	player->update();
+	player->update(this->map);
+
+	secondPlayer->update(this->map);
 	
 	// Monsters update
 	for (unsigned int i = 0; i < monsters.size(); i++)

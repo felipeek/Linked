@@ -49,7 +49,7 @@ private:
 	Map* map;
 
 	Player* player;
-	Entity* secondPlayer;
+	Player* secondPlayer;
 
 	MonsterFactory* monsterFactory;
 	GameEntityFactory* gameEntityFactory;

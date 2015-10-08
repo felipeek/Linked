@@ -3,8 +3,9 @@
 #include <glm\glm.hpp>
 
 class ClientPacket;
-class Entity;
+class Player;
 class UDPClient;
+class Map;
 
 // Entity's IDs
 // Second Player 0
@@ -17,7 +18,7 @@ public:
 	static UDPClient* udpClient;
 
 	//TODO: change to Player entity
-	static Entity* secondPlayer;
+	static Player* secondPlayer;
 
 private:
 	static void dispatchByteArray(int id, int xid, char* data, int dataSize);

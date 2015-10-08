@@ -1,10 +1,10 @@
 #include "PacketController.h"
 #include "network\ClientPacket.h"
 #include "network\Packet.h"
-#include "Entity.h"
+#include "Player.h"
 #include "network\UDPClient.h"
 
-Entity* PacketController::secondPlayer = NULL;
+Player* PacketController::secondPlayer = NULL;
 UDPClient* PacketController::udpClient = NULL;
 
 void PacketController::dispatch(ClientPacket* cp)
@@ -88,7 +88,7 @@ void PacketController::dispatchVec3fArray(int id, int xid, glm::vec3* data, int 
 		{
 			if (PacketController::secondPlayer != NULL)
 			{
-				secondPlayer->getTransform()->translate(data[0].x, data[0].y, data[0].z);
+				secondPlayer->startMovementTo(data[0]);
 				udpClient->sendPackets(Packet(1, 0, 0));
 			}
 		}
