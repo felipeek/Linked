@@ -67,7 +67,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	// Criação do player
 	// Player n fica na lista de entidades para renderização. Tem sua função própria de renderização (onde tbm renderiza suas skills, barra de HP e etc)
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7));
-	player = new Player(new Transform(glm::vec3(520, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
+	player = new Player(new Transform(glm::vec3(440, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
 	this->rangeAttack = new RangeAttack(player, &attacks, &monsters, map);
 	player->setRangeAttack(this->rangeAttack);
 	player->setSpeedBasis(26);
@@ -76,6 +76,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 	player->setDefenseBasis(100);
 	player->setMagicalPowerBasis(20);
 	player->setName("JaOwnes");
+	player->setType(LOCAL);
 
 	Skill* skill1 = new HoshoyoExplosionSkill(&monsters);
 	skill1->setSlot(SLOT_1);
@@ -94,9 +95,16 @@ Game::Game(int windowsWidth, int windowsHeight)
 	player->addNewSkill(skill4);
 
 	Mesh* secondPlayerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7));
-	this->secondPlayer = new Entity(new Transform(glm::vec3(520, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), secondPlayerMesh, new Texture("./res/Monsters/Sprites/orangewarrior.png"));
-	//PacketController::secondPlayer = this->secondPlayer;
-	this->entities.push_back(this->secondPlayer);
+	this->secondPlayer = new Player(new Transform(glm::vec3(440, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), secondPlayerMesh, new Texture("./res/Monsters/Sprites/orangewarrior.png"));
+	PacketController::secondPlayer = this->secondPlayer;
+	RangeAttack* secondPlayerRangeAttack = new RangeAttack(secondPlayer, &secondPlayerAttacks, &monsters, map);
+	this->secondPlayer->setRangeAttack(secondPlayerRangeAttack);
+	this->secondPlayer->setSpeedBasis(26);
+	this->secondPlayer->setType(NETWORK);
+
+	/*Skill* sps1 = new ZurikiRageSkill(&monsters);
+	sps1->setSlot(SLOT_1);
+	secondPlayer->addNewSkill(sps1);*/
 
 	// GUI
 
@@ -169,6 +177,7 @@ void Game::render()
 
 	// Player
 	player->render(primitiveShader, fontShader);
+	secondPlayer->render(primitiveShader, fontShader);
 
 	// Generic entities (Player only at the moment)
 	for (Entity* e : entities)
@@ -200,6 +209,17 @@ void Game::render()
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
+	
+	for (Entity* e : secondPlayerAttacks)
+	{
+		try{
+			e->render(commonShader);
+		}
+		catch (...){
+			std::cerr << "Error rendering entity" << std::endl;
+		}
+	}
+
 	// Common static entities
 	for (Entity* e : gameEntities)
 	{
@@ -217,6 +237,7 @@ void Game::render()
 
 bool playerDead = false;
 unsigned int lastHp = 0;
+int frames = 0;
 
 void Game::update()
 {
@@ -235,8 +256,11 @@ void Game::update()
 	light->update(player->getTransform()->getPosition());
 
 	// Player input & update
+	
 	player->input(this->map);
-	player->update();
+	player->update(this->map);
+	//secondPlayer->input(this->map);
+	secondPlayer->update(this->map);
 	
 	// Monsters update
 	for (unsigned int i = 0; i < monsters.size(); i++)
@@ -251,6 +275,11 @@ void Game::update()
 
 	// GUI update
 	gui->update();
+	
+	frames++;
+
+	if (frames % 10 == 0)
+		udpClient->sendPackets(Packet(player->getTransform()->getPosition(),0,UDPClient::myID));
 }
 
 

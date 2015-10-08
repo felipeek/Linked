@@ -25,6 +25,9 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture) : Entity(tran
 	skills = std::vector<Skill*>();
 	equipments = std::vector<Equipment*>();
 	this->hpBar = new HPBar(this);
+	this->ai = new PlayerAI();
+	this->isMovingTo = false;
+	this->type = LOCAL;
 }
 
 Player::Player(Transform* transform, Mesh* mesh, Texture* texture, RangeAttack* rangeAttack) : Player(transform, mesh, texture)
@@ -35,6 +38,7 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture, RangeAttack* 
 Player::~Player()
 {
 	delete hpBar;
+	delete ai;
 }
 
 void Player::render(Shader* primitiveShader, Shader* fontShader)
@@ -316,11 +320,13 @@ void Player::setRangeAttack(RangeAttack* rangeAttack)
 }
 
 /* INPUT & UPDATE */
-void Player::update()
+void Player::update(Map* map)
 {
+	if (this->type == NETWORK)
+		this->updateMovement(map);
 	this->hpBar->update();
 	this->refreshTexture();
-	this->rangeAttack->update();
+	if (this->rangeAttack != NULL) this->rangeAttack->update();
 
 	for (Skill* skill : this->skills)
 		skill->update();
@@ -328,93 +334,137 @@ void Player::update()
 
 void Player::input(Map* map)
 {
-
-	this->hpBar->input();
-	this->rangeAttack->input();
-
-	glm::vec3 currentPosition = this->getTransform()->getPosition();
-
-	if (this->isAlive())
+	if (this->type == LOCAL)
 	{
-		if (Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
-		{
-			glm::vec3 deltaVector = this->getDeltaVectorToDirection(TOP);
-			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
-				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
-			this->currentDirection = TOP;
-		}
-		else if (Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && Input::keyStates['d'])
-		{
-			glm::vec3 deltaVector = this->getDeltaVectorToDirection(TOP_RIGHT);
-			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
-				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
-			this->currentDirection = TOP_RIGHT;
-		}
-		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && Input::keyStates['d'])
-		{
-			glm::vec3 deltaVector = this->getDeltaVectorToDirection(RIGHT);
-			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
-				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
-			this->currentDirection = RIGHT;
-		}
-		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && Input::keyStates['s'] && Input::keyStates['d'])
-		{
-			glm::vec3 deltaVector = this->getDeltaVectorToDirection(BOTTOM_RIGHT);
-			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
-				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
-			this->currentDirection = BOTTOM_RIGHT;
-		}
-		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && Input::keyStates['s'] && !Input::keyStates['d'])
-		{
-			glm::vec3 deltaVector = this->getDeltaVectorToDirection(BOTTOM);
-			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
-				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
-			this->currentDirection = BOTTOM;
-		}
-		else if (!Input::keyStates['w'] && Input::keyStates['a'] && Input::keyStates['s'] && !Input::keyStates['d'])
-		{
-			glm::vec3 deltaVector = this->getDeltaVectorToDirection(BOTTOM_LEFT);
-			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
-				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
-			this->currentDirection = BOTTOM_LEFT;
-		}
-		else if (!Input::keyStates['w'] && Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
-		{
-			glm::vec3 deltaVector = this->getDeltaVectorToDirection(LEFT);
-			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
-				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
-			this->currentDirection = LEFT;
-		}
-		else if (Input::keyStates['w'] && Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
-		{
-			glm::vec3 deltaVector = this->getDeltaVectorToDirection(TOP_LEFT);
-			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
-				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
-			this->currentDirection = TOP_LEFT;
-		}
+		this->hpBar->input();
+		if (this->rangeAttack != NULL) this->rangeAttack->input();
 
-		if (Input::keyStates['z'] && this->getSkillOfSlot(SLOT_1) != NULL && !this->isPlayerUsingASkill())
-			this->getSkillOfSlot(SLOT_1)->use(this->currentDirection);
-		else if (Input::keyStates['x'] && this->getSkillOfSlot(SLOT_2) != NULL && !this->isPlayerUsingASkill())
-			this->getSkillOfSlot(SLOT_2)->use(this->currentDirection);
-		else if (Input::keyStates['c'] && this->getSkillOfSlot(SLOT_3) != NULL && !this->isPlayerUsingASkill())
-			this->getSkillOfSlot(SLOT_3)->use(this->currentDirection);
-		else if (Input::keyStates['v'] && this->getSkillOfSlot(SLOT_4) != NULL && !this->isPlayerUsingASkill())
-			this->getSkillOfSlot(SLOT_4)->use(this->currentDirection);
+		glm::vec3 currentPosition = this->getTransform()->getPosition();
 
-		if (Input::leftMouseButton)
+		if (Input::keyStates['x'])
+			this->healHp(1);
+
+		if (this->isAlive())
 		{
-			if (this->isPlayerUsingSkillOfSlot(SLOT_1))
-				this->getSkillOfSlot(SLOT_1)->cancelIfPossible();
-			else if (this->isPlayerUsingSkillOfSlot(SLOT_2))
-				this->getSkillOfSlot(SLOT_2)->cancelIfPossible();
-			else if (this->isPlayerUsingSkillOfSlot(SLOT_3))
-				this->getSkillOfSlot(SLOT_3)->cancelIfPossible();
-			else if (this->isPlayerUsingSkillOfSlot(SLOT_4))
-				this->getSkillOfSlot(SLOT_4)->cancelIfPossible();
+			if (Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
+			{
+				glm::vec3 deltaVector = this->getDeltaVectorToDirection(TOP);
+				if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
+					this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+				this->currentDirection = TOP;
+			}
+			else if (Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && Input::keyStates['d'])
+			{
+				glm::vec3 deltaVector = this->getDeltaVectorToDirection(TOP_RIGHT);
+				if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
+					this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+				this->currentDirection = TOP_RIGHT;
+			}
+			else if (!Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && Input::keyStates['d'])
+			{
+				glm::vec3 deltaVector = this->getDeltaVectorToDirection(RIGHT);
+				if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
+					this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+				this->currentDirection = RIGHT;
+			}
+			else if (!Input::keyStates['w'] && !Input::keyStates['a'] && Input::keyStates['s'] && Input::keyStates['d'])
+			{
+				glm::vec3 deltaVector = this->getDeltaVectorToDirection(BOTTOM_RIGHT);
+				if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
+					this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+				this->currentDirection = BOTTOM_RIGHT;
+			}
+			else if (!Input::keyStates['w'] && !Input::keyStates['a'] && Input::keyStates['s'] && !Input::keyStates['d'])
+			{
+				glm::vec3 deltaVector = this->getDeltaVectorToDirection(BOTTOM);
+				if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
+					this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+				this->currentDirection = BOTTOM;
+			}
+			else if (!Input::keyStates['w'] && Input::keyStates['a'] && Input::keyStates['s'] && !Input::keyStates['d'])
+			{
+				glm::vec3 deltaVector = this->getDeltaVectorToDirection(BOTTOM_LEFT);
+				if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
+					this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+				this->currentDirection = BOTTOM_LEFT;
+			}
+			else if (!Input::keyStates['w'] && Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
+			{
+				glm::vec3 deltaVector = this->getDeltaVectorToDirection(LEFT);
+				if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
+					this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+				this->currentDirection = LEFT;
+			}
+			else if (Input::keyStates['w'] && Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
+			{
+				glm::vec3 deltaVector = this->getDeltaVectorToDirection(TOP_LEFT);
+				if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
+					this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+				this->currentDirection = TOP_LEFT;
+			}
 
-			Input::leftMouseButton = false;
+			if (Input::keyStates['z'] && this->getSkillOfSlot(SLOT_1) != NULL && !this->isPlayerUsingASkill())
+				this->getSkillOfSlot(SLOT_1)->use(this->currentDirection);
+			else if (Input::keyStates['x'] && this->getSkillOfSlot(SLOT_2) != NULL && !this->isPlayerUsingASkill())
+				this->getSkillOfSlot(SLOT_2)->use(this->currentDirection);
+			else if (Input::keyStates['c'] && this->getSkillOfSlot(SLOT_3) != NULL && !this->isPlayerUsingASkill())
+				this->getSkillOfSlot(SLOT_3)->use(this->currentDirection);
+			else if (Input::keyStates['v'] && this->getSkillOfSlot(SLOT_4) != NULL && !this->isPlayerUsingASkill())
+				this->getSkillOfSlot(SLOT_4)->use(this->currentDirection);
+
+			if (Input::leftMouseButton)
+			{
+				if (this->isPlayerUsingSkillOfSlot(SLOT_1))
+					this->getSkillOfSlot(SLOT_1)->cancelIfPossible();
+				else if (this->isPlayerUsingSkillOfSlot(SLOT_2))
+					this->getSkillOfSlot(SLOT_2)->cancelIfPossible();
+				else if (this->isPlayerUsingSkillOfSlot(SLOT_3))
+					this->getSkillOfSlot(SLOT_3)->cancelIfPossible();
+				else if (this->isPlayerUsingSkillOfSlot(SLOT_4))
+					this->getSkillOfSlot(SLOT_4)->cancelIfPossible();
+
+				Input::leftMouseButton = false;
+			}
 		}
+	}
+}
+
+PlayerType Player::getType()
+{
+	return this->type;
+}
+
+void Player::setType(PlayerType type)
+{
+	this->type = type;
+}
+
+void Player::updateMovement(Map* map)
+{
+	if (isMovingTo)
+	{
+		glm::vec3 pPos = this->getTransform()->getPosition();
+		float frameTime = (float)Display::frameTime;
+		float range = frameTime * this->getTotalSpeed();
+		MovementDefinition newPos = this->ai->movePerfectlyTo(map, pPos, this->destination, range);
+
+		if (newPos.doMove)
+		{
+			this->getTransform()->translate(newPos.movement.x, newPos.movement.y, newPos.movement.z);
+			this->currentDirection = newPos.direction;
+			switch (this->currentDirection)
+			{
+			case TOP: std::cout << "top" << std::endl; break;
+			case TOP_RIGHT: std::cout << "topright" << std::endl; break;
+			case TOP_LEFT: std::cout << "topleft" << std::endl; break;
+			case LEFT: std::cout << "left" << std::endl; break;
+			case RIGHT: std::cout << "right" << std::endl; break;
+			case BOTTOM_LEFT: std::cout << "bottomleft" << std::endl; break;
+			case BOTTOM_RIGHT: std::cout << "bottomright" << std::endl; break;
+			}
+		}
+		else
+			this->isMovingTo = false;
 	}
 }
 
@@ -527,4 +577,10 @@ glm::vec3 Player::getDeltaVectorToDirection(MovementDirection direction)
 	default:
 		return glm::vec3(0, 0, 0);
 	}
+}
+
+void Player::startMovementTo(glm::vec3 destination)
+{
+	this->destination = destination;
+	this->isMovingTo = true;
 }

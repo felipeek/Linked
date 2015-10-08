@@ -36,6 +36,7 @@ public:
 private:
 	std::vector<Entity*> entities;
 	std::vector<Projectile*> attacks;
+	std::vector<Projectile*> secondPlayerAttacks;
 	std::vector<GameEntity*> gameEntities;
 
 	Camera* camera;
@@ -49,7 +50,7 @@ private:
 	Map* map;
 
 	Player* player;
-	Entity* secondPlayer;
+	Player* secondPlayer;
 
 	MonsterFactory* monsterFactory;
 	GameEntityFactory* gameEntityFactory;

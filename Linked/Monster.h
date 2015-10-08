@@ -114,7 +114,6 @@ private:
 
 	/* MOVEMENT AUXILIAR FUNCTIONS */
 	MovementDefinition moveTo(Entity* entity, Map* map);
-	MovementDefinition moveAway(Entity* entity, Map* map);
 	MovementDefinition moveRandomly(Map* map);
 	bool hasReachedEntity(Entity* entity);
 };

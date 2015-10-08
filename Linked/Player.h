@@ -4,6 +4,7 @@
 #include "Skill.h"
 #include "Equipment.h"
 #include "Movement.h"
+#include "PlayerAI.h"
 
 #include <vector>
 #include <string>
@@ -29,14 +30,18 @@ class HPBar;
 class RangeAttack;
 class Map;
 
+enum PlayerType
+{
+	LOCAL,
+	NETWORK
+};
+
 class Player : public Entity, public Creature
 {
 public:
 	Player(Transform* transform, Mesh* mesh, Texture* texture, RangeAttack* rangeAttack);
 	Player(Transform* transform, Mesh* mesh, Texture* texture);
 	~Player();
-
-	void render(Shader* primitiveShader, Shader* fontShader);
 
 	/* NAME */
 	std::string getName();
@@ -112,15 +117,23 @@ public:
 	RangeAttack* getRangeAttack();
 	void setRangeAttack(RangeAttack* rangeAttack);
 
-	/* INPUT & UPDATE */
-	void update();
+	/* INPUT, UPDATE & RENDERING */
+	void update(Map* map);
 	void input(Map* map);
+	void render(Shader* primitiveShader, Shader* fontShader);
+
+	/* MOVEMENT */
+	void startMovementTo(glm::vec3 destination);
+
+	/* NETWORK */
+	void setType(PlayerType type);
+	PlayerType getType();
 
 private:
 	HPBar* hpBar;
 	RangeAttack* rangeAttack;
 
-	/* MONSTER ATTRIBUTES/STATUS */
+	/* PLAYER ATTRIBUTES/STATUS */
 	std::string name;
 	bool attacking;
 	bool receivingDamage;
@@ -156,5 +169,15 @@ private:
 	bool lastIsAttacking = false;
 	bool lastIsReceivingDamage = false;
 	bool lastIsDead = false;
-};
 
+	/* MOVEMENT AUXILIAR VARIABLES */
+	PlayerAI* ai;
+	glm::vec3 destination;
+	bool isMovingTo;
+
+	/* MOVEMENT AUXILIAR FUNCTIONS */
+	void updateMovement(Map* map);
+
+	/* NETWORK VARIABLES */
+	PlayerType type;
+};

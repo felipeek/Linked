@@ -257,20 +257,6 @@ MovementDefinition Monster::moveTo(Entity* entity, Map* map)
 	return movement;
 }
 
-MovementDefinition Monster::moveAway(Entity* entity, Map* map)
-{
-	float rangeSpeed = getTotalSpeed() * (float)Display::frameTime;
-	this->ai->stopMovingRandomly();
-
-	MovementDefinition movement = ai->movePerfectlyAway(map, this->getTransform()->getPosition(),
-		entity->getTransform()->getPosition(), rangeSpeed);
-
-	if (movement.doMove)
-		this->getTransform()->translate(movement.movement.x, movement.movement.y, movement.movement.z);
-
-	return movement;
-}
-
 MovementDefinition Monster::moveRandomly(Map* map)
 {
 	float rangeSpeed = getTotalSpeed() * (float)Display::frameTime;

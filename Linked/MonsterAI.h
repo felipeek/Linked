@@ -4,6 +4,7 @@
 #define RANGE_DIVIDER 10.0
 #define BORDER_MOVEMENT_LIMIT 2.0
 #define POSITION_KEEP_MOVING_FACTOR 100
+#define LIMIT_DISTANCE 25
 
 class MonsterAI : public AI
 {

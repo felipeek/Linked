@@ -5,7 +5,7 @@
 #include "network\UDPClient.h"
 #include <iostream>
 
-//Player* PacketController::secondPlayer = NULL;
+Player* PacketController::secondPlayer = NULL;
 UDPClient* PacketController::udpClient = NULL;
 
 void PacketController::dispatch(ClientPacket* cp)
@@ -98,14 +98,12 @@ void PacketController::dispatchVec3fArray(int id, int xid, glm::vec3* data, int 
 	{
 	// Second Player control
 	case 0:
-		if (xid == 0)
-		{
-			/*if (PacketController::secondPlayer != NULL)
+
+			if (PacketController::secondPlayer != NULL)
 			{
 				secondPlayer->startMovementTo(data[0]);
-				udpClient->sendPackets(Packet(1, 0, 0));
-			}*/
-		}
+			}
+
 		break;
 	
 	}

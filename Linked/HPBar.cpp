@@ -89,8 +89,7 @@ void HPBar::setHP(unsigned int bars)
 
 void HPBar::input()
 {
-	if (Input::keyStates['x'])
-		player->healHp(1);
+	
 }
 
 

@@ -264,6 +264,9 @@
     <ClInclude Include="PacketController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerAI.h">
+      <Filter>Header Files\Game\AI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -430,6 +433,9 @@
     </ClCompile>
     <ClCompile Include="PacketController.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerAI.cpp">
+      <Filter>Source Files\Game\AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

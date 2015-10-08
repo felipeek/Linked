@@ -3,7 +3,6 @@
 #include "Movement.h"
 class Map;
 
-#define LIMIT_DISTANCE 25
 #define STAND_STILL_RANDOM_FACTOR_MINIMUM 6
 #define STAND_STILL_RANDOM_FACTOR_MAXIMUM 10
 #define RANDOM_KEEP_MOVING_FACTOR 1000
@@ -13,8 +12,6 @@ class AI
 public:
 	AI();
 	~AI();
-	MovementDefinition movePerfectlyTo(Map* map, glm::vec3 reference, glm::vec3 destination, float rangeSpeed);
-	MovementDefinition movePerfectlyAway(Map* map, glm::vec3 reference, glm::vec3 destination, float rangeSpeed);
 	void startRandomMovement(Map* map, glm::vec3 reference, float rangeSpeed);
 	MovementDefinition nextRandomStep();
 	bool isMovingRandomly();

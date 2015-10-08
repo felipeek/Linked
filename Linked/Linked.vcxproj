@@ -113,6 +113,7 @@
     <ClInclude Include="network\UDPClient.h" />
     <ClInclude Include="PacketController.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerAI.h" />
     <ClInclude Include="PlayerFactory.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="PrimitiveShader.h" />
@@ -170,6 +171,7 @@
     <ClCompile Include="network\UDPClient.cpp" />
     <ClCompile Include="PacketController.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerAI.cpp" />
     <ClCompile Include="PlayerFactory.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="PrimitiveShader.cpp" />
