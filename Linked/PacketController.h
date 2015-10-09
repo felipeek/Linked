@@ -30,5 +30,6 @@ private:
 	static void dispatchVec2fArray(int id, int xid, glm::vec2* data, int dataSize);
 	static void dispatchPing(int id, int xid);
 	static void dispatchPong(int id, int xid);
+	static void updatePlayerBasicAttributes(Player* player);
 };
 

@@ -109,6 +109,10 @@ public:
 	void input(Map* map);
 	void render(Shader* primitiveShader, TextRenderer* textRenderer);
 
+	/* METHODS RELATED TO NETWORK */
+#ifdef MULTIPLAYER
+	bool needToSendAttributesToServer();
+#endif
 private:
 	/* FUNDAMENTAL ATTRIBUTES */
 	std::string name;
@@ -166,5 +170,10 @@ private:
 	void updateMovement(Map* map);
 	bool checkIfPlayerIsStillOnTheSameMapPosition(glm::vec3 currentPosition, glm::vec3 nextPosition);
 	glm::vec3 getDeltaVectorToDirection(MovementDirection direction);
+#endif
+
+	/* NETWORK ATTRIBUTES */
+#ifdef MULTIPLAYER
+	bool attributesChanged;
 #endif
 };

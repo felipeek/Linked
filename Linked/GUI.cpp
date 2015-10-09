@@ -25,6 +25,11 @@ GUI::GUI(Player* player, std::string textShaderFileName, std::string guiShaderFi
 
 	this->color = glm::vec3(LGUI_R, LGUI_G, LGUI_B);
 
+	this->skillIconSlot1 = NULL;
+	this->skillIconSlot2 = NULL;
+	this->skillIconSlot3 = NULL;
+	this->skillIconSlot4 = NULL;
+
 	textRenderer = new TextRenderer(textShader, fontName);
 	initLeftGUI();
 }
