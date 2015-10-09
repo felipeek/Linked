@@ -24,6 +24,8 @@ void TextShader::update(Transform* transform, Entity* entity)
 {
 	glm::mat4 projection = glm::ortho(0.0f, (float)WWID, 0.0f, (float)WHEI);
 	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, &projection[0][0]);
+	glActiveTexture(GL_TEXTURE0);
+	glUniform1i(uniformText, 0);
 }
 
 void TextShader::useShader()

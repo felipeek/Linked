@@ -13,6 +13,7 @@ public:
 
 	GLuint textureID;
 	GLuint genGLTexture();
+	static GLuint genGLNullTexture(int width, int height);
 
 	std::string getFilename();
 
