@@ -6,7 +6,7 @@ class ZurikiRageSkill : public Skill
 public:
 	ZurikiRageSkill(std::vector<Monster*>* monsters);
 	~ZurikiRageSkill();
-	void render(Shader* primitiveShader, Shader* fontShader);
+	void render(Shader* primitiveShader, TextRenderer* textRenderer);
 	void use(MovementDirection direction);
 	void update();
 	bool cancelIfPossible();

@@ -13,7 +13,7 @@ public:
 	HoshoyoExplosionSkill(std::vector<Monster*>* monsters);
 	~HoshoyoExplosionSkill();
 
-	void render(Shader* primitiveShader, Shader* fontShader);
+	void render(Shader* primitiveShader, TextRenderer* textRenderer);
 	void use(MovementDirection direction);
 	bool cancelIfPossible();
 	void update();

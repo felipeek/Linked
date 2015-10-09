@@ -107,7 +107,7 @@ public:
 	/* METHODS RELATED TO INPUT, UPDATE AND RENDERING */
 	void update(Map* map);
 	void input(Map* map);
-	void render(Shader* primitiveShader, Shader* fontShader);
+	void render(Shader* primitiveShader, TextRenderer* textRenderer);
 
 private:
 	/* FUNDAMENTAL ATTRIBUTES */

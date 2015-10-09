@@ -48,7 +48,6 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture, RangeAttack* 
 Player::~Player()
 {
 	delete hpBar;
-
 #ifdef MULTIPLAYER
 	delete ai;
 #endif
@@ -449,7 +448,7 @@ void Player::changeTextureBasedOnDirection(MovementDirection direction, unsigned
 
 /* METHODS RELATED TO INPUT, UPDATE AND RENDERING */
 
-void Player::render(Shader* primitiveShader, Shader* fontShader)
+void Player::render(Shader* primitiveShader, TextRenderer* textRenderer)
 {
 	Entity::render(primitiveShader);
 	this->getHPBar()->quad->render(primitiveShader);
@@ -458,7 +457,7 @@ void Player::render(Shader* primitiveShader, Shader* fontShader)
 	{
 		try{
 			if (skill->isActive())
-				skill->render(primitiveShader, fontShader);
+				skill->render(primitiveShader, textRenderer);
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;

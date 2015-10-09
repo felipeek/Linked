@@ -20,6 +20,7 @@
 #include "MapShader.h"
 #include "GUIShader.h"
 #include "CommonShader.h"
+#include "TextShader.h"
 #include "Light.h"
 
 #include "RangeAttack.h"
@@ -39,8 +40,6 @@
 #include <iostream>
 #include <cstdlib>
 
-glm::vec3 Game::pos = glm::vec3(0,0,0);
-
 Game::Game(int windowsWidth, int windowsHeight)
 {	
 	// Câmera luz e shaders
@@ -49,8 +48,8 @@ Game::Game(int windowsWidth, int windowsHeight)
 	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 1, 1));
 	this->primitiveShader = new PrimitiveShader("./shaders/normalshader", camera, light);
 	this->commonShader = new CommonShader("./shaders/commonshader", camera, light);
+	this->projectileShader = new CommonShader("./shaders/projectile", camera, light);
 	this->mapShader = new MapShader("./shaders/mapshader", camera, light);
-	this->fontShader = new GUIShader("./shaders/fontshader");
 	
 	// Criação do Mapa
 	std::string mapPath = "./res/Maps/teste.png";
@@ -113,7 +112,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 
 	// GUI
 
-	this->gui = new GUI(player);
+	this->gui = new GUI(player, "./shaders/textshader", "./shaders/fontshader", "./fonts/bluehigh.ttf");
 	this->gui->addSkillIcon(skill1->getSkillIcon());
 	this->gui->addSkillIcon(skill2->getSkillIcon());
 	this->gui->addSkillIcon(skill3->getSkillIcon());
@@ -182,9 +181,9 @@ void Game::render()
 	entityMap->render(mapShader);
 
 	// Player
-	player->render(primitiveShader, fontShader);
+	player->render(primitiveShader, gui->getTextRenderer());
 #ifdef MULTIPLAYER
-	secondPlayer->render(primitiveShader, fontShader);
+	secondPlayer->render(primitiveShader, gui->getTextRenderer());
 #endif
 
 	// Generic entities (Player only at the moment)
@@ -211,13 +210,15 @@ void Game::render()
 	for (Entity* e : attacks)
 	{
 		try{
-			e->render(commonShader);
+			projectileShader->activateAlphaBlend();
+			e->render(projectileShader);
+			projectileShader->deactivateAlphaBlend();
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
-	
+
 #ifdef MULTIPLAYER
 	for (Entity* e : secondPlayerAttacks)
 	{
@@ -240,9 +241,9 @@ void Game::render()
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
-
+	
 	// Render GUI (Order is important)
-	gui->render(fontShader);
+	gui->render();
 }
 
 bool playerDead = false;

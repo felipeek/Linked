@@ -136,3 +136,16 @@ GLuint Shader::getShader()
 {
 	return this->shader;
 }
+
+void Shader::activateAlphaBlend()
+{
+	glEnable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void Shader::deactivateAlphaBlend()
+{
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
+}
