@@ -44,9 +44,6 @@ ZurikiRageSkill::ZurikiRageSkill(std::vector<Monster*>* monsters) : Skill(monste
 	Texture* enabledSkillIconTexture = new Texture("./res/Skills/zurikiicon.png");
 	Texture* disabledSkillIconTexture = new Texture("./res/Skills/zurikiicon_black.png");
 	this->skillIcon = new SkillIcon(enabledSkillIconTexture, disabledSkillIconTexture, SLOT_1);
-	
-	// temporary (just 4fun)
-	this->skillText = new Text("Zuriki's Rage !!", 0.03f, 0.085f, -0.24f, new Texture("./res/Fonts/fontLinkedFinal.png", -10));
 }
 
 
@@ -55,12 +52,11 @@ ZurikiRageSkill::~ZurikiRageSkill()
 
 }
 
-void ZurikiRageSkill::render(Shader* primitiveShader, Shader* fontShader)
+void ZurikiRageSkill::render(Shader* primitiveShader, TextRenderer* textRenderer)
 {
 	Entity::render(primitiveShader);
 	// temporary (just 4fun)
-	for (Entity* e : this->getSkillText()->getEntities())
-		e->render(fontShader);
+	textRenderer->renderText("Zuriki's Rage!", 750, 525, 0.25f, glm::vec3(0.9f, 0.9f, 0.9f));
 }
 
 void ZurikiRageSkill::use(MovementDirection direction)

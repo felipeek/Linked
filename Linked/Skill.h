@@ -1,5 +1,6 @@
 #include "Entity.h"
 #include "Movement.h"
+#include "TextRenderer.h"
 
 class Monster;
 class Text;
@@ -19,7 +20,7 @@ class Skill : public Entity
 public:
 	Skill(std::vector<Monster*> *monsters);
 	~Skill();
-	virtual void render(Shader* primitiveShader, Shader* fontShader) = 0;
+	virtual void render(Shader* primitiveShader, TextRenderer* textRenderer) = 0;
 	SkillSlot getSlot();
 	void setSlot(SkillSlot slot);
 	bool isActive();
@@ -30,7 +31,6 @@ public:
 	// Creature that "owns" this skill and will use it eventually
 	void setEntity(Entity* entity);
 	Entity* getEntity();
-	Text* getSkillText();
 	SkillIcon* getSkillIcon();
 protected:
 	SkillSlot slot;
@@ -38,6 +38,5 @@ protected:
 	Entity* entity;
 	SkillIcon* skillIcon;
 	std::vector<Monster*> *monsters;
-	Text* skillText;
 };
 

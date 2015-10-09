@@ -2,6 +2,8 @@
 #include "Text.h"
 #include "Skill.h"
 #include <vector>
+#include <string>
+#include "TextRenderer.h"
 
 class Player;
 class Mesh;
@@ -12,25 +14,39 @@ enum leftGUIAttribs;
 #define LEFTGUI_PATH "./res/GUI/Linked_GUI3.png"
 #define NOSKILLICON_PATH "./res/GUI/no_skillicon.png"
 
+#define LGUI_R 0.8f
+#define LGUI_G 0.8f
+#define LGUI_B 0.8f
+
 class GUI
 {
 public:
-	GUI(Player* player);
+	GUI(Player* player, std::string textShaderFileName, std::string guiShaderFileName, std::string fontName);
 	~GUI();
 
-	void render(Shader* shader);
+	void render();
 	void update();
 
 	void addSkillIcon(SkillIcon* skillIcon);
 
+	void setLeftGUITextColor(glm::vec3& color);
+	void setFontSize(int size);
+
+	Shader* getGUIShader();
+	TextRenderer* getTextRenderer();
 private:
+	TextRenderer* textRenderer;
 	Player* player;
 	Mesh* leftGUIMesh;
 	Entity* leftGUIEntity;
 	Texture* leftGUITexture;
-	Texture* fontTexture;
+	Shader* textShader;
+	Shader* guiShader;
 
+	// Left GUI
 	std::vector<Text*> leftGUIText;
+	glm::vec3 color;
+	int fontSize;
 
 	void initLeftGUI();
 	void initLeftGUIText(int attribsHint);
@@ -45,18 +61,20 @@ private:
 	unsigned int playerAttackSpeed;
 	unsigned int playerSpeed;
 
+	std::string pHealth;
+	std::string pAttack;
+	std::string pDefense;
+	std::string pMagicalPower;
+	std::string pAttackSpeed;
+	std::string pSpeed;
+
 	void setPlayerHealth(unsigned int health, unsigned int maxHealth);
 	void setPlayerAttack(unsigned int attack);
 	void setPlayerDefense(unsigned int defense);
 	void setPlayerMagicalPower(unsigned int magicalPower);
 	void setPlayerAttackSpeed(unsigned int attackSpeed);
-	void setPlayerSpeed(unsigned int speed);
+	void setPlayerSpeed(unsigned int speed);	
 
-	const float textSize = 0.03f;
-	const float yspread = 0.03f;
-	const float yoffset = 0.035f;
-	const float xoffset = 0.875f;
-	
 	// Skill Icons
 	SkillIcon* skillIconSlot1;
 	SkillIcon* skillIconSlot2;

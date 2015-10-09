@@ -17,6 +17,9 @@ public:
 	virtual void stopShader();
 	virtual void update(Transform* transform, Entity* entity);
 
+	void activateAlphaBlend();
+	void deactivateAlphaBlend();
+
 private:
 	GLuint loadShader(const char*, GLuint);
 	virtual void getUniformLocations();

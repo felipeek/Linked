@@ -120,7 +120,7 @@ public:
 	/* INPUT, UPDATE & RENDERING */
 	void update(Map* map);
 	void input(Map* map);
-	void render(Shader* primitiveShader, Shader* fontShader);
+	void render(Shader* primitiveShader, TextRenderer* textRenderer);
 
 	/* MOVEMENT */
 	void startMovementTo(glm::vec3 destination);

@@ -45,9 +45,7 @@ private:
 	Light* light;
 	CommonShader* commonShader;
 	PrimitiveShader* primitiveShader;
-	GUIShader* fontShader;
 	MapShader* mapShader;
-	TextShader* textShader;
 	CommonShader* projectileShader;
 
 	EntityMap* entityMap;

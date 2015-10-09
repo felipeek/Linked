@@ -25,9 +25,6 @@ HoshoyoExplosionSkill::HoshoyoExplosionSkill(std::vector<Monster*>* monsters) : 
 	Texture* enabledSkillIconTexture = new Texture("./res/Skills/hoshoyoexplosion_icon.png");
 	Texture* disabledSkillIconTexture = new Texture("./res/Skills/hoshoyoexplosion_icon_black.png");
 	this->skillIcon = new SkillIcon(enabledSkillIconTexture, disabledSkillIconTexture, SLOT_1);
-
-	/* SKILL TEXT (TEMPORARY, NEED ADJUSTMENTS) */
-	this->skillText = new Text("Hoshoyo's Explosion !!", 0.03f, 0.13f, -0.24f, new Texture("./res/Fonts/fontLinkedFinal.png", -10));
 }
 
 HoshoyoExplosionSkill::~HoshoyoExplosionSkill()
@@ -36,7 +33,7 @@ HoshoyoExplosionSkill::~HoshoyoExplosionSkill()
 		delete this->aimEntity;
 }
 
-void HoshoyoExplosionSkill::render(Shader* primitiveShader, Shader* fontShader)
+void HoshoyoExplosionSkill::render(Shader* primitiveShader, TextRenderer* textRenderer)
 {
 	if (this->status == AIM)
 		this->aimEntity->render(primitiveShader);
@@ -44,8 +41,7 @@ void HoshoyoExplosionSkill::render(Shader* primitiveShader, Shader* fontShader)
 	{
 		Entity::render(primitiveShader);
 		// temporary (just 4fun)
-		for (Entity* e : this->getSkillText()->getEntities())
-			e->render(fontShader);
+		textRenderer->renderText("Hoshoyo's Explosion!", 710, 525, 0.25f, glm::vec3(0.9f, 0.9f, 0.9f));
 	}
 }
 

@@ -41,7 +41,7 @@ Player::~Player()
 	delete ai;
 }
 
-void Player::render(Shader* primitiveShader, Shader* fontShader)
+void Player::render(Shader* primitiveShader, TextRenderer* textRenderer)
 {
 	Entity::render(primitiveShader);
 	this->getHPBar()->quad->render(primitiveShader);
@@ -50,7 +50,7 @@ void Player::render(Shader* primitiveShader, Shader* fontShader)
 	{
 		try{
 			if (skill->isActive())
-				skill->render(primitiveShader, fontShader);
+				skill->render(primitiveShader, textRenderer);
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;

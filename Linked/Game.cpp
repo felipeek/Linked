@@ -36,8 +36,6 @@
 #include "network\Packet.h"
 #include "PacketController.h"
 
-#include "TextRenderer.h"
-
 #include <string>
 #include <iostream>
 #include <cstdlib>
@@ -54,8 +52,6 @@ Game::Game(int windowsWidth, int windowsHeight)
 	this->commonShader = new CommonShader("./shaders/commonshader", camera, light);
 	this->projectileShader = new CommonShader("./shaders/projectile", camera, light);
 	this->mapShader = new MapShader("./shaders/mapshader", camera, light);
-	this->fontShader = new GUIShader("./shaders/fontshader");
-	this->textShader = new TextShader("./shaders/textshader");
 	
 	// Criação do Mapa
 	std::string mapPath = "./res/Maps/teste.png";
@@ -111,9 +107,7 @@ Game::Game(int windowsWidth, int windowsHeight)
 
 	// GUI
 
-	textRenderer = new TextRenderer(textShader, "fonts/bluebold.ttf");
-
-	this->gui = new GUI(player);
+	this->gui = new GUI(player, "./shaders/textshader", "./shaders/fontshader", "./fonts/bluehigh.ttf");
 	this->gui->addSkillIcon(skill1->getSkillIcon());
 	this->gui->addSkillIcon(skill2->getSkillIcon());
 	this->gui->addSkillIcon(skill3->getSkillIcon());
@@ -181,8 +175,8 @@ void Game::render()
 	entityMap->render(mapShader);
 
 	// Player
-	player->render(primitiveShader, fontShader);
-	secondPlayer->render(primitiveShader, fontShader);
+	player->render(primitiveShader, gui->getTextRenderer());
+	secondPlayer->render(primitiveShader, gui->getTextRenderer());
 
 	// Generic entities (Player only at the moment)
 	for (Entity* e : entities)
@@ -208,9 +202,9 @@ void Game::render()
 	for (Entity* e : attacks)
 	{
 		try{
-			textShader->useShader();
+			projectileShader->activateAlphaBlend();
 			e->render(projectileShader);
-			textShader->stopShader();
+			projectileShader->deactivateAlphaBlend();
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
@@ -239,8 +233,7 @@ void Game::render()
 	}
 	
 	// Render GUI (Order is important)
-	gui->render(fontShader);
-	textRenderer->renderText("Linked Client Alpha v1.3", 1320.0f, 5.0f, 0.25f, glm::vec3(0, 0, 0));
+	gui->render();
 }
 
 bool playerDead = false;

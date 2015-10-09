@@ -1,16 +1,15 @@
 #include "GUI.h"
 #include "Player.h"
-#include "Mesh.h"
-#include "Primitive.h"
-#include "Texture.h"
 #include "Shader.h"
 #include "SkillIcon.h"
+#include "TextShader.h"
+#include "Primitive.h"
+#include "GUIShader.h"
 
 #include <sstream>
-#include <string>
 #include <iostream>
 
-GUI::GUI(Player* player)
+GUI::GUI(Player* player, std::string textShaderFileName, std::string guiShaderFileName, std::string fontName)
 {
 	this->player = player;
 	this->playerHealth = player->getHp();
@@ -21,25 +20,19 @@ GUI::GUI(Player* player)
 	this->playerAttackSpeed = player->getTotalAttackSpeed();
 	this->playerSpeed = player->getTotalSpeed();
 
-	this->fontTexture = new Texture("./res/Fonts/fontLinkedFinal.png", -10);
+	this->textShader = new TextShader(textShaderFileName);
+	this->guiShader = new GUIShader(guiShaderFileName);
 
+	this->color = glm::vec3(LGUI_R, LGUI_G, LGUI_B);
+
+	textRenderer = new TextRenderer(textShader, fontName);
 	initLeftGUI();
 }
 
 
 GUI::~GUI()
 {
-	if (leftGUIMesh)
-		delete leftGUIMesh;
-	if (leftGUIEntity)
-		delete leftGUIEntity;
-	if (leftGUITexture)
-		delete leftGUITexture;
-	for (int i = 0; i < leftGUIText.size(); i++)
-	{
-		delete leftGUIText[i];
-		leftGUIText.erase(leftGUIText.begin() + i);
-	}
+
 }
 
 void GUI::initLeftGUI()
@@ -53,10 +46,6 @@ void GUI::initLeftGUI()
 
 void GUI::initLeftGUIText(int attribsHint)
 {
-	float yspreadVar = yspread;
-
-	Text* name = new Text(player->getName(), textSize, xoffset, 0.733f, fontTexture);
-
 	std::stringstream healthStream;
 	std::stringstream attackStream;
 	std::stringstream defenseStream;
@@ -71,25 +60,12 @@ void GUI::initLeftGUIText(int attribsHint)
 	attackSpeedStream << "Attack Speed: " << playerAttackSpeed;
 	speedStream << "Speed: " << playerSpeed;
 
-	Text* health = new Text(healthStream.str(), 0.023f, xoffset, 0.733f + yspreadVar + yoffset, fontTexture);
-	yspreadVar += yspread;
-	Text* attack = new Text(attackStream.str(), 0.023f, xoffset, 0.733f + yspreadVar + yoffset, fontTexture);
-	yspreadVar += yspread;
-	Text* defense = new Text(defenseStream.str(), 0.023f, xoffset, 0.733f + yspreadVar + yoffset, fontTexture);
-	yspreadVar += yspread;
-	Text* magpower = new Text(magicalPowerStream.str(), 0.023f, xoffset, 0.733f + yspreadVar + yoffset, fontTexture);
-	yspreadVar += yspread;
-	Text* attspeed = new Text(attackSpeedStream.str(), 0.023f, xoffset, 0.733f + yspreadVar + yoffset, fontTexture);
-	yspreadVar += yspread;
-	Text* speed = new Text(speedStream.str(), 0.023f, xoffset, 0.733f + yspreadVar + yoffset, fontTexture);
-
-	leftGUIText.push_back(name);
-	leftGUIText.push_back(health);
-	leftGUIText.push_back(attack);
-	leftGUIText.push_back(defense);
-	leftGUIText.push_back(magpower);
-	leftGUIText.push_back(attspeed);
-	leftGUIText.push_back(speed);
+	pHealth = healthStream.str();
+	pAttack = attackStream.str();
+	pDefense = defenseStream.str();
+	pMagicalPower = magicalPowerStream.str();
+	pAttackSpeed = attackSpeedStream.str();
+	pSpeed = speedStream.str();
 }
 
 void GUI::initLeftGUISkills()
@@ -97,83 +73,59 @@ void GUI::initLeftGUISkills()
 
 }
 
-void GUI::render(Shader* shader)
+void GUI::render()
 {
-	leftGUIEntity->render(shader);
-	renderSkillIcons(shader);
-	for (Text* t : leftGUIText)
-	{
-		for (Entity* e : t->getEntities())
-		{
-			try{
-				e->render(shader);
-			}
-			catch (...){
-				std::cerr << "Error rendering entity" << std::endl;
-			}
-		}
-	}
+	leftGUIEntity->render(guiShader);
+	renderSkillIcons(guiShader);
+
+	// Render Text
+	// Player Name
+	textRenderer->renderText(player->getName(), 105.0f, 115.0f, 0.2f, color);
+	// Attributes
+	textRenderer->renderText(pHealth, 105.0f, 95.0f, 0.18f, color);
+	textRenderer->renderText(pAttack, 105.0f, 80.0f, 0.18f, glm::vec3(1,0,0));
+	textRenderer->renderText(pDefense, 105.0f, 65.0f, 0.18f, color);
+	textRenderer->renderText(pMagicalPower, 105.0f, 50.0f, 0.18f, color);
+	textRenderer->renderText(pAttackSpeed, 105.0f, 35.0f, 0.18f, color);
+	textRenderer->renderText(pSpeed, 105.0f, 20.0f, 0.18f, color);
 }
 
 void GUI::setPlayerHealth(unsigned int health, unsigned int maxHealth)
 {
-	float yspreadVar = (float)GUI_HEALTH * yspread;
 	std::stringstream healthStream;
 	healthStream << "Health: " << health << "/" << maxHealth;
-	delete leftGUIText[GUI_HEALTH];
-	Text* healthText = new Text(healthStream.str(), 0.023f, xoffset, 0.733f + yspreadVar + yoffset, fontTexture);
-	leftGUIText[GUI_HEALTH] = healthText;
 	playerHealth = health;
 	playerMaxHealth = maxHealth;
+	pHealth = healthStream.str();
 }
 void GUI::setPlayerAttack(unsigned int attack)
 {
-	float yspreadVar = (float)GUI_ATTACK * yspread;
 	std::stringstream attackStream;
 	attackStream << "Attack: " << attack;
-	delete leftGUIText[GUI_ATTACK];
-	Text* attackText = new Text(attackStream.str(), 0.023f, xoffset, 0.733f + yspreadVar + yoffset, fontTexture);
-	leftGUIText[GUI_ATTACK] = attackText;
 	playerAttack = attack;
 }
 void GUI::setPlayerDefense(unsigned int defense)
 {
-	float yspreadVar = (float)GUI_DEFENSE * yspread;
 	std::stringstream defenseStream;
 	defenseStream << "Defense: " << defense;
-	delete leftGUIText[GUI_DEFENSE];
-	Text* defenseText = new Text(defenseStream.str(), 0.023f, xoffset, 0.733f + yspreadVar + yoffset, fontTexture);
-	leftGUIText[GUI_DEFENSE] = defenseText;
 	playerDefense = defense;
 }
 void GUI::setPlayerMagicalPower(unsigned int magicalPower)
 {
-	float yspreadVar = (float)GUI_MAGICAL_POWER * yspread;
 	std::stringstream magicalPowerStream;
-	magicalPowerStream << "Defense: " << magicalPower;
-	delete leftGUIText[GUI_MAGICAL_POWER];
-	Text* magicalPowerText = new Text(magicalPowerStream.str(), 0.023f, xoffset, 0.733f + yspreadVar + yoffset, fontTexture);
-	leftGUIText[GUI_MAGICAL_POWER] = magicalPowerText;
+	magicalPowerStream << "Magical Power: " << magicalPower;
 	playerMagicalPower = magicalPower;
 }
 void GUI::setPlayerAttackSpeed(unsigned int attackSpeed)
 {
-	float yspreadVar = (float)GUI_ATTACK_SPEED * yspread;
 	std::stringstream attackSpeedStream;
 	attackSpeedStream << "Attack Speed: " << attackSpeed;
-	delete leftGUIText[GUI_ATTACK_SPEED];
-	Text* attackSpeedText = new Text(attackSpeedStream.str(), 0.023f, xoffset, 0.733f + yspreadVar + yoffset, fontTexture);
-	leftGUIText[GUI_ATTACK_SPEED] = attackSpeedText;
 	playerAttackSpeed = attackSpeed;
 }
 void GUI::setPlayerSpeed(unsigned int speed)
 {
-	float yspreadVar = (float)GUI_SPEED * yspread;
 	std::stringstream speedStream;
 	speedStream << "Speed: " << speed;
-	delete leftGUIText[GUI_ATTACK_SPEED];
-	Text* speedText = new Text(speedStream.str(), 0.023f, xoffset, 0.733f + yspreadVar + yoffset, fontTexture);
-	leftGUIText[GUI_ATTACK_SPEED] = speedText;
 	playerSpeed = speed;
 }
 
@@ -217,4 +169,24 @@ void GUI::renderSkillIcons(Shader* shader)
 	if (this->skillIconSlot2 != NULL) this->skillIconSlot2->render(shader);
 	if (this->skillIconSlot3 != NULL) this->skillIconSlot3->render(shader);
 	if (this->skillIconSlot4 != NULL) this->skillIconSlot4->render(shader);
+}
+
+void GUI::setLeftGUITextColor(glm::vec3& color)
+{
+	this->color = color;
+}
+
+void GUI::setFontSize(int size)
+{
+	this->fontSize = size;
+}
+
+Shader* GUI::getGUIShader()
+{
+	return this->guiShader;
+}
+
+TextRenderer* GUI::getTextRenderer()
+{
+	return this->textRenderer;
 }

@@ -17,8 +17,6 @@ Skill::~Skill()
 		delete mesh;
 	if (texture != nullptr)
 		delete texture;
-	if (skillText != nullptr)
-		delete skillText;
 	if (skillIcon != nullptr)
 		delete skillIcon;
 }
@@ -47,11 +45,6 @@ Entity* Skill::getEntity()
 void Skill::setEntity(Entity* entity)
 {
 	this->entity = entity;
-}
-
-Text* Skill::getSkillText()
-{
-	return this->skillText;
 }
 
 SkillIcon* Skill::getSkillIcon()
