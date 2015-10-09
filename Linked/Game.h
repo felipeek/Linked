@@ -1,4 +1,5 @@
 #pragma once
+#include "Configuration.h"
 #include <vector>
 #include "network\UDPClient.h"
 #include <glm\glm.hpp>
@@ -36,7 +37,6 @@ public:
 private:
 	std::vector<Entity*> entities;
 	std::vector<Projectile*> attacks;
-	std::vector<Projectile*> secondPlayerAttacks;
 	std::vector<GameEntity*> gameEntities;
 
 	Camera* camera;
@@ -50,7 +50,11 @@ private:
 	Map* map;
 
 	Player* player;
+
+#ifdef MULTIPLAYER
 	Player* secondPlayer;
+	std::vector<Projectile*> secondPlayerAttacks;
+#endif
 
 	MonsterFactory* monsterFactory;
 	GameEntityFactory* gameEntityFactory;

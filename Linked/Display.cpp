@@ -3,6 +3,7 @@
 #include "Time.h"
 #include <iostream>
 #include "Game.h"
+#include "PacketController.h"
 
 // Window and Monitor
 GLFWwindow* Display::window = NULL;
@@ -22,6 +23,7 @@ double Display::elapsedTime = 0;
 double Display::sumTime = 0;
 double Display::gameTime = 0;
 double Display::frameCount = 0;
+double Display::update10Time = 0;
 int Display::frames = 0;
 
 Display::Display(int* argc, char** argv, std::string name)
@@ -112,6 +114,7 @@ void Display::MainLoop(GLFWwindow* window)
 		sumTime += elapsedTime;
 		gameTime += elapsedTime;
 		frameCount += elapsedTime;
+		update10Time += elapsedTime;
 
 		if (gameTime >= 1.0 / GAMESPEED)			// Updates GAMESPEED times per second
 		{
@@ -125,6 +128,12 @@ void Display::MainLoop(GLFWwindow* window)
 			render();
 			frames++;
 		}
+		if (update10Time >= 1.0 / 10)				// Send packets 10 times per second
+		{
+			update10Time = 0;
+			PacketController::update10();
+		}
+
 		if (frameCount >= 1.0)
 		{
 			std::cout << frames << std::endl;

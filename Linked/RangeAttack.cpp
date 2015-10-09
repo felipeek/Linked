@@ -121,6 +121,6 @@ void RangeAttack::input()
 		setLife(LIFE);
 		setSpeed(SPEED);
 		attack();
-		player->attack();
+		player->doAttack();
 	}
 }

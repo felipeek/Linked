@@ -6,6 +6,7 @@
 #include <iostream>
 
 Player* PacketController::secondPlayer = NULL;
+Player* PacketController::player = NULL;
 UDPClient* PacketController::udpClient = NULL;
 
 void PacketController::dispatch(ClientPacket* cp)
@@ -78,6 +79,14 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 					short magPower = data[3];
 					short speed = data[4];
 					short aspd = data[5];
+#ifdef MULTIPLAYER
+					PacketController::secondPlayer->setTotalMaximumHp(maxHp);
+					PacketController::secondPlayer->setTotalAttack(attack);
+					PacketController::secondPlayer->setTotalDefense(defense);
+					PacketController::secondPlayer->setTotalMagicalPower(magPower);
+					PacketController::secondPlayer->setTotalSpeed(speed);
+					PacketController::secondPlayer->setTotalAttackSpeed(aspd);
+#endif
 				}
 
 			break;
@@ -110,6 +119,7 @@ void PacketController::dispatchVec4fArray(int id, int xid, glm::vec4* data, int 
 }
 void PacketController::dispatchVec3fArray(int id, int xid, glm::vec3* data, int dataSize)
 {
+#ifdef MULTIPLAYER
 	switch (id)
 	{
 	// Second Player control
@@ -119,6 +129,7 @@ void PacketController::dispatchVec3fArray(int id, int xid, glm::vec3* data, int 
 				secondPlayer->startMovementTo(data[0]);
 		break;
 	}
+#endif
 }
 void PacketController::dispatchVec2fArray(int id, int xid, glm::vec2* data, int dataSize)
 {
@@ -132,4 +143,11 @@ void PacketController::dispatchPing(int id, int xid)
 void PacketController::dispatchPong(int id, int xid)
 {
 
+}
+
+void PacketController::update10()
+{
+	// Sends player position to server every 10 seconds
+	glm::vec3 playerPosition = PacketController::player->getTransform()->getPosition();
+	udpClient->sendPackets(Packet(playerPosition, 0, UDPClient::myID));
 }
