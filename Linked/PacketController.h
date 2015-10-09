@@ -14,9 +14,10 @@ class PacketController
 {
 public:
 	static void dispatch(ClientPacket* cp);
-
+	static void update10();
 	static UDPClient* udpClient;
 	static Player* secondPlayer;
+	static Player* player;
 private:
 	static void dispatchByteArray(int id, int xid, char* data, int dataSize);
 	static void dispatchShortArray(int id, int xid, short* data, int dataSize);
@@ -29,5 +30,6 @@ private:
 	static void dispatchVec2fArray(int id, int xid, glm::vec2* data, int dataSize);
 	static void dispatchPing(int id, int xid);
 	static void dispatchPong(int id, int xid);
+	static void updatePlayerBasicAttributes(Player* player);
 };
 

@@ -21,6 +21,13 @@ public:
 
 	// returns NULL if quad does not exist
 	Quad* getQuad();
+
+	GLuint getVertexArrayID();
+	GLuint getVertexBufferID();
+	GLuint getTextureBufferID();
+	GLuint getNormalsBufferID();
+	GLuint getIndexBufferID();
+	void setTextureBufferID(GLuint id);
 private:
 	Quad* quad;
 	Grid* grid;

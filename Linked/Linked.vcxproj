@@ -76,6 +76,7 @@
     <ClInclude Include="AI.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CommonShader.h" />
+    <ClInclude Include="Configuration.h" />
     <ClInclude Include="Creature.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Entity.h" />
@@ -84,6 +85,7 @@
     <ClInclude Include="EquipmentFactory.h" />
     <ClInclude Include="Factory.h" />
     <ClInclude Include="FrameBuffer.h" />
+    <ClInclude Include="FrameShader.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameEntity.h" />
     <ClInclude Include="GameEntityFactory.h" />
@@ -144,6 +146,7 @@
     <ClCompile Include="EquipmentFactory.cpp" />
     <ClCompile Include="Factory.cpp" />
     <ClCompile Include="FrameBuffer.cpp" />
+    <ClCompile Include="FrameShader.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameEntity.cpp" />
     <ClCompile Include="GameEntityFactory.cpp" />

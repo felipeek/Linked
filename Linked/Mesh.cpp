@@ -136,3 +136,29 @@ Quad* Mesh::getQuad()
 	else
 		return quad;
 }
+
+GLuint Mesh::getVertexArrayID()
+{
+	return VertexArrayID;
+}
+GLuint Mesh::getVertexBufferID()
+{
+	return VertexBufferID;
+}
+GLuint Mesh::getTextureBufferID()
+{
+	return TextureBufferID;
+}
+GLuint Mesh::getNormalsBufferID()
+{
+	return NormalsBufferID;
+}
+GLuint Mesh::getIndexBufferID()
+{
+	return IndexBufferID;
+}
+
+void Mesh::setTextureBufferID(GLuint id)
+{
+	TextureBufferID = id;
+}

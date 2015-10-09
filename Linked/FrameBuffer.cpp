@@ -2,7 +2,10 @@
 #include "Texture.h"
 #include <iostream>
 #include "Shader.h"
-
+#include "FrameShader.h"
+#include <glm\glm.hpp>
+#include "Mesh.h"
+#include "Primitive.h"
 
 FrameBuffer::FrameBuffer(int width, int height)
 {
@@ -19,6 +22,11 @@ FrameBuffer::FrameBuffer(int width, int height)
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	shader = new FrameShader("./shaders/framebuffer/frameshader");
+
+	mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.5f, 0.5f));
+	mesh->setTextureBufferID(texColorBuffer);
 }
 
 
@@ -36,24 +44,27 @@ GLuint FrameBuffer::genRenderBuffer(int width, int height)
 	return rbo;
 }
 
-void FrameBuffer::renderPassToTexture(Shader* shader)
+void FrameBuffer::renderPassOneToTexture()
 {
-	//// First pass
-	//glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-	//glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // We're not using stencil buffer now
-	//glEnable(GL_DEPTH_TEST);
-	//DrawScene();
-	//
-	//// Second pass
-	//glBindFramebuffer(GL_FRAMEBUFFER, 0); // back to default
-	//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	//glClear(GL_COLOR_BUFFER_BIT);
-	//
-	//screenShader.Use();
-	//glBindVertexArray(quadVAO);
-	//glDisable(GL_DEPTH_TEST);
-	//glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
-	//glDrawArrays(GL_TRIANGLES, 0, 6);
-	//glBindVertexArray(0);
+	// First pass
+	glBindFramebuffer(GL_FRAMEBUFFER, texColorBuffer);
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // We're not using stencil buffer now
+	glEnable(GL_DEPTH_TEST);
+	// DRAW SCENE
+}
+
+void FrameBuffer::renderPassTwoToTexture()
+{
+	// Second pass
+	glBindFramebuffer(GL_FRAMEBUFFER, 0); // back to default
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	shader->useShader();
+	shader->update();
+
+	mesh->render();
+
+	shader->stopShader();
 }

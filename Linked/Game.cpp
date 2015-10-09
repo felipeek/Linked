@@ -40,8 +40,6 @@
 #include <iostream>
 #include <cstdlib>
 
-//#define DEBUG
-
 Game::Game(int windowsWidth, int windowsHeight)
 {	
 	// Câmera luz e shaders
@@ -69,14 +67,23 @@ Game::Game(int windowsWidth, int windowsHeight)
 	player = new Player(new Transform(glm::vec3(440, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
 	this->rangeAttack = new RangeAttack(player, &attacks, &monsters, map);
 	player->setRangeAttack(this->rangeAttack);
+	player->setHp(100);
+	player->setName("JaOwnes");
+	PacketController::player = player;
+
+#ifdef SINGLEPLAYER
 	player->setSpeedBasis(26);
 	player->setMaximumHpBasis(100);
-	player->setHp(100);
 	player->setDefenseBasis(100);
 	player->setMagicalPowerBasis(20);
-	player->setName("JaOwnes");
+#endif
+#ifdef MULTIPLAYER
+	player->setTotalSpeed(26);
+	player->setTotalMaximumHp(100);
+	player->setTotalDefense(100);
+	player->setTotalMagicalPower(20);
 	player->setType(LOCAL);
-
+#endif
 	Skill* skill1 = new HoshoyoExplosionSkill(&monsters);
 	skill1->setSlot(SLOT_1);
 	player->addNewSkill(skill1);
@@ -93,17 +100,15 @@ Game::Game(int windowsWidth, int windowsHeight)
 	skill4->setSlot(SLOT_4);
 	player->addNewSkill(skill4);
 
+#ifdef MULTIPLAYER
 	Mesh* secondPlayerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7));
 	this->secondPlayer = new Player(new Transform(glm::vec3(440, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), secondPlayerMesh, new Texture("./res/Monsters/Sprites/orangewarrior.png"));
 	PacketController::secondPlayer = this->secondPlayer;
 	RangeAttack* secondPlayerRangeAttack = new RangeAttack(secondPlayer, &secondPlayerAttacks, &monsters, map);
 	this->secondPlayer->setRangeAttack(secondPlayerRangeAttack);
-	this->secondPlayer->setSpeedBasis(26);
+	this->secondPlayer->setTotalSpeed(26);
 	this->secondPlayer->setType(NETWORK);
-
-	/*Skill* sps1 = new ZurikiRageSkill(&monsters);
-	sps1->setSlot(SLOT_1);
-	secondPlayer->addNewSkill(sps1);*/
+#endif
 
 	// GUI
 
@@ -149,9 +154,11 @@ Game::Game(int windowsWidth, int windowsHeight)
 	}
 
 	udpClient = new UDPClient(9090, "201.21.41.231");
+
+#ifdef MULTIPLAYER
 	PacketController::udpClient = udpClient;
 	udpClient->virtualConnection();
-
+#endif
 	lastTime = 0;
 }
 
@@ -176,7 +183,9 @@ void Game::render()
 
 	// Player
 	player->render(primitiveShader, gui->getTextRenderer());
+#ifdef MULTIPLAYER
 	secondPlayer->render(primitiveShader, gui->getTextRenderer());
+#endif
 
 	// Generic entities (Player only at the moment)
 	for (Entity* e : entities)
@@ -211,6 +220,7 @@ void Game::render()
 		}
 	}
 
+#ifdef MULTIPLAYER
 	for (Entity* e : secondPlayerAttacks)
 	{
 		try{
@@ -220,6 +230,7 @@ void Game::render()
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
+#endif MULTIPLAYER
 
 	// Common static entities
 	for (Entity* e : gameEntities)
@@ -242,7 +253,9 @@ int frames = 0;
 
 void Game::update()
 {
+#ifdef MULTIPLAYER
 	udpClient->receivePackets();
+#endif
 
 	// Game input
 	input();
@@ -261,7 +274,9 @@ void Game::update()
 	player->input(this->map);
 	player->update(this->map);
 	//secondPlayer->input(this->map);
+#ifdef MULTIPLAYER
 	secondPlayer->update(this->map);
+#endif
 	
 	// Monsters update
 	for (unsigned int i = 0; i < monsters.size(); i++)
@@ -278,9 +293,6 @@ void Game::update()
 	gui->update();
 	
 	frames++;
-
-	if (frames % 10 == 0)
-		udpClient->sendPackets(Packet(player->getTransform()->getPosition(),0,UDPClient::myID));
 }
 
 

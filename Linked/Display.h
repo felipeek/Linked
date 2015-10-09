@@ -50,6 +50,7 @@ private:
 	static double sumTime;
 	static double gameTime;
 	static double frameCount;
+	static double update10Time;
 	static int frames;
 
 	static void printOpenGLandGLSLversions();
