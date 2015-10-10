@@ -1,0 +1,10 @@
+<GAMEENTITY>
+  <NAME>Tree</NAME>
+  <OBJECT>Objects/arvore.obj</OBJECT>
+  <TEXTURE>Textures/arvore_tex.png</TEXTURE>
+  <SIZE>7</SIZE>
+  <ANGLE>180</ANGLE>
+  <RED>100</RED>
+  <GREEN></GREEN>
+  <BLUE>0</BLUE>
+</GAMEENTITY>

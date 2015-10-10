@@ -84,6 +84,8 @@
     <ClInclude Include="Equipment.h" />
     <ClInclude Include="EquipmentFactory.h" />
     <ClInclude Include="Factory.h" />
+    <ClInclude Include="FrameBuffer.h" />
+    <ClInclude Include="FrameShader.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameEntity.h" />
     <ClInclude Include="GameEntityFactory.h" />
@@ -143,6 +145,8 @@
     <ClCompile Include="Equipment.cpp" />
     <ClCompile Include="EquipmentFactory.cpp" />
     <ClCompile Include="Factory.cpp" />
+    <ClCompile Include="FrameBuffer.cpp" />
+    <ClCompile Include="FrameShader.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameEntity.cpp" />
     <ClCompile Include="GameEntityFactory.cpp" />

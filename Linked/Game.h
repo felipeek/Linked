@@ -6,8 +6,8 @@
 
 #define MAP_SIZE 1024
 
-#define TERRAIN_MAP_PATH "./res/Maps/teste.png"
-#define ENTITIES_MAP_PATH "./res/Maps/entities.png"
+#define TERRAIN_MAP_PATH "./res/Maps/map_64.png"
+#define ENTITIES_MAP_PATH "./res/Maps/entities2.png"
 #define MONSTER_MAP_PATH "./res/Maps/monsters.png"
 
 class EntityMap;
@@ -29,12 +29,13 @@ class GameEntity;
 class Player;
 class GUI;
 class TextRenderer;
+class FrameBuffer;
 
 class Game
 {
 public:
 	Game();
-	Game(int windowsWidth, int windowsHeight);
+	Game(int windowWidth, int windowHeight);
 	~Game();
 
 	/* INITIALIZATION METHODS */
@@ -45,7 +46,8 @@ public:
 	void update();
 
 private:
-
+	int windowWidth;
+	int windowHeight;
 	/* INITIALIZATION METHODS */
 	void createGraphicElements(int windowsWidth, int windowsHeight);
 	void createMap();
@@ -64,6 +66,8 @@ private:
 	CommonShader* projectileShader;
 	GUI* gui;
 	TextRenderer* textRenderer;
+	FrameBuffer* frameBuffer;
+	Entity* water;
 
 	/* GAME MAP & RELATED */
 	EntityMap* entityMap;

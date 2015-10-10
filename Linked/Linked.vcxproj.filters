@@ -273,7 +273,13 @@
     <ClInclude Include="TextShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FrameBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Configuration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -450,6 +456,12 @@
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="TextShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

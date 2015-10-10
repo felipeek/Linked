@@ -7,7 +7,13 @@ Texture::Texture(std::string fileName, float bias) : ImageLoader(fileName, 4)
 {
 	this->bias = bias;
 	this->fileName = fileName;
+	this->tileAmount = 1.0f;
 	textureID = genGLTexture();
+}
+
+Texture::Texture(int width, int height)
+{
+	textureID = genGLNullTexture(width, height);
 }
 
 Texture::Texture(){}
@@ -16,6 +22,16 @@ Texture::~Texture(){}
 std::string Texture::getFilename()
 {
 	return this->fileName;
+}
+
+float Texture::getTileAmount()
+{
+	return this->tileAmount;
+}
+
+void Texture::setTileAmount(float amt)
+{
+	this->tileAmount = amt;
 }
 
 GLuint Texture::genGLTexture()
@@ -38,6 +54,18 @@ GLuint Texture::genGLTexture()
 	}
 	glGenerateMipmap(GL_TEXTURE_2D);
 
+	return textureID;
+}
+
+GLuint Texture::genGLNullTexture(int width, int height)
+{
+	// Generate texture
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
 	return textureID;
 }
 

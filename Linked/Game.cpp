@@ -36,15 +36,25 @@
 #include "network\Packet.h"
 #include "PacketController.h"
 
+#include "FrameBuffer.h"
+
 #include <string>
 #include <iostream>
 #include <cstdlib>
 
-Game::Game(int windowsWidth, int windowsHeight)
+//#include <glm\gtc\matrix_transform.hpp>
+
+
+Game::Game(int windowWidth, int windowHeight)
 {
+	this->frameBuffer = new FrameBuffer(windowWidth, windowHeight);
+	this->windowWidth = windowWidth;
+	this->windowHeight = windowHeight;
+
 	PacketController::game = this;
-	this->createGraphicElements(windowsWidth, windowsHeight);
+	this->createGraphicElements(windowWidth, windowHeight);
 	this->createMap();
+
 #ifdef SINGLEPLAYER
 	this->createOfflinePlayer();
 #endif
@@ -209,12 +219,18 @@ void Game::createGUI()
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 {
 	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, this->map));
+
 	this->entityMap = new EntityMap(new Transform(), mapMesh,
 		new Texture("./res/Maps/stonePath.png"),
 		new Texture("./res/Maps/mountain.jpg"),
 		new Texture("./res/Maps/water.jpg"),
 		new Texture("./res/Maps/grassTex.png"),
 		new Texture(TERRAIN_MAP_PATH));
+
+	Mesh* waterMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), (float)MAP_SIZE, (float)MAP_SIZE));
+	Texture* waterTexture = new Texture("./res/Maps/water.jpg");
+	waterTexture->setTileAmount(100);
+	water = new Entity(new Transform(glm::vec3(0,0,-0.3f)), waterMesh, waterTexture);
 
 	// Load monsters and entities
 	for (int i = 0; i < MAP_SIZE; i++)
@@ -253,81 +269,108 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 
 void Game::createUDPConnection()
 {
-	udpClient = new UDPClient(9090, "127.0.0.1");
+	udpClient = new UDPClient(9090, "201.21.41.231");
+
 	PacketController::udpClient = udpClient;
 	udpClient->virtualConnection();
 }
 
 void Game::render()
 {
-	// Map
-	entityMap->render(mapShader);
-
-	// Player
-	localPlayer->render(primitiveShader, gui->getTextRenderer());
-
-	// Generic entities (Player only at the moment)
-	for (Entity* e : entities)
+	glm::vec3 oldPos = camera->getPosition();
+	glm::vec3 oldUp = camera->getUpVector();
+	glm::mat4 oldProj = camera->getProjection();
+	for (int i = 0; i < 2; i++)
 	{
-		try{
-			e->render(primitiveShader);
+		if (i == 0)
+		{
+			glm::mat4 orthoP = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, 0.1f, 100.0f);
+			glm::vec3 newPos = localPlayer->getTransform()->getPosition();
+			glm::vec3 newUp = glm::vec3(0, -1, 0);
+			newPos.y = newPos.y - 2;
+			newPos.z = 30.0f;
+			camera->setCamPosition(newPos);
+			camera->setUpVector(newUp);
+			camera->setProjectionMatrix(orthoP);
+			frameBuffer->renderPassOneToTexture();
 		}
-		catch (...){
-			std::cerr << "Error rendering entity" << std::endl;
+		else if (i == 1)
+		{
+			camera->setProjectionMatrix(oldProj);
+			camera->setCamPosition(oldPos);
+			camera->setUpVector(oldUp);
+			frameBuffer->renderPassTwoToTexture();
 		}
-	}
-	// Monsters
-	for (Entity* e : monsters)
-	{
-		try{
-			e->render(primitiveShader);
-		}
-		catch (...){
-			std::cerr << "Error rendering entity" << std::endl;
-		}
-	}
-	// Projectile attacks
-	for (Entity* e : localPlayerAttacks)
-	{
-		try{
-			projectileShader->activateAlphaBlend();
-			e->render(projectileShader);
-			projectileShader->deactivateAlphaBlend();
-		}
-		catch (...){
-			std::cerr << "Error rendering entity" << std::endl;
-		}
-	}
+		// Map
+		entityMap->render(mapShader);
+		water->render(commonShader);
 
-	// Second Player
+		// Player
+		localPlayer->render(primitiveShader, gui->getTextRenderer());
+
+		// Generic entities (Player only at the moment)
+		for (Entity* e : entities)
+		{
+			try{
+				e->render(primitiveShader);
+			}
+			catch (...){
+				std::cerr << "Error rendering entity" << std::endl;
+			}
+		}
+		// Monsters
+		for (Entity* e : monsters)
+		{
+			try{
+				e->render(primitiveShader);
+			}
+			catch (...){
+				std::cerr << "Error rendering entity" << std::endl;
+			}
+		}
+		// Projectile attacks
+		for (Entity* e : localPlayerAttacks)
+		{
+			try{
+				projectileShader->activateAlphaBlend();
+				e->render(projectileShader);
+				projectileShader->deactivateAlphaBlend();
+			}
+			catch (...){
+				std::cerr << "Error rendering entity" << std::endl;
+			}
+		}
+
+		// Second Player
 #ifdef MULTIPLAYER
-	if (secondPlayer != NULL)
-		secondPlayer->render(primitiveShader, gui->getTextRenderer());
+		if (secondPlayer != NULL)
+			secondPlayer->render(primitiveShader, gui->getTextRenderer());
 
-	for (Entity* e : secondPlayerAttacks)
-	{
-		try{
-			e->render(commonShader);
-		}
-		catch (...){
-			std::cerr << "Error rendering entity" << std::endl;
+		for (Entity* e : secondPlayerAttacks)
+		{
+			try{
+				e->render(commonShader);
+			}
+			catch (...){
+				std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
 #endif MULTIPLAYER
 
-	// Common static entities
-	for (Entity* e : gameEntities)
-	{
-		try{
-			e->render(commonShader);
-		}
-		catch (...){
-			std::cerr << "Error rendering entity" << std::endl;
+		// Common static entities
+		for (Entity* e : gameEntities)
+		{
+			try{
+				e->render(commonShader);
+			}
+			catch (...){
+				std::cerr << "Error rendering entity" << std::endl;
+			}
 		}
 	}
-	
 	// Render GUI (Order is important)
 	gui->render();
+
 }
 
 void Game::update()
@@ -372,27 +415,19 @@ void Game::update()
 	// GUI update
 	gui->update();
 }
+#define DEBUG
 
 void Game::input()
 {		
 
 #ifdef DEBUG
-	if (Input::keyStates['b'])
-	{
-		glm::vec3 pp = player->getTransform()->getPosition();
-		glm::vec3 mi = Input::mouseAttack.getMouseIntersection();
-
-
-		mi.z = 1.0f;
-
-		Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7));
-		Entity* e = new Entity(new Transform(mi), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
-		entities.push_back(e);
-	}
-
-	if (Input::keyStates['v'])
-		player->setMaximumHpBasis(player->getMaximumHpBasis()+1);		
-
+	
+	if (Input::keyStates['o'])
+		localPlayer->setHp(localPlayer->getHp() - 1);
+	if (Input::keyStates['i'])
+		localPlayer->setSpeedBasis(localPlayer->getSpeedBasis() + 1);
+	if (Input::keyStates['k'])
+		localPlayer->setSpeedBasis(localPlayer->getSpeedBasis() - 1);
 	if (Input::keyStates['t'])
 	{
 		double now = Time::getTime();
@@ -407,10 +442,10 @@ void Game::input()
 				randomNumberX = std::rand() % 1024;
 				randomNumberY = std::rand() % 1024;
 				newPos = glm::vec3((float)randomNumberX, (float)randomNumberY, 0);
-			} while (map->getMapCoordinateForEntityMovement(newPos).terrain != NORMAL_FLOOR);
+			} while (map->getMapCoordinateForMapCreation(newPos).terrain != NORMAL_FLOOR);
 
 			lastTime = Time::getTime();
-			entities[0]->getTransform()->translate(newPos.x, newPos.y, entities[0]->getTransform()->getPosition().z);
+			localPlayer->getTransform()->translate(newPos.x, newPos.y, localPlayer->getTransform()->getPosition().z);
 		}
 	}
 

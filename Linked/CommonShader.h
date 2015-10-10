@@ -17,6 +17,7 @@ private:
 	GLuint uniform_viewProj;
 	GLuint uniform_lightPosition;
 	GLuint uniform_lightColor;
+	GLuint uniform_tileAmt;
 
 	Light* light;
 };

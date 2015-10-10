@@ -7,12 +7,14 @@ in vec3 lightPos;
 in vec3 lightCol;
 
 out vec4 out_Color;
+uniform float tileAmt;
 
 uniform sampler2D TextureSampler;
 
 void main(){
+	vec2 tiledCoords = uvCoords * tileAmt;
 	
-	vec4 textureColor = texture(TextureSampler, uvCoords);
+	vec4 textureColor = texture(TextureSampler, tiledCoords);
 	if(textureColor.a < 0.8)
 	{
 		discard;

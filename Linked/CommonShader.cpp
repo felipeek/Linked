@@ -23,6 +23,7 @@ void CommonShader::getUniformLocations()
 	uniform_viewProj = glGetUniformLocation(shader, "viewProj");
 	uniform_lightPosition = glGetUniformLocation(shader, "lightPosition");
 	uniform_lightColor = glGetUniformLocation(shader, "lightColor");
+	uniform_tileAmt = glGetUniformLocation(shader, "tileAmt");
 }
 
 void CommonShader::update(Transform* transform, Entity* entity)
@@ -33,4 +34,5 @@ void CommonShader::update(Transform* transform, Entity* entity)
 	glUniformMatrix4fv(uniform_viewProj, 1, GL_FALSE, &camera->viewProj[0][0]);
 	glUniform3fv(uniform_lightPosition, 1, &this->light->lightPosition[0]);
 	glUniform3fv(uniform_lightColor, 1, &this->light->lightColor[0]);
+	glUniform1f(uniform_tileAmt, entity->getTexture()->getTileAmount());
 }
