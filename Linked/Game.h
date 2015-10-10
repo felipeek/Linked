@@ -6,6 +6,10 @@
 
 #define MAP_SIZE 1024
 
+#define TERRAIN_MAP_PATH "./res/Maps/teste.png"
+#define ENTITIES_MAP_PATH "./res/Maps/entities.png"
+#define MONSTER_MAP_PATH "./res/Maps/monsters.png"
+
 class EntityMap;
 class Entity;
 class Camera;
@@ -32,46 +36,63 @@ public:
 	Game();
 	Game(int windowsWidth, int windowsHeight);
 	~Game();
+
+	/* INITIALIZATION METHODS */
+	void createOnlinePlayer(short* data, bool isLocalPlayer);
+
+	/* RENDER & UPDATE*/
 	void render();
 	void update();
 
-	static glm::vec3 pos;
 private:
-	std::vector<Entity*> entities;
-	std::vector<Projectile*> attacks;
-	std::vector<GameEntity*> gameEntities;
 
+	/* INITIALIZATION METHODS */
+	void createGraphicElements(int windowsWidth, int windowsHeight);
+	void createMap();
+	void createOfflinePlayer();
+	void waitForCreationOfOnlinePlayer();
+	void createGUI();
+	void createUDPConnection();
+	void loadMonstersAndEntities(bool loadMonsters, bool loadEntities);
+
+	/* GAME GRAPHIC ELEMENTS */
 	Camera* camera;
 	Light* light;
 	CommonShader* commonShader;
 	PrimitiveShader* primitiveShader;
 	MapShader* mapShader;
 	CommonShader* projectileShader;
-
-	EntityMap* entityMap;
-	Map* map;
-
-	Player* player;
-
-#ifdef MULTIPLAYER
-	Player* secondPlayer;
-	std::vector<Projectile*> secondPlayerAttacks;
-#endif
-
-	MonsterFactory* monsterFactory;
-	GameEntityFactory* gameEntityFactory;
-	std::vector<Monster*> monsters;
-
-	RangeAttack* rangeAttack;
-
 	GUI* gui;
 	TextRenderer* textRenderer;
 
+	/* GAME MAP & RELATED */
+	EntityMap* entityMap;
+	Map* map;
+	MonsterFactory* monsterFactory;
+	GameEntityFactory* gameEntityFactory;
+
+	/* GAME PLAYERS AND ATTACK */
+	Player* localPlayer = NULL;
+	RangeAttack* localPlayerRangeAttack = NULL;
+#ifdef MULTIPLAYER
+	Player* secondPlayer = NULL;
+	RangeAttack* secondPlayerRangeAttack = NULL;
+#endif
+
+	/* GAME ENTITIES VECTORS */
+	std::vector<Entity*> entities;
+	std::vector<Projectile*> localPlayerAttacks;
+	std::vector<GameEntity*> gameEntities;
+	std::vector<Monster*> monsters;
+#ifdef MULTIPLAYER
+	std::vector<Projectile*> secondPlayerAttacks;
+#endif
+
+	/* GAME NETWORK */
 	UDPClient* udpClient;
 
-	double lastTime;
-
+	/* GAME INPUT */
 	void input();
-	void printCoordinate(int x, int y);
+	double lastTime;
 };
 

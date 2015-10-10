@@ -101,6 +101,7 @@ public:
 	/* METHODS RELATED TO PLAYER TEXTURE CHANGE */
 	void doAttack();
 	bool isAttacking();
+	bool isMoving();
 	void receiveDamage();
 	bool isReceivingDamage();
 
@@ -144,6 +145,7 @@ private:
 	/* TEXTURE-RELATED ATTRIBUTES */
 	bool attacking;
 	bool receivingDamage;
+	bool moving;
 	double lastAttackTime = 0;
 	double lastReceivedDamageTime = 0;
 	MovementDirection currentDirection;
@@ -153,6 +155,7 @@ private:
 	bool lastIsAttacking = false;
 	bool lastIsReceivingDamage = false;
 	bool lastIsDead = false;
+	bool lastIsMoving = false;
 
 	/* TEXTURE-RELATED FUNCTIONS */
 	void refreshTexture();
@@ -168,9 +171,9 @@ private:
 	/* MOVEMENT FUNCTIONS */
 #ifdef MULTIPLAYER
 	void updateMovement(Map* map);
+#endif
 	bool checkIfPlayerIsStillOnTheSameMapPosition(glm::vec3 currentPosition, glm::vec3 nextPosition);
 	glm::vec3 getDeltaVectorToDirection(MovementDirection direction);
-#endif
 
 	/* NETWORK ATTRIBUTES */
 #ifdef MULTIPLAYER

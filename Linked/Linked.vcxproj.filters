@@ -273,6 +273,7 @@
     <ClInclude Include="TextShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="FrameBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -282,6 +283,11 @@
     <ClInclude Include="FrameShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+=======
+    <ClInclude Include="Configuration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+>>>>>>> 62046268dfe577a9be23298bc7030e4593cd24a1
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">

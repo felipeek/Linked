@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "PacketController.h"
 #include "FrameBuffer.h"
+#include "Configuration.h"
 
 // Window and Monitor
 GLFWwindow* Display::window = NULL;
@@ -129,12 +130,13 @@ void Display::MainLoop(GLFWwindow* window)
 			render();
 			frames++;
 		}
+#ifdef MULTIPLAYER
 		if (update10Time >= 1.0 / 10)				// Send packets 10 times per second
 		{
 			update10Time = 0;
 			PacketController::update10();
 		}
-
+#endif
 		if (frameCount >= 1.0)
 		{
 			std::cout << frames << std::endl;
@@ -206,14 +208,14 @@ void Display::mouseCallBack(GLFWwindow* window, int button, int action, int mods
 		//Input::attack = true;
 		Input::attack = !Input::attack;
 		Input::mouseAttack.setAttackPos(screenX, screenY);
-		Input::mouseAttack.setMouseCoords(x, y);
+		Input::mouseAttack.setMouseCoords((int)x, (int)y);
 	}
 
 	if (button == 1)
 		Input::leftMouseButton = true;
 
 	Input::mouseAttack.setAttackPos(screenX, screenY);
-	Input::mouseAttack.setMouseCoords(x, y);
+	Input::mouseAttack.setMouseCoords((int)x, (int)y);
 }
 
 void Display::mousePosCallBack(GLFWwindow* window, double x, double y)
@@ -226,7 +228,7 @@ void Display::mousePosCallBack(GLFWwindow* window, double x, double y)
 	float screenY = -((float)y / height - 0.5f);
 
 	Input::mouseAttack.setAttackPos(screenX, screenY);
-	Input::mouseAttack.setMouseCoords(x, y);
+	Input::mouseAttack.setMouseCoords((int)x, (int)y);
 }
 
 void Display::wheelCallBack(GLFWwindow* window, double xoffset, double yoffset)
