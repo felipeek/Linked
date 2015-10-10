@@ -365,6 +365,11 @@ bool Player::isAttacking()
 	return false;
 }
 
+bool Player::isMoving()
+{
+	return this->moving;
+}
+
 void Player::receiveDamage()
 {
 	this->receivingDamage = true;
@@ -395,38 +400,63 @@ void Player::refreshTexture()
 	bool isDead = !this->isAlive();
 	bool isAttacking = this->isAttacking();
 	bool isReceivingDamage = this->isReceivingDamage();
+	bool isMoving = this->isMoving();
 
-	if (shouldChangeTexture || this->currentDirection != this->lastDirection || isDead != lastIsDead || isAttacking != lastIsAttacking || isReceivingDamage != lastIsReceivingDamage)
+	if (shouldChangeTexture || this->currentDirection != this->lastDirection || isDead != lastIsDead || isAttacking != lastIsAttacking || isReceivingDamage != lastIsReceivingDamage || isMoving != lastIsMoving)
 	{
 		if (isDead)
-			changeTextureBasedOnDirection(this->currentDirection, 48, 48);
+			changeTextureBasedOnDirection(this->currentDirection, 28, 28);
 		else
 		{
 			switch (this->currentDirection)
 			{
 			case TOP:
-			case TOP_LEFT:		// TO DO
-			case TOP_RIGHT:		// TO DO
-				if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 0, 3);
-				else if (isAttacking) changeTextureBasedOnDirection(this->currentDirection, 16, 19);
-				else if (isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 32, 35);
+				if (!isAttacking && !isReceivingDamage && isMoving) changeTextureBasedOnDirection(this->currentDirection, 112, 115);
+				else if (isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 75, 77);
+				else if (isAttacking) changeTextureBasedOnDirection(this->currentDirection, 51, 53);
+				else if (!isMoving) changeTextureBasedOnDirection(this->currentDirection, 135, 137);
+				break;
+			case TOP_LEFT:
+				if (!isAttacking && !isReceivingDamage && isMoving) changeTextureBasedOnDirection(this->currentDirection, 116, 119);
+				else if (isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 78, 80);
+				else if (isAttacking) changeTextureBasedOnDirection(this->currentDirection, 54, 56);
+				else if (!isMoving) changeTextureBasedOnDirection(this->currentDirection, 138, 140);
+				break;
+			case TOP_RIGHT:
+				if (!isAttacking && !isReceivingDamage && isMoving) changeTextureBasedOnDirection(this->currentDirection, 108, 111);
+				else if (isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 72, 74);
+				else if (isAttacking) changeTextureBasedOnDirection(this->currentDirection, 48, 50);
+				else if (!isMoving) changeTextureBasedOnDirection(this->currentDirection, 132, 134);
 				break;
 			case RIGHT:
-			case BOTTOM_RIGHT:	// TO DO
-				if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 8, 11);
-				else if (isAttacking) changeTextureBasedOnDirection(this->currentDirection, 24, 27);
-				else if (isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 40, 43);
+				if (!isAttacking && !isReceivingDamage && isMoving) changeTextureBasedOnDirection(this->currentDirection, 88, 91);
+				else if (isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 69, 71);
+				else if (isAttacking) changeTextureBasedOnDirection(this->currentDirection, 45, 47);
+				else if (!isMoving) changeTextureBasedOnDirection(this->currentDirection, 129, 131);
+				break;
+			case BOTTOM_RIGHT:
+				if (!isAttacking && !isReceivingDamage && isMoving) changeTextureBasedOnDirection(this->currentDirection, 84, 87);
+				else if (isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 66, 68);
+				else if (isAttacking) changeTextureBasedOnDirection(this->currentDirection, 42, 44);
+				else if (!isMoving) changeTextureBasedOnDirection(this->currentDirection, 126, 128);
 				break;
 			case BOTTOM:
-				if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 4, 7);
-				else if (isAttacking) changeTextureBasedOnDirection(this->currentDirection, 20, 23);
-				else if (isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 36, 39);
+				if (!isAttacking && !isReceivingDamage && isMoving) changeTextureBasedOnDirection(this->currentDirection, 104, 107);
+				else if (isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 63, 65);
+				else if (isAttacking) changeTextureBasedOnDirection(this->currentDirection, 39, 41);
+				else if (!isMoving) changeTextureBasedOnDirection(this->currentDirection, 123, 125);
 				break;
 			case LEFT:
-			case BOTTOM_LEFT:	// TO DO
-				if (!isAttacking && !isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 12, 15);
-				else if (isAttacking) changeTextureBasedOnDirection(this->currentDirection, 28, 31);
-				else if (isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 44, 47);
+				if (!isAttacking && !isReceivingDamage && isMoving) changeTextureBasedOnDirection(this->currentDirection, 96, 99);
+				else if (isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 81, 83);
+				else if (isAttacking) changeTextureBasedOnDirection(this->currentDirection, 57, 59);
+				else if (!isMoving) changeTextureBasedOnDirection(this->currentDirection, 141, 143);
+				break;
+			case BOTTOM_LEFT:
+				if (!isAttacking && !isReceivingDamage && isMoving) changeTextureBasedOnDirection(this->currentDirection, 100, 103);
+				else if (isReceivingDamage) changeTextureBasedOnDirection(this->currentDirection, 60, 62);
+				else if (isAttacking) changeTextureBasedOnDirection(this->currentDirection, 36, 38);
+				else if (!isMoving) changeTextureBasedOnDirection(this->currentDirection, 120, 122);
 				break;
 			}
 		}
@@ -435,13 +465,14 @@ void Player::refreshTexture()
 		this->lastIsAttacking = this->isAttacking();
 		this->lastIsReceivingDamage = this->isReceivingDamage();
 		this->lastIsDead = !this->isAlive();
+		this->lastIsMoving = this->isMoving();
 		this->textureChangeTime = now;
 	}
 }
 
 void Player::changeTextureBasedOnDirection(MovementDirection direction, unsigned int initialTextureIndex, unsigned int finalTextureIndex)
 {
-	if (direction != this->lastDirection || this->isAttacking() != lastIsAttacking || this->isReceivingDamage() != lastIsReceivingDamage || !this->isAlive() != lastIsDead)
+	if (direction != this->lastDirection || this->isAttacking() != lastIsAttacking || this->isReceivingDamage() != lastIsReceivingDamage || !this->isAlive() != lastIsDead || this->isMoving() != lastIsMoving)
 	{
 		this->getMesh()->getQuad()->setIndex(initialTextureIndex);
 		this->lastIndexTexture = initialTextureIndex;
@@ -479,12 +510,10 @@ void Player::render(Shader* primitiveShader, TextRenderer* textRenderer)
 	}
 }
 
-int aux = 0;
-
 void Player::update(Map* map)
 {
 #ifdef MULTIPLAYER
-	this->updateMovement(map); aux++;
+	this->updateMovement(map);
 #endif
 	this->hpBar->update();
 	this->refreshTexture();
@@ -508,6 +537,8 @@ void Player::input(Map* map)
 	if (Input::keyStates['x'] && this->getHp() != this->getTotalMaximumHp())
 		this->setHp(this->getHp() + 1);
 
+	this->moving = false;
+
 	if (this->isAlive())
 	{
 		if (Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
@@ -516,6 +547,7 @@ void Player::input(Map* map)
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
 				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
 			this->currentDirection = TOP;
+			this->moving = true;
 		}
 		else if (Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && Input::keyStates['d'])
 		{
@@ -523,6 +555,7 @@ void Player::input(Map* map)
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
 				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
 			this->currentDirection = TOP_RIGHT;
+			this->moving = true;
 		}
 		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && Input::keyStates['d'])
 		{
@@ -530,6 +563,7 @@ void Player::input(Map* map)
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
 				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
 			this->currentDirection = RIGHT;
+			this->moving = true;
 		}
 		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && Input::keyStates['s'] && Input::keyStates['d'])
 		{
@@ -537,6 +571,7 @@ void Player::input(Map* map)
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
 				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
 			this->currentDirection = BOTTOM_RIGHT;
+			this->moving = true;
 		}
 		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && Input::keyStates['s'] && !Input::keyStates['d'])
 		{
@@ -544,6 +579,7 @@ void Player::input(Map* map)
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
 				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
 			this->currentDirection = BOTTOM;
+			this->moving = true;
 		}
 		else if (!Input::keyStates['w'] && Input::keyStates['a'] && Input::keyStates['s'] && !Input::keyStates['d'])
 		{
@@ -551,6 +587,7 @@ void Player::input(Map* map)
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
 				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
 			this->currentDirection = BOTTOM_LEFT;
+			this->moving = true;
 		}
 		else if (!Input::keyStates['w'] && Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
 		{
@@ -558,6 +595,7 @@ void Player::input(Map* map)
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
 				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
 			this->currentDirection = LEFT;
+			this->moving = true;
 		}
 		else if (Input::keyStates['w'] && Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
 		{
@@ -565,6 +603,7 @@ void Player::input(Map* map)
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
 				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
 			this->currentDirection = TOP_LEFT;
+			this->moving = true;
 		}
 
 		if (Input::keyStates['z'] && this->getSkillOfSlot(SLOT_1) != NULL && !this->isPlayerUsingASkill())
@@ -652,19 +691,13 @@ void Player::updateMovement(Map* map)
 		{
 			this->getTransform()->translate(newPos.movement.x, newPos.movement.y, newPos.movement.z);
 			this->currentDirection = newPos.direction;
-			switch (this->currentDirection)
-			{
-			case TOP: std::cout << "top" << std::endl; break;
-			case TOP_RIGHT: std::cout << "topright" << std::endl; break;
-			case TOP_LEFT: std::cout << "topleft" << std::endl; break;
-			case LEFT: std::cout << "left" << std::endl; break;
-			case RIGHT: std::cout << "right" << std::endl; break;
-			case BOTTOM_LEFT: std::cout << "bottomleft" << std::endl; break;
-			case BOTTOM_RIGHT: std::cout << "bottomright" << std::endl; break;
-			}
+			this->moving = true;
 		}
 		else
+		{
+			this->moving = false;
 			this->isMovingTo = false;
+		}
 	}
 }
 #endif

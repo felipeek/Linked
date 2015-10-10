@@ -6,6 +6,7 @@ class ClientPacket;
 class Player;
 class UDPClient;
 class Map;
+class Game;
 
 // Entity's IDs
 // Second Player 0
@@ -17,7 +18,8 @@ public:
 	static void update10();
 	static UDPClient* udpClient;
 	static Player* secondPlayer;
-	static Player* player;
+	static Player* localPlayer;
+	static Game* game;
 private:
 	static void dispatchByteArray(int id, int xid, char* data, int dataSize);
 	static void dispatchShortArray(int id, int xid, short* data, int dataSize);

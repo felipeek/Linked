@@ -104,7 +104,7 @@ void HoshoyoExplosionSkill::executeSkill(glm::vec3 position)
 }
 
 const float skillRadius = 10.0f;
-const float skillDamage = 10.0f;
+const int skillDamage = 10;
 
 void HoshoyoExplosionSkill::hitEnemiesOnSkillRadius()
 {

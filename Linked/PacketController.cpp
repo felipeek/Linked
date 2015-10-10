@@ -3,10 +3,13 @@
 #include "network\Packet.h"
 #include "Player.h"
 #include "network\UDPClient.h"
+#include "Primitive.h"
+#include "Game.h"
 #include <iostream>
 
 Player* PacketController::secondPlayer = NULL;
-Player* PacketController::player = NULL;
+Player* PacketController::localPlayer = NULL;
+Game* PacketController::game = NULL;
 UDPClient* PacketController::udpClient = NULL;
 
 void PacketController::dispatch(ClientPacket* cp)
@@ -71,7 +74,8 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 		// Second Player control
 		case 0:
 			if (xid == 1)	// Change Second Player Attributes
-				if (PacketController::secondPlayer != NULL && dataSize == 7*sizeof(short))
+			{
+				if (PacketController::secondPlayer != NULL && dataSize == 7 * sizeof(short))
 				{
 					short maxHp = data[0];
 					short hp = data[1];
@@ -90,8 +94,24 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 					PacketController::secondPlayer->setTotalAttackSpeed(aspd);
 #endif
 				}
-
+			}
+			else if (xid == 2)
+			{
+				if (dataSize == 11 * sizeof(short))
+				{
+					PacketController::game->createOnlinePlayer(data, false);
+				}
+			}
 			break;
+		// Local Player Control
+		case 1:
+			if (xid == 0) // Creation of Local Player
+			{
+				if (dataSize == 11 * sizeof(short))
+				{
+					PacketController::game->createOnlinePlayer(data, true);
+				}
+			}
 	}
 }
 void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize)
@@ -150,25 +170,27 @@ void PacketController::dispatchPong(int id, int xid)
 void PacketController::update10()
 {
 	// Sends player position to server 10 times per second
-	glm::vec3 playerPosition = PacketController::player->getTransform()->getPosition();
+	glm::vec3 playerPosition = PacketController::localPlayer->getTransform()->getPosition();
 	udpClient->sendPackets(Packet(playerPosition, 0, UDPClient::myID));
 
+#ifdef MULTIPLAYER
 	// Send player attributes, if necessary
-	if (PacketController::player->needToSendAttributesToServer())
-		PacketController::updatePlayerBasicAttributes(PacketController::player);
+	if (PacketController::localPlayer->needToSendAttributesToServer())
+		PacketController::updatePlayerBasicAttributes(PacketController::localPlayer);
+#endif
 }
 
 void PacketController::updatePlayerBasicAttributes(Player* player)
 {
 #ifdef MULTIPLAYER
 	short data[7];
-	data[0] = PacketController::player->getTotalMaximumHp();
-	data[1] = PacketController::player->getHp();
-	data[2] = PacketController::player->getTotalAttack();
-	data[3] = PacketController::player->getTotalDefense();
-	data[4] = PacketController::player->getTotalMagicalPower();
-	data[5] = PacketController::player->getTotalSpeed();
-	data[6] = PacketController::player->getTotalAttackSpeed();
+	data[0] = PacketController::localPlayer->getTotalMaximumHp();
+	data[1] = PacketController::localPlayer->getHp();
+	data[2] = PacketController::localPlayer->getTotalAttack();
+	data[3] = PacketController::localPlayer->getTotalDefense();
+	data[4] = PacketController::localPlayer->getTotalMagicalPower();
+	data[5] = PacketController::localPlayer->getTotalSpeed();
+	data[6] = PacketController::localPlayer->getTotalAttackSpeed();
 	udpClient->sendPackets(Packet((short*)data, 7, 0, UDPClient::myID));
 #endif
 }

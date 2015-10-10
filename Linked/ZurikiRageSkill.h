@@ -18,5 +18,5 @@ private:
 	int lastTextureIndex;
 	double textureChangeTime = 0;
 	MovementDirection skillDirection;
-	int supplementaryAngle = 0;
+	float supplementaryAngle = 0;
 };

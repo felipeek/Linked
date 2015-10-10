@@ -23,7 +23,7 @@ const int TEXTURE_SPRITE_12 = 7;
 
 const float SKILL_RANGE_COLLISION_HEIGHT = 14.0f;
 const float SKILL_RANGE_COLLISION_WIDTH = 0.5f;
-const float SKILL_DAMAGE_PER_HIT = 5;
+const int SKILL_DAMAGE_PER_HIT = 5;
 
 const double SKILL_DELAY = 1.0f;
 const double SKILL_TEXTURE_CHANGE_DELAY = 0.02f;
@@ -118,7 +118,7 @@ void ZurikiRageSkill::attackMonsters()
 	{
 		glm::vec3 monsterPosition = monster->getTransform()->getPosition();
 		glm::vec3 differenceVector = monsterPosition - playerPosition;
-		unsigned int monsterCollisionRange = monster->getTotalCollisionRange()/10.0f;
+		unsigned int monsterCollisionRange = monster->getTotalCollisionRange()/10;
 
 		bool hit = false;
 

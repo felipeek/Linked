@@ -4,6 +4,7 @@
 #include "Time.h"
 #include <stdlib.h>
 #include <time.h>
+#include <iostream>
 
 AI::AI()
 {
@@ -133,7 +134,7 @@ MovementDirection AI::getDirectionBasedOnVector(glm::vec3 vector)
 
 	if (angle >= 0 && angle < 90)
 		return TOP_RIGHT;
-	else if (angle >= 90 && angle < 180)
+	else if (angle >= 90 && angle <= 180)
 		return TOP_LEFT;
 	else if (angle >= -180 && angle < -90)
 		return BOTTOM_LEFT;

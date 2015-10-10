@@ -41,123 +41,27 @@
 #include <cstdlib>
 
 Game::Game(int windowsWidth, int windowsHeight)
-{	
-	// Câmera luz e shaders
-	this->camera = new Camera(glm::vec3(0, 0, 50), glm::vec3(0, 0, 0), 70.0f, (float)windowsWidth / windowsHeight, 0.1f, 1000.0f);
-	Input::mouseAttack.setCamera(this->camera);
-	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 1, 1));
-	this->primitiveShader = new PrimitiveShader("./shaders/normalshader", camera, light);
-	this->commonShader = new CommonShader("./shaders/commonshader", camera, light);
-	this->projectileShader = new CommonShader("./shaders/projectile", camera, light);
-	this->mapShader = new MapShader("./shaders/mapshader", camera, light);
-	
-	// Criação do Mapa
-	std::string mapPath = "./res/Maps/teste.png";
-	std::string entitiesMapPath = "./res/Maps/entities.png";
-	std::string monsterMapPath = "./res/Maps/monsters.png";
+{
+	PacketController::game = this;
+	this->createGraphicElements(windowsWidth, windowsHeight);
+	this->createMap();
+#ifdef SINGLEPLAYER
+	this->createOfflinePlayer();
+#endif
+#ifdef MULTIPLAYER
+	this->createUDPConnection();
+	this->waitForCreationOfOnlinePlayer();
+#endif
+	this->createGUI();
 
-	this->monsterFactory = new MonsterFactory();
-	this->gameEntityFactory = new GameEntityFactory();
-
-	this->map = new Map(mapPath, entitiesMapPath, monsterMapPath, 3, monsterFactory, gameEntityFactory);
-
-	// Criação do player
-	// Player n fica na lista de entidades para renderização. Tem sua função própria de renderização (onde tbm renderiza suas skills, barra de HP e etc)
-	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7));
-	player = new Player(new Transform(glm::vec3(440, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
-	this->rangeAttack = new RangeAttack(player, &attacks, &monsters, map);
-	player->setRangeAttack(this->rangeAttack);
-	player->setHp(100);
-	player->setName("JaOwnes");
-	PacketController::player = player;
+#ifdef MULTIPLAYER
+	this->loadMonstersAndEntities(false, true);
+#endif
 
 #ifdef SINGLEPLAYER
-	player->setSpeedBasis(26);
-	player->setMaximumHpBasis(100);
-	player->setDefenseBasis(100);
-	player->setMagicalPowerBasis(20);
-#endif
-#ifdef MULTIPLAYER
-	player->setTotalSpeed(26);
-	player->setTotalMaximumHp(100);
-	player->setTotalDefense(100);
-	player->setTotalMagicalPower(20);
-	player->setType(LOCAL);
-#endif
-	Skill* skill1 = new HoshoyoExplosionSkill(&monsters);
-	skill1->setSlot(SLOT_1);
-	player->addNewSkill(skill1);
-
-	Skill* skill2 = new ZurikiRageSkill(&monsters);
-	skill2->setSlot(SLOT_2);
-	player->addNewSkill(skill2);
-
-	Skill* skill3 = new HoshoyoExplosionSkill(&monsters);
-	skill3->setSlot(SLOT_3);
-	player->addNewSkill(skill3);
-
-	Skill* skill4 = new HoshoyoExplosionSkill(&monsters);
-	skill4->setSlot(SLOT_4);
-	player->addNewSkill(skill4);
-
-#ifdef MULTIPLAYER
-	Mesh* secondPlayerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7));
-	this->secondPlayer = new Player(new Transform(glm::vec3(440, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), secondPlayerMesh, new Texture("./res/Monsters/Sprites/orangewarrior.png"));
-	PacketController::secondPlayer = this->secondPlayer;
-	RangeAttack* secondPlayerRangeAttack = new RangeAttack(secondPlayer, &secondPlayerAttacks, &monsters, map);
-	this->secondPlayer->setRangeAttack(secondPlayerRangeAttack);
-	this->secondPlayer->setTotalSpeed(26);
-	this->secondPlayer->setType(NETWORK);
+	this->loadMonstersAndEntities(true, true);
 #endif
 
-	// GUI
-
-	this->gui = new GUI(player, "./shaders/textshader", "./shaders/fontshader", "./fonts/bluehigh.ttf");
-	this->gui->addSkillIcon(skill1->getSkillIcon());
-	this->gui->addSkillIcon(skill2->getSkillIcon());
-	this->gui->addSkillIcon(skill3->getSkillIcon());
-	this->gui->addSkillIcon(skill4->getSkillIcon());
-
-	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, map));
-	this->entityMap = new EntityMap(new Transform(), mapMesh,
-		new Texture("./res/Maps/stonePath.png"),
-		new Texture("./res/Maps/mountain.jpg"),
-		new Texture("./res/Maps/water.jpg"),
-		new Texture("./res/Maps/grassTex.png"),
-		new Texture(mapPath));
-
-	// Criação dos Monstros e das Entidades
-	for (int i = 0; i < MAP_SIZE; i++)
-	{
-		for (int j = 0; j < MAP_SIZE; j++)
-		{
-			MapCoordinate coordinate = map->getMapCoordinateForMapCreation(glm::vec3(i, j, 0));
-			Monster *monster = coordinate.mapMonster.monster;
-			GameEntity *gameEntity = coordinate.mapGameEntity.gameEntity;
-
-			if (coordinate.mapMonster.monsterExists)
-			{
-				if (!map->coordinateHasCollision(glm::vec3(i, j, 0)))
-				{
-					monster->getTransform()->translate((float)i, (float)j, 1.0f);
-					monsters.push_back(monster);
-				}
-				else
-					delete monster;
-			}
-			if (coordinate.mapGameEntity.gameEntityExists)
-			{
-				gameEntity->getTransform()->translate((float)i, (float)j, 0);
-				gameEntities.push_back(gameEntity);
-			}
-		}
-	}
-
-#ifdef MULTIPLAYER
-	udpClient = new UDPClient(9090, "127.0.0.1");
-	PacketController::udpClient = udpClient;
-	udpClient->virtualConnection();
-#endif
 	lastTime = 0;
 }
 
@@ -173,6 +77,185 @@ Game::~Game()
 		delete map;
 	for (Monster* monster : monsters)
 		delete monster;
+
+#ifdef MULTIPLAYER
+	udpClient->virtualDisconnection();
+#endif
+}
+
+void Game::createGraphicElements(int windowsWidth, int windowsHeight)
+{
+	// Camera
+	this->camera = new Camera(glm::vec3(0, 0, 50), glm::vec3(0, 0, 0), 70.0f, (float)windowsWidth / windowsHeight, 0.1f, 1000.0f);
+	Input::mouseAttack.setCamera(this->camera);
+
+	// Light
+	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 1, 1));
+
+	// Shaders
+	this->primitiveShader = new PrimitiveShader("./shaders/normalshader", camera, light);
+	this->commonShader = new CommonShader("./shaders/commonshader", camera, light);
+	this->projectileShader = new CommonShader("./shaders/projectile", camera, light);
+	this->mapShader = new MapShader("./shaders/mapshader", camera, light);
+}
+
+void Game::createMap()
+{
+	std::string mapPath = TERRAIN_MAP_PATH;
+	std::string entitiesMapPath = ENTITIES_MAP_PATH;
+	std::string monsterMapPath = MONSTER_MAP_PATH;
+
+	this->monsterFactory = new MonsterFactory();
+	this->gameEntityFactory = new GameEntityFactory();
+
+	this->map = new Map(mapPath, entitiesMapPath, monsterMapPath, 3, monsterFactory, gameEntityFactory);
+}
+
+void Game::createOfflinePlayer()
+{
+#ifdef SINGLEPLAYER
+	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 12, 0));
+	this->localPlayer = new Player(new Transform(glm::vec3(440, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
+	this->localPlayerRangeAttack = new RangeAttack(localPlayer, &localPlayerAttacks, &monsters, map);
+	this->localPlayer->setRangeAttack(this->localPlayerRangeAttack);
+	this->localPlayer->setHp(100);
+	this->localPlayer->setName("JaOwnes");
+	PacketController::localPlayer = localPlayer;
+
+	this->localPlayer->setSpeedBasis(26);
+	this->localPlayer->setMaximumHpBasis(100);
+	this->localPlayer->setDefenseBasis(100);
+	this->localPlayer->setMagicalPowerBasis(20);
+	Skill* skill1 = new HoshoyoExplosionSkill(&monsters);
+	skill1->setSlot(SLOT_1);
+	localPlayer->addNewSkill(skill1);
+
+	Skill* skill2 = new ZurikiRageSkill(&monsters);
+	skill2->setSlot(SLOT_2);
+	localPlayer->addNewSkill(skill2);
+
+	Skill* skill3 = new HoshoyoExplosionSkill(&monsters);
+	skill3->setSlot(SLOT_3);
+	localPlayer->addNewSkill(skill3);
+
+	Skill* skill4 = new HoshoyoExplosionSkill(&monsters);
+	skill4->setSlot(SLOT_4);
+	localPlayer->addNewSkill(skill4);
+#endif
+}
+
+void Game::waitForCreationOfOnlinePlayer()
+{
+	do
+	{
+		this->udpClient->receivePackets();
+		Sleep(100);
+	}
+	while (this->localPlayer == NULL);
+
+	this->localPlayer = PacketController::localPlayer;
+}
+
+void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
+{
+#ifdef MULTIPLAYER
+	glm::vec3 localPlayerPosition = glm::vec3(data[8], data[9], data[10]);
+	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 12, 0));
+	Player* designedPlayer;
+
+	if (data[0] == 0)
+	{
+		Transform* pt = new Transform(localPlayerPosition, 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2));
+		Texture* t = new Texture("./res/Monsters/Sprites/greenwarrior.png");
+		designedPlayer = new Player(pt, playerMesh, t);
+		designedPlayer->setName("JaOwnes");
+	}
+	else if (data[0] == 1)
+	{
+		designedPlayer = new Player(new Transform(localPlayerPosition, 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
+		designedPlayer->setName("Hoshoyo");
+	}
+
+	designedPlayer->setTotalMaximumHp(data[1]);
+	designedPlayer->setHp(data[2]);
+	designedPlayer->setTotalAttack(data[3]);
+	designedPlayer->setTotalDefense(data[4]);
+	designedPlayer->setTotalMagicalPower(data[5]);
+	designedPlayer->setTotalSpeed(data[6]);
+	designedPlayer->setTotalAttackSpeed(data[7]);
+
+	if (isLocalPlayer)
+	{
+		this->localPlayer = designedPlayer;
+		this->localPlayerRangeAttack = new RangeAttack(localPlayer, &localPlayerAttacks, &monsters, map);
+		this->localPlayer->setRangeAttack(this->localPlayerRangeAttack);
+		PacketController::localPlayer = this->localPlayer;
+	}
+	else
+	{
+		this->secondPlayer = designedPlayer;
+		this->secondPlayerRangeAttack = new RangeAttack(secondPlayer, &secondPlayerAttacks, &monsters, map);
+		this->secondPlayer->setRangeAttack(this->secondPlayerRangeAttack);
+		PacketController::secondPlayer = this->secondPlayer;
+	}
+#endif
+}
+
+void Game::createGUI()
+{
+	this->gui = new GUI(localPlayer, "./shaders/textshader", "./shaders/fontshader", "./fonts/bluehigh.ttf");
+}
+
+void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
+{
+	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, this->map));
+	this->entityMap = new EntityMap(new Transform(), mapMesh,
+		new Texture("./res/Maps/stonePath.png"),
+		new Texture("./res/Maps/mountain.jpg"),
+		new Texture("./res/Maps/water.jpg"),
+		new Texture("./res/Maps/grassTex.png"),
+		new Texture(TERRAIN_MAP_PATH));
+
+	// Load monsters and entities
+	for (int i = 0; i < MAP_SIZE; i++)
+	{
+		for (int j = 0; j < MAP_SIZE; j++)
+		{
+			MapCoordinate coordinate = map->getMapCoordinateForMapCreation(glm::vec3(i, j, 0));
+			Monster *monster = coordinate.mapMonster.monster;
+			GameEntity *gameEntity = coordinate.mapGameEntity.gameEntity;
+
+			if (loadMonsters)
+			{
+				if (coordinate.mapMonster.monsterExists)
+				{
+					if (!map->coordinateHasCollision(glm::vec3(i, j, 0)))
+					{
+						monster->getTransform()->translate((float)i, (float)j, 1.3f);
+						monsters.push_back(monster);
+					}
+					else
+						delete monster;
+				}
+			}
+			
+			if (loadEntities)
+			{
+				if (coordinate.mapGameEntity.gameEntityExists)
+				{
+					gameEntity->getTransform()->translate((float)i, (float)j, 0);
+					gameEntities.push_back(gameEntity);
+				}
+			}
+		}
+	}
+}
+
+void Game::createUDPConnection()
+{
+	udpClient = new UDPClient(9090, "127.0.0.1");
+	PacketController::udpClient = udpClient;
+	udpClient->virtualConnection();
 }
 
 void Game::render()
@@ -181,10 +264,7 @@ void Game::render()
 	entityMap->render(mapShader);
 
 	// Player
-	player->render(primitiveShader, gui->getTextRenderer());
-#ifdef MULTIPLAYER
-	secondPlayer->render(primitiveShader, gui->getTextRenderer());
-#endif
+	localPlayer->render(primitiveShader, gui->getTextRenderer());
 
 	// Generic entities (Player only at the moment)
 	for (Entity* e : entities)
@@ -207,7 +287,7 @@ void Game::render()
 		}
 	}
 	// Projectile attacks
-	for (Entity* e : attacks)
+	for (Entity* e : localPlayerAttacks)
 	{
 		try{
 			projectileShader->activateAlphaBlend();
@@ -219,7 +299,11 @@ void Game::render()
 		}
 	}
 
+	// Second Player
 #ifdef MULTIPLAYER
+	if (secondPlayer != NULL)
+		secondPlayer->render(primitiveShader, gui->getTextRenderer());
+
 	for (Entity* e : secondPlayerAttacks)
 	{
 		try{
@@ -246,10 +330,6 @@ void Game::render()
 	gui->render();
 }
 
-bool playerDead = false;
-unsigned int lastHp = 0;
-int frames = 0;
-
 void Game::update()
 {
 #ifdef MULTIPLAYER
@@ -262,24 +342,25 @@ void Game::update()
 
 	// Camera input & update
 	camera->input();
-	camera->update(player->getTransform()->getPosition());
+	camera->update(localPlayer->getTransform()->getPosition());
 
 	// Light input & update
 	light->input();
-	light->update(player->getTransform()->getPosition());
+	light->update(localPlayer->getTransform()->getPosition());
 
 	// Player input & update
 	
-	player->input(this->map);
-	player->update(this->map);
-	//secondPlayer->input(this->map);
+	localPlayer->input(this->map);
+	localPlayer->update(this->map);
+
 #ifdef MULTIPLAYER
-	secondPlayer->update(this->map);
+	if (secondPlayer != NULL)
+		secondPlayer->update(this->map);
 #endif
 	
 	// Monsters update
 	for (unsigned int i = 0; i < monsters.size(); i++)
-		monsters[i]->update(map, player);
+		monsters[i]->update(map, localPlayer);
 
 	for (unsigned int i = 0; i < monsters.size(); i++)
 		if (!monsters[i]->isOnScreen())
@@ -290,10 +371,7 @@ void Game::update()
 
 	// GUI update
 	gui->update();
-	
-	frames++;
 }
-
 
 void Game::input()
 {		
