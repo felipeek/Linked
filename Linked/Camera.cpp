@@ -7,7 +7,8 @@ Camera::Camera(glm::vec3 position, glm::vec3 orientation, float fov, float aspec
 	angle = 2.0f;
 	camPosition = position;
 	camOrientation = orientation;
-	viewMatrix = glm::lookAt(position, orientation, glm::vec3(0, 1, 0));
+	upVector = glm::vec3(1, 0, 0);
+	viewMatrix = glm::lookAt(position, orientation, upVector);
 
 	projectionMatrix = glm::perspective(fov, aspect, zNear, zFar);
 	updateViewProj();
@@ -25,16 +26,26 @@ void Camera::updateViewProj()
 
 void Camera::setCamPosition(glm::vec3& pos)
 {
-	glm::vec3 right = glm::vec3(1, 0, 0);
 	camPosition = pos;
-	viewMatrix = glm::lookAt(pos, camOrientation, glm::cross(right, camOrientation));
+	viewMatrix = glm::lookAt(pos, camOrientation, glm::cross(upVector, camOrientation));
 	updateViewProj();
 }
 void Camera::setCamOrientation(glm::vec3& ori)
 {
-	glm::vec3 right = glm::vec3(1, 0, 0);
 	camOrientation = ori;
-	viewMatrix = glm::lookAt(camPosition, ori, glm::cross(right, camOrientation));
+	viewMatrix = glm::lookAt(camPosition, ori, glm::cross(upVector, camOrientation));
+	updateViewProj();
+}
+
+void Camera::setUpVector(glm::vec3& up)
+{
+	this->upVector = up;
+	setCamOrientation(camOrientation);
+}
+
+void Camera::setProjectionMatrix(glm::mat4 mat)
+{
+	this->projectionMatrix = mat;
 	updateViewProj();
 }
 
@@ -93,4 +104,9 @@ glm::mat4& Camera::getProjection()
 glm::vec3& Camera::getPosition()
 {
 	return camPosition;
+}
+
+glm::vec3& Camera::getUpVector()
+{
+	return upVector;
 }

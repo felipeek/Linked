@@ -27,7 +27,6 @@ public:
 	GLuint getTextureBufferID();
 	GLuint getNormalsBufferID();
 	GLuint getIndexBufferID();
-	void setTextureBufferID(GLuint id);
 private:
 	Quad* quad;
 	Grid* grid;

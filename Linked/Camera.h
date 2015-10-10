@@ -14,6 +14,7 @@ public:
 
 	void setCamPosition(glm::vec3& pos);
 	void setCamOrientation(glm::vec3& ori);
+	void setUpVector(glm::vec3& up);
 
 	void update(glm::vec3& playerPos);
 	void input();
@@ -25,6 +26,9 @@ public:
 	glm::mat4& getView();
 	glm::mat4& getProjection();
 	glm::vec3& getPosition();
+	glm::vec3& getUpVector();
+
+	void setProjectionMatrix(glm::mat4 mat);
 	
 private:
 	glm::mat4 viewMatrix;
@@ -32,6 +36,7 @@ private:
 
 	glm::vec3 camPosition;
 	glm::vec3 camOrientation;
+	glm::vec3 upVector;
 
 	float distance;
 	float angle;

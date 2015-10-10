@@ -6,15 +6,18 @@
 #include <glm\glm.hpp>
 #include "Mesh.h"
 #include "Primitive.h"
-
+#include "Entity.h"
+Entity* e;
+Texture* t;
 FrameBuffer::FrameBuffer(int width, int height)
 {
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-	texColorBuffer = Texture::genGLNullTexture(width, height);
 
+	//glDrawBuffer(GL_COLOR_ATTACHMENT0);
 	// Attach it to currently bound framebuffer object
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
+	t = new Texture(width, height);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, t->textureID, 0);
 	renderBuffer = genRenderBuffer(width, height);
 
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderBuffer);
@@ -24,9 +27,9 @@ FrameBuffer::FrameBuffer(int width, int height)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	shader = new FrameShader("./shaders/framebuffer/frameshader");
-
-	mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.5f, 0.5f));
-	mesh->setTextureBufferID(texColorBuffer);
+	mesh = new Mesh(new Quad(glm::vec3(0.65f, 0.65f, 0), 0.3f, 0.3f));
+	
+	e = new Entity(new Transform(glm::vec3(0, 0, 0)), mesh, t);
 }
 
 
@@ -47,7 +50,7 @@ GLuint FrameBuffer::genRenderBuffer(int width, int height)
 void FrameBuffer::renderPassOneToTexture()
 {
 	// First pass
-	glBindFramebuffer(GL_FRAMEBUFFER, texColorBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, t->textureID);
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // We're not using stencil buffer now
 	glEnable(GL_DEPTH_TEST);
@@ -61,10 +64,5 @@ void FrameBuffer::renderPassTwoToTexture()
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	shader->useShader();
-	shader->update();
-
-	mesh->render();
-
-	shader->stopShader();
+	e->render(shader);
 }

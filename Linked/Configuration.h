@@ -1,3 +1,3 @@
 //#define DEBUG
-//#define SINGLEPLAYER
-#define MULTIPLAYER
+#define SINGLEPLAYER
+//#define MULTIPLAYER

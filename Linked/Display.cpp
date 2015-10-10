@@ -4,7 +4,6 @@
 #include <iostream>
 #include "Game.h"
 #include "PacketController.h"
-#include "FrameBuffer.h"
 #include "Configuration.h"
 
 // Window and Monitor

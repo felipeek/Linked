@@ -157,8 +157,3 @@ GLuint Mesh::getIndexBufferID()
 {
 	return IndexBufferID;
 }
-
-void Mesh::setTextureBufferID(GLuint id)
-{
-	TextureBufferID = id;
-}
