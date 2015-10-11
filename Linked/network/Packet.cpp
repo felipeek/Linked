@@ -220,6 +220,35 @@ Packet::Packet(glm::vec3* bufferVector3f, int size, int ID, int xID) : Packet(ID
 	}
 }
 
+Packet::Packet(glm::vec3* bufferVector3f,short* bufferShort, int size, int ID, int xID) : Packet(ID, xID)
+{
+	multiplePacketSetup(P_MONSTERS, size*sizeof(float) * 3 + size*sizeof(short));
+	for (int i = 0, a = 0; i < size*sizeof(float) * 3 + size * sizeof(short); i += sizeof(float) * 3 + sizeof(short), a++)
+	{
+		// For each vector
+		float x = bufferVector3f[a].x;
+		float y = bufferVector3f[a].y;
+		float z = bufferVector3f[a].z;
+
+		// For each component x, y, z & w
+		for (int k = 0, j = 0; k < sizeof(float); k++, j++)
+		{
+			buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i + k] = *((char*)&x + j);
+		}
+		for (int k = sizeof(float), j = 0; k < sizeof(float) * 2; k++, j++)
+		{
+			buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i + k] = *((char*)&y + j);
+		}
+		for (int k = sizeof(float) * 2, j = 0; k < sizeof(float) * 3; k++, j++)
+		{
+			buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i + k] = *((char*)&z + j);
+		}
+		buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i + sizeof(float) * 3] = ((char*)bufferShort)[sizeof(short)*a];
+		buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i + sizeof(float) * 3 + 1] = ((char*)bufferShort)[sizeof(short)*a + 1];
+	}
+}
+
+
 Packet::Packet(glm::vec3 uVector3f, int ID, int xID) : Packet(ID, xID)
 {
 	uniquePacketSetup(P_SINGLE_VECTOR3F, sizeof(float) * 3);

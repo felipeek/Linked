@@ -41,12 +41,16 @@
 #include <string>
 #include <iostream>
 #include <cstdlib>
+#include "network\Packet.h"
 
 //#include <glm\gtc\matrix_transform.hpp>
 
 
 Game::Game(int windowWidth, int windowHeight)
 {
+	glm::vec3 pacs[2] = { glm::vec3(1, 2, 3), glm::vec3(4, 5, 6) };
+	short shorts[2] = { 7, 8 };
+	Packet* p = new Packet(pacs, shorts, 2, 0, 0);
 	this->frameBuffer = new FrameBuffer(windowWidth, windowHeight);
 	this->windowWidth = windowWidth;
 	this->windowHeight = windowHeight;
@@ -276,8 +280,8 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 
 void Game::createUDPConnection()
 {
-	//udpClient = new UDPClient(9090, "201.21.41.231");
-	udpClient = new UDPClient(9090, "127.0.0.1");
+	udpClient = new UDPClient(9090, "201.21.41.231");
+	//udpClient = new UDPClient(9090, "127.0.0.1");
 	PacketController::udpClient = udpClient;
 	udpClient->virtualConnection();
 }

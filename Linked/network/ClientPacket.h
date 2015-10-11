@@ -27,7 +27,8 @@ public:
 	int getID();
 	int getXID();
 	int getDataSize();
-	void* getData();
+	void* getData(); 
+	void* getExtraData();
 private:
 
 	// Data
@@ -36,6 +37,7 @@ private:
 	int xID;
 	int sizeData;
 	void* data;
+	void* extraData;
 
 #ifdef DEBUG
 	void printPacket();

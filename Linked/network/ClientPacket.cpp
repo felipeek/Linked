@@ -99,6 +99,12 @@ void ClientPacket::decodePacket(char* rawPacket)
 			sizeData = (type - P_SINGLE_VECTOR2F + 1) * sizeof(float) * 2;
 			data = new glm::vec2[sizeData];
 		}
+		else if (type >= P_MONSTERS && type < END)
+		{
+			sizeData = (type - P_MONSTERS + 1) * sizeof(float) * 3 + (type - P_MONSTERS + 1) * sizeof(short);
+			data = new glm::vec3[(type - P_MONSTERS + 1) * sizeof(float) * 3];
+			extraData = new short[(type - P_MONSTERS + 1) * sizeof(short)];
+		}
 	}
 	if (type >= P_SINGLE_BYTE && type < P_PING)
 		std::memcpy(data, &rawPacket[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE], sizeData);
@@ -123,6 +129,10 @@ int ClientPacket::getDataSize()
 void* ClientPacket::getData()
 {
 	return data;
+}
+void* ClientPacket::getExtraData()
+{
+	return extraData;
 }
 
 #ifdef DEBUG

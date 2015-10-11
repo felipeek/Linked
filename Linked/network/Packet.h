@@ -28,6 +28,9 @@
 
 #define P_MSG 299
 
+#define P_MONSTERS 300		// 1 a 32 (300 - 331)
+#define END 332
+
 class Packet
 {
 public:
@@ -61,6 +64,8 @@ public:
 	Packet(glm::vec2 uVector2f, int ID, int xID);
 	
 	Packet(std::string message, int ID, int xID);
+
+	Packet(glm::vec3* bufferVector3f, short* bufferShort, int size, int ID, int xID);
 
 	// TODO: int vectors
 
