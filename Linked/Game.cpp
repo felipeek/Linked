@@ -398,6 +398,7 @@ void Game::render()
 
 }
 
+int j = 0;
 void Game::update()
 {
 #ifdef MULTIPLAYER

@@ -74,7 +74,7 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 	{
 		// Second Player control
 		case 0:
-			if (xid == 1)	// Change Second Player Attributes
+			if (xid == 1)	// Refresh Second Player Attributes
 			{
 				if (PacketController::secondPlayer != NULL && dataSize == 7 * sizeof(short))
 				{
@@ -86,6 +86,8 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 					short speed = data[5];
 					short aspd = data[6];
 #ifdef MULTIPLAYER
+					if (hp < PacketController::secondPlayer->getHp())
+						PacketController::secondPlayer->receiveDamage();
 					PacketController::secondPlayer->setTotalMaximumHp(maxHp);
 					PacketController::secondPlayer->setHp(hp);
 					PacketController::secondPlayer->setTotalAttack(attack);
@@ -111,6 +113,30 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 				if (dataSize == 11 * sizeof(short))
 				{
 					PacketController::game->createOnlinePlayer(data, true);
+				}
+			}
+			else if (xid == 1)	// Refresh Local Player Attributes
+			{
+				if (PacketController::localPlayer != NULL && dataSize == 7 * sizeof(short))
+				{
+					short maxHp = data[0];
+					short hp = data[1];
+					short attack = data[2];
+					short defense = data[3];
+					short magPower = data[4];
+					short speed = data[5];
+					short aspd = data[6];
+#ifdef MULTIPLAYER
+					if (hp < PacketController::localPlayer->getHp())
+						PacketController::localPlayer->receiveDamage();
+					PacketController::localPlayer->setTotalMaximumHp(maxHp);
+					PacketController::localPlayer->setHp(hp);
+					PacketController::localPlayer->setTotalAttack(attack);
+					PacketController::localPlayer->setTotalDefense(defense);
+					PacketController::localPlayer->setTotalMagicalPower(magPower);
+					PacketController::localPlayer->setTotalSpeed(speed);
+					PacketController::localPlayer->setTotalAttackSpeed(aspd);
+#endif
 				}
 			}
 			break;
@@ -162,6 +188,7 @@ void PacketController::dispatchVec4fArray(int id, int xid, glm::vec4* data, int 
 				Monster* targetMonster = PacketController::game->getMonsterOfId(data[i].x);
 				if (targetMonster != NULL)
 					targetMonster->startMovementTo(glm::vec3(data[i].y, data[i].z, data[i].w));
+					//targetMonster->getTransform()->translate(data[i].y, data[i].z, data[i].w);
 			}
 		}
 		break;
