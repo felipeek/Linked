@@ -184,15 +184,13 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 
 	if (data[0] == 0)
 	{
-		Transform* pt = new Transform(localPlayerPosition, 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2));
-		Texture* t = new Texture("./res/Monsters/Sprites/greenwarrior.png");
-		designedPlayer = new Player(pt, playerMesh, t);
+		designedPlayer = new Player(new Transform(localPlayerPosition, 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
 		designedPlayer->setName("JaOwnes");
 	}
 	else if (data[0] == 1)
 	{
 		designedPlayer = new Player(new Transform(localPlayerPosition, 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
-		designedPlayer->setName("Hoshoyo");
+		designedPlayer->setName("HoEnchant");
 	}
 
 	designedPlayer->setTotalMaximumHp(data[1]);
@@ -282,6 +280,33 @@ void Game::createUDPConnection()
 
 	PacketController::udpClient = udpClient;
 	udpClient->virtualConnection();
+}
+
+void Game::createMonster(int monsterId, short* data)
+{
+#ifdef MULTIPLAYER
+	int monsterHp = data[0];
+	glm::vec3 monsterRgb = glm::vec3(data[1], data[2], data[3]);
+	glm::vec3 monsterPosition = glm::vec3(data[4], data[5], data[6]);
+	Monster* newMonster = this->monsterFactory->getMonsterOfMapColor(monsterRgb);
+	newMonster->getTransform()->translate(monsterPosition.x, monsterPosition.y, monsterPosition.z);
+	newMonster->setId(monsterId);
+	newMonster->setHp(monsterHp);
+
+	if (!this->map->coordinateHasCollision(monsterPosition))
+		this->monsters.push_back(newMonster);
+#endif
+}
+
+Monster* Game::getMonsterOfId(int id)
+{
+#ifdef MULTIPLAYER
+	for (int i = 0; i < monsters.size(); i++)
+		if (monsters[i]->getId() == id)
+			return monsters[i];
+#endif
+
+	return NULL;
 }
 
 void Game::render()
@@ -446,7 +471,6 @@ void Game::update()
 	// GUI update
 	gui->update();
 }
-#define DEBUG
 
 void Game::input()
 {		
@@ -466,6 +490,13 @@ void Game::input()
 
 	if (Input::keyStates['o'])
 		localPlayer->setHp(localPlayer->getHp() - 1);
+
+#ifdef SINGLEPLAYER
+	if (Input::keyStates['i'])
+		localPlayer->setSpeedBasis(localPlayer->getSpeedBasis() + 1);
+	if (Input::keyStates['k'])
+		localPlayer->setSpeedBasis(localPlayer->getSpeedBasis() - 1);
+#endif SINGLEPLAYER
 
 	if (Input::keyStates['t'])
 	{

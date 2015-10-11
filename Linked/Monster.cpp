@@ -25,12 +25,29 @@ Monster::Monster(Transform* transform, Mesh* mesh, Texture* texture) : Entity(tr
 
 	this->currentDirection = MONSTER_FIRST_DIRECTION;
 	this->lastIndexTexture = MONSTER_FIRST_INDEX_TEXTURE;
+#ifdef MULTIPLAYER
+	this->isMovingTo = false;
+#endif
 }
 
 Monster::~Monster()
 {
 	delete this->ai;
 }
+
+#ifdef MULTIPLAYER
+void Monster::setId(int id)
+{
+	this->id = id;
+}
+#endif
+
+#ifdef MULTIPLAYER
+int Monster::getId()
+{
+	return this->id;
+}
+#endif
 
 std::string Monster::getName()
 {
@@ -98,6 +115,12 @@ void Monster::killMonster()
 {
 	this->alive = false;
 	this->killTime = Time::getTime();
+}
+
+void Monster::attack()
+{
+	this->attacking = true;
+	lastAttackTime = Time::getTime();
 }
 
 unsigned int Monster::getHp()
@@ -245,6 +268,7 @@ void Monster::setMapColorBlue(int blue)
 	this->mapColor.b = (float)blue;
 }
 
+#ifdef SINGLEPLAYER
 MovementDefinition Monster::moveTo(Entity* entity, Map* map)
 {
 	float rangeSpeed = getTotalSpeed() * (float)Display::frameTime;
@@ -256,7 +280,9 @@ MovementDefinition Monster::moveTo(Entity* entity, Map* map)
 
 	return movement;
 }
+#endif
 
+#ifdef SINGLEPLAYER
 MovementDefinition Monster::moveRandomly(Map* map)
 {
 	float rangeSpeed = getTotalSpeed() * (float)Display::frameTime;
@@ -272,7 +298,9 @@ MovementDefinition Monster::moveRandomly(Map* map)
 
 	return movement;
 }
+#endif
 
+#ifdef SINGLEPLAYER
 bool Monster::hasReachedEntity(Entity* entity)
 {
 	float distance = glm::length(this->getTransform()->getPosition() - entity->getTransform()->getPosition());
@@ -282,13 +310,13 @@ bool Monster::hasReachedEntity(Entity* entity)
 	else
 		return false;
 }
+#endif
 
 void Monster::attackCreature(Creature* creature)
 {
-	this->attacking = true;
 	unsigned int damage = (unsigned int)ceil(getTotalAttack()/(creature->getTotalDefense()/10.f));
 	creature->doDamage(damage);
-	lastAttackTime = Time::getTime();
+	this->attack();
 }
 
 void Monster::changeTexture(MovementDirection direction)
@@ -384,6 +412,8 @@ void Monster::update(Map* map, Player* player)
 	// If the monster is receiving damage, it can't move.
 	else if (this->isReceivingDamage())
 		movementDefinition.doMove = false;
+
+#ifdef SINGLEPLAYER
 	// If the player is dead, the monster will move randomly.
 	else if (!player->isAlive())
 		movementDefinition = this->moveRandomly(map);
@@ -396,6 +426,11 @@ void Monster::update(Map* map, Player* player)
 	// If the monster has not reached the player yet, it will move towards the player.
 	else
 		movementDefinition = this->moveTo(player, map);
+#endif
+
+#ifdef MULTIPLAYER
+	this->updateMovement(map);
+#endif
 
 	// Change monster's texture.
 	if (movementDefinition.doMove)
@@ -468,3 +503,36 @@ int Monster::decodeMonsterIndex(int index)
 	default: return 0;
 	}
 }
+
+#ifdef MULTIPLAYER
+void Monster::startMovementTo(glm::vec3 destination)
+{
+	this->destination = destination;
+	this->isMovingTo = true;
+}
+#endif
+
+#ifdef MULTIPLAYER
+void Monster::updateMovement(Map* map)
+{
+	if (isMovingTo)
+	{
+		glm::vec3 pPos = this->getTransform()->getPosition();
+		float frameTime = (float)Display::frameTime;
+		float range = frameTime * this->getTotalSpeed();
+		MovementDefinition newPos = this->ai->movePerfectlyTo(map, pPos, this->destination, range);
+
+		if (newPos.doMove)
+		{
+			this->getTransform()->translate(newPos.movement.x, newPos.movement.y, newPos.movement.z);
+			this->currentDirection = newPos.direction;
+			this->moving = true;
+		}
+		else
+		{
+			this->moving = false;
+			this->isMovingTo = false;
+		}
+	}
+}
+#endif

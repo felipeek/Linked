@@ -5,6 +5,7 @@
 #include "network\UDPClient.h"
 #include "Primitive.h"
 #include "Game.h"
+#include "Monster.h"
 #include <iostream>
 
 Player* PacketController::secondPlayer = NULL;
@@ -112,6 +113,16 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 					PacketController::game->createOnlinePlayer(data, true);
 				}
 			}
+			break;
+		// Monster Control
+		default:
+			if (xid == 0)	// Creation of Monster
+			{
+				if (dataSize == 7 * sizeof(short))
+				{
+					PacketController::game->createMonster(id, data);
+				}
+			}
 	}
 }
 void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize)
@@ -137,7 +148,25 @@ void PacketController::dispatchDoubleArray(int id, int xid, double* data, int da
 }
 void PacketController::dispatchVec4fArray(int id, int xid, glm::vec4* data, int dataSize)
 {
+#ifdef MULTIPLAYER
+	switch (id)
+	{
+		// Monster Control
+	default:
+		if (xid == 1)	// Change Monster Position
+		{
+			int numberOfPositions = dataSize / sizeof(glm::vec4);
 
+			for (int i = 0; i < numberOfPositions; i++)
+			{
+				Monster* targetMonster = PacketController::game->getMonsterOfId(data[i].x);
+				if (targetMonster != NULL)
+					targetMonster->startMovementTo(glm::vec3(data[i].y, data[i].z, data[i].w));
+			}
+		}
+		break;
+	}
+#endif
 }
 void PacketController::dispatchVec3fArray(int id, int xid, glm::vec3* data, int dataSize)
 {

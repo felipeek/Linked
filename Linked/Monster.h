@@ -1,6 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include "Creature.h"
+#include "Configuration.h"
 class Player;
 
 #define MONSTER_DEFAULT_NAME "unnamed"
@@ -35,6 +36,10 @@ class Monster : public Entity, public Creature
 public:
 	Monster(Transform* transform, Mesh* mesh, Texture* texture);
 	~Monster();
+#ifdef MULTIPLAYER
+	int getId();
+	void setId(int id);
+#endif
 	std::string getName();
 	void setName(std::string name);
 	bool isAlive();
@@ -44,6 +49,7 @@ public:
 	void killMonster();
 	bool isOnScreen();
 	bool canBeDeleted();
+	void attack();
 	unsigned int getHp();
 	void setHp(unsigned int hp);
 	unsigned int getTotalMaximumHp();
@@ -73,10 +79,16 @@ public:
 	void setMapColor(glm::vec3 mapColor);
 	void attackCreature(Creature* creature);
 	void update(Map* map, Player* player);
+#ifdef MULTIPLAYER
+	void startMovementTo(glm::vec3 destination);
+#endif
 private:
 	MonsterAI* ai;
 
 	/* MONSTER ATTRIBUTES/STATUS */
+#ifdef MULTIPLAYER
+	int id;
+#endif
 	std::string name;
 	bool alive;
 	bool attacking;
@@ -113,7 +125,19 @@ private:
 	bool lastIsMoving = false;
 
 	/* MOVEMENT AUXILIAR FUNCTIONS */
+#ifdef SINGLEPLAYER
 	MovementDefinition moveTo(Entity* entity, Map* map);
 	MovementDefinition moveRandomly(Map* map);
 	bool hasReachedEntity(Entity* entity);
+#endif
+
+#ifdef MULTIPLAYER
+	void updateMovement(Map* map);
+#endif
+
+	/* MOVEMENT AUXILIAR VARIABLES */
+#ifdef MULTIPLAYER
+	glm::vec3 destination;
+	bool isMovingTo;
+#endif
 };
