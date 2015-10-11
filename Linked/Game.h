@@ -40,6 +40,10 @@ public:
 
 	/* INITIALIZATION METHODS */
 	void createOnlinePlayer(short* data, bool isLocalPlayer);
+	void createMonster(int monsterId, short* data);
+
+	/* AUXILIAR METHODS */
+	Monster* getMonsterOfId(int id);
 
 	/* RENDER & UPDATE*/
 	void render();
