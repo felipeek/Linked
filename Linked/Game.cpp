@@ -93,6 +93,9 @@ Game::~Game()
 #endif
 }
 
+MapShader* mapShader2;
+std::vector<Light*> light2;
+
 void Game::createGraphicElements(int windowsWidth, int windowsHeight)
 {
 	// Camera
@@ -101,12 +104,18 @@ void Game::createGraphicElements(int windowsWidth, int windowsHeight)
 
 	// Light
 	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 1, 1));
+	light2.push_back(new Light(glm::vec3(520, 500, 2), glm::vec3(1, 1, 1)));
+	light2.push_back(new Light(glm::vec3(520, 490, 2), glm::vec3(1, 1, 1)));
+	light2.push_back(new Light(glm::vec3(520, 480, 2), glm::vec3(1, 1, 1)));
+	light2.push_back(new Light(glm::vec3(520, 470, 2), glm::vec3(1, 1, 1)));
 
 	// Shaders
 	this->primitiveShader = new PrimitiveShader("./shaders/normalshader", camera, light);
 	this->commonShader = new CommonShader("./shaders/commonshader", camera, light);
 	this->projectileShader = new CommonShader("./shaders/projectile", camera, light);
-	this->mapShader = new MapShader("./shaders/mapshader", camera, light);
+	//this->mapShader = new MapShader("./shaders/mapshader", camera, light);
+	this->mapShader = new MapShader("./shaders/forward_rendering/ambient_map", camera, light);
+	mapShader2 = new MapShader("./shaders/forward_rendering/diffuse_map", camera, light);
 }
 
 void Game::createMap()
@@ -277,32 +286,53 @@ void Game::createUDPConnection()
 
 void Game::render()
 {
-	glm::vec3 oldPos = camera->getPosition();
-	glm::vec3 oldUp = camera->getUpVector();
-	glm::mat4 oldProj = camera->getProjection();
-	for (int i = 0; i < 2; i++)
-	{
-		if (i == 0)
-		{
-			glm::mat4 orthoP = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, 0.1f, 100.0f);
-			glm::vec3 newPos = localPlayer->getTransform()->getPosition();
-			glm::vec3 newUp = glm::vec3(0, -1, 0);
-			newPos.y = newPos.y - 2;
-			newPos.z = 30.0f;
-			camera->setCamPosition(newPos);
-			camera->setUpVector(newUp);
-			camera->setProjectionMatrix(orthoP);
-			frameBuffer->renderPassOneToTexture();
-		}
-		else if (i == 1)
-		{
-			camera->setProjectionMatrix(oldProj);
-			camera->setCamPosition(oldPos);
-			camera->setUpVector(oldUp);
-			frameBuffer->renderPassTwoToTexture();
-		}
+//	glm::vec3 oldPos = camera->getPosition();
+//	glm::vec3 oldUp = camera->getUpVector();
+//	glm::mat4 oldProj = camera->getProjection();
+//	for (int i = 0; i < 2; i++)
+//	{
+//		if (i == 0)
+//		{
+//			glm::mat4 orthoP = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, 0.1f, 100.0f);
+//			glm::vec3 newPos = localPlayer->getTransform()->getPosition();
+//			glm::vec3 newUp = glm::vec3(0, -1, 0);
+//			newPos.y = newPos.y - 10;
+//			newPos.x = newPos.x - 10;
+//			newPos.z = 10.0f;
+//			camera->setCamPosition(newPos);
+//			camera->setUpVector(newUp);
+//			camera->setProjectionMatrix(orthoP);
+//			frameBuffer->renderPassOneToTexture();
+//		}
+//		else if (i == 1)
+//		{
+//			camera->setProjectionMatrix(oldProj);
+//			camera->setCamPosition(oldPos);
+//			camera->setUpVector(oldUp);
+//			frameBuffer->renderPassTwoToTexture();
+//		}
+
 		// Map
 		entityMap->render(mapShader);
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE);
+		glDepthMask(false);
+		glDepthFunc(GL_EQUAL);
+
+		entityMap->render(mapShader2);
+
+		for (int i = 0; i < 4; i++)
+		{
+			mapShader2->setLight(light2[i]);
+			entityMap->render(mapShader2);
+		}
+		mapShader2->setLight(light);
+
+		glDepthFunc(GL_LESS);
+		glDepthMask(true);
+		glDisable(GL_BLEND);
+
 		water->render(commonShader);
 
 		// Player
@@ -367,7 +397,7 @@ void Game::render()
 				std::cerr << "Error rendering entity" << std::endl;
 			}
 		}
-	}
+//	}
 	// Render GUI (Order is important)
 	gui->render();
 
@@ -388,8 +418,9 @@ void Game::update()
 	camera->update(localPlayer->getTransform()->getPosition());
 
 	// Light input & update
+	glm::vec3 playerPos = localPlayer->getTransform()->getPosition();
 	light->input();
-	light->update(localPlayer->getTransform()->getPosition());
+	light->update(playerPos);
 
 	// Player input & update
 	
@@ -422,12 +453,20 @@ void Game::input()
 
 #ifdef DEBUG
 	
+	//if (Input::keyStates[5 + 320])
+	//	light2->lightPosition = localPlayer->getTransform()->getPosition();
+	//if (Input::keyStates[6 + 320])
+	//	light2->lightPosition.x += 1.0f;
+	//if (Input::keyStates[4 + 320])
+	//	light2->lightPosition.x -= 1.0f;
+	//if (Input::keyStates[8 + 320])
+	//	light2->lightPosition.y += 1.0f;
+	//if (Input::keyStates[2 + 320])
+	//	light2->lightPosition.y -= 1.0f;
+
 	if (Input::keyStates['o'])
 		localPlayer->setHp(localPlayer->getHp() - 1);
-	if (Input::keyStates['i'])
-		localPlayer->setSpeedBasis(localPlayer->getSpeedBasis() + 1);
-	if (Input::keyStates['k'])
-		localPlayer->setSpeedBasis(localPlayer->getSpeedBasis() - 1);
+
 	if (Input::keyStates['t'])
 	{
 		double now = Time::getTime();

@@ -188,6 +188,7 @@ void Display::keyCallBack(GLFWwindow* window, int key, int scancode, int action,
 	{
 		Input::keyStates[key + 32] = value;
 	}
+	//std::cout << "Key: " << key << std::endl;
 }
 
 void Display::mouseCallBack(GLFWwindow* window, int button, int action, int mods)

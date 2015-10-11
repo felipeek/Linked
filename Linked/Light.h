@@ -13,5 +13,7 @@ public:
 	glm::vec3 lightPosition;
 	glm::vec3 lightColor;
 
+	void setPosition(glm::vec3 position);
+
 };
 

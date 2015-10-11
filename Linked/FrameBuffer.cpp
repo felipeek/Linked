@@ -28,7 +28,7 @@ FrameBuffer::FrameBuffer(int width, int height)
 
 	shader = new FrameShader("./shaders/framebuffer/frameshader");
 	mesh = new Mesh(new Quad(glm::vec3(0.65f, 0.65f, 0), 0.3f, 0.3f));
-	
+	//mesh = new Mesh(new Quad(glm::vec3(0.0f, 0.0f, 0), 1.0f, 1.0f));
 	e = new Entity(new Transform(glm::vec3(0, 0, 0)), mesh, t);
 }
 

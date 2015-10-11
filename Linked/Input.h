@@ -1,7 +1,7 @@
 #pragma once
 #include "MouseAttack.h"
 
-#define KEYSTATES 256
+#define KEYSTATES 512
 
 class Input
 {

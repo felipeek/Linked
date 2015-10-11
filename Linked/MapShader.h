@@ -8,6 +8,8 @@ public:
 	MapShader(std::string fileName, Camera* camera, Light* light);
 	~MapShader();
 	virtual void update(Transform* transform);
+	void setLight(Light* light);
+
 private:
 	virtual void getUniformLocations();
 
