@@ -62,6 +62,10 @@ void PacketController::dispatch(ClientPacket* cp)
 	{
 		dispatchPong(cp->getID(), cp->getXID());
 	}
+	else if (type >= P_MONSTERS && type < END)
+	{
+		dispatchVec3fWithShortArray(cp->getID(), cp->getXID(), (glm::vec3*)cp->getData(), (short*)cp->getExtraData(), cp->getDataSize());
+	}
 }
 
 void PacketController::dispatchByteArray(int id, int xid, char* data, int dataSize)
@@ -174,26 +178,6 @@ void PacketController::dispatchDoubleArray(int id, int xid, double* data, int da
 }
 void PacketController::dispatchVec4fArray(int id, int xid, glm::vec4* data, int dataSize)
 {
-#ifdef MULTIPLAYER
-	switch (id)
-	{
-		// Monster Control
-	default:
-		if (xid == 1)	// Change Monster Position
-		{
-			int numberOfPositions = dataSize / sizeof(glm::vec4);
-
-			for (int i = 0; i < numberOfPositions; i++)
-			{
-				Monster* targetMonster = PacketController::game->getMonsterOfId(data[i].x);
-				if (targetMonster != NULL)
-					targetMonster->startMovementTo(glm::vec3(data[i].y, data[i].z, data[i].w));
-					//targetMonster->getTransform()->translate(data[i].y, data[i].z, data[i].w);
-			}
-		}
-		break;
-	}
-#endif
 }
 void PacketController::dispatchVec3fArray(int id, int xid, glm::vec3* data, int dataSize)
 {
@@ -213,7 +197,6 @@ void PacketController::dispatchVec2fArray(int id, int xid, glm::vec2* data, int 
 {
 
 }
-
 void PacketController::dispatchPing(int id, int xid)
 {
 	udpClient->sendPackets(Packet(ID_PONG, UDPClient::myID));
@@ -222,7 +205,29 @@ void PacketController::dispatchPong(int id, int xid)
 {
 
 }
+void PacketController::dispatchVec3fWithShortArray(int id, int xid, glm::vec3* data, short* extraData, int dataSize)
+{
+#ifdef MULTIPLAYER
+	switch (id)
+	{
+		// Monster Control
+	default:
+		if (xid == 1)	// Change Monster Position
+		{
+			int numberOfPositions = dataSize / (sizeof(glm::vec3) + sizeof(short));
 
+			for (int i = 0; i < numberOfPositions; i++)
+			{
+				Monster* targetMonster = PacketController::game->getMonsterOfId(extraData[i]);
+				if (targetMonster != NULL)
+					targetMonster->startMovementTo(glm::vec3(data[i].x, data[i].y, data[i].z));
+				//targetMonster->getTransform()->translate(data[i].y, data[i].z, data[i].w);
+			}
+		}
+		break;
+	}
+#endif
+}
 void PacketController::update10()
 {
 	// Sends player position to server 10 times per second

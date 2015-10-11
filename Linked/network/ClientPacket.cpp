@@ -108,6 +108,25 @@ void ClientPacket::decodePacket(char* rawPacket)
 	}
 	if (type >= P_SINGLE_BYTE && type < P_PING)
 		std::memcpy(data, &rawPacket[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE], sizeData);
+	if (type >= P_MONSTERS && type < END)
+	{
+		for (int i = 0, k = 0, j = 0; i < sizeData; i += 14, k += 2, j += 12)
+		{
+			std::memcpy(((char*)data) + j, &rawPacket[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i], sizeof(float) * 3);
+			std::memcpy(((char*)extraData) + k, &rawPacket[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i + 12], sizeof(short));
+		}
+
+		/*for (int i = 0; i < (type - P_MONSTERS + 1); i++)
+		{
+			std::cout << ((glm::vec3*)data)[i].x << " " << ((glm::vec3*)data)[i].y << " " << ((glm::vec3*)data)[i].z << std::endl;
+		}
+
+		for (int j = 0; j < (type - P_MONSTERS + 1); j++)
+		{
+			std::cout << ((short*)extraData)[j] << std::endl;
+		}*/
+
+	}
 }
 
 short ClientPacket::getType()
