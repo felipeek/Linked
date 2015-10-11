@@ -148,15 +148,15 @@ void Game::createOfflinePlayer()
 	Skill* skill1 = new HoshoyoExplosionSkill(&monsters);
 	skill1->setSlot(SLOT_1);
 	localPlayer->addNewSkill(skill1);
-
+	
 	Skill* skill2 = new ZurikiRageSkill(&monsters);
 	skill2->setSlot(SLOT_2);
 	localPlayer->addNewSkill(skill2);
-
+	
 	Skill* skill3 = new HoshoyoExplosionSkill(&monsters);
 	skill3->setSlot(SLOT_3);
 	localPlayer->addNewSkill(skill3);
-
+	
 	Skill* skill4 = new HoshoyoExplosionSkill(&monsters);
 	skill4->setSlot(SLOT_4);
 	localPlayer->addNewSkill(skill4);
@@ -276,8 +276,8 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 
 void Game::createUDPConnection()
 {
-	udpClient = new UDPClient(9090, "201.21.41.231");
-
+	//udpClient = new UDPClient(9090, "201.21.41.231");
+	udpClient = new UDPClient(9090, "127.0.0.1");
 	PacketController::udpClient = udpClient;
 	udpClient->virtualConnection();
 }
@@ -347,7 +347,7 @@ void Game::render()
 
 		entityMap->render(mapShader2);
 
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 1; i++)
 		{
 			mapShader2->setLight(light2[i]);
 			entityMap->render(mapShader2);

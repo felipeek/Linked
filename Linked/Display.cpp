@@ -138,7 +138,7 @@ void Display::MainLoop(GLFWwindow* window)
 #endif
 		if (frameCount >= 1.0)
 		{
-			//std::cout << frames << std::endl;
+			std::cout << frames << std::endl;
 			frameCount = 0;
 			frames = 0;
 		}
