@@ -123,6 +123,12 @@ void Monster::attack()
 	lastAttackTime = Time::getTime();
 }
 
+void Monster::receiveDamage()
+{
+	this->receivingDamage = true;
+	lastReceivedDamageTime = Time::getTime();
+}
+
 unsigned int Monster::getHp()
 {
 	return hp;
@@ -153,8 +159,7 @@ void Monster::doDamage(unsigned int damage)
 	else
 		hp = hp - damage;
 
-	this->receivingDamage = true;
-	lastReceivedDamageTime = Time::getTime();
+	this->receiveDamage();
 }
 
 unsigned int Monster::getTotalAttack()

@@ -50,6 +50,7 @@ public:
 	bool isOnScreen();
 	bool canBeDeleted();
 	void attack();
+	void receiveDamage();
 	unsigned int getHp();
 	void setHp(unsigned int hp);
 	unsigned int getTotalMaximumHp();
