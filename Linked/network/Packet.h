@@ -63,13 +63,11 @@ public:
 	Packet(glm::vec2* bufferVector2f, int size, int ID, int xID);
 	Packet(glm::vec2 uVector2f, int ID, int xID);
 	
-	Packet(std::string message, int ID, int xID);
+	Packet(std::string message,int ID);
 
 	Packet(glm::vec3* bufferVector3f, short* bufferShort, int size, int ID, int xID);
 
 	// TODO: int vectors
-
-	// TODO: ping packet
 
 	~Packet();
 

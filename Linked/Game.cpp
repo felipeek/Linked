@@ -48,9 +48,9 @@
 
 Game::Game(int windowWidth, int windowHeight)
 {
-	glm::vec3 pacs[2] = { glm::vec3(1, 2, 3), glm::vec3(4, 5, 6) };
-	short shorts[2] = { 7, 8 };
-	Packet* p = new Packet(pacs, shorts, 2, 0, 0);
+	std::string str = "hello world";
+	//Packet* p = new Packet(str, 0, str.length());
+	
 	this->frameBuffer = new FrameBuffer(windowWidth, windowHeight);
 	this->windowWidth = windowWidth;
 	this->windowHeight = windowHeight;
@@ -64,7 +64,9 @@ Game::Game(int windowWidth, int windowHeight)
 #endif
 #ifdef MULTIPLAYER
 	this->createUDPConnection();
+	udpClient->sendPackets(Packet(str, 0));
 	this->waitForCreationOfOnlinePlayer();
+	
 #endif
 	this->createGUI();
 
@@ -97,9 +99,6 @@ Game::~Game()
 #endif
 }
 
-MapShader* mapShader2;
-std::vector<Light*> light2;
-
 void Game::createGraphicElements(int windowsWidth, int windowsHeight)
 {
 	// Camera
@@ -108,18 +107,12 @@ void Game::createGraphicElements(int windowsWidth, int windowsHeight)
 
 	// Light
 	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 1, 1));
-	light2.push_back(new Light(glm::vec3(520, 500, 2), glm::vec3(1, 1, 1)));
-	light2.push_back(new Light(glm::vec3(520, 490, 2), glm::vec3(1, 1, 1)));
-	light2.push_back(new Light(glm::vec3(520, 480, 2), glm::vec3(1, 1, 1)));
-	light2.push_back(new Light(glm::vec3(520, 470, 2), glm::vec3(1, 1, 1)));
 
 	// Shaders
 	this->primitiveShader = new PrimitiveShader("./shaders/normalshader", camera, light);
 	this->commonShader = new CommonShader("./shaders/commonshader", camera, light);
 	this->projectileShader = new CommonShader("./shaders/projectile", camera, light);
-	//this->mapShader = new MapShader("./shaders/mapshader", camera, light);
-	this->mapShader = new MapShader("./shaders/forward_rendering/ambient_map", camera, light);
-	mapShader2 = new MapShader("./shaders/forward_rendering/diffuse_map", camera, light);
+	this->mapShader = new MapShader("./shaders/mapshader", camera, light);
 }
 
 void Game::createMap()
@@ -280,8 +273,7 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 
 void Game::createUDPConnection()
 {
-	udpClient = new UDPClient(9090, "201.21.41.231");
-	//udpClient = new UDPClient(9090, "127.0.0.1");
+	udpClient = new UDPClient(SERVER_PORT, SERVER_IP);
 	PacketController::udpClient = udpClient;
 	udpClient->virtualConnection();
 }
@@ -315,52 +307,26 @@ Monster* Game::getMonsterOfId(int id)
 
 void Game::render()
 {
-//	glm::vec3 oldPos = camera->getPosition();
-//	glm::vec3 oldUp = camera->getUpVector();
-//	glm::mat4 oldProj = camera->getProjection();
-//	for (int i = 0; i < 2; i++)
-//	{
-//		if (i == 0)
-//		{
-//			glm::mat4 orthoP = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, 0.1f, 100.0f);
-//			glm::vec3 newPos = localPlayer->getTransform()->getPosition();
-//			glm::vec3 newUp = glm::vec3(0, -1, 0);
-//			newPos.y = newPos.y - 10;
-//			newPos.x = newPos.x - 10;
-//			newPos.z = 10.0f;
-//			camera->setCamPosition(newPos);
-//			camera->setUpVector(newUp);
-//			camera->setProjectionMatrix(orthoP);
-//			frameBuffer->renderPassOneToTexture();
-//		}
-//		else if (i == 1)
-//		{
-//			camera->setProjectionMatrix(oldProj);
-//			camera->setCamPosition(oldPos);
-//			camera->setUpVector(oldUp);
-//			frameBuffer->renderPassTwoToTexture();
-//		}
-
 		// Map
 		entityMap->render(mapShader);
 
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_ONE, GL_ONE);
-		glDepthMask(false);
-		glDepthFunc(GL_EQUAL);
+		//glEnable(GL_BLEND);
+		//glBlendFunc(GL_ONE, GL_ONE);
+		//glDepthMask(false);
+		//glDepthFunc(GL_EQUAL);
 
-		entityMap->render(mapShader2);
+		entityMap->render(mapShader);
 
-		for (int i = 0; i < 1; i++)
-		{
-			mapShader2->setLight(light2[i]);
-			entityMap->render(mapShader2);
-		}
-		mapShader2->setLight(light);
-
-		glDepthFunc(GL_LESS);
-		glDepthMask(true);
-		glDisable(GL_BLEND);
+		//for (int i = 0; i < 1; i++)
+		//{
+		//	mapShader2->setLight(light2[i]);
+		//	entityMap->render(mapShader2);
+		//}
+		//mapShader2->setLight(light);
+		//
+		//glDepthFunc(GL_LESS);
+		//glDepthMask(true);
+		//glDisable(GL_BLEND);
 
 		water->render(commonShader);
 
@@ -432,7 +398,6 @@ void Game::render()
 
 }
 
-int j = 0;
 void Game::update()
 {
 #ifdef MULTIPLAYER

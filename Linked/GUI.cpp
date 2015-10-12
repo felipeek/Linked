@@ -88,7 +88,7 @@ void GUI::render()
 	textRenderer->renderText(player->getName(), 105.0f, 115.0f, 0.2f, color);
 	// Attributes
 	textRenderer->renderText(pHealth, 105.0f, 95.0f, 0.18f, color);
-	textRenderer->renderText(pAttack, 105.0f, 80.0f, 0.18f, glm::vec3(1,0,0));
+	textRenderer->renderText(pAttack, 105.0f, 80.0f, 0.18f, color);
 	textRenderer->renderText(pDefense, 105.0f, 65.0f, 0.18f, color);
 	textRenderer->renderText(pMagicalPower, 105.0f, 50.0f, 0.18f, color);
 	textRenderer->renderText(pAttackSpeed, 105.0f, 35.0f, 0.18f, color);

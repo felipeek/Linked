@@ -330,9 +330,15 @@ Packet::Packet(int id, int xid)
 }
 
 
-Packet::Packet(std::string message, int ID, int xID) : Packet(ID, xID)
+Packet::Packet(std::string message, int ID) : Packet(ID, message.length())
 {
-	// TODO: 
+	uniquePacketSetup(P_MSG, message.length());
+
+	// Fill data
+	for (int i = 0; i < message.length(); i++)
+		buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i] = (char)message[i];
+
+	//printPacket();
 }
 
 void Packet::uniquePacketSetup(int type, int sizeOfType)
@@ -401,6 +407,10 @@ void Packet::printPacket()
 	case P_SINGLE_VECTOR2F:
 		for (int i = 0; i < 4 * 2; i += 4)
 			cout << *(float*)&buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i] << endl;
+		break;
+	case P_MSG:
+		for (int i = 0; i < xID; i ++)
+			cout << buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i] << endl;
 		break;
 	default:
 		
