@@ -133,7 +133,7 @@ void Display::MainLoop(GLFWwindow* window)
 			frames++;
 		}
 #ifdef MULTIPLAYER
-		if (update10Time >= 1.0 / 10)				// Send packets 10 times per second
+		if (update10Time >= 1.0 / 7)				// Send packets 10 times per second
 		{
 			update10Time = 0;
 			PacketController::update10();

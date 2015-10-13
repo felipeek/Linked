@@ -66,6 +66,11 @@ void Chat::update(int key, int scancode, int action, int mods)
 					ss.seekp(0, std::ios_base::end);
 				}
 			}
+			else if (key == '/')
+			{
+				std::cout << '/';
+				ss << '/';
+			}
 		}
 	}
 	if (stateChat[RETURN_KEY] == 0)

@@ -3,7 +3,7 @@
 #include <vector>
 
 
-#define ASPD 0.1f
+#define ASPD 0.3f
 #define ATTACK 20
 #define LIFE 1.0f
 #define SPEED 0.4f
