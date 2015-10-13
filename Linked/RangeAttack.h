@@ -21,9 +21,10 @@ public:
 	RangeAttack(Player* player, std::vector<Projectile*>* attacks, std::vector<Monster*>* monsters, Map* map);
 	~RangeAttack();
 
+	void createProjectile(glm::vec3 direction);
 	void setSpeed(float value);
 	void setLife(float value);
-	void attack();
+
 	void update();
 	void input();
 private:
@@ -36,6 +37,8 @@ private:
 	Map* map;
 
 	bool monsterCollision(Projectile* projectile, int* hitMonsterIndex);
+	bool createProjectileDirectedToMouse();
+	void sendAttackToServer();
 
 	Player* player;
 	Texture* texture;

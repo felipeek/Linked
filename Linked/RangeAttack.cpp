@@ -8,6 +8,7 @@
 #include "Map.h"
 #include "Mesh.h"
 #include "Player.h"
+#include "PacketController.h"
 
 #include <iostream>
 
@@ -21,6 +22,8 @@ RangeAttack::RangeAttack(Player* player, std::vector<Projectile*>* attacks, std:
 	texture = new Texture("./res/Textures/energyBall.png");
 	lastTimeUpdate = 0;
 	lastTimeCreate = 0;
+	setLife(LIFE);
+	setSpeed(SPEED);
 }
 
 RangeAttack::~RangeAttack()
@@ -60,22 +63,15 @@ void RangeAttack::update()
 	}
 }
 
-void RangeAttack::attack()
+void RangeAttack::createProjectile(glm::vec3 direction)
 {
 	glm::vec3 playerPos = player->getTransform()->getPosition();
 	playerPos.z = 0;
-	glm::vec3 direction = Input::mouseAttack.getMouseIntersection() - playerPos;
 	direction.z = 1.0f;
-	direction = glm::normalize(direction);
 
-	double now = Time::getTime();
-
-	if (now - lastTimeCreate >= ASPD)
-	{
-		Projectile* entityD = new Projectile(new Transform(playerPos + glm::vec3(0,0,playerPos.z), 35, glm::vec3(1, 0, 0), glm::vec3(3, 3, 3)), mesh, texture, speed, direction);
-		(*attacks).push_back(entityD);
-		lastTimeCreate = now;
-	}
+	Transform* projectileTransform = new Transform(playerPos + glm::vec3(0, 0, playerPos.z), 35, glm::vec3(1, 0, 0), glm::vec3(3, 3, 3));
+	Projectile* entityD = new Projectile(projectileTransform, mesh, texture, speed, direction);
+	(*attacks).push_back(entityD);
 }
 
 void RangeAttack::setSpeed(float value)
@@ -114,13 +110,50 @@ bool RangeAttack::monsterCollision(Projectile* projectile, int* hitMonsterIndex)
 	return false;
 }
 
+bool RangeAttack::createProjectileDirectedToMouse()
+{
+	double now = Time::getTime();
+
+	if (now - lastTimeCreate >= ASPD)
+	{
+		glm::vec3 playerPos = player->getTransform()->getPosition();
+		glm::vec3 direction = Input::mouseAttack.getMouseIntersection() - playerPos;
+
+		this->createProjectile(direction);
+
+		lastTimeCreate = now;
+
+		return true;
+	}
+
+	return false;
+}
+
+void RangeAttack::sendAttackToServer()
+{
+	double now = Time::getTime();
+
+	if (now - lastTimeCreate >= ASPD)
+	{
+		glm::vec3 playerPos = player->getTransform()->getPosition();
+		glm::vec3 direction = Input::mouseAttack.getMouseIntersection() - playerPos;
+
+		PacketController::sendAttackToServer(direction);
+
+		lastTimeCreate = now;
+	}
+}
+
 void RangeAttack::input()
 {
 	if (Input::attack && player->isAlive())
 	{
-		setLife(LIFE);
-		setSpeed(SPEED);
-		attack();
+#ifdef SINGLEPLAYER
+		createProjectileDirectedToMouse();
 		player->doAttack();
+#endif
+#ifdef MULTIPLAYER
+		this->sendAttackToServer();
+#endif
 	}
 }

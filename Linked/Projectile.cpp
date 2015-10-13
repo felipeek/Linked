@@ -5,7 +5,7 @@
 Projectile::Projectile(Transform* transform, Mesh* mesh, Texture* texture, float speed, glm::vec3 direction) : Entity(transform, mesh, texture)
 {
 	this->speed = (speed / 1000.0f);
-	this->direction = direction * glm::vec3(speed, speed, speed);
+	this->direction = glm::normalize(direction) * glm::vec3(speed, speed, speed);
 	spawnTime = Time::getTime();
 }
 

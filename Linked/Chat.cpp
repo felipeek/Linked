@@ -56,10 +56,13 @@ void Chat::update(int key, int scancode, int action, int mods)
 			else if (key == BACKSPACE_KEY)
 			{
 				std::string s = ss.str();
-				ss.clear();
-				s.erase(s.end() - 1, s.end());
-				ss.str(s);
-				ss.seekp(0, std::ios_base::end);
+				if (s.size() > 0)
+				{
+					ss.clear();
+					s.erase(s.end() - 1, s.end());
+					ss.str(s);
+					ss.seekp(0, std::ios_base::end);
+				}
 			}
 		}
 	}

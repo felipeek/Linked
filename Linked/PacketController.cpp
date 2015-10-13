@@ -6,6 +6,7 @@
 #include "Primitive.h"
 #include "Game.h"
 #include "Monster.h"
+#include "RangeAttack.h"
 #include <iostream>
 
 Player* PacketController::secondPlayer = NULL;
@@ -192,7 +193,15 @@ void PacketController::dispatchVec3fArray(int id, int xid, glm::vec3* data, int 
 	case 0:
 		if (xid == 0)	// Change Second Player Position
 			if (PacketController::secondPlayer != NULL)
-				secondPlayer->startMovementTo(data[0]);
+				PacketController::secondPlayer->startMovementTo(data[0]);
+		if (xid == 3) // Second Player attack
+			if (PacketController::secondPlayer != NULL)
+				PacketController::secondPlayer->getRangeAttack()->createProjectile(data[0]);
+		break;
+	case 1:
+		if (xid == 3) // Local player attack
+			if (PacketController::localPlayer != NULL)
+				PacketController::localPlayer->getRangeAttack()->createProjectile(data[0]);
 		break;
 	}
 #endif
@@ -232,6 +241,12 @@ void PacketController::dispatchVec3fWithShortArray(int id, int xid, glm::vec3* d
 	}
 #endif
 }
+void PacketController::dispatchMsg(int id, int xid, char* data)
+{
+	// id = senderID	xid = msg size
+	std::string msg(data);
+	std::cout << msg << std::endl;
+}
 void PacketController::update10()
 {
 	// Sends player position to server 10 times per second
@@ -260,9 +275,7 @@ void PacketController::updatePlayerBasicAttributes(Player* player)
 #endif
 }
 
-void PacketController::dispatchMsg(int id, int xid, char* data)
+void PacketController::sendAttackToServer(glm::vec3 attackDirection)
 {
-	// id = senderID	xid = msg size
-	std::string msg(data);
-	std::cout << msg << std::endl;
+	udpClient->sendPackets(Packet(attackDirection, 1, UDPClient::myID));
 }

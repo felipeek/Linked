@@ -14,12 +14,16 @@ class Game;
 class PacketController
 {
 public:
-	static void dispatch(ClientPacket* cp);
-	static void update10();
+	/* REFERENCES */
 	static UDPClient* udpClient;
 	static Player* secondPlayer;
 	static Player* localPlayer;
 	static Game* game;
+
+	/* METHODS */
+	static void dispatch(ClientPacket* cp);
+	static void update10();
+	static void sendAttackToServer(glm::vec3 attackDirection);
 private:
 	static void dispatchByteArray(int id, int xid, char* data, int dataSize);
 	static void dispatchShortArray(int id, int xid, short* data, int dataSize);
