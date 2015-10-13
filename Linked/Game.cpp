@@ -379,10 +379,19 @@ void Game::update()
 	udpClient->receivePackets();
 	if (Chat::msg != "")
 	{
-		gui->setNextMessage(Chat::appendPlayerName(localPlayer->getName()));
-		//gui->setNextMessage(Chat::msg);
-		udpClient->sendPackets(Packet(Chat::msg, -1));
-		Chat::msg = "";
+		if (Chat::msg.compare("/where") == 0)
+		{
+			std::stringstream ss;
+			ss << localPlayer->getTransform()->getPosition().x << ", " << localPlayer->getTransform()->getPosition().y << ", " << localPlayer->getTransform()->getPosition().z;
+			gui->setNextMessage(ss.str());
+			Chat::msg = "";
+		}
+		else{
+			gui->setNextMessage(Chat::appendPlayerName(localPlayer->getName()));
+			//gui->setNextMessage(Chat::msg);
+			udpClient->sendPackets(Packet(Chat::msg, -1));
+			Chat::msg = "";
+		}
 	}
 #endif
 #ifdef SINGLEPLAYER
