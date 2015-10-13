@@ -1,0 +1,31 @@
+TODO List near future: Linked
+
+1.  Limitar distância que os monstros aparecem para o player
+2.  Otimizar pacotes enviados constantemente
+3.  Implementar skills no servidor
+4.  Fazer chat aceitar caracteres especiais
+5.  Bloquear input quando chat estiver ativo
+6.  Arrumar HP bar
+7.  Fazer monstros morrerem direito
+8.  Fazer entidades girarem
+9.  Refactor no codigo de shaders
+10. Implementar forward rendering
+11. Arrumar deletes e includes do codigo
+12. Limitar a quantidade de caracteres do chat
+13. Implementar comandos de client
+14. Implementar comandos de servidor
+15. Fazer menu do jogo
+16. Fazer menu de configuracoes
+17. Suporte para diversos window sizes
+18. Arrumar direcao de projeteis
+19. Implementar AI para colisao
+
+
+TODO List far future:
+
+1. Implementar itens/equipamentos
+2. Implementar skills de monstros
+3. Criar mapas definitivos (fases)
+4. Sons
+5. Criar texturas dos 2 players
+6. Criar texturas de monstros
