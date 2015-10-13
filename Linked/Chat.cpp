@@ -26,6 +26,7 @@ void Chat::nextState(int key)
 
 void Chat::update(int key, int scancode, int action, int mods)
 {
+
 	// Chat system
 	if (key == RETURN_KEY && action == 0 || key == RETURN_KEY && action == 1)
 		Chat::nextState();
@@ -66,7 +67,7 @@ void Chat::update(int key, int scancode, int action, int mods)
 					ss.seekp(0, std::ios_base::end);
 				}
 			}
-			else if (key == '/')
+			else if (key == -1 || key == 331)
 			{
 				std::cout << '/';
 				ss << '/';
