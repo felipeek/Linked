@@ -7,6 +7,7 @@ short Chat::capsLockState = 0;
 short Chat::numLockState = 0;
 std::stringstream Chat::ss;
 std::string Chat::msg = "";
+bool Chat::chatActive = false;
 
 void Chat::nextState()
 {
@@ -33,6 +34,7 @@ void Chat::update(int key, int scancode, int action, int mods)
 
 	if (stateChat[RETURN_KEY] == 2)
 	{
+		chatActive = true;
 		if (action == 1 || action == 2)
 		{
 			// Check keys
@@ -68,10 +70,11 @@ void Chat::update(int key, int scancode, int action, int mods)
 	}
 	if (stateChat[RETURN_KEY] == 0)
 	{
+		chatActive = false;
 		//std::cout << "Chat desativado" << std::endl;
 		if (ss.rdbuf()->in_avail() != 0)
 		{
-			std::cout << std::endl << ss.str() << std::endl;
+			//std::cout << std::endl << ss.str() << std::endl;
 			msg = ss.str();
 			ss.clear();
 			ss.str(std::string());
@@ -135,4 +138,21 @@ char Chat::getNumber(int key)
 		return (char)key;
 	else
 		return (char)(key - 272);
+}
+
+bool Chat::isChatActive()
+{
+	return chatActive;
+}
+
+std::stringstream& Chat::getStream()
+{
+	return ss;
+}
+
+std::string Chat::appendPlayerName(std::string& name)
+{
+	std::stringstream stream;
+	stream << name << ": "<< msg;
+	return stream.str();
 }

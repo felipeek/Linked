@@ -5,6 +5,7 @@
 #include "TextShader.h"
 #include "Primitive.h"
 #include "GUIShader.h"
+#include "Chat.h"
 
 #include <sstream>
 #include <iostream>
@@ -24,6 +25,7 @@ GUI::GUI(Player* player, std::string textShaderFileName, std::string guiShaderFi
 	this->guiShader = new GUIShader(guiShaderFileName);
 
 	this->color = glm::vec3(LGUI_R, LGUI_G, LGUI_B);
+	this->activeText = glm::vec3(0.8f, 0.8f, 0.95f);
 
 	this->skillIconSlot1 = NULL;
 	this->skillIconSlot2 = NULL;
@@ -37,14 +39,22 @@ GUI::GUI(Player* player, std::string textShaderFileName, std::string guiShaderFi
 
 GUI::~GUI()
 {
-
+	delete textRenderer;
+	delete guiShader;
+	delete textShader;
+	delete leftGUIMesh;
+	delete leftGUIChatActiveTexture;
+	delete leftGUIChatInactiveTexture;
+	delete leftGUIEntity;
 }
 
 void GUI::initLeftGUI()
 {
 	leftGUIMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f));
-	leftGUITexture = new Texture(LEFTGUI_PATH);
-	leftGUIEntity = new Entity(new Transform(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)), leftGUIMesh, leftGUITexture);
+	leftGUIChatInactiveTexture = new Texture(LEFTGUI_PATH_CHATINACTIVE);
+	leftGUIChatActiveTexture = new Texture(LEFTGUI_PATH_CHATACTIVE);
+	leftGUIEntity = new Entity(new Transform(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)), leftGUIMesh, leftGUIChatInactiveTexture);
+
 	initLeftGUIText(1);
 	initLeftGUISkills();
 }
@@ -93,6 +103,15 @@ void GUI::render()
 	textRenderer->renderText(pMagicalPower, 105.0f, 50.0f, 0.18f, color);
 	textRenderer->renderText(pAttackSpeed, 105.0f, 35.0f, 0.18f, color);
 	textRenderer->renderText(pSpeed, 105.0f, 20.0f, 0.18f, color);
+
+	std::string msg = "Superwaffles eh um cara bem legal, pena que naum pode ver o zeh";
+	for (int i = 0; i < messages.size(); i++)
+	{
+		textRenderer->renderText(messages[i], 1075.0f, 46.0f + (i*CHAT_SPACING), CHAT_LETTER_SIZE, color);
+	}
+
+	textRenderer->renderText(Chat::getStream().str(), 1075.0f, 130.0f - ((CHAT_MAX_MSGS +0.5f) * CHAT_SPACING), CHAT_LETTER_SIZE, activeText);
+
 }
 
 void GUI::setPlayerHealth(unsigned int health, unsigned int maxHealth)
@@ -136,6 +155,11 @@ void GUI::setPlayerSpeed(unsigned int speed)
 
 void GUI::update()
 {
+	if (Chat::isChatActive())
+		leftGUIEntity->setTexture(leftGUIChatActiveTexture);
+	else
+		leftGUIEntity->setTexture(leftGUIChatInactiveTexture);
+
 	if (player->getHp() != playerHealth)
 		setPlayerHealth(player->getHp(), player->getTotalMaximumHp());
 	
@@ -194,4 +218,15 @@ Shader* GUI::getGUIShader()
 TextRenderer* GUI::getTextRenderer()
 {
 	return this->textRenderer;
+}
+
+void GUI::setNextMessage(std::string& msg)
+{
+	if (messages.size() < CHAT_MAX_MSGS)
+		messages.insert(messages.begin(), msg);
+	else
+	{
+		messages.erase(messages.begin()+messages.size()-1);
+		messages.insert(messages.begin(), msg);
+	}
 }

@@ -7,6 +7,7 @@ class Player;
 class UDPClient;
 class Map;
 class Game;
+class GUI;
 
 // Entity's IDs
 // Second Player 0
@@ -19,6 +20,7 @@ public:
 	static Player* secondPlayer;
 	static Player* localPlayer;
 	static Game* game;
+	static GUI* gui;
 
 	/* METHODS */
 	static void dispatch(ClientPacket* cp);

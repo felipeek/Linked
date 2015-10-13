@@ -14,9 +14,13 @@ class Chat
 public:
 	Chat();
 	~Chat();
+	static bool isChatActive();
+	static std::stringstream& getStream();
+	static std::string appendPlayerName(std::string& name);
 	static std::string msg;
 	static void update(int key, int scancode, int action, int mods);
 private:
+	static bool chatActive;
 	static int stateChat[NUM_KEYS];	// 0 to 3
 	// Normal 0, Normal 1, Chat 0, Chat 1
 	static void nextState(int key);

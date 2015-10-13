@@ -210,6 +210,7 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 void Game::createGUI()
 {
 	this->gui = new GUI(localPlayer, "./shaders/textshader", "./shaders/fontshader", "./fonts/bluehigh.ttf");
+	PacketController::gui = this->gui;
 }
 
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
@@ -345,13 +346,7 @@ void Game::render()
 				std::cerr << "Error rendering entity" << std::endl;
 			}
 		}
-
-		// Second Player
-#ifdef MULTIPLAYER
-		if (secondPlayer != NULL)
-			secondPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
-#endif MULTIPLAYER
-
+		
 		// Common static entities
 		for (Entity* e : gameEntities)
 		{
@@ -362,6 +357,16 @@ void Game::render()
 				std::cerr << "Error rendering entity" << std::endl;
 			}
 		}
+
+		// Player
+		localPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
+
+		// Second Player
+#ifdef MULTIPLAYER
+		if (secondPlayer != NULL)
+			secondPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
+#endif MULTIPLAYER
+
 //	}
 	// Render GUI (Order is important)
 	gui->render();
@@ -374,11 +379,19 @@ void Game::update()
 	udpClient->receivePackets();
 	if (Chat::msg != "")
 	{
+		gui->setNextMessage(Chat::appendPlayerName(localPlayer->getName()));
+		//gui->setNextMessage(Chat::msg);
 		udpClient->sendPackets(Packet(Chat::msg, -1));
 		Chat::msg = "";
 	}
 #endif
-
+#ifdef SINGLEPLAYER
+	if (Chat::msg != "")
+	{
+		gui->setNextMessage(Chat::msg);
+		Chat::msg = "";
+	}
+#endif
 	// Game input
 	input();
 	Input::mouseAttack.update();
