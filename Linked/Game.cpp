@@ -138,9 +138,7 @@ void Game::createOfflinePlayer()
 {
 #ifdef SINGLEPLAYER
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 12, 0));
-	this->localPlayer = new Player(new Transform(glm::vec3(440, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
-	this->localPlayerRangeAttack = new RangeAttack(localPlayer, &localPlayerAttacks, &monsters, map);
-	this->localPlayer->setRangeAttack(this->localPlayerRangeAttack);
+	this->localPlayer = new Player(new Transform(glm::vec3(440, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"), &monsters, map);
 	this->localPlayer->setHp(100);
 	this->localPlayer->setName("JaOwnes");
 	PacketController::localPlayer = localPlayer;
@@ -188,12 +186,12 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 
 	if (data[0] == 0)
 	{
-		designedPlayer = new Player(new Transform(localPlayerPosition, 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
+		designedPlayer = new Player(new Transform(localPlayerPosition, 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"), &monsters, map);
 		designedPlayer->setName("JaOwnes");
 	}
 	else if (data[0] == 1)
 	{
-		designedPlayer = new Player(new Transform(localPlayerPosition, 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
+		designedPlayer = new Player(new Transform(localPlayerPosition, 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"), &monsters, map);
 		designedPlayer->setName("HoEnchant");
 	}
 
@@ -208,15 +206,11 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 	if (isLocalPlayer)
 	{
 		this->localPlayer = designedPlayer;
-		this->localPlayerRangeAttack = new RangeAttack(localPlayer, &localPlayerAttacks, &monsters, map);
-		this->localPlayer->setRangeAttack(this->localPlayerRangeAttack);
 		PacketController::localPlayer = this->localPlayer;
 	}
 	else
 	{
 		this->secondPlayer = designedPlayer;
-		this->secondPlayerRangeAttack = new RangeAttack(secondPlayer, &secondPlayerAttacks, &monsters, map);
-		this->secondPlayer->setRangeAttack(this->secondPlayerRangeAttack);
 		PacketController::secondPlayer = this->secondPlayer;
 	}
 #endif
@@ -365,7 +359,7 @@ void Game::render()
 		water->render(commonShader);
 
 		// Player
-		localPlayer->render(primitiveShader, gui->getTextRenderer());
+		localPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
 
 		// Generic entities (Player only at the moment)
 		for (Entity* e : entities)
@@ -387,33 +381,11 @@ void Game::render()
 				std::cerr << "Error rendering entity" << std::endl;
 			}
 		}
-		// Projectile attacks
-		for (Entity* e : localPlayerAttacks)
-		{
-			try{
-				projectileShader->activateAlphaBlend();
-				e->render(projectileShader);
-				projectileShader->deactivateAlphaBlend();
-			}
-			catch (...){
-				std::cerr << "Error rendering entity" << std::endl;
-			}
-		}
 
 		// Second Player
 #ifdef MULTIPLAYER
 		if (secondPlayer != NULL)
-			secondPlayer->render(primitiveShader, gui->getTextRenderer());
-
-		for (Entity* e : secondPlayerAttacks)
-		{
-			try{
-				e->render(commonShader);
-			}
-			catch (...){
-				std::cerr << "Error rendering entity" << std::endl;
-		}
-	}
+			secondPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
 #endif MULTIPLAYER
 
 		// Common static entities

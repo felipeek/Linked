@@ -8,16 +8,18 @@
 #include "Map.h"
 #include "Text.h"
 #include "PacketController.h"
+#include "Projectile.h"
 
 #include <iostream>
 
-Player::Player(Transform* transform, Mesh* mesh, Texture* texture) : Entity(transform, mesh, texture)
+Player::Player(Transform* transform, Mesh* mesh, Texture* texture, std::vector<Monster*>* monsters, Map* map) : Entity(transform, mesh, texture)
 {
 	setName(PLAYER_DEFAULT_NAME);
 	setHp(PLAYER_DEFAULT_HP);
 	skills = std::vector<Skill*>();
 	equipments = std::vector<Equipment*>();
 	this->hpBar = new HPBar(this);
+	this->rangeAttack = new RangeAttack(this, &attacks, monsters, map);
 
 #ifdef SINGLEPLAYER
 	setMaximumHpBasis(PLAYER_DEFAULT_MAX_HP_BASIS);
@@ -42,14 +44,10 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture) : Entity(tran
 #endif
 }
 
-Player::Player(Transform* transform, Mesh* mesh, Texture* texture, RangeAttack* rangeAttack) : Player(transform, mesh, texture)
-{
-	this->rangeAttack = rangeAttack;
-}
-
 Player::~Player()
 {
 	delete hpBar;
+	delete rangeAttack;
 #ifdef MULTIPLAYER
 	delete ai;
 #endif
@@ -224,11 +222,6 @@ HPBar* Player::getHPBar()
 RangeAttack* Player::getRangeAttack()
 {
 	return this->rangeAttack;
-}
-
-void Player::setRangeAttack(RangeAttack* rangeAttack)
-{
-	this->rangeAttack = rangeAttack;
 }
 
 #ifdef SINGLEPLAYER
@@ -493,10 +486,23 @@ void Player::changeTextureBasedOnDirection(MovementDirection direction, unsigned
 
 /* METHODS RELATED TO INPUT, UPDATE AND RENDERING */
 
-void Player::render(Shader* primitiveShader, TextRenderer* textRenderer)
+void Player::render(Shader* primitiveShader, TextRenderer* textRenderer, Shader* projectileShader)
 {
 	Entity::render(primitiveShader);
 	this->getHPBar()->quad->render(primitiveShader);
+
+	// Projectile attacks
+	for (Entity* e : this->attacks)
+	{
+		try{
+			projectileShader->activateAlphaBlend();
+			e->render(projectileShader);
+			projectileShader->deactivateAlphaBlend();
+		}
+		catch (...){
+			std::cerr << "Error rendering entity" << std::endl;
+		}
+	}
 
 	for (Skill* skill : this->getSkills())
 	{
@@ -516,8 +522,8 @@ void Player::update(Map* map)
 	this->updateMovement(map);
 #endif
 	this->hpBar->update();
+	this->rangeAttack->update();
 	this->refreshTexture();
-	if (this->rangeAttack != NULL) this->rangeAttack->update();
 
 	for (Skill* skill : this->skills)
 		skill->update();

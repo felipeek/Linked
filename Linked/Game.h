@@ -89,12 +89,8 @@ private:
 
 	/* GAME ENTITIES VECTORS */
 	std::vector<Entity*> entities;
-	std::vector<Projectile*> localPlayerAttacks;
 	std::vector<GameEntity*> gameEntities;
 	std::vector<Monster*> monsters;
-#ifdef MULTIPLAYER
-	std::vector<Projectile*> secondPlayerAttacks;
-#endif
 
 	/* GAME NETWORK */
 	UDPClient* udpClient;

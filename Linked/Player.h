@@ -30,6 +30,7 @@
 class HPBar;
 class RangeAttack;
 class Map;
+class Projectile;
 
 enum PlayerType
 {
@@ -40,8 +41,7 @@ enum PlayerType
 class Player : public Entity, public Creature
 {
 public:
-	Player(Transform* transform, Mesh* mesh, Texture* texture, RangeAttack* rangeAttack);
-	Player(Transform* transform, Mesh* mesh, Texture* texture);
+	Player(Transform* transform, Mesh* mesh, Texture* texture, std::vector<Monster*>* monsters, Map* map);
 	~Player();
 
 	/* METHODS RELATED TO PLAYER ATTRIBUTES */
@@ -67,7 +67,6 @@ public:
 	Equipment* addNewEquipment(Equipment* equipment);
 	HPBar* getHPBar();
 	RangeAttack* getRangeAttack();
-	void setRangeAttack(RangeAttack* rangeAttack);
 
 #ifdef SINGLEPLAYER
 	void healHp(unsigned int healingAmount);
@@ -108,7 +107,7 @@ public:
 	/* METHODS RELATED TO INPUT, UPDATE AND RENDERING */
 	void update(Map* map);
 	void input(Map* map);
-	void render(Shader* primitiveShader, TextRenderer* textRenderer);
+	void render(Shader* primitiveShader, TextRenderer* textRenderer, Shader* projectileShader);
 
 	/* METHODS RELATED TO NETWORK */
 #ifdef MULTIPLAYER
@@ -120,6 +119,7 @@ private:
 	unsigned int hp;
 	std::vector<Skill*> skills;
 	std::vector<Equipment*> equipments;
+	std::vector<Projectile*> attacks;
 	HPBar* hpBar;
 	RangeAttack* rangeAttack;
 
