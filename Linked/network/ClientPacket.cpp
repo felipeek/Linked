@@ -53,6 +53,11 @@ void ClientPacket::decodePacket(char* rawPacket)
 	case P_SINGLE_VECTOR2F:
 		sizeData = sizeof(float) * 2;
 		data = new glm::vec2[sizeData]; break;
+	case P_MSG:
+		sizeData = xID;
+		data = new char[xID + 1];
+		((char*)data)[xID] = 0;
+		break;
 	default:
 		if (type < P_SINGLE_SHORT && type > P_SINGLE_BYTE)
 		{
@@ -106,7 +111,7 @@ void ClientPacket::decodePacket(char* rawPacket)
 			extraData = new short[(type - P_MONSTERS + 1) * sizeof(short)];
 		}
 	}
-	if (type >= P_SINGLE_BYTE && type < P_PING)
+	if (type >= P_SINGLE_BYTE && type < P_PING || type == P_MSG)
 		std::memcpy(data, &rawPacket[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE], sizeData);
 	if (type >= P_MONSTERS && type < END)
 	{
@@ -115,17 +120,6 @@ void ClientPacket::decodePacket(char* rawPacket)
 			std::memcpy(((char*)data) + j, &rawPacket[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i], sizeof(float) * 3);
 			std::memcpy(((char*)extraData) + k, &rawPacket[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i + 12], sizeof(short));
 		}
-
-		/*for (int i = 0; i < (type - P_MONSTERS + 1); i++)
-		{
-			std::cout << ((glm::vec3*)data)[i].x << " " << ((glm::vec3*)data)[i].y << " " << ((glm::vec3*)data)[i].z << std::endl;
-		}
-
-		for (int j = 0; j < (type - P_MONSTERS + 1); j++)
-		{
-			std::cout << ((short*)extraData)[j] << std::endl;
-		}*/
-
 	}
 }
 

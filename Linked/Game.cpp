@@ -43,14 +43,13 @@
 #include <cstdlib>
 #include "network\Packet.h"
 
+#include "Chat.h"
+
 //#include <glm\gtc\matrix_transform.hpp>
 
 
 Game::Game(int windowWidth, int windowHeight)
-{
-	std::string str = "hello world";
-	//Packet* p = new Packet(str, 0, str.length());
-	
+{	
 	this->frameBuffer = new FrameBuffer(windowWidth, windowHeight);
 	this->windowWidth = windowWidth;
 	this->windowHeight = windowHeight;
@@ -64,7 +63,6 @@ Game::Game(int windowWidth, int windowHeight)
 #endif
 #ifdef MULTIPLAYER
 	this->createUDPConnection();
-	udpClient->sendPackets(Packet(str, 0));
 	this->waitForCreationOfOnlinePlayer();
 	
 #endif
@@ -402,6 +400,11 @@ void Game::update()
 {
 #ifdef MULTIPLAYER
 	udpClient->receivePackets();
+	if (Chat::msg != "")
+	{
+		udpClient->sendPackets(Packet(Chat::msg, -1));
+		Chat::msg = "";
+	}
 #endif
 
 	// Game input

@@ -338,7 +338,6 @@ Packet::Packet(std::string message, int ID) : Packet(ID, message.length())
 	for (int i = 0; i < message.length(); i++)
 		buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i] = (char)message[i];
 
-	//printPacket();
 }
 
 void Packet::uniquePacketSetup(int type, int sizeOfType)
