@@ -6,12 +6,14 @@
 #include "Primitive.h"
 #include "Game.h"
 #include "Monster.h"
+#include "GUI.h"
 #include <iostream>
 
 Player* PacketController::secondPlayer = NULL;
 Player* PacketController::localPlayer = NULL;
 Game* PacketController::game = NULL;
 UDPClient* PacketController::udpClient = NULL;
+GUI* PacketController::gui = NULL;
 
 void PacketController::dispatch(ClientPacket* cp)
 {
@@ -264,5 +266,8 @@ void PacketController::dispatchMsg(int id, int xid, char* data)
 {
 	// id = senderID	xid = msg size
 	std::string msg(data);
-	std::cout << msg << std::endl;
+	std::stringstream ss;
+
+	ss << PacketController::secondPlayer->getName() << ": " << msg;
+	gui->setNextMessage(ss.str());
 }

@@ -11,12 +11,17 @@ class Texture;
 class Shader;
 enum leftGUIAttribs;
 
-#define LEFTGUI_PATH "./res/GUI/Linked_GUI3.png"
+#define LEFTGUI_PATH_CHATINACTIVE "./res/GUI/Linked_GUI5.png"
+#define LEFTGUI_PATH_CHATACTIVE "./res/GUI/Linked_GUI5_active.png"
 #define NOSKILLICON_PATH "./res/GUI/no_skillicon.png"
 
 #define LGUI_R 0.8f
 #define LGUI_G 0.8f
 #define LGUI_B 0.8f
+
+#define CHAT_SPACING 14
+#define CHAT_LETTER_SIZE 0.16f
+#define CHAT_MAX_MSGS 7
 
 class GUI
 {
@@ -32,6 +37,8 @@ public:
 	void setLeftGUITextColor(glm::vec3& color);
 	void setFontSize(int size);
 
+	void setNextMessage(std::string& msg);
+
 	Shader* getGUIShader();
 	TextRenderer* getTextRenderer();
 private:
@@ -39,13 +46,16 @@ private:
 	Player* player;
 	Mesh* leftGUIMesh;
 	Entity* leftGUIEntity;
-	Texture* leftGUITexture;
+	Texture* leftGUIChatInactiveTexture;
+	Texture* leftGUIChatActiveTexture;
 	Shader* textShader;
 	Shader* guiShader;
 
 	// Left GUI
 	std::vector<Text*> leftGUIText;
+	std::vector<std::string> messages;
 	glm::vec3 color;
+	glm::vec3 activeText;
 	int fontSize;
 
 	void initLeftGUI();
