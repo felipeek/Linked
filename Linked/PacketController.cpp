@@ -66,6 +66,10 @@ void PacketController::dispatch(ClientPacket* cp)
 	{
 		dispatchVec3fWithShortArray(cp->getID(), cp->getXID(), (glm::vec3*)cp->getData(), (short*)cp->getExtraData(), cp->getDataSize());
 	}
+	else if (type == P_MSG)
+	{
+		dispatchMsg(cp->getID(), cp->getXID(), (char*)cp->getData());
+	}
 }
 
 void PacketController::dispatchByteArray(int id, int xid, char* data, int dataSize)
@@ -254,4 +258,11 @@ void PacketController::updatePlayerBasicAttributes(Player* player)
 	data[6] = PacketController::localPlayer->getTotalAttackSpeed();
 	udpClient->sendPackets(Packet((short*)data, 7, 0, UDPClient::myID));
 #endif
+}
+
+void PacketController::dispatchMsg(int id, int xid, char* data)
+{
+	// id = senderID	xid = msg size
+	std::string msg(data);
+	std::cout << msg << std::endl;
 }

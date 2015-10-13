@@ -75,6 +75,7 @@
   <ItemGroup>
     <ClInclude Include="AI.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Chat.h" />
     <ClInclude Include="CommonShader.h" />
     <ClInclude Include="Configuration.h" />
     <ClInclude Include="Creature.h" />
@@ -137,6 +138,7 @@
   <ItemGroup>
     <ClCompile Include="AI.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Chat.cpp" />
     <ClCompile Include="CommonShader.cpp" />
     <ClCompile Include="Creature.cpp" />
     <ClCompile Include="Display.cpp" />

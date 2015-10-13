@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "PacketController.h"
 #include "Configuration.h"
+#include "Chat.h"
 
 // Window and Monitor
 GLFWwindow* Display::window = NULL;
@@ -84,17 +85,19 @@ void Display::startGlfw(int* argc, char** argv, std::string titulo)
 	// TODO : check if needed
 	glewExperimental = true;
 	
+#ifdef DEBUG
 	if (glewExperimental)
 		std::cout << "Using glew experimental." << std::endl;
+#endif
 
 	// Start glew
 	GLenum result = glewInit();
 	if (result != GLEW_OK) {
 		std::cerr << "Erro na chamada de glewInit()" << std::endl;
 	}
-
+#ifdef DEBUG
 	printOpenGLandGLSLversions();
-
+#endif
 	initOpenGL();
 
 	MainLoop(window);
@@ -138,7 +141,9 @@ void Display::MainLoop(GLFWwindow* window)
 #endif
 		if (frameCount >= 1.0)
 		{
+#ifdef DEBUG
 			std::cout << frames << std::endl;
+#endif
 			frameCount = 0;
 			frames = 0;
 		}
@@ -185,10 +190,9 @@ void Display::keyCallBack(GLFWwindow* window, int key, int scancode, int action,
 
 	Input::keyStates[key] = value;
 	if (key >= 'A' && key <= 'Z')
-	{
 		Input::keyStates[key + 32] = value;
-	}
-	//std::cout << "Key: " << key << std::endl;
+
+	Chat::update(key, scancode, action, mods);
 }
 
 void Display::mouseCallBack(GLFWwindow* window, int button, int action, int mods)
