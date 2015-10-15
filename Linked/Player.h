@@ -110,11 +110,11 @@ public:
 	void render(Shader* primitiveShader, TextRenderer* textRenderer, Shader* projectileShader);
 
 	/* METHODS RELATED TO NETWORK */
-#ifdef MULTIPLAYER
-	bool needToSendAttributesToServer();
-#endif
+	short getClientId();
+	void setClientId(short clientId);
 private:
 	/* FUNDAMENTAL ATTRIBUTES */
+	short clientId;
 	std::string name;
 	unsigned int hp;
 	std::vector<Skill*> skills;
@@ -174,9 +174,4 @@ private:
 #endif
 	bool checkIfPlayerIsStillOnTheSameMapPosition(glm::vec3 currentPosition, glm::vec3 nextPosition);
 	glm::vec3 getDeltaVectorToDirection(MovementDirection direction);
-
-	/* NETWORK ATTRIBUTES */
-#ifdef MULTIPLAYER
-	bool attributesChanged;
-#endif
 };

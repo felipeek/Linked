@@ -34,7 +34,6 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture, std::vector<M
 	this->ai = new PlayerAI();
 	this->isMovingTo = false;
 	this->type = LOCAL;
-	this->attributesChanged = false;
 	setTotalMaximumHp(PLAYER_DEFAULT_MAX_HP_BASIS);
 	setTotalAttack(PLAYER_DEFAULT_ATTACK_BASIS);
 	setTotalDefense(PLAYER_DEFAULT_DEFENSE_BASIS);
@@ -71,9 +70,6 @@ unsigned int Player::getHp()
 void Player::setHp(unsigned int hp)
 {
 	this->hp = hp;
-#ifdef MULTIPLAYER
-	this->attributesChanged = true;
-#endif
 }
 
 void Player::doDamage(unsigned int damage)
@@ -84,9 +80,6 @@ void Player::doDamage(unsigned int damage)
 		hp = hp - damage;
 
 	this->receiveDamage();
-#ifdef MULTIPLAYER
-	this->attributesChanged = true;
-#endif
 }
 
 bool Player::isAlive(){
@@ -300,37 +293,31 @@ void Player::setType(PlayerType type)
 void Player::setTotalMaximumHp(unsigned int maxHp)
 {
 	this->maximumHp = maxHp;
-	this->attributesChanged = true;
 }
 
 void Player::setTotalAttack(unsigned int attack)
 {
 	this->attack = attack;
-	this->attributesChanged = true;
 }
 
 void Player::setTotalDefense(unsigned int defense)
 {
 	this->defense = defense;
-	this->attributesChanged = true;
 }
 
 void Player::setTotalMagicalPower(unsigned int magicalPower)
 {
 	this->magicalPower = magicalPower;
-	this->attributesChanged = true;
 }
 
 void Player::setTotalSpeed(unsigned int speed)
 {
 	this->speed = speed;
-	this->attributesChanged = true;
 }
 
 void Player::setTotalAttackSpeed(unsigned int attackSpeed)
 {
 	this->attackSpeed = attackSpeed;
-	this->attributesChanged = true;
 }
 #endif
 
@@ -710,9 +697,12 @@ void Player::updateMovement(Map* map)
 
 /* NETWORK */
 
-#ifdef MULTIPLAYER
-bool Player::needToSendAttributesToServer()
+short Player::getClientId()
 {
-	return this->attributesChanged;
+	return this->clientId;
 }
-#endif
+
+void Player::setClientId(short clientId)
+{
+	this->clientId = clientId;
+}

@@ -10,8 +10,8 @@
 #include "GUI.h"
 #include <iostream>
 
-Player* PacketController::secondPlayer = NULL;
 Player* PacketController::localPlayer = NULL;
+std::vector<Player*>* PacketController::onlinePlayers = NULL;
 Game* PacketController::game = NULL;
 UDPClient* PacketController::udpClient = NULL;
 GUI* PacketController::gui = NULL;
@@ -83,83 +83,49 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 {
 	switch (id)
 	{
-		// Second Player control
+		// CREATION/INITIALIZATION
 		case 0:
-			if (xid == 1)	// Refresh Second Player Attributes
+			if (xid == 0)	// Creation of player
 			{
-				if (PacketController::secondPlayer != NULL && dataSize == 7 * sizeof(short))
-				{
-					short maxHp = data[0];
-					short hp = data[1];
-					short attack = data[2];
-					short defense = data[3];
-					short magPower = data[4];
-					short speed = data[5];
-					short aspd = data[6];
-#ifdef MULTIPLAYER
-					if (hp < PacketController::secondPlayer->getHp())
-						PacketController::secondPlayer->receiveDamage();
-					PacketController::secondPlayer->setTotalMaximumHp(maxHp);
-					PacketController::secondPlayer->setHp(hp);
-					PacketController::secondPlayer->setTotalAttack(attack);
-					PacketController::secondPlayer->setTotalDefense(defense);
-					PacketController::secondPlayer->setTotalMagicalPower(magPower);
-					PacketController::secondPlayer->setTotalSpeed(speed);
-					PacketController::secondPlayer->setTotalAttackSpeed(aspd);
-#endif
-				}
-			}
-			else if (xid == 2)
-			{
-				if (dataSize == 11 * sizeof(short))
-				{
-					PacketController::game->createOnlinePlayer(data, false);
-				}
-			}
-			break;
-		// Local Player Control
-		case 1:
-			if (xid == 0) // Creation of Local Player
-			{
-				if (dataSize == 11 * sizeof(short))
-				{
+				short playerClientId = data[0];
+
+				if (playerClientId == UDPClient::myID)
 					PacketController::game->createOnlinePlayer(data, true);
-				}
+				else
+					PacketController::game->createOnlinePlayer(data, false);
 			}
-			else if (xid == 1)	// Refresh Local Player Attributes
+			else if (xid == 1)
 			{
-				if (PacketController::localPlayer != NULL && dataSize == 7 * sizeof(short))
+				int numberOfShort = dataSize / sizeof(short);
+
+				for (int i = 0; i < dataSize; i+=8)
+					PacketController::game->createMonster(data+i);
+			}
+			break;
+
+		// UPDATE PLAYERS ATTRIBUTES/POSITION
+		case 1:
+			if (xid == 0) // Refresh player attributes
+			{
+				int numberOfShort = dataSize / sizeof(short);
+
+				for (int i = 0; i < dataSize; i += 8)
 				{
-					short maxHp = data[0];
-					short hp = data[1];
-					short attack = data[2];
-					short defense = data[3];
-					short magPower = data[4];
-					short speed = data[5];
-					short aspd = data[6];
-#ifdef MULTIPLAYER
-					if (hp < PacketController::localPlayer->getHp())
-						PacketController::localPlayer->receiveDamage();
-					PacketController::localPlayer->setTotalMaximumHp(maxHp);
-					PacketController::localPlayer->setHp(hp);
-					PacketController::localPlayer->setTotalAttack(attack);
-					PacketController::localPlayer->setTotalDefense(defense);
-					PacketController::localPlayer->setTotalMagicalPower(magPower);
-					PacketController::localPlayer->setTotalSpeed(speed);
-					PacketController::localPlayer->setTotalAttackSpeed(aspd);
-#endif
+					short playerClientId = (data + i)[0];
+					Player* player = PacketController::getPlayerOfClient(playerClientId);
+					if (player != NULL)
+					{
+						player->setTotalMaximumHp((data + i)[1]);
+						player->setHp((data + i)[2]);
+						player->setTotalAttack((data + i)[3]);
+						player->setTotalDefense((data + i)[4]);
+						player->setTotalMagicalPower((data + i)[5]);
+						player->setTotalSpeed((data + i)[6]);
+						player->setTotalAttackSpeed((data + i)[7]);
+					}
 				}
 			}
 			break;
-		// Monster Control
-		default:
-			if (xid == 0)	// Creation of Monster
-			{
-				if (dataSize == 7 * sizeof(short))
-				{
-					PacketController::game->createMonster(id, data);
-				}
-			}
 	}
 }
 void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize)
@@ -188,25 +154,6 @@ void PacketController::dispatchVec4fArray(int id, int xid, glm::vec4* data, int 
 }
 void PacketController::dispatchVec3fArray(int id, int xid, glm::vec3* data, int dataSize)
 {
-#ifdef MULTIPLAYER
-	switch (id)
-	{
-	// Second Player control
-	case 0:
-		if (xid == 0)	// Change Second Player Position
-			if (PacketController::secondPlayer != NULL)
-				PacketController::secondPlayer->startMovementTo(data[0]);
-		if (xid == 3) // Second Player attack
-			if (PacketController::secondPlayer != NULL)
-				PacketController::secondPlayer->getRangeAttack()->createProjectile(data[0]);
-		break;
-	case 1:
-		if (xid == 3) // Local player attack
-			if (PacketController::localPlayer != NULL)
-				PacketController::localPlayer->getRangeAttack()->createProjectile(data[0]);
-		break;
-	}
-#endif
 }
 void PacketController::dispatchVec2fArray(int id, int xid, glm::vec2* data, int dataSize)
 {
@@ -225,9 +172,25 @@ void PacketController::dispatchVec3fWithShortArray(int id, int xid, glm::vec3* d
 #ifdef MULTIPLAYER
 	switch (id)
 	{
-		// Monster Control
-	default:
-		if (xid == 1)	// Change Monster Position
+	// UPDATE PLAYERS ATTRIBUTES/POSITION
+	case 1:
+		if (xid == 1)	// Refresh Player Position
+		{
+			int numberOfPositions = dataSize / (sizeof(glm::vec3) + sizeof(short));
+
+			for (int i = 0; i < numberOfPositions; i++)
+			{
+				if (extraData[i] != UDPClient::myID) // we don't want to refresh local Player position
+				{
+					Player* player = PacketController::getPlayerOfClient(extraData[i]);
+					if (player != NULL)	player->startMovementTo(glm::vec3(data[i].x, data[i].y, data[i].z));
+				}
+			}
+		}
+		break;
+		// UPDATE MONSTERS ATTRIBUTES/POSITION
+	case 2:
+		if (xid == 0)	// Refresh Monster Position
 		{
 			int numberOfPositions = dataSize / (sizeof(glm::vec3) + sizeof(short));
 
@@ -236,7 +199,7 @@ void PacketController::dispatchVec3fWithShortArray(int id, int xid, glm::vec3* d
 				Monster* targetMonster = PacketController::game->getMonsterOfId(extraData[i]);
 				if (targetMonster != NULL)
 					targetMonster->startMovementTo(glm::vec3(data[i].x, data[i].y, data[i].z));
-				//targetMonster->getTransform()->translate(data[i].y, data[i].z, data[i].w);
+					//targetMonster->getTransform()->translate(data[i].x, data[i].y, data[i].z);
 			}
 		}
 		break;
@@ -249,38 +212,30 @@ void PacketController::dispatchMsg(int id, int xid, char* data)
 	std::string msg(data);
 	std::stringstream ss;
 
-	ss << PacketController::secondPlayer->getName() << ": " << msg;
+	//ss << PacketController::secondPlayer->getName() << ": " << msg;
 	gui->setNextMessage(ss.str());
 }
+
 void PacketController::update10()
 {
 	// Sends player position to server 10 times per second
 	glm::vec3 playerPosition = PacketController::localPlayer->getTransform()->getPosition();
 	udpClient->sendPackets(Packet(playerPosition, 0, UDPClient::myID));
-
-#ifdef MULTIPLAYER
-	// Send player attributes, if necessary
-	if (PacketController::localPlayer->needToSendAttributesToServer())
-		PacketController::updatePlayerBasicAttributes(PacketController::localPlayer);
-#endif
-}
-
-void PacketController::updatePlayerBasicAttributes(Player* player)
-{
-#ifdef MULTIPLAYER
-	short data[7];
-	data[0] = PacketController::localPlayer->getTotalMaximumHp();
-	data[1] = PacketController::localPlayer->getHp();
-	data[2] = PacketController::localPlayer->getTotalAttack();
-	data[3] = PacketController::localPlayer->getTotalDefense();
-	data[4] = PacketController::localPlayer->getTotalMagicalPower();
-	data[5] = PacketController::localPlayer->getTotalSpeed();
-	data[6] = PacketController::localPlayer->getTotalAttackSpeed();
-	udpClient->sendPackets(Packet((short*)data, 7, 0, UDPClient::myID));
-#endif
 }
 
 void PacketController::sendAttackToServer(glm::vec3 attackDirection)
 {
 	udpClient->sendPackets(Packet(attackDirection, 1, UDPClient::myID));
+}
+
+Player* PacketController::getPlayerOfClient(int clientId)
+{
+	if (PacketController::localPlayer->getClientId() == clientId)
+		return PacketController::localPlayer;
+
+	for (Player* player : *PacketController::onlinePlayers)
+		if (player->getClientId() == clientId)
+			return player;
+
+	return NULL;
 }

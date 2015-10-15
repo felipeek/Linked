@@ -63,8 +63,8 @@ Game::Game(int windowWidth, int windowHeight)
 #endif
 #ifdef MULTIPLAYER
 	this->createUDPConnection();
+	PacketController::onlinePlayers = &this->onlinePlayers;
 	this->waitForCreationOfOnlinePlayer();
-	
 #endif
 	this->createGUI();
 
@@ -173,19 +173,10 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 #ifdef MULTIPLAYER
 	glm::vec3 localPlayerPosition = glm::vec3(data[8], data[9], data[10]);
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 12, 0));
-	Player* designedPlayer;
-
-	if (data[0] == 0)
-	{
-		designedPlayer = new Player(new Transform(localPlayerPosition, 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"), &monsters, map);
-		designedPlayer->setName("JaOwnes");
-	}
-	else if (data[0] == 1)
-	{
-		designedPlayer = new Player(new Transform(localPlayerPosition, 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"), &monsters, map);
-		designedPlayer->setName("HoEnchant");
-	}
-
+	Player* designedPlayer = new Player(new Transform(localPlayerPosition, 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"), &monsters, map);
+	
+	designedPlayer->setName("new player");
+	designedPlayer->setClientId(data[0]);
 	designedPlayer->setTotalMaximumHp(data[1]);
 	designedPlayer->setHp(data[2]);
 	designedPlayer->setTotalAttack(data[3]);
@@ -201,8 +192,7 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 	}
 	else
 	{
-		this->secondPlayer = designedPlayer;
-		PacketController::secondPlayer = this->secondPlayer;
+		this->onlinePlayers.push_back(designedPlayer);
 	}
 #endif
 }
@@ -271,19 +261,22 @@ void Game::createUDPConnection()
 	udpClient->virtualConnection();
 }
 
-void Game::createMonster(int monsterId, short* data)
+void Game::createMonster(short* data)
 {
 #ifdef MULTIPLAYER
-	int monsterHp = data[0];
-	glm::vec3 monsterRgb = glm::vec3(data[1], data[2], data[3]);
-	glm::vec3 monsterPosition = glm::vec3(data[4], data[5], data[6]);
-	Monster* newMonster = this->monsterFactory->getMonsterOfMapColor(monsterRgb);
-	newMonster->getTransform()->translate(monsterPosition.x, monsterPosition.y, monsterPosition.z);
-	newMonster->setId(monsterId);
-	newMonster->setHp(monsterHp);
+	int monsterId = data[0];
+	int monsterHp = data[1];
+	glm::vec3 monsterRgb = glm::vec3(data[2], data[3], data[4]);
+	glm::vec3 monsterPosition = glm::vec3(data[5], data[6], data[7]);
 
 	if (!this->map->coordinateHasCollision(monsterPosition))
+	{
+		Monster* newMonster = this->monsterFactory->getMonsterOfMapColor(monsterRgb);
+		newMonster->getTransform()->translate(monsterPosition.x, monsterPosition.y, monsterPosition.z);
+		newMonster->setId(monsterId);
+		newMonster->setHp(monsterHp);
 		this->monsters.push_back(newMonster);
+	}
 #endif
 }
 
@@ -363,8 +356,8 @@ void Game::render()
 
 		// Second Player
 #ifdef MULTIPLAYER
-		if (secondPlayer != NULL)
-			secondPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
+		for (Player* player : this->onlinePlayers)
+			player->render(primitiveShader, gui->getTextRenderer(), projectileShader);
 #endif MULTIPLAYER
 
 //	}
@@ -420,8 +413,8 @@ void Game::update()
 	localPlayer->update(this->map);
 
 #ifdef MULTIPLAYER
-	if (secondPlayer != NULL)
-		secondPlayer->update(this->map);
+	for (Player* player : this->onlinePlayers)
+		player->update(this->map);
 #endif
 	
 	// Monsters update

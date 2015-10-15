@@ -40,7 +40,7 @@ public:
 
 	/* INITIALIZATION METHODS */
 	void createOnlinePlayer(short* data, bool isLocalPlayer);
-	void createMonster(int monsterId, short* data);
+	void createMonster(short* data);
 
 	/* AUXILIAR METHODS */
 	Monster* getMonsterOfId(int id);
@@ -81,10 +81,8 @@ private:
 
 	/* GAME PLAYERS AND ATTACK */
 	Player* localPlayer = NULL;
-	RangeAttack* localPlayerRangeAttack = NULL;
 #ifdef MULTIPLAYER
-	Player* secondPlayer = NULL;
-	RangeAttack* secondPlayerRangeAttack = NULL;
+	std::vector<Player*> onlinePlayers;
 #endif
 
 	/* GAME ENTITIES VECTORS */

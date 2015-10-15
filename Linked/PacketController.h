@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm\glm.hpp>
+#include <vector>
 
 class ClientPacket;
 class Player;
@@ -17,8 +18,8 @@ class PacketController
 public:
 	/* REFERENCES */
 	static UDPClient* udpClient;
-	static Player* secondPlayer;
 	static Player* localPlayer;
+	static std::vector<Player*>* onlinePlayers;
 	static Game* game;
 	static GUI* gui;
 
@@ -41,6 +42,6 @@ private:
 	static void dispatchVec3fWithShortArray(int id, int xid, glm::vec3* data, short* extraData, int dataSize);
 	static void dispatchMsg(int id, int xid, char* data);
 
-	static void updatePlayerBasicAttributes(Player* player);
+	static Player* getPlayerOfClient(int clientId);
 };
 
