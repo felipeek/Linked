@@ -8,6 +8,7 @@
 #include "Monster.h"
 #include "RangeAttack.h"
 #include "GUI.h"
+#include "Projectile.h"
 #include <iostream>
 
 Player* PacketController::localPlayer = NULL;
@@ -15,6 +16,8 @@ std::vector<Player*>* PacketController::onlinePlayers = NULL;
 Game* PacketController::game = NULL;
 UDPClient* PacketController::udpClient = NULL;
 GUI* PacketController::gui = NULL;
+
+glm::vec3 PacketController::playerLastPosition = glm::vec3(0, 0, 0);
 
 void PacketController::dispatch(ClientPacket* cp)
 {
@@ -85,7 +88,7 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 	{
 		// CREATION/INITIALIZATION
 		case 0:
-			if (xid == 0)	// Creation of player
+			if (xid == 0 && dataSize == 11 * sizeof(short))	// Creation of player
 			{
 				short playerClientId = data[0];
 
@@ -94,27 +97,28 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 				else
 					PacketController::game->createOnlinePlayer(data, false);
 			}
-			else if (xid == 1)
+			else if (xid == 1)	// Creation of Monster
 			{
 				int numberOfShort = dataSize / sizeof(short);
 
-				for (int i = 0; i < dataSize; i+=8)
+				for (int i = 0; i < numberOfShort; i+=8)
 					PacketController::game->createMonster(data+i);
 			}
 			break;
 
 		// UPDATE PLAYERS ATTRIBUTES/POSITION
 		case 1:
-			if (xid == 0) // Refresh player attributes
+			if (xid == 0 && (dataSize % (8*sizeof(short))) == 0) // Refresh player attributes
 			{
 				int numberOfShort = dataSize / sizeof(short);
 
-				for (int i = 0; i < dataSize; i += 8)
+				for (int i = 0; i < numberOfShort; i += 8)
 				{
 					short playerClientId = (data + i)[0];
 					Player* player = PacketController::getPlayerOfClient(playerClientId);
 					if (player != NULL)
 					{
+#ifdef MULTIPLAYER
 						player->setTotalMaximumHp((data + i)[1]);
 						player->setHp((data + i)[2]);
 						player->setTotalAttack((data + i)[3]);
@@ -122,6 +126,7 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 						player->setTotalMagicalPower((data + i)[5]);
 						player->setTotalSpeed((data + i)[6]);
 						player->setTotalAttackSpeed((data + i)[7]);
+#endif
 					}
 				}
 			}
@@ -130,11 +135,29 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 }
 void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize)
 {
-	if (data[0] == 1 && id == 0 && dataSize == sizeof(int))
+	switch (id)
 	{
-		// Connection ID back
-		UDPClient::myID = xid;
-		std::cout << UDPClient::myID << std::endl;
+	// CONNECTION
+	case 0:
+		if (data[0] == 1 && dataSize == sizeof(int))
+		{
+			// Connection ID back
+			UDPClient::myID = xid;
+			std::cout << UDPClient::myID << std::endl;
+		}
+		break;
+	// ATTACK COLLISION
+	case 4:
+		if (dataSize == 3 * sizeof(int))
+		{
+			int hurtMonsterId = data[0];
+			int projectileToBeDestroyed = data[1];
+			int attack = data[2];
+
+			PacketController::game->getMonsterOfId(hurtMonsterId)->doDamage(attack);
+			PacketController::game->destroyProjectileOfId(projectileToBeDestroyed);
+		}
+		break;
 	}
 }
 void PacketController::dispatchFloatArray(int id, int xid, float* data, int dataSize)
@@ -151,6 +174,17 @@ void PacketController::dispatchDoubleArray(int id, int xid, double* data, int da
 }
 void PacketController::dispatchVec4fArray(int id, int xid, glm::vec4* data, int dataSize)
 {
+	switch (id)
+	{
+	// CREATE NEW PROJECTILE (ATTACK)
+	case 3:
+		Player* player = PacketController::getPlayerOfClient(xid);
+		if (player != NULL && dataSize == sizeof(glm::vec4))
+		{
+			player->getRangeAttack()->createProjectile(glm::vec3(data[0].x, data[0].y, data[0].z), (int)data[0].w);
+		}
+		break;
+	}
 }
 void PacketController::dispatchVec3fArray(int id, int xid, glm::vec3* data, int dataSize)
 {
@@ -174,7 +208,7 @@ void PacketController::dispatchVec3fWithShortArray(int id, int xid, glm::vec3* d
 	{
 	// UPDATE PLAYERS ATTRIBUTES/POSITION
 	case 1:
-		if (xid == 1)	// Refresh Player Position
+		if (xid == 1 && (dataSize % (sizeof(glm::vec3) + sizeof(short)) == 0))	// Refresh Player Position
 		{
 			int numberOfPositions = dataSize / (sizeof(glm::vec3) + sizeof(short));
 
@@ -198,8 +232,15 @@ void PacketController::dispatchVec3fWithShortArray(int id, int xid, glm::vec3* d
 			{
 				Monster* targetMonster = PacketController::game->getMonsterOfId(extraData[i]);
 				if (targetMonster != NULL)
-					targetMonster->startMovementTo(glm::vec3(data[i].x, data[i].y, data[i].z));
-					//targetMonster->getTransform()->translate(data[i].x, data[i].y, data[i].z);
+				{
+					if (targetMonster->shouldRender())
+						targetMonster->startMovementTo(glm::vec3(data[i].x, data[i].y, data[i].z));
+					else
+					{
+						targetMonster->getTransform()->translate(data[i].x, data[i].y, data[i].z);
+						targetMonster->setShouldRender(true);
+					}
+				}
 			}
 		}
 		break;
@@ -220,12 +261,26 @@ void PacketController::update10()
 {
 	// Sends player position to server 10 times per second
 	glm::vec3 playerPosition = PacketController::localPlayer->getTransform()->getPosition();
-	udpClient->sendPackets(Packet(playerPosition, 0, UDPClient::myID));
+	if (playerLastPosition.x != playerPosition.x || playerLastPosition.y != playerPosition.y)
+	{
+		udpClient->sendPackets(Packet(playerPosition, 0, UDPClient::myID));
+		playerLastPosition = playerPosition;
+	}
 }
 
 void PacketController::sendAttackToServer(glm::vec3 attackDirection)
 {
 	udpClient->sendPackets(Packet(attackDirection, 1, UDPClient::myID));
+}
+
+void PacketController::sendAttackCollisionToServer(int monsterId, int attackId)
+{
+	int attackCollisionInformation[3];
+	attackCollisionInformation[0] = monsterId;
+	attackCollisionInformation[1] = attackId;
+	attackCollisionInformation[2] = 20;	// TO DO: damage
+
+	udpClient->sendPackets(Packet(attackCollisionInformation, 3, 2, UDPClient::myID));
 }
 
 Player* PacketController::getPlayerOfClient(int clientId)

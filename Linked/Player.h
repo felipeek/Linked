@@ -22,6 +22,8 @@
 #define PLAYER_DEFAULT_SPEED_BASIS 10
 #define PLAYER_DEFAULT_ATTACK_SPEED_BASIS 10
 
+#define PLAYER_FOG_OF_WAR_RADIUS 30
+
 #define PLAYER_RECEIVE_DAMAGE_DELAY 0.3f
 #define PLAYER_TEXTURE_CHANGE_DELAY 0.2f
 
@@ -44,10 +46,14 @@ public:
 	Player(Transform* transform, Mesh* mesh, Texture* texture, std::vector<Monster*>* monsters, Map* map);
 	~Player();
 
+	bool isFogOfWar(glm::vec3 position);
+
 	/* METHODS RELATED TO PLAYER ATTRIBUTES */
 	std::string getName();
 	void setName(std::string name);
 	bool isAlive();
+	bool isLocalPlayer();
+	void setLocalPlayer(bool localPlayer);
 	void doDamage(unsigned int damage);
 	unsigned int getHp();
 	void setHp(unsigned int hp);
@@ -115,6 +121,7 @@ public:
 private:
 	/* FUNDAMENTAL ATTRIBUTES */
 	short clientId;
+	bool localPlayer;
 	std::string name;
 	unsigned int hp;
 	std::vector<Skill*> skills;

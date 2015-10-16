@@ -6,18 +6,33 @@ Projectile::Projectile(Transform* transform, Mesh* mesh, Texture* texture, float
 {
 	this->speed = (speed / 1000.0f);
 	this->direction = glm::normalize(direction) * glm::vec3(speed, speed, speed);
-	spawnTime = Time::getTime();
+	this->spawnTime = Time::getTime();
+	this->id = 0;
 }
-
 
 Projectile::~Projectile()
 {
 
 }
 
+double Projectile::getSpawnTime()
+{
+	return this->spawnTime;
+}
+
+int Projectile::getId()
+{
+	return this->id;
+}
+
+void Projectile::setId(int id)
+{
+	this->id = id;
+}
+
 void Projectile::update()
 {
-	glm::vec3 newPos = transform->getPosition() + direction;
+	glm::vec3 newPos = this->transform->getPosition() + this->direction;
 
-	transform->translate(newPos.x, newPos.y, newPos.z);
+	this->transform->translate(newPos.x, newPos.y, newPos.z);
 }

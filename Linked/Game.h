@@ -44,6 +44,7 @@ public:
 
 	/* AUXILIAR METHODS */
 	Monster* getMonsterOfId(int id);
+	void destroyProjectileOfId(int id);
 
 	/* RENDER & UPDATE*/
 	void render();

@@ -36,16 +36,16 @@ class Monster : public Entity, public Creature
 public:
 	Monster(Transform* transform, Mesh* mesh, Texture* texture);
 	~Monster();
-#ifdef MULTIPLAYER
 	int getId();
 	void setId(int id);
-#endif
 	std::string getName();
 	void setName(std::string name);
 	bool isAlive();
 	bool isAttacking();
 	bool isReceivingDamage();
 	bool isMoving();
+	bool shouldRender();
+	void setShouldRender(bool shouldRender);
 	void killMonster();
 	bool isOnScreen();
 	bool canBeDeleted();
@@ -87,10 +87,9 @@ private:
 	MonsterAI* ai;
 
 	/* MONSTER ATTRIBUTES/STATUS */
-#ifdef MULTIPLAYER
 	int id;
-#endif
 	std::string name;
+	bool bRender;
 	bool alive;
 	bool attacking;
 	bool receivingDamage;

@@ -35,6 +35,16 @@ Monster::~Monster()
 	delete this->ai;
 }
 
+void Monster::setShouldRender(bool bRender)
+{
+	this->bRender = bRender;
+}
+
+bool Monster::shouldRender()
+{
+	return this->bRender;
+}
+
 #ifdef MULTIPLAYER
 void Monster::setId(int id)
 {
@@ -42,12 +52,10 @@ void Monster::setId(int id)
 }
 #endif
 
-#ifdef MULTIPLAYER
 int Monster::getId()
 {
 	return this->id;
 }
-#endif
 
 std::string Monster::getName()
 {
@@ -151,10 +159,13 @@ void Monster::setTotalMaximumHp(unsigned int totalMaximumHp)
 
 void Monster::doDamage(unsigned int damage)
 {
+	std::cout << "Monster " << this->getId() << " took damage: " << damage << std::endl;
+
 	if (damage > hp)
 	{
 		hp = 0;
 		this->killMonster();
+		std::cout << "Monster " << this->getId() << " died." << std::endl;
 	}
 	else
 		hp = hp - damage;

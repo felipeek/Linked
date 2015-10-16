@@ -20,6 +20,7 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture, std::vector<M
 	equipments = std::vector<Equipment*>();
 	this->hpBar = new HPBar(this);
 	this->rangeAttack = new RangeAttack(this, &attacks, monsters, map);
+	this->localPlayer = true;
 
 #ifdef SINGLEPLAYER
 	setMaximumHpBasis(PLAYER_DEFAULT_MAX_HP_BASIS);
@@ -50,6 +51,27 @@ Player::~Player()
 #ifdef MULTIPLAYER
 	delete ai;
 #endif
+}
+
+bool Player::isLocalPlayer()
+{
+	return this->localPlayer;
+}
+
+void Player::setLocalPlayer(bool localPlayer)
+{
+	this->localPlayer = localPlayer;
+}
+
+bool Player::isFogOfWar(glm::vec3 position)
+{
+	glm::vec3 diffVector = position - this->getTransform()->getPosition();
+	float vecLength = glm::length(diffVector);
+
+	if (vecLength > PLAYER_FOG_OF_WAR_RADIUS)
+		return true;
+	else
+		return false;
 }
 
 /* METHODS RELATED TO PLAYER ATTRIBUTES */

@@ -1,7 +1,7 @@
-TODO List near future: Linked
+﻿TODO List near future: Linked
 
-1.  Limitar distância que os monstros aparecem para o player
-2.  Otimizar pacotes enviados constantemente
+1.  Limitar distância que os monstros aparecem para o player (DONE)
+2.  Otimizar pacotes enviados constantemente (DOING)
 3.  Implementar skills no servidor
 4.  Fazer chat aceitar caracteres especiais
 5.  Bloquear input quando chat estiver ativo

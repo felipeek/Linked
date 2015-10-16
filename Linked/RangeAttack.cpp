@@ -30,40 +30,12 @@ RangeAttack::~RangeAttack()
 {
 }
 
-void RangeAttack::update()
+std::vector<Projectile*>* RangeAttack::getAttacks()
 {
-	double now = Time::getTime();
-	int hitMonsterIndex;
-
-	for (unsigned int i = 0; i < attacks->size(); i++)
-	{
-		(*attacks)[i]->update();
-	
-		if (monsterCollision((*attacks)[i], &hitMonsterIndex))
-		{
-			if (hitMonsterIndex >= 0)
-			{
-				Monster *hitMonster = (*monsters)[hitMonsterIndex];
-
-				hitMonster->doDamage(ATTACK);
-			}
-			delete (*attacks)[i];
-			attacks->erase((*attacks).begin() + i);
-		}
-		else if (map->coordinateHasCollision((*attacks)[i]->getTransform()->getPosition()))
-		{
-			delete (*attacks)[i];
-			attacks->erase((*attacks).begin() + i);
-		}
-		else if (now - (*attacks)[i]->spawnTime >= life)
-		{
-			delete (*attacks)[i];
-			attacks->erase((*attacks).begin() + i);
-		}
-	}
+	return this->attacks;
 }
 
-void RangeAttack::createProjectile(glm::vec3 direction)
+void RangeAttack::createProjectile(glm::vec3 direction, int projId)
 {
 	glm::vec3 playerPos = player->getTransform()->getPosition();
 	playerPos.z = 0;
@@ -71,7 +43,10 @@ void RangeAttack::createProjectile(glm::vec3 direction)
 
 	Transform* projectileTransform = new Transform(playerPos + glm::vec3(0, 0, playerPos.z), 35, glm::vec3(1, 0, 0), glm::vec3(3, 3, 3));
 	Projectile* entityD = new Projectile(projectileTransform, mesh, texture, speed, direction);
+	entityD->setId(projId);
 	(*attacks).push_back(entityD);
+
+	std::cout << "created projectile " << projId << "." << std::endl;
 }
 
 void RangeAttack::setSpeed(float value)
@@ -119,7 +94,7 @@ bool RangeAttack::createProjectileDirectedToMouse()
 		glm::vec3 playerPos = player->getTransform()->getPosition();
 		glm::vec3 direction = Input::mouseAttack.getMouseIntersection() - playerPos;
 
-		this->createProjectile(direction);
+		this->createProjectile(direction, 0);
 
 		lastTimeCreate = now;
 
@@ -141,6 +116,42 @@ void RangeAttack::sendAttackToServer()
 		PacketController::sendAttackToServer(direction);
 
 		lastTimeCreate = now;
+	}
+}
+
+void RangeAttack::update()
+{
+	double now = Time::getTime();
+	int hitMonsterIndex;
+
+	for (unsigned int i = 0; i < attacks->size(); i++)
+	{
+		(*attacks)[i]->update();
+
+		if (this->player->isLocalPlayer() && monsterCollision((*attacks)[i], &hitMonsterIndex))
+		{
+			if (hitMonsterIndex >= 0)
+			{
+				Monster *hitMonster = (*monsters)[hitMonsterIndex];
+
+#ifdef MULTIPLAYER
+				PacketController::sendAttackCollisionToServer(hitMonster->getId(), (*attacks)[i]->getId());
+#endif
+				delete (*attacks)[i];
+				attacks->erase((*attacks).begin() + i);
+				hitMonster->doDamage(ATTACK);
+			}
+		}
+		else if (map->coordinateHasCollision((*attacks)[i]->getTransform()->getPosition()))
+		{
+			delete (*attacks)[i];
+			attacks->erase((*attacks).begin() + i);
+		}
+		else if (now - (*attacks)[i]->getSpawnTime() >= life)
+		{
+			delete (*attacks)[i];
+			attacks->erase((*attacks).begin() + i);
+		}
 	}
 }
 

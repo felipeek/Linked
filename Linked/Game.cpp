@@ -24,6 +24,7 @@
 #include "Light.h"
 
 #include "RangeAttack.h"
+#include "Projectile.h"
 
 #include "Player.h"
 #include "HPBar.h"
@@ -104,7 +105,7 @@ void Game::createGraphicElements(int windowsWidth, int windowsHeight)
 	Input::mouseAttack.setCamera(this->camera);
 
 	// Light
-	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 1, 1));
+	this->light = new Light(glm::vec3(100, 500, 15), glm::vec3(1, 1, 1));
 
 	// Shaders
 	this->primitiveShader = new PrimitiveShader("./shaders/normalshader", camera, light);
@@ -189,10 +190,12 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 	{
 		this->localPlayer = designedPlayer;
 		PacketController::localPlayer = this->localPlayer;
+		designedPlayer->setLocalPlayer(true);
 	}
 	else
 	{
 		this->onlinePlayers.push_back(designedPlayer);
+		designedPlayer->setLocalPlayer(false);
 	}
 #endif
 }
@@ -291,6 +294,19 @@ Monster* Game::getMonsterOfId(int id)
 	return NULL;
 }
 
+void Game::destroyProjectileOfId(int id)
+{
+	for (int i = 0; i < this->onlinePlayers.size(); i++)
+		for (int j = 0; j < this->onlinePlayers[i]->getRangeAttack()->getAttacks()->size(); j++)
+			if ((*this->onlinePlayers[i]->getRangeAttack()->getAttacks())[j]->getId() == id)
+			{
+				std::vector<Projectile*>* attacks = this->onlinePlayers[i]->getRangeAttack()->getAttacks();
+				delete (*attacks)[j];
+				attacks->erase((*attacks).begin() + j);
+				break;
+			}
+}
+
 void Game::render()
 {
 		// Map
@@ -330,16 +346,35 @@ void Game::render()
 			}
 		}
 		// Monsters
-		for (Entity* e : monsters)
+#ifdef MULTIPLAYER
+		for (Monster* m : monsters)
 		{
 			try{
-				e->render(primitiveShader);
+				if (m->shouldRender())
+				{
+					if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()))
+						m->render(primitiveShader);
+					else
+						m->setShouldRender(false);
+				}
 			}
 			catch (...){
 				std::cerr << "Error rendering entity" << std::endl;
 			}
 		}
-		
+#endif
+
+#ifdef SINGLEPLAYER
+		for (Monster* m : monsters)
+		{
+			try{
+				m->render(primitiveShader);
+			}
+			catch (...){
+				std::cerr << "Error rendering entity" << std::endl;
+			}
+		}
+#endif
 		// Common static entities
 		for (Entity* e : gameEntities)
 		{
