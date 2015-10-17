@@ -276,9 +276,6 @@
     <ClInclude Include="FrameBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Configuration.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="FrameShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -9,6 +9,7 @@
 #include "Mesh.h"
 #include "Player.h"
 #include "PacketController.h"
+#include "Game.h"
 
 #include <iostream>
 
@@ -128,29 +129,35 @@ void RangeAttack::update()
 	{
 		(*attacks)[i]->update();
 
-		if (this->player->isLocalPlayer() && monsterCollision((*attacks)[i], &hitMonsterIndex))
-		{
-			if (hitMonsterIndex >= 0)
-			{
-				Monster *hitMonster = (*monsters)[hitMonsterIndex];
-
-#ifdef MULTIPLAYER
-				PacketController::sendAttackCollisionToServer(hitMonster->getId(), (*attacks)[i]->getId());
-#endif
-				delete (*attacks)[i];
-				attacks->erase((*attacks).begin() + i);
-				hitMonster->doDamage(ATTACK);
-			}
-		}
-		else if (map->coordinateHasCollision((*attacks)[i]->getTransform()->getPosition()))
+		// if projectile hit wall it must be deleted
+		if (map->coordinateHasCollision((*attacks)[i]->getTransform()->getPosition()))
 		{
 			delete (*attacks)[i];
 			attacks->erase((*attacks).begin() + i);
 		}
+		// if projectile lived long enough it must be deleted
 		else if (now - (*attacks)[i]->getSpawnTime() >= life)
 		{
 			delete (*attacks)[i];
 			attacks->erase((*attacks).begin() + i);
+		}
+		// projetil collision should be tested only if the game is single player OR is multiplayer but the player is the local player
+		else if ((Game::multiplayer && player->getType() == LOCAL) || !Game::multiplayer)
+		{
+			if (monsterCollision((*attacks)[i], &hitMonsterIndex))
+			{
+				if (hitMonsterIndex >= 0)
+				{
+					Monster *hitMonster = (*monsters)[hitMonsterIndex];
+
+					if (Game::multiplayer)
+						PacketController::sendAttackCollisionToServer(hitMonster->getId(), (*attacks)[i]->getId());
+
+					delete (*attacks)[i];
+					attacks->erase((*attacks).begin() + i);
+					hitMonster->doDamage(ATTACK);
+				}
+			}
 		}
 	}
 }
@@ -159,12 +166,14 @@ void RangeAttack::input()
 {
 	if (Input::attack && player->isAlive())
 	{
-#ifdef SINGLEPLAYER
-		createProjectileDirectedToMouse();
-		player->doAttack();
-#endif
-#ifdef MULTIPLAYER
-		this->sendAttackToServer();
-#endif
+		if (Game::multiplayer)
+		{
+			this->sendAttackToServer();
+		}
+		else
+		{
+			createProjectileDirectedToMouse();
+			player->doAttack();
+		}
 	}
 }

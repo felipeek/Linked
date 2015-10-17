@@ -4,7 +4,6 @@
 #include <iostream>
 #include "Game.h"
 #include "PacketController.h"
-#include "Configuration.h"
 #include "Chat.h"
 
 // Window and Monitor
@@ -132,13 +131,15 @@ void Display::MainLoop(GLFWwindow* window)
 			render();
 			frames++;
 		}
-#ifdef MULTIPLAYER
-		if (update10Time >= 1.0 / 7)				// Send packets 10 times per second
+		if (Game::multiplayer)
 		{
-			update10Time = 0;
-			PacketController::update10();
+			if (update10Time >= 1.0 / 7)				// Send packets 10 times per second
+			{
+				update10Time = 0;
+				PacketController::update10();
+			}
 		}
-#endif
+
 		if (frameCount >= 1.0)
 		{
 #ifdef DEBUG

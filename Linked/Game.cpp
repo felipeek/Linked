@@ -48,6 +48,9 @@
 
 //#include <glm\gtc\matrix_transform.hpp>
 
+bool Game::multiplayer = true;
+int Game::server_port = 9090;
+std::string Game::server_ip = "127.0.0.1";
 
 Game::Game(int windowWidth, int windowHeight)
 {	
@@ -59,23 +62,22 @@ Game::Game(int windowWidth, int windowHeight)
 	this->createGraphicElements(windowWidth, windowHeight);
 	this->createMap();
 
-#ifdef SINGLEPLAYER
-	this->createOfflinePlayer();
-#endif
-#ifdef MULTIPLAYER
-	this->createUDPConnection();
-	PacketController::onlinePlayers = &this->onlinePlayers;
-	this->waitForCreationOfOnlinePlayer();
-#endif
+	if (!Game::multiplayer)
+		this->createOfflinePlayer();
+
+	if (Game::multiplayer)
+	{
+		this->createUDPConnection();
+		PacketController::onlinePlayers = &this->onlinePlayers;
+		this->waitForCreationOfOnlinePlayer();
+	}
+
 	this->createGUI();
 
-#ifdef MULTIPLAYER
-	this->loadMonstersAndEntities(false, true);
-#endif
-
-#ifdef SINGLEPLAYER
-	this->loadMonstersAndEntities(true, true);
-#endif
+	if (Game::multiplayer)
+		this->loadMonstersAndEntities(false, true);
+	else
+		this->loadMonstersAndEntities(true, true);
 
 	lastTime = 0;
 }
@@ -93,9 +95,8 @@ Game::~Game()
 	for (Monster* monster : monsters)
 		delete monster;
 
-#ifdef MULTIPLAYER
-	udpClient->virtualDisconnection();
-#endif
+	if (Game::multiplayer)
+		udpClient->virtualDisconnection();
 }
 
 void Game::createGraphicElements(int windowsWidth, int windowsHeight)
@@ -128,7 +129,6 @@ void Game::createMap()
 
 void Game::createOfflinePlayer()
 {
-#ifdef SINGLEPLAYER
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 12, 0));
 	this->localPlayer = new Player(new Transform(glm::vec3(440, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"), &monsters, map);
 	this->localPlayer->setHp(100);
@@ -154,7 +154,6 @@ void Game::createOfflinePlayer()
 	Skill* skill4 = new HoshoyoExplosionSkill(&monsters);
 	skill4->setSlot(SLOT_4);
 	localPlayer->addNewSkill(skill4);
-#endif
 }
 
 void Game::waitForCreationOfOnlinePlayer()
@@ -171,7 +170,6 @@ void Game::waitForCreationOfOnlinePlayer()
 
 void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 {
-#ifdef MULTIPLAYER
 	glm::vec3 localPlayerPosition = glm::vec3(data[8], data[9], data[10]);
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 12, 0));
 	Player* designedPlayer = new Player(new Transform(localPlayerPosition, 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"), &monsters, map);
@@ -190,14 +188,13 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 	{
 		this->localPlayer = designedPlayer;
 		PacketController::localPlayer = this->localPlayer;
-		designedPlayer->setLocalPlayer(true);
+		designedPlayer->setType(LOCAL);
 	}
 	else
 	{
 		this->onlinePlayers.push_back(designedPlayer);
-		designedPlayer->setLocalPlayer(false);
+		designedPlayer->setType(NETWORK);
 	}
-#endif
 }
 
 void Game::createGUI()
@@ -259,45 +256,39 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 
 void Game::createUDPConnection()
 {
-	udpClient = new UDPClient(SERVER_PORT, SERVER_IP);
+	udpClient = new UDPClient(Game::server_port, Game::server_ip);
 	PacketController::udpClient = udpClient;
 	udpClient->virtualConnection();
 }
 
 void Game::createMonster(short* data)
 {
-#ifdef MULTIPLAYER
+	// do not tests collision propositally
 	int monsterId = data[0];
 	int monsterHp = data[1];
 	glm::vec3 monsterRgb = glm::vec3(data[2], data[3], data[4]);
 	glm::vec3 monsterPosition = glm::vec3(data[5], data[6], data[7]);
-
-	if (!this->map->coordinateHasCollision(monsterPosition))
-	{
-		Monster* newMonster = this->monsterFactory->getMonsterOfMapColor(monsterRgb);
-		newMonster->getTransform()->translate(monsterPosition.x, monsterPosition.y, monsterPosition.z);
-		newMonster->setId(monsterId);
-		newMonster->setHp(monsterHp);
-		this->monsters.push_back(newMonster);
-	}
-#endif
+	
+	Monster* newMonster = this->monsterFactory->getMonsterOfMapColor(monsterRgb);
+	newMonster->getTransform()->translate(monsterPosition.x, monsterPosition.y, monsterPosition.z);
+	newMonster->setId(monsterId);
+	newMonster->setHp(monsterHp);
+	this->monsters.push_back(newMonster);
 }
 
 Monster* Game::getMonsterOfId(int id)
 {
-#ifdef MULTIPLAYER
-	for (int i = 0; i < monsters.size(); i++)
+	for (unsigned int i = 0; i < monsters.size(); i++)
 		if (monsters[i]->getId() == id)
 			return monsters[i];
-#endif
 
 	return NULL;
 }
 
 void Game::destroyProjectileOfId(int id)
 {
-	for (int i = 0; i < this->onlinePlayers.size(); i++)
-		for (int j = 0; j < this->onlinePlayers[i]->getRangeAttack()->getAttacks()->size(); j++)
+	for (unsigned int i = 0; i < this->onlinePlayers.size(); i++)
+		for (unsigned int j = 0; j < this->onlinePlayers[i]->getRangeAttack()->getAttacks()->size(); j++)
 			if ((*this->onlinePlayers[i]->getRangeAttack()->getAttacks())[j]->getId() == id)
 			{
 				std::vector<Projectile*>* attacks = this->onlinePlayers[i]->getRangeAttack()->getAttacks();
@@ -309,47 +300,48 @@ void Game::destroyProjectileOfId(int id)
 
 void Game::render()
 {
-		// Map
-		entityMap->render(mapShader);
+	// Map
+	entityMap->render(mapShader);
 
-		//glEnable(GL_BLEND);
-		//glBlendFunc(GL_ONE, GL_ONE);
-		//glDepthMask(false);
-		//glDepthFunc(GL_EQUAL);
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_ONE, GL_ONE);
+	//glDepthMask(false);
+	//glDepthFunc(GL_EQUAL);
 
-		entityMap->render(mapShader);
+	entityMap->render(mapShader);
 
-		//for (int i = 0; i < 1; i++)
-		//{
-		//	mapShader2->setLight(light2[i]);
-		//	entityMap->render(mapShader2);
-		//}
-		//mapShader2->setLight(light);
-		//
-		//glDepthFunc(GL_LESS);
-		//glDepthMask(true);
-		//glDisable(GL_BLEND);
+	//for (int i = 0; i < 1; i++)
+	//{
+	//	mapShader2->setLight(light2[i]);
+	//	entityMap->render(mapShader2);
+	//}
+	//mapShader2->setLight(light);
+	//
+	//glDepthFunc(GL_LESS);
+	//glDepthMask(true);
+	//glDisable(GL_BLEND);
 
-		water->render(commonShader);
+	water->render(commonShader);
 
-		// Player
-		localPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
+	// Player
+	localPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
 
-		// Generic entities (Player only at the moment)
-		for (Entity* e : entities)
-		{
-			try{
-				e->render(primitiveShader);
-			}
-			catch (...){
-				std::cerr << "Error rendering entity" << std::endl;
-			}
+	// Generic entities (Player only at the moment)
+	for (Entity* e : entities)
+	{
+		try{
+			e->render(primitiveShader);
 		}
-		// Monsters
-#ifdef MULTIPLAYER
-		for (Monster* m : monsters)
-		{
-			try{
+		catch (...){
+			std::cerr << "Error rendering entity" << std::endl;
+		}
+	}
+	// Monsters
+	for (Monster* m : monsters)
+	{
+		try{
+			if (Game::multiplayer)
+			{
 				if (m->shouldRender())
 				{
 					if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()))
@@ -358,44 +350,37 @@ void Game::render()
 						m->setShouldRender(false);
 				}
 			}
-			catch (...){
-				std::cerr << "Error rendering entity" << std::endl;
-			}
-		}
-#endif
-
-#ifdef SINGLEPLAYER
-		for (Monster* m : monsters)
-		{
-			try{
+			else
+			{
 				m->render(primitiveShader);
 			}
-			catch (...){
-				std::cerr << "Error rendering entity" << std::endl;
-			}
 		}
-#endif
-		// Common static entities
-		for (Entity* e : gameEntities)
-		{
-			try{
-				e->render(commonShader);
-			}
-			catch (...){
-				std::cerr << "Error rendering entity" << std::endl;
-			}
+		catch (...){
+			std::cerr << "Error rendering entity" << std::endl;
 		}
+	}
 
-		// Player
-		localPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
+	// Common static entities
+	for (Entity* e : gameEntities)
+	{
+		try{
+			e->render(commonShader);
+		}
+		catch (...){
+			std::cerr << "Error rendering entity" << std::endl;
+		}
+	}
 
-		// Second Player
-#ifdef MULTIPLAYER
+	// Player
+	localPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
+
+	// Second Player
+	if (Game::multiplayer)
+	{
 		for (Player* player : this->onlinePlayers)
 			player->render(primitiveShader, gui->getTextRenderer(), projectileShader);
-#endif MULTIPLAYER
+	}
 
-//	}
 	// Render GUI (Order is important)
 	gui->render();
 
@@ -403,32 +388,35 @@ void Game::render()
 
 void Game::update()
 {
-#ifdef MULTIPLAYER
-	udpClient->receivePackets();
-	if (Chat::msg != "")
+	if (Game::multiplayer)
 	{
-		if (Chat::msg.compare("/where") == 0)
+		udpClient->receivePackets();
+		if (Chat::msg != "")
 		{
-			std::stringstream ss;
-			ss << localPlayer->getTransform()->getPosition().x << ", " << localPlayer->getTransform()->getPosition().y << ", " << localPlayer->getTransform()->getPosition().z;
-			gui->setNextMessage(ss.str());
-			Chat::msg = "";
-		}
-		else{
-			gui->setNextMessage(Chat::appendPlayerName(localPlayer->getName()));
-			//gui->setNextMessage(Chat::msg);
-			udpClient->sendPackets(Packet(Chat::msg, -1));
-			Chat::msg = "";
+			if (Chat::msg.compare("/where") == 0)
+			{
+				std::stringstream ss;
+				ss << localPlayer->getTransform()->getPosition().x << ", " << localPlayer->getTransform()->getPosition().y << ", " << localPlayer->getTransform()->getPosition().z;
+				gui->setNextMessage(ss.str());
+				Chat::msg = "";
+			}
+			else{
+				gui->setNextMessage(Chat::appendPlayerName(localPlayer->getName()));
+				//gui->setNextMessage(Chat::msg);
+				udpClient->sendPackets(Packet(Chat::msg, -1));
+				Chat::msg = "";
+			}
 		}
 	}
-#endif
-#ifdef SINGLEPLAYER
-	if (Chat::msg != "")
+	else
 	{
-		gui->setNextMessage(Chat::msg);
-		Chat::msg = "";
+		if (Chat::msg != "")
+		{
+			gui->setNextMessage(Chat::msg);
+			Chat::msg = "";
+		}
 	}
-#endif
+
 	// Game input
 	input();
 	Input::mouseAttack.update();
@@ -447,10 +435,11 @@ void Game::update()
 	localPlayer->input(this->map);
 	localPlayer->update(this->map);
 
-#ifdef MULTIPLAYER
-	for (Player* player : this->onlinePlayers)
-		player->update(this->map);
-#endif
+	if (Game::multiplayer)
+	{
+		for (Player* player : this->onlinePlayers)
+			player->update(this->map);
+	}
 	
 	// Monsters update
 	for (unsigned int i = 0; i < monsters.size(); i++)
@@ -486,12 +475,13 @@ void Game::input()
 	if (Input::keyStates['o'])
 		localPlayer->setHp(localPlayer->getHp() - 1);
 
-#ifdef SINGLEPLAYER
-	if (Input::keyStates['i'])
-		localPlayer->setSpeedBasis(localPlayer->getSpeedBasis() + 1);
-	if (Input::keyStates['k'])
-		localPlayer->setSpeedBasis(localPlayer->getSpeedBasis() - 1);
-#endif SINGLEPLAYER
+	if (!Game::multiplayer)
+	{
+		if (Input::keyStates['i'])
+			localPlayer->setSpeedBasis(localPlayer->getSpeedBasis() + 1);
+		if (Input::keyStates['k'])
+			localPlayer->setSpeedBasis(localPlayer->getSpeedBasis() - 1);
+	}
 
 	if (Input::keyStates['t'])
 	{

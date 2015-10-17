@@ -118,7 +118,6 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 					Player* player = PacketController::getPlayerOfClient(playerClientId);
 					if (player != NULL)
 					{
-#ifdef MULTIPLAYER
 						player->setTotalMaximumHp((data + i)[1]);
 						player->setHp((data + i)[2]);
 						player->setTotalAttack((data + i)[3]);
@@ -126,7 +125,6 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 						player->setTotalMagicalPower((data + i)[5]);
 						player->setTotalSpeed((data + i)[6]);
 						player->setTotalAttackSpeed((data + i)[7]);
-#endif
 					}
 				}
 			}
@@ -203,7 +201,6 @@ void PacketController::dispatchPong(int id, int xid)
 }
 void PacketController::dispatchVec3fWithShortArray(int id, int xid, glm::vec3* data, short* extraData, int dataSize)
 {
-#ifdef MULTIPLAYER
 	switch (id)
 	{
 	// UPDATE PLAYERS ATTRIBUTES/POSITION
@@ -245,7 +242,6 @@ void PacketController::dispatchVec3fWithShortArray(int id, int xid, glm::vec3* d
 		}
 		break;
 	}
-#endif
 }
 void PacketController::dispatchMsg(int id, int xid, char* data)
 {
