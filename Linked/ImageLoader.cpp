@@ -19,8 +19,8 @@ ImageLoader::ImageLoader()
 
 ImageLoader::~ImageLoader()
 {
-	if (loadedImage)
-		stbi_image_free(loadedImage);
+	//if (loadedImage)
+	//	stbi_image_free(loadedImage);
 }
 
 vec3 ImageLoader::getPixel(int x, int y)

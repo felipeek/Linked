@@ -13,8 +13,6 @@ PrimitiveShader::PrimitiveShader(std::string fileName, Camera* camera, Light* li
 
 PrimitiveShader::~PrimitiveShader()
 {
-	if (light)
-		delete light;
 }
 
 void PrimitiveShader::getUniformLocations()

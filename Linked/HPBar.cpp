@@ -44,7 +44,7 @@ void HPBar::update()
 {
 	glm::vec3 playerPos = player->getTransform()->getPosition();
 	quad->getTransform()->translate(playerPos.x, playerPos.y-1.7f, playerPos.z+1);
-	
+
 	unsigned int currentHP = player->getHp();
 	float percentHP = (float)currentHP / (float)player->getTotalMaximumHp();
 	numBars = (unsigned int)(percentHP * maxBars);

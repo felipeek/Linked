@@ -19,7 +19,7 @@ TODO List near future: Linked
 17. Suporte para diversos window sizes
 18. Arrumar direcao de projeteis
 19. Implementar AI para colisao
-
+20. Implementar players extras como espectadores
 
 TODO List far future:
 

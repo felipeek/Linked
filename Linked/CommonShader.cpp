@@ -12,8 +12,6 @@ CommonShader::CommonShader(std::string fileName, Camera* camera, Light* light) :
 
 CommonShader::~CommonShader()
 {
-	if (light)
-		delete light;
 }
 
 void CommonShader::getUniformLocations()

@@ -42,18 +42,18 @@ void Chat::update(int key, int scancode, int action, int mods)
 			if (isLetter(key))
 			{
 				char c = getLetter(key, mods);
-				std::cout << c;
+				//std::cout << c;
 				ss << c;
 			}
 			else if (isNumber(key, mods))
 			{
 				char c = getNumber(key);
-				std::cout << c;
+				//std::cout << c;
 				ss << c;
 			}
 			else if (key == SPACE_KEY)
 			{
-				std::cout << " ";
+				//std::cout << " ";
 				ss << " ";
 			}
 			else if (key == BACKSPACE_KEY)
@@ -69,7 +69,7 @@ void Chat::update(int key, int scancode, int action, int mods)
 			}
 			else if (key == -1 || key == 331)
 			{
-				std::cout << '/';
+				//std::cout << '/';
 				ss << '/';
 			}
 		}

@@ -137,7 +137,7 @@ Packet::Packet(double uDouble, int ID, int xID) : Packet(ID, xID)
 Packet::Packet(glm::vec4* bufferVector4f, int size, int ID, int xID) : Packet(ID, xID)
 {
 	multiplePacketSetup(P_SINGLE_VECTOR4F + size - 1, size*sizeof(float)*4);
-	for (int i = 0, a = 0; i < size*sizeof(float)*4; i+=sizeof(float)*4, a++)
+	for (unsigned int i = 0, a = 0; i < size*sizeof(float)*4; i+=sizeof(float)*4, a++)
 	{
 		// For each vector
 		float x = bufferVector4f[a].x;
@@ -197,7 +197,7 @@ Packet::Packet(glm::vec4 uVector4f, int ID, int xID) : Packet(ID, xID)
 Packet::Packet(glm::vec3* bufferVector3f, int size, int ID, int xID) : Packet(ID, xID)
 {
 	multiplePacketSetup(P_SINGLE_VECTOR3F + size - 1, size*sizeof(float) * 3);
-	for (int i = 0, a = 0; i < size*sizeof(float) * 3; i += sizeof(float) * 3, a++)
+	for (unsigned int i = 0, a = 0; i < size*sizeof(float) * 3; i += sizeof(float) * 3, a++)
 	{
 		// For each vector
 		float x = bufferVector3f[a].x;
@@ -223,7 +223,7 @@ Packet::Packet(glm::vec3* bufferVector3f, int size, int ID, int xID) : Packet(ID
 Packet::Packet(glm::vec3* bufferVector3f,short* bufferShort, int size, int ID, int xID) : Packet(ID, xID)
 {
 	multiplePacketSetup(P_MONSTERS, size*sizeof(float) * 3 + size*sizeof(short));
-	for (int i = 0, a = 0; i < size*sizeof(float) * 3 + size * sizeof(short); i += sizeof(float) * 3 + sizeof(short), a++)
+	for (unsigned int i = 0, a = 0; i < size*sizeof(float) * 3 + size * sizeof(short); i += sizeof(float) * 3 + sizeof(short), a++)
 	{
 		// For each vector
 		float x = bufferVector3f[a].x;
@@ -275,7 +275,7 @@ Packet::Packet(glm::vec3 uVector3f, int ID, int xID) : Packet(ID, xID)
 Packet::Packet(glm::vec2* bufferVector2f, int size, int ID, int xID) : Packet(ID, xID)
 {
 	multiplePacketSetup(P_SINGLE_VECTOR2F + size - 1, size*sizeof(float) * 2);
-	for (int i = 0, a = 0; i < size*sizeof(float) * 2; i += sizeof(float) * 2, a++)
+	for (unsigned int i = 0, a = 0; i < size*sizeof(float) * 2; i += sizeof(float) * 2, a++)
 	{
 		// For each vector
 		float x = bufferVector2f[a].x;
@@ -335,7 +335,7 @@ Packet::Packet(std::string message, int ID) : Packet(ID, message.length())
 	uniquePacketSetup(P_MSG, message.length());
 
 	// Fill data
-	for (int i = 0; i < message.length(); i++)
+	for (unsigned int i = 0; i < message.length(); i++)
 		buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i] = (char)message[i];
 
 }
@@ -420,32 +420,32 @@ void Packet::printPacket()
 		}
 		else if (type >= P_SINGLE_SHORT && type < P_SINGLE_INTEGER)
 		{
-			for (int i = 0; i <= (type - P_SINGLE_SHORT)*sizeof(short); i += sizeof(short))
+			for (unsigned int i = 0; i <= (type - P_SINGLE_SHORT)*sizeof(short); i += sizeof(short))
 				cout << *(short*)&buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i] << endl;
 		}
 		else if (type >= P_SINGLE_INTEGER && type < P_SINGLE_FLOAT)
 		{
-			for (int i = 0; i <= (type - P_SINGLE_INTEGER) * sizeof(int); i += sizeof(int))
+			for (unsigned int i = 0; i <= (type - P_SINGLE_INTEGER) * sizeof(int); i += sizeof(int))
 				cout << *(int*)&buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i] << endl;
 		}
 		else if (type >= P_SINGLE_FLOAT && type < P_SINGLE_LONG)
 		{
-			for (int i = 0; i <= (type - P_SINGLE_FLOAT) * sizeof(float); i += sizeof(float))
+			for (unsigned int i = 0; i <= (type - P_SINGLE_FLOAT) * sizeof(float); i += sizeof(float))
 				cout << *(float*)&buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i] << endl;
 		}
 		else if (type >= P_SINGLE_LONG && type < P_SINGLE_DOUBLE)
 		{
-			for (int i = 0; i <= (type - P_SINGLE_LONG) * sizeof(long); i += sizeof(long))
+			for (unsigned int i = 0; i <= (type - P_SINGLE_LONG) * sizeof(long); i += sizeof(long))
 				cout << *(long*)&buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i] << endl;
 		}
 		else if (type >= P_SINGLE_DOUBLE && type < P_SINGLE_VECTOR4F)
 		{
-			for (int i = 0; i <= (type - P_SINGLE_DOUBLE) * sizeof(double); i += sizeof(double))
+			for (unsigned int i = 0; i <= (type - P_SINGLE_DOUBLE) * sizeof(double); i += sizeof(double))
 				cout << *(double*)&buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + i] << endl;
 		}
 		else if (type >= P_SINGLE_VECTOR4F && type < P_SINGLE_VECTOR3F)
 		{
-			for (int i = 0, j=0; i <= type - P_SINGLE_VECTOR4F; i++, j+=sizeof(float)*4)
+			for (int i = 0, j = 0; i <= type - P_SINGLE_VECTOR4F; i++, j += sizeof(float) * 4)
 			{
 				cout << "x: " << *(float*)&buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + j+0] << endl;
 				cout << "y: " << *(float*)&buffer[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE + j+4] << endl;

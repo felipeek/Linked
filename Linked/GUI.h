@@ -11,16 +11,20 @@ class Texture;
 class Shader;
 enum leftGUIAttribs;
 
-#define LEFTGUI_PATH_CHATINACTIVE "./res/GUI/Linked_GUI5.png"
-#define LEFTGUI_PATH_CHATACTIVE "./res/GUI/Linked_GUI5_active.png"
+#define LEFTGUI_PATH_CHATINACTIVE "./res/GUI/GUI_Chat_Inactive1.png"
+#define LEFTGUI_PATH_CHATACTIVE "./res/GUI/GUI_Chat_Active1.png"
 #define NOSKILLICON_PATH "./res/GUI/no_skillicon.png"
 
 #define LGUI_R 0.8f
 #define LGUI_G 0.8f
 #define LGUI_B 0.8f
 
+#define PLAYER_STATS_FONT_SIZE 0.16f
+#define PLAYER_STATS_LEFT_ALIGN 25.0f
+#define PLAYER_STATS_VERT_ALIGN 118.0f
+
 #define CHAT_SPACING 14
-#define CHAT_LETTER_SIZE 0.16f
+#define CHAT_LETTER_SIZE 0.15f
 #define CHAT_MAX_MSGS 7
 
 class GUI

@@ -3,7 +3,7 @@
 #include "Grid.h"
 #include <iostream>
 
-GLuint Mesh::drawForm = GL_TRIANGLES;
+bool Mesh::wireframe = false;
 
 Mesh::Mesh(std::string fileName, float reflectivity, float glossiness)
 {
@@ -122,7 +122,12 @@ void Mesh::render()
 	glBindBuffer(GL_ARRAY_BUFFER, TextureBufferID);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-	glDrawElements(drawForm, indicesSize / sizeof(float), GL_UNSIGNED_INT, 0);
+	if (wireframe)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	else
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	glDrawElements(GL_TRIANGLES, indicesSize / sizeof(float), GL_UNSIGNED_INT, 0);
 
 	glDisableVertexAttribArray(2);
 	glDisableVertexAttribArray(1);

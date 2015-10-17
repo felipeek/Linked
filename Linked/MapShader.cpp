@@ -46,6 +46,7 @@ void MapShader::update(Transform* transform)
 
 	glUniformMatrix4fv(uniform_Model, 1, GL_FALSE, &transform->model[0][0]);
 	glUniformMatrix4fv(uniform_viewProj, 1, GL_FALSE, &camera->viewProj[0][0]);
+
 }
 
 void MapShader::setLight(Light* light)

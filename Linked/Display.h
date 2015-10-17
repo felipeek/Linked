@@ -1,12 +1,14 @@
 #pragma once
+#include "../Game.h"
+
 #include <string>
-#include <GL\glew.h>
-#include <GLFW\glfw3.h>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 class Game;
 
-#define WWID 1600
-#define WHEI 900
+#define WWID 800
+#define WHEI 600
 #define WINDOW_START_X 100
 #define WINDOW_START_Y 100
 

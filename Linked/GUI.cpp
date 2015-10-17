@@ -95,22 +95,23 @@ void GUI::render()
 
 	// Render Text
 	// Player Name
-	textRenderer->renderText(player->getName(), 105.0f, 115.0f, 0.2f, color);
+	const float padding = 16.0f;
+	textRenderer->renderText(player->getName(), PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN + 5.0f, PLAYER_STATS_FONT_SIZE, color);
 	// Attributes
-	textRenderer->renderText(pHealth, 105.0f, 95.0f, 0.18f, color);
-	textRenderer->renderText(pAttack, 105.0f, 80.0f, 0.18f, color);
-	textRenderer->renderText(pDefense, 105.0f, 65.0f, 0.18f, color);
-	textRenderer->renderText(pMagicalPower, 105.0f, 50.0f, 0.18f, color);
-	textRenderer->renderText(pAttackSpeed, 105.0f, 35.0f, 0.18f, color);
-	textRenderer->renderText(pSpeed, 105.0f, 20.0f, 0.18f, color);
+	textRenderer->renderText(pHealth, PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 1, PLAYER_STATS_FONT_SIZE, color);
+	textRenderer->renderText(pAttack, PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 2, PLAYER_STATS_FONT_SIZE, color);
+	textRenderer->renderText(pDefense, PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 3, PLAYER_STATS_FONT_SIZE, color);
+	textRenderer->renderText(pMagicalPower, PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 4, PLAYER_STATS_FONT_SIZE, color);
+	textRenderer->renderText(pAttackSpeed, PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 5, PLAYER_STATS_FONT_SIZE, color);
+	textRenderer->renderText(pSpeed, PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 6, PLAYER_STATS_FONT_SIZE, color);
 
 	std::string msg = "Superwaffles eh um cara bem legal, pena que naum pode ver o zeh";
-	for (int i = 0; i < messages.size(); i++)
+	for (unsigned int i = 0; i < messages.size(); i++)
 	{
-		textRenderer->renderText(messages[i], 1075.0f, 46.0f + (i*CHAT_SPACING), CHAT_LETTER_SIZE, color);
+		textRenderer->renderText(messages[i], 1095.0f, 46.0f + (i*CHAT_SPACING), CHAT_LETTER_SIZE, color);
 	}
 
-	textRenderer->renderText(Chat::getStream().str(), 1075.0f, 130.0f - ((CHAT_MAX_MSGS +0.5f) * CHAT_SPACING), CHAT_LETTER_SIZE, activeText);
+	textRenderer->renderText(Chat::getStream().str(), 1095.0f, 130.0f - ((CHAT_MAX_MSGS +0.5f) * CHAT_SPACING), CHAT_LETTER_SIZE, activeText);
 
 }
 

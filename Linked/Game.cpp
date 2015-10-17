@@ -1,5 +1,5 @@
+// Project Libs
 #include "Game.h"
-#include <iostream>
 #include "Display.h"
 #include "Time.h"
 #include "Input.h"
@@ -14,6 +14,7 @@
 #include "MonsterFactory.h"
 #include "GameEntityFactory.h"
 #include "Projectile.h"
+#include "Player.h"
 
 #include "Camera.h"
 #include "PrimitiveShader.h"
@@ -25,75 +26,91 @@
 
 #include "RangeAttack.h"
 
-#include "Player.h"
-#include "HPBar.h"
 #include "GUI.h"
+#include "Text.h"
+#include "Chat.h"
+#include "HPBar.h"
 #include "ZurikiRageSkill.h"
 #include "HoshoyoExplosionSkill.h"
-
-#include "Text.h"
 
 #include "network\Packet.h"
 #include "PacketController.h"
 
 #include "FrameBuffer.h"
 
-#include <string>
+// Standard libs
 #include <iostream>
-#include <cstdlib>
-#include "network\Packet.h"
+#include <string>
 
-#include "Chat.h"
-
-//#include <glm\gtc\matrix_transform.hpp>
-
+FrameBuffer* fb;
 
 Game::Game(int windowWidth, int windowHeight)
 {	
+	double lastT = 0;
 	this->frameBuffer = new FrameBuffer(windowWidth, windowHeight);
 	this->windowWidth = windowWidth;
 	this->windowHeight = windowHeight;
 
 	PacketController::game = this;
+	lastT = Time::getTime();
 	this->createGraphicElements(windowWidth, windowHeight);
+	std::cout <<"createGraphicElements "<< Time::getTime() - lastT << std::endl;
+	lastT = Time::getTime();
 	this->createMap();
-
+	std::cout <<"createMap "<< Time::getTime() - lastT << std::endl;
+	lastT = Time::getTime();
 #ifdef SINGLEPLAYER
 	this->createOfflinePlayer();
+	std::cout << "createOfflinePlayer " << Time::getTime() - lastT << std::endl;
 #endif
 #ifdef MULTIPLAYER
 	this->createUDPConnection();
 	this->waitForCreationOfOnlinePlayer();
 	
 #endif
+	lastT = Time::getTime();
 	this->createGUI();
-
+	std::cout << "createGUI " << Time::getTime() - lastT << std::endl;
 #ifdef MULTIPLAYER
 	this->loadMonstersAndEntities(false, true);
 #endif
 
 #ifdef SINGLEPLAYER
+	lastT = Time::getTime();
 	this->loadMonstersAndEntities(true, true);
+	std::cout << "loadMonstersAndEntities " << Time::getTime() - lastT << std::endl;
 #endif
-
-	lastTime = 0;
+	fb = new FrameBuffer(2048, 2048, true);
+	//lastTime = 0;
 }
 
 Game::~Game()
 {
-	// TODO: fix deletions
+	if (camera != nullptr) delete camera;
+	if (light != nullptr) delete light;
+	if (primitiveShader != nullptr) delete primitiveShader;
+	if (projectileShader != nullptr) delete projectileShader;
+	if (mapShader != nullptr) delete mapShader;
+	if (monsterFactory != nullptr) delete monsterFactory;
+	if (gameEntityFactory != nullptr) delete gameEntityFactory;
+	if (this->map != nullptr) delete map;
+	if (this->gui != nullptr) delete gui;
+	if (this->water != nullptr) delete water;
 
-	delete primitiveShader;
-	delete camera;
-	if (monsterFactory != NULL)
-		delete monsterFactory;
-	if (this->map != NULL)
-		delete map;
+	// delete vectors content
 	for (Monster* monster : monsters)
 		delete monster;
+	for (Entity* entity : entities)
+		delete entity;
+	for (GameEntity* entity : gameEntities)
+		delete entity;
 
+#ifdef SINGLEPLAYER
+	if (this->localPlayer != nullptr)	delete localPlayer;
+#endif
 #ifdef MULTIPLAYER
 	udpClient->virtualDisconnection();
+	if (this->udpClient != nullptr) delete udpClient;
 #endif
 }
 
@@ -104,13 +121,13 @@ void Game::createGraphicElements(int windowsWidth, int windowsHeight)
 	Input::mouseAttack.setCamera(this->camera);
 
 	// Light
-	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 1, 1));
+	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 0.95f, 0.8f));
 
 	// Shaders
 	this->primitiveShader = new PrimitiveShader("./shaders/normalshader", camera, light);
 	this->commonShader = new CommonShader("./shaders/commonshader", camera, light);
 	this->projectileShader = new CommonShader("./shaders/projectile", camera, light);
-	this->mapShader = new MapShader("./shaders/mapshader", camera, light);
+	this->mapShader = new MapShader("./shaders/mapshader_shadow", camera, light);
 }
 
 void Game::createMap()
@@ -128,6 +145,7 @@ void Game::createMap()
 void Game::createOfflinePlayer()
 {
 #ifdef SINGLEPLAYER
+	// TODO delete player Mesh, Transform, Texture
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 12, 0));
 	this->localPlayer = new Player(new Transform(glm::vec3(440, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"), &monsters, map);
 	this->localPlayer->setHp(100);
@@ -138,6 +156,7 @@ void Game::createOfflinePlayer()
 	this->localPlayer->setMaximumHpBasis(100);
 	this->localPlayer->setDefenseBasis(100);
 	this->localPlayer->setMagicalPowerBasis(20);
+	// TODO delete skill1, 2, 3, 4
 	Skill* skill1 = new HoshoyoExplosionSkill(&monsters);
 	skill1->setSlot(SLOT_1);
 	localPlayer->addNewSkill(skill1);
@@ -163,7 +182,7 @@ void Game::waitForCreationOfOnlinePlayer()
 		this->udpClient->receivePackets();
 		Sleep(100);
 	}
-	while (this->localPlayer == NULL);
+	while (this->localPlayer == nullptr);
 
 	this->localPlayer = PacketController::localPlayer;
 }
@@ -172,7 +191,9 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 {
 #ifdef MULTIPLAYER
 	glm::vec3 localPlayerPosition = glm::vec3(data[8], data[9], data[10]);
+	// TODO: delete player Mesh
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 12, 0));
+	// TODO: delete designedPlayer, and his transform/texture
 	Player* designedPlayer;
 
 	if (data[0] == 0)
@@ -209,14 +230,19 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 
 void Game::createGUI()
 {
-	this->gui = new GUI(localPlayer, "./shaders/textshader", "./shaders/fontshader", "./fonts/bluehigh.ttf");
+	this->gui = new GUI(localPlayer, "./shaders/textshader", "./shaders/fontshader", "./fonts/consola.ttf");
 	PacketController::gui = this->gui;
 }
 
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 {
+	double lastT = 0;
+	lastT = Time::getTime();
 	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, this->map));
+	std::cout << "Create Grid:" << Time::getTime() - lastT << std::endl;
 
+	// TODO: delete EntityMap transform and textures
+	lastT = Time::getTime();
 	this->entityMap = new EntityMap(new Transform(), mapMesh,
 		new Texture("./res/Maps/stonePath.png"),
 		new Texture("./res/Maps/mountain.jpg"),
@@ -224,11 +250,14 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 		new Texture("./res/Maps/grassTex.png"),
 		new Texture(TERRAIN_MAP_PATH));
 
+	// TODO: delete waterMesh Mesh, texture and transform
 	Mesh* waterMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), (float)MAP_SIZE, (float)MAP_SIZE));
 	Texture* waterTexture = new Texture("./res/Maps/water.jpg");
 	waterTexture->setTileAmount(100);
 	water = new Entity(new Transform(glm::vec3(0,0,-0.3f)), waterMesh, waterTexture);
+	std::cout << "load rest of map: " << Time::getTime() - lastT << std::endl;
 
+	lastT = Time::getTime();
 	// Load monsters and entities
 	for (int i = 0; i < MAP_SIZE; i++)
 	{
@@ -262,6 +291,7 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 			}
 		}
 	}
+	std::cout << "Create entities and monsters" << Time::getTime() - lastT << std::endl;
 }
 
 void Game::createUDPConnection()
@@ -274,6 +304,7 @@ void Game::createUDPConnection()
 void Game::createMonster(int monsterId, short* data)
 {
 #ifdef MULTIPLAYER
+	// TODO: delete newMonster
 	int monsterHp = data[0];
 	glm::vec3 monsterRgb = glm::vec3(data[1], data[2], data[3]);
 	glm::vec3 monsterPosition = glm::vec3(data[4], data[5], data[6]);
@@ -290,41 +321,48 @@ void Game::createMonster(int monsterId, short* data)
 Monster* Game::getMonsterOfId(int id)
 {
 #ifdef MULTIPLAYER
-	for (int i = 0; i < monsters.size(); i++)
+	for (unsigned int i = 0; i < monsters.size(); i++)
 		if (monsters[i]->getId() == id)
 			return monsters[i];
 #endif
 
-	return NULL;
+	return nullptr;
 }
 
 void Game::render()
 {
-		// Map
+	// Map
+	glm::mat4 oldProj = camera->getProjection();
+	glm::vec3 camOldPos = camera->getPosition();
+	for (int i = 0; i < 2; i++){
+		if (i == 0)
+		{
+			glm::vec3 lightPos = light->lightPosition;
+
+			glm::mat4 ort = glm::ortho(-55.0f, 55.0f, -55.0f, 55.0f, 0.1f, 150.0f);
+			//glm::mat4 ort = glm::ortho(-30.0f, 30.0f, -30.0f, 30.0f, 0.1f, 150.0f);
+			camera->setProjectionMatrix(ort);
+			camera->setCamPosition(lightPos);
+
+			glm::mat4 lightSpace = ort * camera->getView();
+			mapShader->useShader();
+			glUniformMatrix4fv(glGetUniformLocation(mapShader->getShader(), "lightSpaceMatrix"), 1, GL_FALSE, &lightSpace[0][0]);
+			glBindTexture(GL_TEXTURE_2D, fb->textureID);
+			glActiveTexture(GL_TEXTURE5);
+			glUniform1i(glGetUniformLocation(mapShader->getShader(), "shadowMap"), 5);
+			mapShader->stopShader();
+			fb->renderDepth();
+		}
+		else
+		{
+			camera->setProjectionMatrix(oldProj);
+			camera->setCamPosition(camOldPos);
+			fb->normalRender();
+		}
+
 		entityMap->render(mapShader);
-
-		//glEnable(GL_BLEND);
-		//glBlendFunc(GL_ONE, GL_ONE);
-		//glDepthMask(false);
-		//glDepthFunc(GL_EQUAL);
-
-		entityMap->render(mapShader);
-
-		//for (int i = 0; i < 1; i++)
-		//{
-		//	mapShader2->setLight(light2[i]);
-		//	entityMap->render(mapShader2);
-		//}
-		//mapShader2->setLight(light);
-		//
-		//glDepthFunc(GL_LESS);
-		//glDepthMask(true);
-		//glDisable(GL_BLEND);
-
 		water->render(commonShader);
 
-		// Player
-		localPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
 
 		// Generic entities (Player only at the moment)
 		for (Entity* e : entities)
@@ -346,7 +384,7 @@ void Game::render()
 				std::cerr << "Error rendering entity" << std::endl;
 			}
 		}
-		
+
 		// Common static entities
 		for (Entity* e : gameEntities)
 		{
@@ -366,8 +404,7 @@ void Game::render()
 		if (secondPlayer != NULL)
 			secondPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
 #endif MULTIPLAYER
-
-//	}
+	}
 	// Render GUI (Order is important)
 	gui->render();
 
@@ -401,26 +438,20 @@ void Game::update()
 		Chat::msg = "";
 	}
 #endif
-	// Game input
-	input();
-	Input::mouseAttack.update();
-
-	// Camera input & update
-	camera->input();
+	// Camera update
 	camera->update(localPlayer->getTransform()->getPosition());
 
-	// Light input & update
+	// Light update
 	glm::vec3 playerPos = localPlayer->getTransform()->getPosition();
-	light->input();
+	playerPos.x -= 30.0f;
+	playerPos.y -= 30.0f;
 	light->update(playerPos);
 
-	// Player input & update
-	
-	localPlayer->input(this->map);
+	// Player update	
 	localPlayer->update(this->map);
 
 #ifdef MULTIPLAYER
-	if (secondPlayer != NULL)
+	if (secondPlayer != NULL) 
 		secondPlayer->update(this->map);
 #endif
 	
@@ -440,31 +471,17 @@ void Game::update()
 }
 
 void Game::input()
-{		
+{	
+	if (!Chat::isChatActive())
+	{
+		Input::mouseAttack.update();
+		camera->input();
+		light->input();
+		localPlayer->input(this->map);
+	}
 
 #ifdef DEBUG
 	
-	//if (Input::keyStates[5 + 320])
-	//	light2->lightPosition = localPlayer->getTransform()->getPosition();
-	//if (Input::keyStates[6 + 320])
-	//	light2->lightPosition.x += 1.0f;
-	//if (Input::keyStates[4 + 320])
-	//	light2->lightPosition.x -= 1.0f;
-	//if (Input::keyStates[8 + 320])
-	//	light2->lightPosition.y += 1.0f;
-	//if (Input::keyStates[2 + 320])
-	//	light2->lightPosition.y -= 1.0f;
-
-	if (Input::keyStates['o'])
-		localPlayer->setHp(localPlayer->getHp() - 1);
-
-#ifdef SINGLEPLAYER
-	if (Input::keyStates['i'])
-		localPlayer->setSpeedBasis(localPlayer->getSpeedBasis() + 1);
-	if (Input::keyStates['k'])
-		localPlayer->setSpeedBasis(localPlayer->getSpeedBasis() - 1);
-#endif SINGLEPLAYER
-
 	if (Input::keyStates['t'])
 	{
 		double now = Time::getTime();

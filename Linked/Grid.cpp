@@ -5,7 +5,6 @@
 
 Grid::Grid(int blockSize, Map* map)
 {
-	
 	this->blockSize = blockSize;
 	for (int i = 0; i < blockSize; i += 2)
 	{
@@ -62,6 +61,7 @@ Grid::Grid(int blockSize, Map* map)
 			//indexedModel.normals.push_back(glm::vec3(0, 1, 0));
 		}
 	}
+
 	// Calc Normals
 	int indexPos = 0;
 	for (int i = 0; i < blockSize; i += 2)

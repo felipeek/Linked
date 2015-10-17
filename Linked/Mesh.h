@@ -17,7 +17,7 @@ public:
 	void render();
 	float reflectivity;
 	float glossiness;
-	static GLuint drawForm;
+	static bool wireframe;
 
 	// returns NULL if quad does not exist
 	Quad* getQuad();

@@ -2,7 +2,6 @@
 #include "Packet.h"
 #include "ClientPacket.h"
 #include "../PacketController.h"
-#include "../Game.h"
 #include <iostream>
 
 //#define DEBUG

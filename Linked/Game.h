@@ -1,8 +1,10 @@
 #pragma once
 #include "Configuration.h"
-#include <vector>
 #include "network\UDPClient.h"
+
 #include <glm\glm.hpp>
+
+#include <vector>
 
 #define MAP_SIZE 1024
 
@@ -49,6 +51,8 @@ public:
 	void render();
 	void update();
 
+	/* GAME INPUT */
+	void input();
 private:
 	int windowWidth;
 	int windowHeight;
@@ -95,8 +99,6 @@ private:
 	/* GAME NETWORK */
 	UDPClient* udpClient;
 
-	/* GAME INPUT */
-	void input();
 	double lastTime;
 };
 

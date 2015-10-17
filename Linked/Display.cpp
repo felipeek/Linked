@@ -1,11 +1,12 @@
 #include "Display.h"
 #include "Input.h"
 #include "Time.h"
-#include <iostream>
 #include "Game.h"
 #include "PacketController.h"
 #include "Configuration.h"
 #include "Chat.h"
+
+#include <iostream>
 
 // Window and Monitor
 GLFWwindow* Display::window = NULL;
@@ -73,7 +74,7 @@ void Display::startGlfw(int* argc, char** argv, std::string titulo)
 	glfwMakeContextCurrent(window);
 
 	// Disable vsync
-	glfwSwapInterval(0);
+	//glfwSwapInterval(0);
 
 	// Set callbacks for input
 	glfwSetKeyCallback(window, keyCallBack);
@@ -155,6 +156,7 @@ void Display::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	game->render();
+	game->input();
 	glfwSwapBuffers(window);
 }
 

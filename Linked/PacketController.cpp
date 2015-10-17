@@ -97,7 +97,7 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 					short speed = data[5];
 					short aspd = data[6];
 #ifdef MULTIPLAYER
-					if (hp < PacketController::secondPlayer->getHp())
+					if ((unsigned int)hp < PacketController::secondPlayer->getHp())
 						PacketController::secondPlayer->receiveDamage();
 					PacketController::secondPlayer->setTotalMaximumHp(maxHp);
 					PacketController::secondPlayer->setHp(hp);
@@ -138,7 +138,7 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 					short speed = data[5];
 					short aspd = data[6];
 #ifdef MULTIPLAYER
-					if (hp < PacketController::localPlayer->getHp())
+					if ((unsigned int)hp < PacketController::localPlayer->getHp())
 						PacketController::localPlayer->receiveDamage();
 					PacketController::localPlayer->setTotalMaximumHp(maxHp);
 					PacketController::localPlayer->setHp(hp);
@@ -223,10 +223,10 @@ void PacketController::dispatchPong(int id, int xid)
 void PacketController::dispatchVec3fWithShortArray(int id, int xid, glm::vec3* data, short* extraData, int dataSize)
 {
 #ifdef MULTIPLAYER
-	switch (id)
-	{
+	//switch (id)
+	//{
 		// Monster Control
-	default:
+	//default:
 		if (xid == 1)	// Change Monster Position
 		{
 			int numberOfPositions = dataSize / (sizeof(glm::vec3) + sizeof(short));
@@ -239,8 +239,8 @@ void PacketController::dispatchVec3fWithShortArray(int id, int xid, glm::vec3* d
 				//targetMonster->getTransform()->translate(data[i].y, data[i].z, data[i].w);
 			}
 		}
-		break;
-	}
+		//break;
+	//}
 #endif
 }
 void PacketController::dispatchMsg(int id, int xid, char* data)
