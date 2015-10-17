@@ -73,7 +73,7 @@ void FrameBuffer::renderDepth()
 void FrameBuffer::normalRender()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, 1600, 900);
 	//e->render(shader);
 }
 

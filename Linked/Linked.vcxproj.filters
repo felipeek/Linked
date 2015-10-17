@@ -273,9 +273,12 @@
     <ClInclude Include="Chat.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="TextShader.h">
       <Filter>Header Files\Shaders</Filter>
     </ClInclude>
+=======
+>>>>>>> c4dbbba944856831e7eb08bd0168f50dbe2fae0b
     <ClInclude Include="FrameShader.h">
       <Filter>Header Files\Shaders</Filter>
     </ClInclude>

@@ -5,7 +5,6 @@
 #include "Equipment.h"
 #include "Movement.h"
 #include "PlayerAI.h"
-#include "Configuration.h"
 
 #include <vector>
 #include <string>
@@ -21,6 +20,8 @@
 #define PLAYER_DEFAULT_MAGICAL_POWER_BASIS 10
 #define PLAYER_DEFAULT_SPEED_BASIS 10
 #define PLAYER_DEFAULT_ATTACK_SPEED_BASIS 10
+
+#define PLAYER_FOG_OF_WAR_RADIUS 30
 
 #define PLAYER_RECEIVE_DAMAGE_DELAY 0.3f
 #define PLAYER_TEXTURE_CHANGE_DELAY 0.2f
@@ -44,19 +45,41 @@ public:
 	Player(Transform* transform, Mesh* mesh, Texture* texture, std::vector<Monster*>* monsters, Map* map);
 	~Player();
 
-	/* METHODS RELATED TO PLAYER ATTRIBUTES */
+	/* BASIC ATTRIBUTES */
+	short getClientId();	// multiplayer
+	void setClientId(short clientId);	// multiplayer
+	PlayerType getType();	// multiplayer
+	void setType(PlayerType type);	// multiplayer
 	std::string getName();
 	void setName(std::string name);
-	bool isAlive();
-	void doDamage(unsigned int damage);
 	unsigned int getHp();
 	void setHp(unsigned int hp);
+	void healHp(unsigned int healingAmount);
+	void restoreHpToMaximum();
+	unsigned int getMaximumHpBasis();	// single player
+	void setMaximumHpBasis(unsigned int maximumHpBasis);	// single player
 	unsigned int getTotalMaximumHp();
+	void setTotalMaximumHp(unsigned int maxHp);	// multiplayer
+	unsigned int getAttackBasis();	// single player
+	void setAttackBasis(unsigned int attackBasis);	// single player
 	unsigned int getTotalAttack();
+	void setTotalAttack(unsigned int totalAttack);	// multiplayer
+	unsigned int getDefenseBasis();	// single player
+	void setDefenseBasis(unsigned int defenseBasis);	// single player
 	unsigned int getTotalDefense();
+	void setTotalDefense(unsigned int totalDefense);	// multiplayer
+	unsigned int getMagicalPowerBasis();	// single player
+	void setMagicalPowerBasis(unsigned int magicalPowerBasis);	// single player
 	unsigned int getTotalMagicalPower();
+	void setTotalMagicalPower(unsigned int totalMagicalPower);	// multiplayer
+	unsigned int getSpeedBasis();	// single player
+	void setSpeedBasis(unsigned int speedBasis);	// single player
 	unsigned int getTotalSpeed();
+	void setTotalSpeed(unsigned int totalSpeed);	// multiplayer
+	unsigned int getAttackSpeedBasis();	// single player
+	void setAttackSpeedBasis(unsigned int attackSpeedBasis);	// single player
 	unsigned int getTotalAttackSpeed();
+	void setTotalAttackSpeed(unsigned int totalAttackSpeed);	// multiplayer
 	std::vector<Skill*> getSkills();
 	Skill* getSkillOfSlot(SkillSlot slot);
 	bool addNewSkill(Skill* skill);
@@ -68,79 +91,50 @@ public:
 	HPBar* getHPBar();
 	RangeAttack* getRangeAttack();
 
-#ifdef SINGLEPLAYER
-	void healHp(unsigned int healingAmount);
-	void restoreHpToMaximum();
-	unsigned int getMaximumHpBasis();
-	void setMaximumHpBasis(unsigned int maximumHpBasis);
-	unsigned int getAttackBasis();
-	void setAttackBasis(unsigned int attackBasis);
-	unsigned int getDefenseBasis();
-	void setDefenseBasis(unsigned int defenseBasis);
-	unsigned int getMagicalPowerBasis();
-	void setMagicalPowerBasis(unsigned int magicalPowerBasis);
-	unsigned int getSpeedBasis();
-	void setSpeedBasis(unsigned int speedBasis);
-	unsigned int getAttackSpeedBasis();
-	void setAttackSpeedBasis(unsigned int attackSpeedBasis);
-#endif
-
-#ifdef MULTIPLAYER
-	void setTotalMaximumHp(unsigned int maxHp);
-	void setTotalAttack(unsigned int totalAttack);
-	void setTotalDefense(unsigned int totalDefense);
-	void setTotalMagicalPower(unsigned int totalMagicalPower);
-	void setTotalSpeed(unsigned int totalSpeed);
-	void setTotalAttackSpeed(unsigned int totalAttackSpeed);
-	void startMovementTo(glm::vec3 destination);
-	void setType(PlayerType type);
-	PlayerType getType();
-#endif	
-
-	/* METHODS RELATED TO PLAYER TEXTURE CHANGE */
-	void doAttack();
-	bool isAttacking();
+	/* STATUS */
+	bool isAlive();
 	bool isMoving();
+	bool isAttacking();
+	void doAttack();
 	void receiveDamage();
 	bool isReceivingDamage();
+
+	/* COMBAT */
+	void doDamage(unsigned int damage);
+	
+	/* MOVEMENT */
+	void startMovementTo(glm::vec3 destination);	// multiplayer
+
+	/* AUXILIAR */
+	bool isFogOfWar(glm::vec3 position);
 
 	/* METHODS RELATED TO INPUT, UPDATE AND RENDERING */
 	void update(Map* map);
 	void input(Map* map);
 	void render(Shader* primitiveShader, TextRenderer* textRenderer, Shader* projectileShader);
-
-	/* METHODS RELATED TO NETWORK */
-#ifdef MULTIPLAYER
-	bool needToSendAttributesToServer();
-#endif
 private:
 	/* FUNDAMENTAL ATTRIBUTES */
+	short clientId;
 	std::string name;
 	unsigned int hp;
+	unsigned int maximumHpBasis;	// single player
+	unsigned int maximumHp;	// multiplayer
+	unsigned int attackBasis;	// single player
+	unsigned int attack;	// multiplayer
+	unsigned int defenseBasis;	// single player
+	unsigned int defense;	// multiplayer
+	unsigned int magicalPowerBasis;	// single player
+	unsigned int magicalPower;	// multiplayer
+	unsigned int speedBasis;	// single player
+	unsigned int speed;	// multiplayer
+	unsigned int attackSpeedBasis;	// single player
+	unsigned int attackSpeed;	// multiplayer
+	PlayerType type;
 	std::vector<Skill*> skills;
 	std::vector<Equipment*> equipments;
 	std::vector<Projectile*> attacks;
 	HPBar* hpBar;
 	RangeAttack* rangeAttack;
-
-#ifdef SINGLEPLAYER
-	unsigned int maximumHpBasis;
-	unsigned int attackBasis;
-	unsigned int defenseBasis;
-	unsigned int magicalPowerBasis;
-	unsigned int speedBasis;
-	unsigned int attackSpeedBasis;
-#endif
-
-#ifdef MULTIPLAYER
-	unsigned int maximumHp;
-	unsigned int attack;
-	unsigned int defense;
-	unsigned int magicalPower;
-	unsigned int speed;
-	unsigned int attackSpeed;
-	PlayerType type;
-#endif
 
 	/* TEXTURE-RELATED ATTRIBUTES */
 	bool attacking;
@@ -157,26 +151,19 @@ private:
 	bool lastIsDead = false;
 	bool lastIsMoving = false;
 
-	/* TEXTURE-RELATED FUNCTIONS */
+	/* TEXTURE-RELATED METHODS */
 	void refreshTexture();
 	void changeTextureBasedOnDirection(MovementDirection direction, unsigned int initialTextureIndex, unsigned int finalTextureIndex);
 
 	/* MOVEMENT ATTRIBUTES */
-#ifdef MULTIPLAYER
-	PlayerAI* ai;
-	glm::vec3 destination;
-	bool isMovingTo;
-#endif
+	PlayerAI* ai;	// multiplayer
+	glm::vec3 destination;	// multiplayer
+	bool isMovingTo;	// multiplayer
 
-	/* MOVEMENT FUNCTIONS */
-#ifdef MULTIPLAYER
-	void updateMovement(Map* map);
-#endif
+	/* MOVEMENT METHODS */
+	void updateMovement(Map* map);	// multiplater
+
+	/* AUXILIAR METHODS */
 	bool checkIfPlayerIsStillOnTheSameMapPosition(glm::vec3 currentPosition, glm::vec3 nextPosition);
 	glm::vec3 getDeltaVectorToDirection(MovementDirection direction);
-
-	/* NETWORK ATTRIBUTES */
-#ifdef MULTIPLAYER
-	bool attributesChanged;
-#endif
 };

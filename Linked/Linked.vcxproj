@@ -81,7 +81,6 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Chat.h" />
     <ClInclude Include="CommonShader.h" />
-    <ClInclude Include="Configuration.h" />
     <ClInclude Include="Creature.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Entity.h" />

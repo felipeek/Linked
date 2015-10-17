@@ -9,6 +9,7 @@
 #include "Mesh.h"
 #include "Player.h"
 #include "PacketController.h"
+#include "Game.h"
 
 #include <iostream>
 
@@ -30,40 +31,12 @@ RangeAttack::~RangeAttack()
 {
 }
 
-void RangeAttack::update()
+std::vector<Projectile*>* RangeAttack::getAttacks()
 {
-	double now = Time::getTime();
-	int hitMonsterIndex;
-
-	for (unsigned int i = 0; i < attacks->size(); i++)
-	{
-		(*attacks)[i]->update();
-	
-		if (monsterCollision((*attacks)[i], &hitMonsterIndex))
-		{
-			if (hitMonsterIndex >= 0)
-			{
-				Monster *hitMonster = (*monsters)[hitMonsterIndex];
-
-				hitMonster->doDamage(ATTACK);
-			}
-			delete (*attacks)[i];
-			attacks->erase((*attacks).begin() + i);
-		}
-		else if (map->coordinateHasCollision((*attacks)[i]->getTransform()->getPosition()))
-		{
-			delete (*attacks)[i];
-			attacks->erase((*attacks).begin() + i);
-		}
-		else if (now - (*attacks)[i]->spawnTime >= life)
-		{
-			delete (*attacks)[i];
-			attacks->erase((*attacks).begin() + i);
-		}
-	}
+	return this->attacks;
 }
 
-void RangeAttack::createProjectile(glm::vec3 direction)
+void RangeAttack::createProjectile(glm::vec3 direction, int projId)
 {
 	glm::vec3 playerPos = player->getTransform()->getPosition();
 	playerPos.z = 0;
@@ -71,7 +44,10 @@ void RangeAttack::createProjectile(glm::vec3 direction)
 
 	Transform* projectileTransform = new Transform(playerPos + glm::vec3(0, 0, playerPos.z), 35, glm::vec3(1, 0, 0), glm::vec3(3, 3, 3));
 	Projectile* entityD = new Projectile(projectileTransform, mesh, texture, speed, direction);
+	entityD->setId(projId);
 	(*attacks).push_back(entityD);
+
+	std::cout << "created projectile " << projId << "." << std::endl;
 }
 
 void RangeAttack::setSpeed(float value)
@@ -119,7 +95,7 @@ bool RangeAttack::createProjectileDirectedToMouse()
 		glm::vec3 playerPos = player->getTransform()->getPosition();
 		glm::vec3 direction = Input::mouseAttack.getMouseIntersection() - playerPos;
 
-		this->createProjectile(direction);
+		this->createProjectile(direction, 0);
 
 		lastTimeCreate = now;
 
@@ -144,16 +120,60 @@ void RangeAttack::sendAttackToServer()
 	}
 }
 
+void RangeAttack::update()
+{
+	double now = Time::getTime();
+	int hitMonsterIndex;
+
+	for (unsigned int i = 0; i < attacks->size(); i++)
+	{
+		(*attacks)[i]->update();
+
+		// if projectile hit wall it must be deleted
+		if (map->coordinateHasCollision((*attacks)[i]->getTransform()->getPosition()))
+		{
+			delete (*attacks)[i];
+			attacks->erase((*attacks).begin() + i);
+		}
+		// if projectile lived long enough it must be deleted
+		else if (now - (*attacks)[i]->getSpawnTime() >= life)
+		{
+			delete (*attacks)[i];
+			attacks->erase((*attacks).begin() + i);
+		}
+		// projetil collision should be tested only if the game is single player OR is multiplayer but the player is the local player
+		else if ((Game::multiplayer && player->getType() == LOCAL) || !Game::multiplayer)
+		{
+			if (monsterCollision((*attacks)[i], &hitMonsterIndex))
+			{
+				if (hitMonsterIndex >= 0)
+				{
+					Monster *hitMonster = (*monsters)[hitMonsterIndex];
+
+					if (Game::multiplayer)
+						PacketController::sendAttackCollisionToServer(hitMonster->getId(), (*attacks)[i]->getId());
+
+					delete (*attacks)[i];
+					attacks->erase((*attacks).begin() + i);
+					hitMonster->doDamage(ATTACK);
+				}
+			}
+		}
+	}
+}
+
 void RangeAttack::input()
 {
 	if (Input::attack && player->isAlive())
 	{
-#ifdef SINGLEPLAYER
-		createProjectileDirectedToMouse();
-		player->doAttack();
-#endif
-#ifdef MULTIPLAYER
-		this->sendAttackToServer();
-#endif
+		if (Game::multiplayer)
+		{
+			this->sendAttackToServer();
+		}
+		else
+		{
+			createProjectileDirectedToMouse();
+			player->doAttack();
+		}
 	}
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "Configuration.h"
+
 #include "network\UDPClient.h"
 
 #include <glm\glm.hpp>
@@ -40,12 +40,17 @@ public:
 	Game(int windowWidth, int windowHeight);
 	~Game();
 
+	static bool multiplayer;
+	static int server_port;
+	static std::string server_ip;
+
 	/* INITIALIZATION METHODS */
 	void createOnlinePlayer(short* data, bool isLocalPlayer);
-	void createMonster(int monsterId, short* data);
+	void createMonster(short* data);
 
 	/* AUXILIAR METHODS */
 	Monster* getMonsterOfId(int id);
+	void destroyProjectileOfId(int id);
 
 	/* RENDER & UPDATE*/
 	void render();
@@ -85,11 +90,7 @@ private:
 
 	/* GAME PLAYERS AND ATTACK */
 	Player* localPlayer = NULL;
-	RangeAttack* localPlayerRangeAttack = NULL;
-#ifdef MULTIPLAYER
-	Player* secondPlayer = NULL;
-	RangeAttack* secondPlayerRangeAttack = NULL;
-#endif
+	std::vector<Player*> onlinePlayers;
 
 	/* GAME ENTITIES VECTORS */
 	std::vector<Entity*> entities;

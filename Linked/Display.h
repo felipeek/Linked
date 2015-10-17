@@ -7,8 +7,8 @@
 
 class Game;
 
-#define WWID 800
-#define WHEI 600
+#define WWID 1600
+#define WHEI 900
 #define WINDOW_START_X 100
 #define WINDOW_START_Y 100
 

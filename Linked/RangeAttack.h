@@ -21,7 +21,8 @@ public:
 	RangeAttack(Player* player, std::vector<Projectile*>* attacks, std::vector<Monster*>* monsters, Map* map);
 	~RangeAttack();
 
-	void createProjectile(glm::vec3 direction);
+	std::vector<Projectile*>* getAttacks();
+	void createProjectile(glm::vec3 direction, int projId);
 	void setSpeed(float value);
 	void setLife(float value);
 

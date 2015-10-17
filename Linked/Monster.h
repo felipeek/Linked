@@ -1,8 +1,6 @@
 #pragma once
 #include "Entity.h"
 #include "Creature.h"
-#include "Configuration.h"
-class Player;
 
 #define MONSTER_DEFAULT_NAME "unnamed"
 #define MONSTER_DEFAULT_HP 10
@@ -26,6 +24,7 @@ class Player;
 #define MONSTER_FIRST_DIRECTION BOTTOM
 #define MONSTER_FIRST_INDEX_TEXTURE 20
 
+class Player;
 class MonsterAI;
 class Map;
 class MovementDefinition;
@@ -36,26 +35,16 @@ class Monster : public Entity, public Creature
 public:
 	Monster(Transform* transform, Mesh* mesh, Texture* texture);
 	~Monster();
-#ifdef MULTIPLAYER
+
+	/* BASIC ATTRIBUTES */
 	int getId();
 	void setId(int id);
-#endif
 	std::string getName();
 	void setName(std::string name);
-	bool isAlive();
-	bool isAttacking();
-	bool isReceivingDamage();
-	bool isMoving();
-	void killMonster();
-	bool isOnScreen();
-	bool canBeDeleted();
-	void attack();
-	void receiveDamage();
 	unsigned int getHp();
 	void setHp(unsigned int hp);
 	unsigned int getTotalMaximumHp();
 	void setTotalMaximumHp(unsigned int totalMaximumHp);
-	void doDamage(unsigned int damage);
 	unsigned int getTotalAttack();
 	void setTotalAttack(unsigned int totalAttack);
 	unsigned int getTotalDefense();
@@ -78,19 +67,36 @@ public:
 	void setMapColorBlue(int blue);
 	glm::vec3 getMapColor();
 	void setMapColor(glm::vec3 mapColor);
+
+	/* STATUS */
+	bool isAlive();
+	void killMonster();
+	bool isAttacking();
+	void attack();
+	bool isReceivingDamage();
+	void receiveDamage();
+	bool shouldRender();
+	void setShouldRender(bool shouldRender);
+	bool isMoving();
+	bool isOnScreen();
+
+	/* COMBAT */
+	void doDamage(unsigned int damage);
 	void attackCreature(Creature* creature);
-	void update(Map* map, Player* player);
-#ifdef MULTIPLAYER
+	
+	/* MOVEMENT */
 	void startMovementTo(glm::vec3 destination);
-#endif
+	
+	/* UPDATE */
+	void update(Map* map, Player* player);
+	
 private:
 	MonsterAI* ai;
 
-	/* MONSTER ATTRIBUTES/STATUS */
-#ifdef MULTIPLAYER
+	/* BASIC ATTRIBUTES */
 	int id;
-#endif
 	std::string name;
+	bool bRender;
 	bool alive;
 	bool attacking;
 	bool receivingDamage;
@@ -126,19 +132,12 @@ private:
 	bool lastIsMoving = false;
 
 	/* MOVEMENT AUXILIAR FUNCTIONS */
-#ifdef SINGLEPLAYER
-	MovementDefinition moveTo(Entity* entity, Map* map);
-	MovementDefinition moveRandomly(Map* map);
-	bool hasReachedEntity(Entity* entity);
-#endif
-
-#ifdef MULTIPLAYER
-	void updateMovement(Map* map);
-#endif
+	MovementDefinition moveTo(Entity* entity, Map* map); // single player
+	MovementDefinition moveRandomly(Map* map); // single player
+	bool hasReachedEntity(Entity* entity); // single player
+	MovementDefinition updateMovement(Map* map); // multiplayer
 
 	/* MOVEMENT AUXILIAR VARIABLES */
-#ifdef MULTIPLAYER
 	glm::vec3 destination;
 	bool isMovingTo;
-#endif
 };
