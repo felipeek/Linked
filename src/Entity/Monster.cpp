@@ -277,13 +277,13 @@ bool Monster::isOnScreen()
 
 void Monster::doDamage(unsigned int damage)
 {
-	std::cout << "Monster " << this->getId() << " took damage: " << damage << std::endl;
+	//std::cout << "Monster " << this->getId() << " took damage: " << damage << std::endl;
 
 	if (damage >= hp)
 	{
 		hp = 0;
 		this->killMonster();
-		std::cout << "Monster " << this->getId() << " died." << std::endl;
+		//std::cout << "Monster " << this->getId() << " died." << std::endl;
 	}
 	else
 		hp = hp - damage;

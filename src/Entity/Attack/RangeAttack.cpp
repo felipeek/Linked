@@ -47,7 +47,7 @@ void RangeAttack::createProjectile(glm::vec3 direction, int projId)
 	entityD->setId(projId);
 	(*attacks).push_back(entityD);
 
-	std::cout << "created projectile " << projId << "." << std::endl;
+	//std::cout << "created projectile " << projId << "." << std::endl;
 }
 
 void RangeAttack::setSpeed(float value)
