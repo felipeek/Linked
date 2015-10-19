@@ -36,7 +36,11 @@ MapGameEntity MapGameEntityImageLoader::getMapEntity(vec3 coordinateVector)
 	try
 	{
 		vec3 rgb = getPixel((int)coordinateVector.x, (int)coordinateVector.y);
-
+		if ((rgb.r == 0 && rgb.g == 0 && rgb.b == 0) || (rgb.r == 255 && rgb.g == 255 && rgb.b == 0))
+		{
+			mapGameEntity.gameEntityExists = false;
+			return mapGameEntity;
+		}
 		if (gameEntityFactory->isGameEntityMapColorValid(rgb))
 		{
 			mapGameEntity.gameEntity = gameEntityFactory->getGameEntityOfMapColor(rgb);
