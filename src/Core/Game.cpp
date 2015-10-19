@@ -45,7 +45,7 @@
 
 FrameBuffer* fb;
 
-bool Game::multiplayer = true;
+bool Game::multiplayer = false;
 int Game::server_port = 9090;
 std::string Game::server_ip = "127.0.0.1";
 
@@ -223,7 +223,7 @@ void Game::createGUI()
 	this->gui = new GUI(localPlayer, "./shaders/textshader", "./shaders/fontshader", "./fonts/consola.ttf");
 	PacketController::gui = this->gui;
 }
-
+#define DEBUG
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 {
 	double lastT = 0;
@@ -257,27 +257,21 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 			Monster *monster = coordinate.mapMonster.monster;
 			GameEntity *gameEntity = coordinate.mapGameEntity.gameEntity;
 
-			if (loadMonsters)
+			if (coordinate.mapMonster.monsterExists)
 			{
-				if (coordinate.mapMonster.monsterExists)
+				if (!map->coordinateHasCollision(glm::vec3(i, j, 0)) && loadMonsters)
 				{
-					if (!map->coordinateHasCollision(glm::vec3(i, j, 0)))
-					{
-						monster->getTransform()->translate((float)i, (float)j, 1.3f);
-						monsters.push_back(monster);
-					}
-					else
-						delete monster;
+					monster->getTransform()->translate((float)i, (float)j, 1.3f);
+					monsters.push_back(monster);
 				}
+				else
+					delete monster;
 			}
 			
-			if (loadEntities)
+			if (coordinate.mapGameEntity.gameEntityExists && loadEntities)
 			{
-				if (coordinate.mapGameEntity.gameEntityExists)
-				{
-					gameEntity->getTransform()->translate((float)i, (float)j, 0);
-					gameEntities.push_back(gameEntity);
-				}
+				gameEntity->getTransform()->translate((float)i, (float)j, 0);
+				gameEntities.push_back(gameEntity);
 			}
 		}
 	}
@@ -518,8 +512,8 @@ void Game::input()
 			int randomNumberY;
 			glm::vec3 newPos;
 			do{
-				randomNumberX = std::rand() % 1024;
-				randomNumberY = std::rand() % 1024;
+				randomNumberX = std::rand() % MAP_SIZE;
+				randomNumberY = std::rand() % MAP_SIZE;
 				newPos = glm::vec3((float)randomNumberX, (float)randomNumberY, 0);
 			} while (map->getMapCoordinateForMapCreation(newPos).terrain != NORMAL_FLOOR);
 
@@ -528,7 +522,7 @@ void Game::input()
 		}
 	}
 
-	if (Input::keyStates['l'])
+	/*if (Input::keyStates['l'])
 	{
 		double now = Time::getTime();
 		if (now - lastTime >= 0.3)
@@ -539,6 +533,6 @@ void Game::input()
 				Mesh::drawForm = GL_TRIANGLES;
 			lastTime = Time::getTime();
 		}
-	}
+	}*/
 #endif
 }

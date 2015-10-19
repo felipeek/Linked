@@ -1,12 +1,12 @@
 ﻿TODO List near future: Linked
 
 1.  Limitar distância que os monstros aparecem para o player (DONE)
-2.  Otimizar pacotes enviados constantemente (DOING)
+2.  Otimizar pacotes enviados constantemente (DONE)
 3.  Implementar skills no servidor
 4.  Fazer chat aceitar caracteres especiais
 5.  Bloquear input quando chat estiver ativo
 6.  Arrumar HP bar
-7.  Fazer monstros morrerem direito
+7.  Fazer monstros morrerem direito (DONE)
 8.  Fazer entidades girarem
 9.  Refactor no codigo de shaders
 10. Implementar forward rendering
