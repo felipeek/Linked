@@ -4,7 +4,7 @@
 2.  Otimizar pacotes enviados constantemente (DONE)
 3.  Implementar skills no servidor
 4.  Fazer chat aceitar caracteres especiais
-5.  Bloquear input quando chat estiver ativo
+5.  Bloquear input quando chat estiver ativo (DONE)
 6.  Arrumar HP bar
 7.  Fazer monstros morrerem direito (DONE)
 8.  Fazer entidades girarem
