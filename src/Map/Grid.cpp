@@ -3,10 +3,17 @@
 #include <cmath>
 #include <iostream>
 
+// TODO: (VERY IMPORTANT) Fix allocation sizes to work dynamically
+
 Grid::Grid(int blockSize, Map* map)
 {
+	indexedModel.indices.resize(6279200);
+	indexedModel.positions.resize(1048600);
+	indexedModel.normals.resize(1048600);
+	indexedModel.texCoords.resize(1048600);
+
 	this->blockSize = blockSize;
-	for (int i = 0; i < blockSize; i += 2)
+	for (int i = 0, var = 0; i < blockSize; i += 2)
 	{
 		for (int j = 0; j < blockSize; j += 2)
 		{
@@ -15,6 +22,7 @@ Grid::Grid(int blockSize, Map* map)
 			float height2 = 0;
 			float height3 = 0;
 			float height4 = 0;
+			
 			if (map->getMapTerrainForCoordinate(glm::vec3(j, i, 0)) == BLOCKED)
 				height1 = height;
 			if (map->getMapTerrainForCoordinate(glm::vec3(j, i + 1, 0)) == BLOCKED)
@@ -32,33 +40,36 @@ Grid::Grid(int blockSize, Map* map)
 			if (map->getMapTerrainForCoordinate(glm::vec3(j + 1, i + 1, 0)) == WATER)
 				height4 = -height;
 
+
 			glm::vec3 pos1 = glm::vec3(j, i, height1);
 			glm::vec3 pos2 = glm::vec3(j, i + 1, height2);
 			glm::vec3 pos3 = glm::vec3(j + 1, i, height3);
 			glm::vec3 pos4 = glm::vec3(j + 1, i + 1, height4);
 
 			// Positions
-			indexedModel.positions.push_back(pos1);
-			indexedModel.positions.push_back(pos2);
-			indexedModel.positions.push_back(pos3);
-			indexedModel.positions.push_back(pos4);
+			//indexedModel.positions.push_back(pos1);
+			//indexedModel.positions.push_back(pos2);
+			//indexedModel.positions.push_back(pos3);
+			//indexedModel.positions.push_back(pos4);
+
+			indexedModel.positions[var] = pos1;
+			indexedModel.positions[var + 1] = pos2;
+			indexedModel.positions[var + 2] = pos3;
+			indexedModel.positions[var + 3] = pos4;
 
 			// TexCoords
 
-			//indexedModel.texCoords.push_back(glm::vec2(pos1.x / blockSize*30.0f, pos1.y / blockSize*30.0f));
-			//indexedModel.texCoords.push_back(glm::vec2(pos2.x / blockSize*30.0f, pos2.y / blockSize*30.0f));
-			//indexedModel.texCoords.push_back(glm::vec2(pos3.x / blockSize*30.0f, pos3.y / blockSize*30.0f));
-			//indexedModel.texCoords.push_back(glm::vec2(pos4.x / blockSize*30.0f, pos4.y / blockSize*30.0f));
-			indexedModel.texCoords.push_back(glm::vec2(pos1.x / blockSize, pos1.y / blockSize));
-			indexedModel.texCoords.push_back(glm::vec2(pos2.x / blockSize, pos2.y / blockSize));
-			indexedModel.texCoords.push_back(glm::vec2(pos3.x / blockSize, pos3.y / blockSize));
-			indexedModel.texCoords.push_back(glm::vec2(pos4.x / blockSize, pos4.y / blockSize));
+			//indexedModel.texCoords.push_back(glm::vec2(pos1.x / blockSize, pos1.y / blockSize));
+			//indexedModel.texCoords.push_back(glm::vec2(pos2.x / blockSize, pos2.y / blockSize));
+			//indexedModel.texCoords.push_back(glm::vec2(pos3.x / blockSize, pos3.y / blockSize));
+			//indexedModel.texCoords.push_back(glm::vec2(pos4.x / blockSize, pos4.y / blockSize));
 
-			// Normals
-			//indexedModel.normals.push_back(glm::vec3(0, 1, 0));
-			//indexedModel.normals.push_back(glm::vec3(0, 1, 0));
-			//indexedModel.normals.push_back(glm::vec3(0, 1, 0));
-			//indexedModel.normals.push_back(glm::vec3(0, 1, 0));
+			indexedModel.texCoords[var] = glm::vec2(pos1.x / blockSize, pos1.y / blockSize);
+			indexedModel.texCoords[var + 1] = glm::vec2(pos2.x / blockSize, pos2.y / blockSize);
+			indexedModel.texCoords[var + 2] = glm::vec2(pos3.x / blockSize, pos3.y / blockSize);
+			indexedModel.texCoords[var + 3] = glm::vec2(pos4.x / blockSize, pos4.y / blockSize);
+
+			var += 4;
 		}
 	}
 
@@ -68,24 +79,38 @@ Grid::Grid(int blockSize, Map* map)
 	{
 		for (int j = 0; j < blockSize; j += 2)
 		{
-			indexedModel.normals.push_back(calculateNormal(indexedModel.positions[indexPos]));
-			indexedModel.normals.push_back(calculateNormal(indexedModel.positions[indexPos + 1]));
-			indexedModel.normals.push_back(calculateNormal(indexedModel.positions[indexPos + 2]));
-			indexedModel.normals.push_back(calculateNormal(indexedModel.positions[indexPos + 3]));
+			//indexedModel.normals.push_back(calculateNormal(indexedModel.positions[indexPos]));
+			//indexedModel.normals.push_back(calculateNormal(indexedModel.positions[indexPos + 1]));
+			//indexedModel.normals.push_back(calculateNormal(indexedModel.positions[indexPos + 2]));
+			//indexedModel.normals.push_back(calculateNormal(indexedModel.positions[indexPos + 3]));
+
+			indexedModel.normals[indexPos] = calculateNormal(indexedModel.positions[indexPos]);
+			indexedModel.normals[indexPos + 1] = calculateNormal(indexedModel.positions[indexPos + 1]);
+			indexedModel.normals[indexPos + 2] = calculateNormal(indexedModel.positions[indexPos + 2]);
+			indexedModel.normals[indexPos + 3] = calculateNormal(indexedModel.positions[indexPos + 3]);
 			indexPos += 4;
 		}
 	}
 
-	for (int i = 0, prevFirst = 0, newFirst = 0, deslocamento = 0, ultimo = 0; i < blockSize - 1; i++)
+	for (int i = 0, prevFirst = 0, newFirst = 0, deslocamento = 0, ultimo = 0, var = 0; i < blockSize - 1; i++)
 	{
 		for (int j = 0, aux = 0; j < blockSize - 1; j++)
 		{
-			indexedModel.indices.push_back(deslocamento + j + 3 + aux);
-			indexedModel.indices.push_back(deslocamento + j + 1 + aux);
-			indexedModel.indices.push_back(newFirst + j + aux);
-			indexedModel.indices.push_back(newFirst + j + aux);
-			indexedModel.indices.push_back(newFirst + j + 2 + aux);
-			indexedModel.indices.push_back(deslocamento + j + 3 + aux);
+			//indexedModel.indices.push_back(deslocamento + j + 3 + aux);
+			//indexedModel.indices.push_back(deslocamento + j + 1 + aux);
+			//indexedModel.indices.push_back(newFirst + j + aux);
+			//indexedModel.indices.push_back(newFirst + j + aux);
+			//indexedModel.indices.push_back(newFirst + j + 2 + aux);
+			//indexedModel.indices.push_back(deslocamento + j + 3 + aux);
+
+			indexedModel.indices[var] = (deslocamento + j + 3 + aux);
+			indexedModel.indices[var + 1] = (deslocamento + j + 1 + aux);
+			indexedModel.indices[var + 2] = (newFirst + j + aux);
+			indexedModel.indices[var + 3] = (newFirst + j + aux);
+			indexedModel.indices[var + 4] = (newFirst + j + 2 + aux);
+			indexedModel.indices[var + 5] = (deslocamento + j + 3 + aux);
+			var += 6;
+
 			if (j == 0)
 				prevFirst = deslocamento + j + 1 + aux;
 			ultimo = deslocamento + j + 3 + aux;

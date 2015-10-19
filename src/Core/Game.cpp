@@ -256,7 +256,7 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 	
 	// Load monsters and entities
 	lastT = Time::getTime();
-	for (int i = 0, m=0, e=0; i < MAP_SIZE; i++)
+	for (int i = 0/*, m=0, e=0*/; i < MAP_SIZE; i++)
 	{
 		for (int j = 0; j < MAP_SIZE; j++)
 		{
@@ -293,6 +293,7 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 			}
 		}
 	}
+	std::cout << "Aloc 2: " << aloc2 << std::endl;
 	std::cout << "Load monsters and entities: " << Time::getTime() - lastT << std::endl;
 }
 
