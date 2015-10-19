@@ -33,7 +33,12 @@ MapMonster MapMonsterImageLoader::getMonster(vec3 coordinateVector)
 	try
 	{
 		vec3 rgb = getPixel((int)coordinateVector.x, (int)coordinateVector.y);
-
+		
+		if (rgb.r == 0 && rgb.g == 0 && rgb.b == 0)
+		{
+			mapMonster.monsterExists = false;
+			return mapMonster;
+		}
 		if (monsterFactory->isMonsterMapColorValid(rgb))
 		{
 			mapMonster.monster = monsterFactory->getMonsterOfMapColor(rgb);
@@ -41,6 +46,7 @@ MapMonster MapMonsterImageLoader::getMonster(vec3 coordinateVector)
 		}
 		else
 			mapMonster.monsterExists = false;
+
 	}
 	catch (PixelOutOfBoundsException e)
 	{

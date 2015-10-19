@@ -45,10 +45,14 @@
 
 FrameBuffer* fb;
 
-bool Game::multiplayer = true;
+bool Game::multiplayer = false;
 int Game::server_port = 9090;
-std::string Game::server_ip = "127.0.0.1";
+//std::string Game::server_ip = "127.0.0.1";
+std::string Game::server_ip = "201.21.40.57";
 
+
+double Game::aloc = 0;
+double Game::aloc2 = 0;
 
 Game::Game(int windowWidth, int windowHeight)
 {	
@@ -79,7 +83,6 @@ Game::Game(int windowWidth, int windowHeight)
 		this->loadMonstersAndEntities(true, true);
 
 	fb = new FrameBuffer(2048, 2048, true);
-
 }
 
 Game::~Game()
@@ -247,15 +250,20 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 	water = new Entity(new Transform(glm::vec3(0,0,-0.3f)), waterMesh, waterTexture);
 	std::cout << "load rest of map: " << Time::getTime() - lastT << std::endl;
 
-	lastT = Time::getTime();
+	// TODO: verify allocation in a loop ( if causes performance overhead )
+	//monsters.resize(77);
+	//gameEntities.resize(30);
+	
 	// Load monsters and entities
-	for (int i = 0; i < MAP_SIZE; i++)
+	lastT = Time::getTime();
+	for (int i = 0, m=0, e=0; i < MAP_SIZE; i++)
 	{
 		for (int j = 0; j < MAP_SIZE; j++)
 		{
 			MapCoordinate coordinate = map->getMapCoordinateForMapCreation(glm::vec3(i, j, 0));
 			Monster *monster = coordinate.mapMonster.monster;
 			GameEntity *gameEntity = coordinate.mapGameEntity.gameEntity;
+			
 
 			if (loadMonsters)
 			{
@@ -265,6 +273,8 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 					{
 						monster->getTransform()->translate((float)i, (float)j, 1.3f);
 						monsters.push_back(monster);
+						//monsters[m] = monster;
+						//m++;
 					}
 					else
 						delete monster;
@@ -277,11 +287,13 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 				{
 					gameEntity->getTransform()->translate((float)i, (float)j, 0);
 					gameEntities.push_back(gameEntity);
+					//gameEntities[e] = gameEntity;
+					//e++;
 				}
 			}
 		}
 	}
-	std::cout << "Create entities and monsters" << Time::getTime() - lastT << std::endl;
+	std::cout << "Load monsters and entities: " << Time::getTime() - lastT << std::endl;
 }
 
 void Game::createUDPConnection()

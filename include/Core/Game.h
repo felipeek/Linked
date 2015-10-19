@@ -36,6 +36,8 @@ class FrameBuffer;
 class Game
 {
 public:
+	static double aloc;
+	static double aloc2;
 	Game();
 	Game(int windowWidth, int windowHeight);
 	~Game();

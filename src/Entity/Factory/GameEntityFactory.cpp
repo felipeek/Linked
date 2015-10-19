@@ -1,6 +1,7 @@
 #include "GameEntityFactory.h"
 #include "rapidxml_utils.hpp"
 #include "Primitive.h"
+#include <iostream>
 
 using namespace rapidxml;
 using namespace std;
@@ -66,7 +67,7 @@ void GameEntityFactory::parseAllGameEntitiesInDirectory()
 GameEntity* GameEntityFactory::generateCopyOfGameEntity(GameEntity* gameEntity)
 {
 	GameEntity* copy = new GameEntity(NULL, NULL, NULL);
-
+	
 	// Copy Basic Attributes
 	copy->setMapColor(gameEntity->getMapColor());
 	copy->setName(gameEntity->getName());
@@ -74,7 +75,7 @@ GameEntity* GameEntityFactory::generateCopyOfGameEntity(GameEntity* gameEntity)
 	copy->setMesh(gameEntity->getMesh());
 	// Copy Texture (A new texture object must be created for each gameEntity)
 	Texture* gameEntityTexture = gameEntity->getTexture();
-	copy->setTexture(new Texture(gameEntityTexture->getFilename()));
+	copy->setTexture(gameEntityTexture);
 	// Copy Transform (A new transform object must be created for each gameEntity)
 	Transform *gameEntityTransform = gameEntity->getTransform();
 	glm::vec3 gameEntityTransformPosition = gameEntityTransform->getPosition();
@@ -82,7 +83,7 @@ GameEntity* GameEntityFactory::generateCopyOfGameEntity(GameEntity* gameEntity)
 	float gameEntityTransformAngleY = gameEntityTransform->getAngleY();
 	copy->setTransform(new Transform(gameEntityTransformPosition, GAMEENTITY_STANDARD_ANGLE, GAMEENTITY_STANDARD_AXIS, gameEntityTransformScale));
 	copy->getTransform()->incRotateY(gameEntityTransformAngleY);
-
+	
 	return copy;
 }
 
