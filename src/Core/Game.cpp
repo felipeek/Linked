@@ -50,10 +50,6 @@ int Game::server_port = 9090;
 std::string Game::server_ip = "127.0.0.1";
 //std::string Game::server_ip = "201.21.40.57";
 
-
-double Game::aloc = 0;
-double Game::aloc2 = 0;
-
 Game::Game(int windowWidth, int windowHeight)
 {	
 	this->windowWidth = windowWidth;
@@ -229,13 +225,9 @@ void Game::createGUI()
 #define DEBUG
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 {
-	double lastT = 0;
-	lastT = Time::getTime();
 	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, this->map));
-	std::cout << "Create Grid:" << Time::getTime() - lastT << std::endl;
 
 	// TODO: delete EntityMap transform and textures
-	lastT = Time::getTime();
 	this->entityMap = new EntityMap(new Transform(), mapMesh,
 		new Texture("./res/Maps/stonePath.png"),
 		new Texture("./res/Maps/mountain.jpg"),
@@ -248,14 +240,13 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 	Texture* waterTexture = new Texture("./res/Maps/water.jpg");
 	waterTexture->setTileAmount(100);
 	water = new Entity(new Transform(glm::vec3(0,0,-0.3f)), waterMesh, waterTexture);
-	std::cout << "load rest of map: " << Time::getTime() - lastT << std::endl;
+
 
 	// TODO: verify allocation in a loop ( if causes performance overhead )
 	//monsters.resize(77);
 	//gameEntities.resize(30);
 	
 	// Load monsters and entities
-	lastT = Time::getTime();
 	for (int i = 0/*, m=0, e=0*/; i < MAP_SIZE; i++)
 	{
 		for (int j = 0; j < MAP_SIZE; j++)
@@ -283,8 +274,6 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 			}
 		}
 	}
-	std::cout << "Aloc 2: " << aloc2 << std::endl;
-	std::cout << "Load monsters and entities: " << Time::getTime() - lastT << std::endl;
 }
 
 void Game::createUDPConnection()
