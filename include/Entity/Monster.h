@@ -138,6 +138,7 @@ private:
 	MovementDefinition updateMovement(Map* map); // multiplayer
 
 	/* MOVEMENT AUXILIAR VARIABLES */
+	bool isKnockedBack;
 	glm::vec3 destination;
 	bool isMovingTo;
 };

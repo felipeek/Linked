@@ -157,6 +157,19 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 			PacketController::game->destroyProjectileOfId(projectileToBeDestroyed);
 		}
 		break;
+	// MONSTER ATTACK
+	case 5:
+		if (dataSize % sizeof(int) == 0)
+		{
+			int numberOfMonsterAttacks = dataSize / sizeof(int);
+			std::cout << "attack chegou: " << numberOfMonsterAttacks << std::endl;
+			for (int i = 0; i < numberOfMonsterAttacks; i++)
+			{
+				Monster* monster = PacketController::game->getMonsterOfId(data[i]);
+				monster->attack();
+			}
+		}
+		break;
 	}
 }
 void PacketController::dispatchFloatArray(int id, int xid, float* data, int dataSize)
