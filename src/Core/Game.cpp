@@ -45,38 +45,32 @@
 
 FrameBuffer* fb;
 
-bool Game::multiplayer = false;
+bool Game::multiplayer = true;
 int Game::server_port = 9090;
-//std::string Game::server_ip = "127.0.0.1";
-std::string Game::server_ip = "201.21.40.57";
+std::string Game::server_ip = "127.0.0.1";
+//std::string Game::server_ip = "201.21.40.57";
 
 Game::Game(int windowWidth, int windowHeight)
+	: windowWidth(windowWidth), windowHeight(windowHeight)
 {	
-	this->windowWidth = windowWidth;
-	this->windowHeight = windowHeight;
-
 	PacketController::game = this;
 
 	this->createGraphicElements(windowWidth, windowHeight);
-
 	this->createMap();
-
-	if (!Game::multiplayer)
-		this->createOfflinePlayer();
 
 	if (Game::multiplayer)
 	{
 		this->createUDPConnection();
 		PacketController::onlinePlayers = &this->onlinePlayers;
 		this->waitForCreationOfOnlinePlayer();
-	}
-
-	this->createGUI();
-
-	if (Game::multiplayer)
 		this->loadMonstersAndEntities(false, true);
+	}
 	else
+	{
+		this->createOfflinePlayer();
 		this->loadMonstersAndEntities(true, true);
+	}
+	this->createGUI();
 
 	fb = new FrameBuffer(2048, 2048, true);
 }
@@ -118,7 +112,6 @@ void Game::createGraphicElements(int windowsWidth, int windowsHeight)
 	Input::mouseAttack.setCamera(this->camera);
 
 	// Light
-
 	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 0.95f, 0.8f));
 
 	// Shaders
@@ -490,13 +483,7 @@ void Game::input()
 		camera->input();
 		light->input();
 		localPlayer->input(this->map);
-	}
-
-	// Game input
-	Input::mouseAttack.update();
-
-	// Camera input
-	camera->input();
+	
 #ifdef DEBUG
 	
 	if (Input::keyStates['t'])
@@ -533,4 +520,5 @@ void Game::input()
 		}
 	}*/
 #endif
+	}
 }
