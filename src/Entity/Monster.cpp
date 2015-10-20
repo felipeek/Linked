@@ -27,6 +27,7 @@ Monster::Monster(Transform* transform, Mesh* mesh, Texture* texture) : Entity(tr
 	this->currentDirection = MONSTER_FIRST_DIRECTION;
 	this->lastIndexTexture = MONSTER_FIRST_INDEX_TEXTURE;
 	this->isMovingTo = false;
+	this->isKnockedBack = false;
 }
 
 Monster::~Monster()
@@ -246,6 +247,8 @@ void Monster::receiveDamage()
 {
 	this->receivingDamage = true;
 	lastReceivedDamageTime = Time::getTime();
+	if (rand() % 2) this->isKnockedBack = false;
+	else this->isKnockedBack = true;
 }
 
 bool Monster::shouldRender()
@@ -325,7 +328,7 @@ void Monster::update(Map* map, Player* player)
 		else if (this->isAttacking())
 			movementDefinition.doMove = false;
 		// If the monster is receiving damage, it can't move.
-		else if (this->isReceivingDamage())
+		else if (this->isReceivingDamage() && this->isKnockedBack)
 			movementDefinition.doMove = false;
 		// If the player is dead, the monster will move randomly.
 		else if (!player->isAlive())
