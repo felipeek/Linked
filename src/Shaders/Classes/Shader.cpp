@@ -2,8 +2,10 @@
 #include "Camera.h"
 #include "Entity.h"
 #include "Light.h"
+
 #include "glm\glm.hpp"
 #include "glm\gtc\matrix_transform.hpp"
+
 #include <fstream>
 #include <iostream>
 
@@ -32,9 +34,10 @@ void Shader::stopShader()
 	glUseProgram(0);
 }
 
-void Shader::update(Transform* transform, Entity* entity)
+void Shader::update()
 {
-	std::cout << "Shader abstrato update!" << std::endl;
+	//std::cout << "Shader abstrato update!" << std::endl;
+	throw "Abstract shader run";
 }
 
 void Shader::getUniformLocations()
@@ -132,11 +135,6 @@ GLuint Shader::loadShader(const char* filename, GLuint shaderProgram)
 	return shaderProgram;
 }
 
-GLuint Shader::getShader()
-{
-	return this->shader;
-}
-
 void Shader::activateAlphaBlend()
 {
 	glEnable(GL_BLEND);
@@ -148,4 +146,19 @@ void Shader::deactivateAlphaBlend()
 {
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
+}
+
+GLuint Shader::getShader()
+{
+	return this->shader;
+}
+
+void Shader::setCamera(Camera* c)
+{
+	this->camera = c;
+}
+
+void Shader::setEntity(Entity* e)
+{
+	this->entity = e;
 }

@@ -1,6 +1,6 @@
 #include "Display.h"
 #include "Input.h"
-#include "Time.h"
+#include "LinkedTime.h"
 #include "Game.h"
 #include "PacketController.h"
 #include "Chat.h"
@@ -106,7 +106,8 @@ void Display::startGlfw(int* argc, char** argv, std::string titulo)
 void Display::MainLoop(GLFWwindow* window)
 {
 	do{
-		totalTime = glfwGetTime();
+		//totalTime = glfwGetTime();
+		totalTime = Time::getTime();
 
 		if (timeSinceLastUpdate == 0)
 			timeSinceLastUpdate = totalTime;

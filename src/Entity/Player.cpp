@@ -23,6 +23,7 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture, std::vector<M
 	this->ai = new PlayerAI();
 	this->isMovingTo = false;
 	this->type = LOCAL;
+	this->hpBar_shouldRender = true;
 	setMaximumHpBasis(PLAYER_DEFAULT_MAX_HP_BASIS);
 	setTotalMaximumHp(PLAYER_DEFAULT_MAX_HP_BASIS);
 	setAttackBasis(PLAYER_DEFAULT_ATTACK_BASIS);
@@ -515,7 +516,8 @@ void Player::input(Map* map)
 void Player::render(Shader* primitiveShader, TextRenderer* textRenderer, Shader* projectileShader)
 {
 	Entity::render(primitiveShader);
-	this->getHPBar()->quad->render(primitiveShader);
+	if (hpBar_shouldRender)
+		this->getHPBar()->quad->render(primitiveShader);
 
 	// Projectile attacks
 	for (Entity* e : this->attacks)
@@ -710,4 +712,11 @@ glm::vec3 Player::getDeltaVectorToDirection(MovementDirection direction)
 	default:
 		return glm::vec3(0, 0, 0);
 	}
+}
+
+/* HPBAR RELATED METHODS */
+
+void Player::hpBarRenderOptions(bool shouldRender)
+{
+	this->hpBar_shouldRender = shouldRender;
 }

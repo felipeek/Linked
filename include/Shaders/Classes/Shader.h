@@ -15,16 +15,20 @@ public:
 	GLuint getActiveShader();
 	virtual void useShader();
 	virtual void stopShader();
-	virtual void update(Transform* transform, Entity* entity);
+	virtual void update();
+	//virtual void update();
 
 	void activateAlphaBlend();
 	void deactivateAlphaBlend();
 
+	void setCamera(Camera* c);
+	void setEntity(Entity* e);
 private:
 	GLuint loadShader(const char*, GLuint);
 	virtual void getUniformLocations();
 protected:
 	GLuint shader;
 	Camera* camera;
+	Entity* entity;
 };
 

@@ -26,11 +26,11 @@ void PrimitiveShader::getUniformLocations()
 	uniform_lightColor = glGetUniformLocation(shader, "lightColor");
 }
 
-void PrimitiveShader::update(Transform* transform, Entity* entity)
+void PrimitiveShader::update()
 {
 	glActiveTexture(GL_TEXTURE0);
 	glUniform1i(uniform_TexSampler, 0);
-	glUniformMatrix4fv(uniform_Model, 1, GL_FALSE, &transform->model[0][0]);
+	glUniformMatrix4fv(uniform_Model, 1, GL_FALSE, &entity->getTransform()->model[0][0]);
 	glUniformMatrix4fv(uniform_viewProj, 1, GL_FALSE, &camera->viewProj[0][0]);
 
 	glUniform2fv(uniform_textureOffset, 1, &entity->getMesh()->getQuad()->getTextureOffset()[0]);

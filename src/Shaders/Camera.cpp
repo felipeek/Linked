@@ -14,6 +14,17 @@ Camera::Camera(glm::vec3 position, glm::vec3 orientation, float fov, float aspec
 	updateViewProj();
 }
 
+Camera::Camera(glm::vec3 position, glm::vec3 orientation, float orthoSpan, float zNear, float zFar)
+{
+	camPosition = position;
+	camOrientation = orientation;
+	upVector = glm::vec3(1, 0, 0);
+	viewMatrix = glm::lookAt(position, orientation, upVector);
+
+	orthoSpan = abs(orthoSpan);
+	projectionMatrix = glm::ortho(-orthoSpan, orthoSpan, -orthoSpan, orthoSpan, zNear, zFar);
+	updateViewProj();
+}
 
 Camera::~Camera()
 {
@@ -49,12 +60,18 @@ void Camera::setProjectionMatrix(glm::mat4 mat)
 	updateViewProj();
 }
 
-void Camera::update(glm::vec3& playerPosition)
+void Camera::updatePlayer(glm::vec3& playerPosition)
 {
 	glm::vec3 camPos = glm::vec3(playerPosition.x, playerPosition.y - (distance / angle), distance);
 	glm::vec3 camOri = playerPosition;
 	setCamPosition(camPos);
 	setCamOrientation(camOri);
+}
+
+void Camera::updateLight(glm::vec3& lightPos, glm::vec3& playerPos)
+{
+	setCamPosition(lightPos);
+	setCamOrientation(playerPos);
 }
 
 void Camera::incDistance()

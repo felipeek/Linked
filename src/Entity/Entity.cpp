@@ -27,8 +27,14 @@ Transform* Entity::getTransform()
 void Entity::render(Shader* shader)
 {
 	shader->useShader();
+	// Set shader data
+	shader->setEntity(this);
+
+	// Update shader
 	bindTextures();
-	shader->update(transform, this);
+	shader->update();
+
+	// Render
 	mesh->render();
 	shader->stopShader();
 }

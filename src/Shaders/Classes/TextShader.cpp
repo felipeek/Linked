@@ -20,7 +20,7 @@ void TextShader::getUniformLocations()
 	uniformTextColor = glGetUniformLocation(shader, "textColor");
 }
 
-void TextShader::update(Transform* transform, Entity* entity)
+void TextShader::update()
 {
 	glm::mat4 projection = glm::ortho(0.0f, (float)WWID, 0.0f, (float)WHEI);
 	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, &projection[0][0]);

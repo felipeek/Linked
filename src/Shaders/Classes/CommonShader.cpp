@@ -24,11 +24,10 @@ void CommonShader::getUniformLocations()
 	uniform_tileAmt = glGetUniformLocation(shader, "tileAmt");
 }
 
-void CommonShader::update(Transform* transform, Entity* entity)
+void CommonShader::update()
 {
-	glActiveTexture(GL_TEXTURE0);
 	glUniform1i(uniform_TexSampler, 0);
-	glUniformMatrix4fv(uniform_Model, 1, GL_FALSE, &transform->model[0][0]);
+	glUniformMatrix4fv(uniform_Model, 1, GL_FALSE, &entity->getTransform()->model[0][0]);
 	glUniformMatrix4fv(uniform_viewProj, 1, GL_FALSE, &camera->viewProj[0][0]);
 	glUniform3fv(uniform_lightPosition, 1, &this->light->lightPosition[0]);
 	glUniform3fv(uniform_lightColor, 1, &this->light->lightColor[0]);

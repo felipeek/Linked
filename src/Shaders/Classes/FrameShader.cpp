@@ -14,8 +14,7 @@ void FrameShader::getUniformLocations()
 	uniform_TexSampler = glGetUniformLocation(shader, "screenTexture");
 }
 
-void FrameShader::update(Transform* t, Entity* e)
+void FrameShader::update()
 {
-	glActiveTexture(GL_TEXTURE0);
 	glUniform1i(uniform_TexSampler, 0);
 }
