@@ -10,13 +10,15 @@ class Camera
 {
 public:
 	Camera(glm::vec3 position, glm::vec3 orientation, float fov, float aspect, float zNear, float zFar);
+	Camera(glm::vec3 position, glm::vec3 orientation, float orthoSpan, float zNear, float zFar);
 	~Camera();
 
 	void setCamPosition(glm::vec3& pos);
 	void setCamOrientation(glm::vec3& ori);
 	void setUpVector(glm::vec3& up);
 
-	void update(glm::vec3& playerPos);
+	void updatePlayer(glm::vec3& playerPos);
+	void updateLight(glm::vec3& lightPos, glm::vec3& playerPos);
 	void input();
 	void incDistance();
 	void decDistance();

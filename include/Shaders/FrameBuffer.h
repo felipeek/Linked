@@ -1,9 +1,12 @@
 #pragma once
 #include <GL/glew.h>
 
+#include <glm/glm.hpp>
+
 class Texture;
 class FrameShader;
 class Mesh;
+class Camera;
 
 #define FRAME_SHADER_PATH "./shaders/frameshader"
 #define DEPTH_SHADER_PATH "./shaders/framebuffer/depth"
@@ -12,26 +15,26 @@ class FrameBuffer
 {
 public:
 	FrameBuffer(int width, int height);
-	FrameBuffer(int width, int height, bool shadow);
 	~FrameBuffer();
 
-	void renderPassOneToTexture();
-	void renderPassTwoToTexture();
+	void genShadowMap(glm::vec4& borderColor);
+	void genLightCamera(float orthoSpan);
 
 	void renderDepth();
-	void normalRender();
+	void normalRender(int windowsWidth, int windowsHeight);
 
-	GLuint textureID;
+	Texture* getTexture();
+	Camera* getCamera();
 private:
 	int width, height;
 	GLuint frameBuffer;
 	GLuint renderBuffer;
 
-	GLuint depthMap;
-	GLuint texColorBuffer;
 	GLuint genRenderBuffer(int width, int height);
 
 	FrameShader* shader;
 	Mesh* mesh;
+	Texture* texture;
+	Camera* lightCamera;
 };
 

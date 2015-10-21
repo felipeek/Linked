@@ -149,3 +149,8 @@ void Shader::deactivateAlphaBlend()
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
 }
+
+void Shader::setCamera(Camera* c)
+{
+	this->camera = c;
+}

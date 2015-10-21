@@ -12,6 +12,8 @@
 #define ENTITIES_MAP_PATH "./res/Maps/entities2.png"
 #define MONSTER_MAP_PATH "./res/Maps/monsters.png"
 
+#define SHADOW_BUFFER_SIZE 2048
+
 class EntityMap;
 class Entity;
 class Camera;
@@ -99,6 +101,10 @@ private:
 
 	/* GAME NETWORK */
 	UDPClient* udpClient;
+
+	/* GAME RENDER PASSES */
+	void renderFirstPass();
+	void renderSecondsPass();
 
 	double lastTime;
 };

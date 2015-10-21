@@ -1,6 +1,6 @@
 #include "Display.h"
 #include "Input.h"
-#include "Time.h"
+#include "LinkedTime.h"
 #include "Game.h"
 #include "PacketController.h"
 #include "Chat.h"
@@ -102,11 +102,12 @@ void Display::startGlfw(int* argc, char** argv, std::string titulo)
 
 	MainLoop(window);
 }
-
+#define DEBUG
 void Display::MainLoop(GLFWwindow* window)
 {
 	do{
-		totalTime = glfwGetTime();
+		//totalTime = glfwGetTime();
+		totalTime = Time::getTime();
 
 		if (timeSinceLastUpdate == 0)
 			timeSinceLastUpdate = totalTime;
@@ -123,6 +124,7 @@ void Display::MainLoop(GLFWwindow* window)
 		if (gameTime >= 1.0 / GAMESPEED)			// Updates GAMESPEED times per second
 		{
 			game->update();
+			game->input();
 			glfwPollEvents();
 			gameTime = gameTime - (1.0/GAMESPEED);
 		}
@@ -157,7 +159,6 @@ void Display::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	game->render();
-	game->input();
 	glfwSwapBuffers(window);
 }
 

@@ -20,6 +20,7 @@ public:
 	void activateAlphaBlend();
 	void deactivateAlphaBlend();
 
+	void setCamera(Camera* c);
 private:
 	GLuint loadShader(const char*, GLuint);
 	virtual void getUniformLocations();

@@ -42,10 +42,7 @@
 #include <iostream>
 #include <string>
 
-
-FrameBuffer* fb;
-
-bool Game::multiplayer = true;
+bool Game::multiplayer = false;
 int Game::server_port = 9090;
 std::string Game::server_ip = "127.0.0.1";
 //std::string Game::server_ip = "201.21.40.57";
@@ -71,8 +68,6 @@ Game::Game(int windowWidth, int windowHeight)
 		this->loadMonstersAndEntities(true, true);
 	}
 	this->createGUI();
-
-	fb = new FrameBuffer(2048, 2048, true);
 }
 
 Game::~Game()
@@ -105,10 +100,10 @@ Game::~Game()
 	}
 }
 
-void Game::createGraphicElements(int windowsWidth, int windowsHeight)
+void Game::createGraphicElements(int windowWidth, int windowHeight)
 {
 	// Camera
-	this->camera = new Camera(glm::vec3(0, 0, 50), glm::vec3(0, 0, 0), 70.0f, (float)windowsWidth / windowsHeight, 0.1f, 1000.0f);
+	this->camera = new Camera(glm::vec3(0, 0, 50), glm::vec3(0, 0, 0), 70.0f, (float)windowWidth / windowHeight, 0.1f, 1000.0f);
 	Input::mouseAttack.setCamera(this->camera);
 
 	// Light
@@ -119,6 +114,11 @@ void Game::createGraphicElements(int windowsWidth, int windowsHeight)
 	this->commonShader = new CommonShader("./shaders/commonshader", camera, light);
 	this->projectileShader = new CommonShader("./shaders/projectile", camera, light);
 	this->mapShader = new MapShader("./shaders/mapshader_shadow", camera, light);
+
+	// Shadows
+	frameBuffer = new FrameBuffer(SHADOW_BUFFER_SIZE, SHADOW_BUFFER_SIZE);
+	frameBuffer->genShadowMap(glm::vec4(1,1,1,1));
+	frameBuffer->genLightCamera(55.0f);
 }
 
 void Game::createMap()
@@ -215,7 +215,7 @@ void Game::createGUI()
 	this->gui = new GUI(localPlayer, "./shaders/textshader", "./shaders/fontshader", "./fonts/consola.ttf");
 	PacketController::gui = this->gui;
 }
-#define DEBUG
+
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 {
 	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, this->map));
@@ -319,96 +319,145 @@ void Game::destroyProjectileOfId(int id)
 
 void Game::render()
 {
+
+	glm::mat4 lightSpace = frameBuffer->getCamera()->viewProj;
+	mapShader->useShader();
+	glUniformMatrix4fv(glGetUniformLocation(mapShader->getShader(), "lightSpaceMatrix"), 1, GL_FALSE, &lightSpace[0][0]);
+	glBindTexture(GL_TEXTURE_2D, frameBuffer->getTexture()->textureID);
+	glActiveTexture(GL_TEXTURE5);
+	glUniform1i(glGetUniformLocation(mapShader->getShader(), "shadowMap"), 5);
+	mapShader->stopShader();
+	
+	/* FIRST PASS (SHADOW PASS) */
+	renderFirstPass();
+
+	/* SECOND PASS (COLOR PASS) */
+	renderSecondsPass();
+}
+
+void Game::renderFirstPass()
+{	
+	// Set Camera on shaders
+	mapShader->setCamera(frameBuffer->getCamera());
+	commonShader->setCamera(frameBuffer->getCamera());
+	primitiveShader->setCamera(frameBuffer->getCamera());
+	projectileShader->setCamera(frameBuffer->getCamera());
+
+	// Prime render
+	frameBuffer->renderDepth();
+
 	// Map
-	glm::mat4 oldProj = camera->getProjection();
-	glm::vec3 camOldPos = camera->getPosition();
-	for (int i = 0; i < 2; i++){
-		if (i == 0)
-		{
-			glm::vec3 lightPos = light->lightPosition;
+	//entityMap->render(mapShader);
+	((Entity*)entityMap)->render(commonShader);
+	water->render(commonShader);
 
-			glm::mat4 ort = glm::ortho(-55.0f, 55.0f, -55.0f, 55.0f, 0.1f, 150.0f);
-			//glm::mat4 ort = glm::ortho(-30.0f, 30.0f, -30.0f, 30.0f, 0.1f, 150.0f);
-			camera->setProjectionMatrix(ort);
-			camera->setCamPosition(lightPos);
-
-			glm::mat4 lightSpace = ort * camera->getView();
-			mapShader->useShader();
-			glUniformMatrix4fv(glGetUniformLocation(mapShader->getShader(), "lightSpaceMatrix"), 1, GL_FALSE, &lightSpace[0][0]);
-			glBindTexture(GL_TEXTURE_2D, fb->textureID);
-			glActiveTexture(GL_TEXTURE5);
-			glUniform1i(glGetUniformLocation(mapShader->getShader(), "shadowMap"), 5);
-			mapShader->stopShader();
-			fb->renderDepth();
-		}
-		else
-		{
-			camera->setProjectionMatrix(oldProj);
-			camera->setCamPosition(camOldPos);
-			fb->normalRender();
-		}
-
-		entityMap->render(mapShader);
-		water->render(commonShader);
-
-		// Generic entities (Player only at the moment)
-		for (Entity* e : entities)
-		{
-			try{
-				e->render(primitiveShader);
-			}
-			catch (...){
-				std::cerr << "Error rendering entity" << std::endl;
-			}
-		}
-		// Monsters
-		for (Monster* m : monsters)
-		{
-			try{
-				if (Game::multiplayer)
+	// Monsters
+	for (Monster* m : monsters)
+	{
+		try{
+			if (Game::multiplayer)
+			{
+				if (m->shouldRender())
 				{
-					if (m->shouldRender())
-					{
-						if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()))
-							m->render(primitiveShader);
-						else
-							m->setShouldRender(false);
-					}
-				}
-				else
-				{
-					m->render(primitiveShader);
+					if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()))
+						m->render(primitiveShader);
+					else
+						m->setShouldRender(false);
 				}
 			}
-			catch (...){
-				std::cerr << "Error rendering entity" << std::endl;
+			else
+			{
+				m->render(primitiveShader);
 			}
 		}
+		catch (...){
+			std::cerr << "Error rendering entity" << std::endl;
+		}
+	}
 
-		// Common static entities
-		for (Entity* e : gameEntities)
-		{
-			try{
-				e->render(commonShader);
+	// Common static entities
+	for (Entity* e : gameEntities)
+	{
+		try{
+			e->render(commonShader);
+		}
+		catch (...){
+			std::cerr << "Error rendering entity" << std::endl;
+		}
+	}
+
+	// Player
+	localPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
+
+	// Second Player
+	if (Game::multiplayer)
+	{
+		for (Player* player : this->onlinePlayers)
+			player->render(primitiveShader, gui->getTextRenderer(), projectileShader);
+	}
+}
+
+void Game::renderSecondsPass()
+{
+	// Set Camera on shaders
+	mapShader->setCamera(camera);
+	commonShader->setCamera(camera);
+	primitiveShader->setCamera(camera);
+	projectileShader->setCamera(camera);
+
+	// Prime render
+	frameBuffer->normalRender(windowWidth, windowHeight);
+
+	// Map
+	entityMap->render(mapShader);
+	water->render(commonShader);
+
+	// Monsters
+	for (Monster* m : monsters)
+	{
+		try{
+			if (Game::multiplayer)
+			{
+				if (m->shouldRender())
+				{
+					if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()))
+						m->render(primitiveShader);
+					else
+						m->setShouldRender(false);
+				}
 			}
-			catch (...){
-				std::cerr << "Error rendering entity" << std::endl;
+			else
+			{
+				m->render(primitiveShader);
 			}
 		}
-
-		// Player
-		localPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
-
-		// Second Player
-		if (Game::multiplayer)
-		{
-			for (Player* player : this->onlinePlayers)
-				player->render(primitiveShader, gui->getTextRenderer(), projectileShader);
+		catch (...){
+			std::cerr << "Error rendering entity" << std::endl;
 		}
+	}
+
+	// Common static entities
+	for (Entity* e : gameEntities)
+	{
+		try{
+			e->render(commonShader);
+		}
+		catch (...){
+			std::cerr << "Error rendering entity" << std::endl;
+		}
+	}
+
+	// Player
+	localPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
+
+	// Second Player
+	if (Game::multiplayer)
+	{
+		for (Player* player : this->onlinePlayers)
+			player->render(primitiveShader, gui->getTextRenderer(), projectileShader);
 	}
 	// Render GUI (Order is important)
 	gui->render();
-
 }
 
 void Game::update()
@@ -442,9 +491,6 @@ void Game::update()
 		}
 	}
 
-	// Camera update
-	camera->update(localPlayer->getTransform()->getPosition());
-
 	// Light update
 	glm::vec3 playerPos = localPlayer->getTransform()->getPosition();
 	playerPos.x -= 30.0f;
@@ -453,6 +499,10 @@ void Game::update()
 
 	// Player update	
 	localPlayer->update(this->map);
+
+	// Camera update
+	camera->updatePlayer(localPlayer->getTransform()->getPosition());
+	frameBuffer->getCamera()->updateLight(light->lightPosition, localPlayer->getTransform()->getPosition());
 
 	if (Game::multiplayer)
 	{
