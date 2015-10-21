@@ -3,14 +3,14 @@
 #include "glm\glm.hpp"
 
 enum MovementDirection{
-	TOP,
-	LEFT,
-	RIGHT,
-	BOTTOM,
-	TOP_LEFT,
-	TOP_RIGHT,
-	BOTTOM_LEFT,
-	BOTTOM_RIGHT
+	TOP = 0,
+	LEFT = 1,
+	RIGHT = 2,
+	BOTTOM = 3,
+	TOP_LEFT = 4,
+	TOP_RIGHT = 5,
+	BOTTOM_LEFT = 6,
+	BOTTOM_RIGHT = 7
 };
 
 class MovementDefinition

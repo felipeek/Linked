@@ -102,7 +102,7 @@ void Display::startGlfw(int* argc, char** argv, std::string titulo)
 
 	MainLoop(window);
 }
-
+#define DEBUG
 void Display::MainLoop(GLFWwindow* window)
 {
 	do{
@@ -123,6 +123,7 @@ void Display::MainLoop(GLFWwindow* window)
 		if (gameTime >= 1.0 / GAMESPEED)			// Updates GAMESPEED times per second
 		{
 			game->update();
+			game->input();
 			glfwPollEvents();
 			gameTime = gameTime - (1.0/GAMESPEED);
 		}
@@ -157,7 +158,6 @@ void Display::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	game->render();
-	game->input();
 	glfwSwapBuffers(window);
 }
 

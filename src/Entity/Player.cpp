@@ -35,6 +35,9 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture, std::vector<M
 	setTotalSpeed(PLAYER_DEFAULT_SPEED_BASIS);
 	setAttackSpeedBasis(PLAYER_DEFAULT_ATTACK_SPEED_BASIS);
 	setTotalAttackSpeed(PLAYER_DEFAULT_ATTACK_SPEED_BASIS);
+
+	this->currentDirection = PLAYER_FIRST_DIRECTION;
+	this->lastIndexTexture = PLAYER_FIRST_INDEX_TEXTURE;
 }
 
 Player::~Player()
@@ -485,13 +488,13 @@ void Player::input(Map* map)
 		}
 
 		if (Input::keyStates['z'] && this->getSkillOfSlot(SLOT_1) != NULL && !this->isPlayerUsingASkill())
-			this->getSkillOfSlot(SLOT_1)->use(this->currentDirection);
+			this->getSkillOfSlot(SLOT_1)->prepareExecution(this->currentDirection);
 		else if (Input::keyStates['x'] && this->getSkillOfSlot(SLOT_2) != NULL && !this->isPlayerUsingASkill())
-			this->getSkillOfSlot(SLOT_2)->use(this->currentDirection);
+			this->getSkillOfSlot(SLOT_2)->prepareExecution(this->currentDirection);
 		else if (Input::keyStates['c'] && this->getSkillOfSlot(SLOT_3) != NULL && !this->isPlayerUsingASkill())
-			this->getSkillOfSlot(SLOT_3)->use(this->currentDirection);
+			this->getSkillOfSlot(SLOT_3)->prepareExecution(this->currentDirection);
 		else if (Input::keyStates['v'] && this->getSkillOfSlot(SLOT_4) != NULL && !this->isPlayerUsingASkill())
-			this->getSkillOfSlot(SLOT_4)->use(this->currentDirection);
+			this->getSkillOfSlot(SLOT_4)->prepareExecution(this->currentDirection);
 
 		if (Input::leftMouseButton)
 		{

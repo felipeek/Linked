@@ -14,11 +14,11 @@ public:
 	~HoshoyoExplosionSkill();
 
 	void render(Shader* primitiveShader, TextRenderer* textRenderer);
-	void use(MovementDirection direction);
+	void prepareExecution(MovementDirection skillDirection);
+	void execute(MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId);
 	bool cancelIfPossible();
 	void update();
 private:
-	void executeSkill(glm::vec3 position);
 	void hitEnemiesOnSkillRadius();
 	
 	Entity* aimEntity;

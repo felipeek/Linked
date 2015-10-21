@@ -9,6 +9,7 @@
 #include "RangeAttack.h"
 #include "GUI.h"
 #include "Projectile.h"
+#include "HoshoyoExplosionSkill.h"
 #include <iostream>
 #include <sstream>
 
@@ -145,16 +146,22 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 			std::cout << UDPClient::myID << std::endl;
 		}
 		break;
-	// ATTACK COLLISION
+	// ATTACK HIT A MONSTER
 	case 4:
-		if (dataSize == 3 * sizeof(int))
+		if ((dataSize % (3 * sizeof(int))) == 0)
 		{
-			int hurtMonsterId = data[0];
-			int projectileToBeDestroyed = data[1];
-			int attack = data[2];
+			int numberOfAttacks = dataSize / (3 * sizeof(int));
 
-			PacketController::game->getMonsterOfId(hurtMonsterId)->doDamage(attack);
-			PacketController::game->destroyProjectileOfId(projectileToBeDestroyed);
+			for (int i = 0; i < numberOfAttacks; i++)
+			{
+				int hurtMonsterId = data[3*i];
+				int projectileToBeDestroyed = data[3*i+1];
+				int attack = data[3*i+2];
+
+				PacketController::game->getMonsterOfId(hurtMonsterId)->doDamage(attack);
+				if (projectileToBeDestroyed != -1)
+					PacketController::game->destroyProjectileOfId(projectileToBeDestroyed);
+			}
 		}
 		break;
 	// MONSTER ATTACK
@@ -162,7 +169,7 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 		if (dataSize % sizeof(int) == 0)
 		{
 			int numberOfMonsterAttacks = dataSize / sizeof(int);
-			std::cout << "attack chegou: " << numberOfMonsterAttacks << std::endl;
+
 			for (int i = 0; i < numberOfMonsterAttacks; i++)
 			{
 				Monster* monster = PacketController::game->getMonsterOfId(data[i]);
@@ -174,7 +181,30 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 }
 void PacketController::dispatchFloatArray(int id, int xid, float* data, int dataSize)
 {
+	switch (id)
+	{
+	// SKILL EXECUTION
+	case 6:
+		Player* player = PacketController::getPlayerOfClient(xid);
+		if (player != NULL && (dataSize % (6*sizeof(float)) == 0))
+		{
+			int numberOfSkills = dataSize / (6 * sizeof(float));
 
+			for (int i = 0; i < numberOfSkills; i++)
+			{
+				SkillSlot skillSlot = SkillSlot((int)round(data[6*i]));
+				MovementDirection skillDirection = MovementDirection((int)round(data[6 * i + 1]));
+				glm::vec3 skillTargetPosition = glm::vec3(data[6 * i + 2], data[6 * i + 3], data[6 * i + 4]);
+				int creatureId = (int)data[6 * i + 5];
+				
+				Skill* usedSkill = player->getSkillOfSlot(skillSlot);
+
+				if (usedSkill != NULL)
+					usedSkill->execute(skillDirection, skillTargetPosition, creatureId);
+			}
+		}
+		break;
+	}
 }
 void PacketController::dispatchLongArray(int id, int xid, long* data, int dataSize)
 {
@@ -291,6 +321,18 @@ void PacketController::sendAttackCollisionToServer(int monsterId, int attackId)
 	attackCollisionInformation[2] = 20;	// TO DO: damage
 
 	udpClient->sendPackets(Packet(attackCollisionInformation, 3, 2, UDPClient::myID));
+}
+
+void PacketController::sendSkillToServer(SkillSlot slot, MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId)
+{
+	float skillInformation[6];
+	skillInformation[0] = (float)(slot);
+	skillInformation[1] = (float)(skillDirection);
+	skillInformation[2] = skillTargetPosition.x;
+	skillInformation[3] = skillTargetPosition.y;
+	skillInformation[4] = skillTargetPosition.z;
+	skillInformation[5] = (float)(targetCreatureId);
+	udpClient->sendPackets(Packet(skillInformation, 6, 6, UDPClient::myID));
 }
 
 Player* PacketController::getPlayerOfClient(int clientId)

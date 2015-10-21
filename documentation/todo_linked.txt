@@ -20,6 +20,7 @@
 18. Arrumar direcao de projeteis
 19. Implementar AI para colisao
 20. Implementar players extras como espectadores
+21. arrumar problema do FPS
 
 TODO List far future:
 

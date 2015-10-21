@@ -2,6 +2,8 @@
 
 #include <glm\glm.hpp>
 #include <vector>
+#include "Movement.h"
+#include "Skill.h"
 
 class ClientPacket;
 class Player;
@@ -28,6 +30,9 @@ public:
 	static void update10();
 	static void sendAttackToServer(glm::vec3 attackDirection);
 	static void sendAttackCollisionToServer(int monsterId, int attackId);
+
+	/* SKILLS */
+	static void sendSkillToServer(SkillSlot slot, MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId);
 private:
 	static void dispatchByteArray(int id, int xid, char* data, int dataSize);
 	static void dispatchShortArray(int id, int xid, short* data, int dataSize);

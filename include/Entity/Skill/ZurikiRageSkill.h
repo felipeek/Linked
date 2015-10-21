@@ -1,4 +1,4 @@
-#include "Skill.h"
+/*#include "Skill.h"
 
 #pragma once
 class ZurikiRageSkill : public Skill
@@ -19,4 +19,4 @@ private:
 	double textureChangeTime = 0;
 	MovementDirection skillDirection;
 	float supplementaryAngle = 0;
-};
+};*/

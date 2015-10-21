@@ -119,7 +119,7 @@ void Game::createGraphicElements(int windowsWidth, int windowsHeight)
 
 	// Light
 
-	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 0.95f, 0.8f));
+	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 1, 1));
 
 	// Shaders
 	this->primitiveShader = new PrimitiveShader("./shaders/normalshader", camera, light);
@@ -158,7 +158,7 @@ void Game::createOfflinePlayer()
 	skill1->setSlot(SLOT_1);
 	localPlayer->addNewSkill(skill1);
 	
-	Skill* skill2 = new ZurikiRageSkill(&monsters);
+	Skill* skill2 = new HoshoyoExplosionSkill(&monsters);
 	skill2->setSlot(SLOT_2);
 	localPlayer->addNewSkill(skill2);
 	
@@ -204,6 +204,23 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 	designedPlayer->setTotalSpeed(data[6]);
 	designedPlayer->setTotalAttackSpeed(data[7]);
 
+	/* FOR NOW, SKILLS MUST BE THE SAME AS THEY ARE DEFINED SERVER-SIDE (SAME SLOTS, ALSO) */
+	Skill* skill1 = new HoshoyoExplosionSkill(&monsters);
+	skill1->setSlot(SLOT_1);
+	designedPlayer->addNewSkill(skill1);
+
+	Skill* skill2 = new HoshoyoExplosionSkill(&monsters);
+	skill2->setSlot(SLOT_2);
+	designedPlayer->addNewSkill(skill2);
+
+	Skill* skill3 = new HoshoyoExplosionSkill(&monsters);
+	skill3->setSlot(SLOT_3);
+	designedPlayer->addNewSkill(skill3);
+
+	Skill* skill4 = new HoshoyoExplosionSkill(&monsters);
+	skill4->setSlot(SLOT_4);
+	designedPlayer->addNewSkill(skill4);
+
 	if (isLocalPlayer)
 	{
 		this->localPlayer = designedPlayer;
@@ -220,6 +237,8 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 void Game::createGUI()
 {
 	this->gui = new GUI(localPlayer, "./shaders/textshader", "./shaders/fontshader", "./fonts/consola.ttf");
+	for (Skill* s : this->localPlayer->getSkills())
+		this->gui->addSkillIcon(s->getSkillIcon());
 	PacketController::gui = this->gui;
 }
 #define DEBUG
@@ -490,47 +509,42 @@ void Game::input()
 		camera->input();
 		light->input();
 		localPlayer->input(this->map);
-	}
 
-	// Game input
-	Input::mouseAttack.update();
-
-	// Camera input
-	camera->input();
 #ifdef DEBUG
-	
-	if (Input::keyStates['t'])
-	{
-		double now = Time::getTime();
-		double delta = now - lastTime;
-		
-		if (delta >= 0.3)
-		{
-			int randomNumberX;
-			int randomNumberY;
-			glm::vec3 newPos;
-			do{
-				randomNumberX = std::rand() % MAP_SIZE;
-				randomNumberY = std::rand() % MAP_SIZE;
-				newPos = glm::vec3((float)randomNumberX, (float)randomNumberY, 0);
-			} while (map->getMapCoordinateForMapCreation(newPos).terrain != NORMAL_FLOOR);
 
-			lastTime = Time::getTime();
-			localPlayer->getTransform()->translate(newPos.x, newPos.y, localPlayer->getTransform()->getPosition().z);
-		}
-	}
-
-	/*if (Input::keyStates['l'])
-	{
-		double now = Time::getTime();
-		if (now - lastTime >= 0.3)
+		if (Input::keyStates['t'])
 		{
-			if (Mesh::drawForm == GL_TRIANGLES)
-				Mesh::drawForm = GL_LINES;
-			else
-				Mesh::drawForm = GL_TRIANGLES;
-			lastTime = Time::getTime();
+			double now = Time::getTime();
+			double delta = now - lastTime;
+
+			if (delta >= 0.3)
+			{
+				int randomNumberX;
+				int randomNumberY;
+				glm::vec3 newPos;
+				do {
+					randomNumberX = std::rand() % MAP_SIZE;
+					randomNumberY = std::rand() % MAP_SIZE;
+					newPos = glm::vec3((float)randomNumberX, (float)randomNumberY, 0);
+				} while (map->getMapCoordinateForMapCreation(newPos).terrain != NORMAL_FLOOR);
+
+				lastTime = Time::getTime();
+				localPlayer->getTransform()->translate(newPos.x, newPos.y, localPlayer->getTransform()->getPosition().z);
+			}
 		}
-	}*/
+
+		/*if (Input::keyStates['l'])
+		{
+			double now = Time::getTime();
+			if (now - lastTime >= 0.3)
+			{
+				if (Mesh::drawForm == GL_TRIANGLES)
+					Mesh::drawForm = GL_LINES;
+				else
+					Mesh::drawForm = GL_TRIANGLES;
+				lastTime = Time::getTime();
+			}
+		}*/
 #endif
+	}
 }

@@ -3,6 +3,8 @@
 #include "Input.h"
 #include "SkillIcon.h"
 #include "Monster.h"
+#include "Game.h"
+#include "PacketController.h"
 
 HoshoyoExplosionSkill::HoshoyoExplosionSkill(std::vector<Monster*>* monsters) : Skill(monsters)
 {
@@ -44,7 +46,7 @@ void HoshoyoExplosionSkill::render(Shader* primitiveShader, TextRenderer* textRe
 	}
 }
 
-void HoshoyoExplosionSkill::use(MovementDirection direction)
+void HoshoyoExplosionSkill::prepareExecution(MovementDirection skillDirection)
 {
 	if (!this->active)
 	{
@@ -63,12 +65,24 @@ void HoshoyoExplosionSkill::update()
 			this->aimEntity->getTransform()->translate(mousePos.x, mousePos.y, 0.1f);
 
 			if (Input::attack)
-				this->executeSkill(mousePos);
+			{
+				if (Game::multiplayer)
+				{
+					PacketController::sendSkillToServer(this->getSlot(), TOP, mousePos, 0);
+				}
+				else
+				{
+					this->execute(TOP, mousePos, 0);
+				}
+			}
 		}
 		else if (this->status == EXECUTION)
 		{
-			if (this->currentExplosionTextureIndex % 27 == 0)
-				this->hitEnemiesOnSkillRadius();
+			if (!Game::multiplayer)
+			{
+				if (this->currentExplosionTextureIndex % 27 == 0)
+					this->hitEnemiesOnSkillRadius();
+			}
 			if (this->currentExplosionTextureIndex == 81)
 			{
 				this->active = false;
@@ -93,13 +107,14 @@ bool HoshoyoExplosionSkill::cancelIfPossible()
 	return false;
 }
 
-void HoshoyoExplosionSkill::executeSkill(glm::vec3 position)
+void HoshoyoExplosionSkill::execute(MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId)
 {
 	this->status = EXECUTION;
-	explosionPosition = position;
-	this->getTransform()->translate(position.x, position.y, 0.1f);
+	explosionPosition = skillTargetPosition;
+	this->getTransform()->translate(skillTargetPosition.x, skillTargetPosition.y, 0.1f);
 	this->currentExplosionTextureIndex = 0;
 	this->skillIcon->disableIcon();
+	this->active = true;
 }
 
 const float skillRadius = 10.0f;
@@ -110,7 +125,7 @@ void HoshoyoExplosionSkill::hitEnemiesOnSkillRadius()
 	for (Monster* monster : *(this->monsters))
 	{
 		glm::vec3 diffVector = monster->getTransform()->getPosition() - explosionPosition;
-		if (length(diffVector) < skillRadius)
+		if (length(diffVector) < skillRadius && monster->isAlive())
 			monster->doDamage(skillDamage);
 	}
 }

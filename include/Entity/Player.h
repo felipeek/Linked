@@ -26,6 +26,13 @@
 #define PLAYER_RECEIVE_DAMAGE_DELAY 0.3f
 #define PLAYER_TEXTURE_CHANGE_DELAY 0.2f
 
+// If PLAYER_FIRST_DIRECTION is changed,
+// PLAYER_FIRST_INDEX_TEXTURE must also be changed.
+// Plus, the texture index must be an index of a texture which
+// direction is the same as defined on MONSTER_FIRST_DIRECTION
+#define PLAYER_FIRST_DIRECTION BOTTOM
+#define PLAYER_FIRST_INDEX_TEXTURE 123
+
 #define SQRT2 1.414213562373
 
 class HPBar;
