@@ -512,7 +512,8 @@ void Player::input(Map* map)
 void Player::render(Shader* primitiveShader, TextRenderer* textRenderer, Shader* projectileShader)
 {
 	Entity::render(primitiveShader);
-	this->getHPBar()->quad->render(primitiveShader);
+	if (Input::hpBarShadow)
+		this->getHPBar()->quad->render(primitiveShader);
 
 	// Projectile attacks
 	for (Entity* e : this->attacks)

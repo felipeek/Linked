@@ -42,10 +42,10 @@
 #include <iostream>
 #include <string>
 
-bool Game::multiplayer = false;
+bool Game::multiplayer = true;
 int Game::server_port = 9090;
-std::string Game::server_ip = "127.0.0.1";
-//std::string Game::server_ip = "201.21.40.57";
+//std::string Game::server_ip = "127.0.0.1";
+std::string Game::server_ip = "201.21.40.57";
 
 Game::Game(int windowWidth, int windowHeight)
 	: windowWidth(windowWidth), windowHeight(windowHeight)
@@ -227,6 +227,7 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 		new Texture("./res/Maps/water.jpg"),
 		new Texture("./res/Maps/grassTex.png"),
 		new Texture(TERRAIN_MAP_PATH));
+	entityMap->setShadowTexture(frameBuffer->getTexture());
 
 	// TODO: delete waterMesh Mesh, texture and transform
 	Mesh* waterMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), (float)MAP_SIZE, (float)MAP_SIZE));
@@ -319,15 +320,6 @@ void Game::destroyProjectileOfId(int id)
 
 void Game::render()
 {
-
-	glm::mat4 lightSpace = frameBuffer->getCamera()->viewProj;
-	mapShader->useShader();
-	glUniformMatrix4fv(glGetUniformLocation(mapShader->getShader(), "lightSpaceMatrix"), 1, GL_FALSE, &lightSpace[0][0]);
-	glBindTexture(GL_TEXTURE_2D, frameBuffer->getTexture()->textureID);
-	glActiveTexture(GL_TEXTURE5);
-	glUniform1i(glGetUniformLocation(mapShader->getShader(), "shadowMap"), 5);
-	mapShader->stopShader();
-	
 	/* FIRST PASS (SHADOW PASS) */
 	renderFirstPass();
 
@@ -387,6 +379,7 @@ void Game::renderFirstPass()
 	}
 
 	// Player
+	Input::hpBarShadow = false;
 	localPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
 
 	// Second Player
@@ -409,7 +402,7 @@ void Game::renderSecondsPass()
 	frameBuffer->normalRender(windowWidth, windowHeight);
 
 	// Map
-	entityMap->render(mapShader);
+	entityMap->render(mapShader, frameBuffer->getCamera());
 	water->render(commonShader);
 
 	// Monsters
@@ -448,6 +441,7 @@ void Game::renderSecondsPass()
 	}
 
 	// Player
+	Input::hpBarShadow = true;
 	localPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
 
 	// Second Player

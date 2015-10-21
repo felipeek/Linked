@@ -26,9 +26,13 @@ void MapShader::getUniformLocations()
 
 	uniform_Model = glGetUniformLocation(shader, "Model");
 	uniform_viewProj = glGetUniformLocation(shader, "viewProj");
+
+	// Shadow stuff
+	uniform_lightSpace = glGetUniformLocation(shader, "lightSpaceMatrix");
+	uniform_shadowMap = glGetUniformLocation(shader, "shadowMap");
 }
 
-void MapShader::update(Transform* transform)
+void MapShader::update(Transform* transform, Camera* lightCamera)
 {
 	glActiveTexture(GL_TEXTURE0);
 	glUniform1i(uniform_NormalFloor, 0);
@@ -40,12 +44,17 @@ void MapShader::update(Transform* transform)
 	glUniform1i(uniform_Dirt, 3);
 	glActiveTexture(GL_TEXTURE3);
 	glUniform1i(uniform_BlendMap, 4);
+	glActiveTexture(GL_TEXTURE5);
+	glUniform1i(uniform_shadowMap, 5);
+
 
 	glUniform3fv(uniform_LightPos, 1, &this->light->lightPosition[0]);
 	glUniform3fv(uniform_LightIntensity, 1, &this->light->lightColor[0]);
 
 	glUniformMatrix4fv(uniform_Model, 1, GL_FALSE, &transform->model[0][0]);
 	glUniformMatrix4fv(uniform_viewProj, 1, GL_FALSE, &camera->viewProj[0][0]);
+
+	glUniformMatrix4fv(uniform_lightSpace, 1, GL_FALSE, &lightCamera->viewProj[0][0]);
 
 }
 

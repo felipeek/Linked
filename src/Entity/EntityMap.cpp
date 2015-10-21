@@ -17,13 +17,18 @@ EntityMap::~EntityMap()
 		delete mesh;
 }
 
-void EntityMap::render(MapShader* shader)
+void EntityMap::render(MapShader* shader, Camera* lightCamera)
 {
 	shader->useShader();
-	shader->update(transform);
+	shader->update(transform, lightCamera);
 	bindTextures();
 	mesh->render();
 	shader->stopShader();
+}
+
+void EntityMap::setShadowTexture(Texture* shadowTexture)
+{
+	this->shadowTexture = shadowTexture;
 }
 
 void EntityMap::bindTextures()
@@ -38,4 +43,9 @@ void EntityMap::bindTextures()
 	glBindTexture(GL_TEXTURE_2D, texture3->textureID);
 	glActiveTexture(GL_TEXTURE4);
 	glBindTexture(GL_TEXTURE_2D, blendMap->textureID);
+
+	// bind Shadow Map
+	glActiveTexture(GL_TEXTURE5);
+	glBindTexture(GL_TEXTURE_2D, shadowTexture->textureID);
+	
 }

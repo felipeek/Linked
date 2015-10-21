@@ -1,13 +1,14 @@
 #pragma once
 #include "Shader.h"
 class Light;
+class Camera;
 
 class MapShader : public Shader
 {
 public:
 	MapShader(std::string fileName, Camera* camera, Light* light);
 	~MapShader();
-	virtual void update(Transform* transform);
+	virtual void update(Transform* transform, Camera* lightCamera);
 	void setLight(Light* light);
 
 private:
@@ -20,6 +21,8 @@ private:
 	GLuint uniform_BlendMap;
 	GLuint uniform_LightPos;
 	GLuint uniform_LightIntensity;
+	GLuint uniform_lightSpace;
+	GLuint uniform_shadowMap;
 
 	GLuint uniform_Model;
 	GLuint uniform_viewProj;

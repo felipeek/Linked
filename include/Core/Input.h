@@ -14,5 +14,7 @@ public:
 
 	static void clear();
 
+	static bool hpBarShadow;
+
 };
 

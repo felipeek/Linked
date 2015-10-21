@@ -5,6 +5,7 @@ int Input::wheel = 0;
 bool Input::attack = false;
 bool Input::leftMouseButton = false;	
 MouseAttack Input::mouseAttack;
+bool Input::hpBarShadow = false;
 
 void Input::clear()
 {
