@@ -42,7 +42,7 @@
 #include <iostream>
 #include <string>
 
-bool Game::multiplayer = true;
+bool Game::multiplayer = false;
 int Game::server_port = 9090;
 //std::string Game::server_ip = "127.0.0.1";
 std::string Game::server_ip = "201.21.40.57";
@@ -279,10 +279,9 @@ void Game::createUDPConnection()
 
 void Game::createMonster(short* data)
 {
-
 	// TODO: delete newMonster
 
-	// do not tests collision propositally
+	// do not tests collision intentionally
 	int monsterId = data[0];
 	int monsterHp = data[1];
 	glm::vec3 monsterRgb = glm::vec3(data[2], data[3], data[4]);
@@ -379,7 +378,7 @@ void Game::renderFirstPass()
 	}
 
 	// Player
-	Input::hpBarShadow = false;
+	localPlayer->hpBarRenderOptions(false);
 	localPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
 
 	// Second Player
@@ -441,7 +440,7 @@ void Game::renderSecondsPass()
 	}
 
 	// Player
-	Input::hpBarShadow = true;
+	localPlayer->hpBarRenderOptions(true);
 	localPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
 
 	// Second Player

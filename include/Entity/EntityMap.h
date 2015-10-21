@@ -11,6 +11,7 @@ public:
 	virtual void render(MapShader* shader, Camera* lightCamera);
 	virtual void bindTextures();
 	void setShadowTexture(Texture* shadowTexture);
+	void setLightCamera(Camera* c);
 
 	Texture* texture1;
 	Texture* texture2;

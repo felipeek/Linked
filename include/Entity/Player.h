@@ -112,6 +112,10 @@ public:
 	void update(Map* map);
 	void input(Map* map);
 	void render(Shader* primitiveShader, TextRenderer* textRenderer, Shader* projectileShader);
+
+	/* HPBAR RELATED */
+	void hpBarRenderOptions(bool shouldRender);
+	bool hpBar_shouldRender;
 private:
 	/* FUNDAMENTAL ATTRIBUTES */
 	short clientId;

@@ -89,7 +89,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>include;include/external;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include/Shaders/Classes;include;include/external;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -120,7 +120,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>include;include/external;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include/Shaders/Classes;include;include/external;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -202,15 +202,15 @@
     <ClCompile Include="src\ResourceLoad\IndexedModel.cpp" />
     <ClCompile Include="src\ResourceLoad\Texture.cpp" />
     <ClCompile Include="src\Shaders\Camera.cpp" />
-    <ClCompile Include="src\Shaders\CommonShader.cpp" />
+    <ClCompile Include="src\Shaders\Classes\CommonShader.cpp" />
     <ClCompile Include="src\Shaders\FrameBuffer.cpp" />
-    <ClCompile Include="src\Shaders\FrameShader.cpp" />
-    <ClCompile Include="src\Shaders\GUIShader.cpp" />
+    <ClCompile Include="src\Shaders\Classes\FrameShader.cpp" />
+    <ClCompile Include="src\Shaders\Classes\GUIShader.cpp" />
     <ClCompile Include="src\Shaders\Light.cpp" />
-    <ClCompile Include="src\Shaders\MapShader.cpp" />
-    <ClCompile Include="src\Shaders\PrimitiveShader.cpp" />
-    <ClCompile Include="src\Shaders\Shader.cpp" />
-    <ClCompile Include="src\Shaders\TextShader.cpp" />
+    <ClCompile Include="src\Shaders\Classes\MapShader.cpp" />
+    <ClCompile Include="src\Shaders\Classes\PrimitiveShader.cpp" />
+    <ClCompile Include="src\Shaders\Classes\Shader.cpp" />
+    <ClCompile Include="src\Shaders\Classes\TextShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Display.h" />
@@ -254,7 +254,7 @@
     <ClInclude Include="include\Map\MapEntity.h" />
     <ClInclude Include="include\Map\MapMonster.h" />
     <ClInclude Include="include\Map\MapTerrain.h" />
-    <ClInclude Include="include\Movement.h" />
+    <ClInclude Include="include\Entity\Movement.h" />
     <ClInclude Include="include\Network\ClientPacket.h" />
     <ClInclude Include="include\Network\Packet.h" />
     <ClInclude Include="include\Network\PacketController.h" />
@@ -263,15 +263,15 @@
     <ClInclude Include="include\ResourceLoad\IndexedModel.h" />
     <ClInclude Include="include\ResourceLoad\Texture.h" />
     <ClInclude Include="include\Shaders\Camera.h" />
-    <ClInclude Include="include\Shaders\CommonShader.h" />
+    <ClInclude Include="include\Shaders\Classes\CommonShader.h" />
     <ClInclude Include="include\Shaders\FrameBuffer.h" />
-    <ClInclude Include="include\Shaders\FrameShader.h" />
-    <ClInclude Include="include\Shaders\GUIShader.h" />
+    <ClInclude Include="include\Shaders\Classes\FrameShader.h" />
+    <ClInclude Include="include\Shaders\Classes\GUIShader.h" />
     <ClInclude Include="include\Shaders\Light.h" />
-    <ClInclude Include="include\Shaders\MapShader.h" />
-    <ClInclude Include="include\Shaders\PrimitiveShader.h" />
-    <ClInclude Include="include\Shaders\Shader.h" />
-    <ClInclude Include="include\Shaders\TextShader.h" />
+    <ClInclude Include="include\Shaders\Classes\MapShader.h" />
+    <ClInclude Include="include\Shaders\Classes\PrimitiveShader.h" />
+    <ClInclude Include="include\Shaders\Classes\Shader.h" />
+    <ClInclude Include="include\Shaders\Classes\TextShader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

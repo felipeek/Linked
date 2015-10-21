@@ -9,7 +9,8 @@ class CommonShader : public Shader
 public:
 	CommonShader(std::string fileName, Camera* camera, Light* light);
 	~CommonShader();
-	virtual void update(Transform* transform, Entity* entity);
+	virtual void update();
+
 private:
 	virtual void getUniformLocations();
 	GLuint uniform_TexSampler;

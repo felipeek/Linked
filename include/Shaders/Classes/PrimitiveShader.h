@@ -9,7 +9,7 @@ class PrimitiveShader : public Shader
 public:
 	PrimitiveShader(std::string fileName, Camera* camera, Light* light);
 	~PrimitiveShader();
-	virtual void update(Transform* transform, Entity* entity);
+	virtual void update();
 private:
 	virtual void getUniformLocations();
 	GLuint uniform_TexSampler;

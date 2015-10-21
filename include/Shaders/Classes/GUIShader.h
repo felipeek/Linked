@@ -9,7 +9,7 @@ class GUIShader : public Shader
 public:
 	GUIShader(std::string fileName);
 	~GUIShader();
-	virtual void update(Transform* transform, Entity* entity);
+	virtual void update();
 	virtual void useShader();
 	virtual void stopShader();
 private:

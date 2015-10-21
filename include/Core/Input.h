@@ -13,8 +13,5 @@ public:
 	static int wheel;
 
 	static void clear();
-
-	static bool hpBarShadow;
-
 };
 

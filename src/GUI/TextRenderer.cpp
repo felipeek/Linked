@@ -125,7 +125,7 @@ void TextRenderer::renderText(std::string text, GLfloat x, GLfloat y, GLfloat sc
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 		// Update shader after binding stuff
-		this->shader->update(NULL, NULL);
+		this->shader->update();
 
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

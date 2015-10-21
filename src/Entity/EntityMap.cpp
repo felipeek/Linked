@@ -19,11 +19,8 @@ EntityMap::~EntityMap()
 
 void EntityMap::render(MapShader* shader, Camera* lightCamera)
 {
-	shader->useShader();
-	shader->update(transform, lightCamera);
-	bindTextures();
-	mesh->render();
-	shader->stopShader();
+	shader->setLightCamera(lightCamera);
+	Entity::render(shader);
 }
 
 void EntityMap::setShadowTexture(Texture* shadowTexture)

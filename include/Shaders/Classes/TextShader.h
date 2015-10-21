@@ -8,7 +8,7 @@ public:
 	TextShader(std::string fileName);
 	~TextShader();
 
-	void update(Transform* transform, Entity* entity);
+	void update();
 	void useShader();
 	void stopShader();
 
