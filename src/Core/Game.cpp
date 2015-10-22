@@ -510,24 +510,32 @@ void Game::update()
 					std::string xPos = thisMsg.substr(firstSpace + 1, secondSpace - firstSpace - 1);
 					std::string yPos = thisMsg.substr(secondSpace + 1, endString - secondSpace - 1);
 
-					float xPosf = std::stof(xPos);
-					float yPosf = std::stof(yPos);
-
-					if (xPosf < MAP_SIZE && xPosf > 0 && yPosf < MAP_SIZE && yPosf > 0)
-					{
-						if (!map->coordinateHasCollision(glm::vec3(xPosf, yPosf, PLAYER_HEIGHT)))
-							localPlayer->getTransform()->translate(xPosf, yPosf, PLAYER_HEIGHT);
+					try{
+						float xPosf = std::stof(xPos);
+						float yPosf = std::stof(yPos);
+					
+						if (xPosf < MAP_SIZE && xPosf > 0 && yPosf < MAP_SIZE && yPosf > 0)
+						{
+							if (!map->coordinateHasCollision(glm::vec3(xPosf, yPosf, PLAYER_HEIGHT)))
+								localPlayer->getTransform()->translate(xPosf, yPosf, PLAYER_HEIGHT);
+							else
+								gui->setNextMessage(std::string("Invalid position!"));
+						}
 						else
-							gui->setNextMessage(std::string("Invalid position!"));
+							gui->setNextMessage(std::string("Out of the world!"));
 					}
-					else
-						gui->setNextMessage(std::string("Out of the world!"));
+					catch (...){
+						gui->setNextMessage(std::string("Invalid input!"));
+					}
+					Chat::msg = "";
 				}
-
-				gui->setNextMessage(Chat::appendPlayerName(localPlayer->getName()));
-				//gui->setNextMessage(Chat::msg);
-				udpClient->sendPackets(Packet(Chat::msg, -1));
-				Chat::msg = "";
+				else
+				{
+					gui->setNextMessage(Chat::appendPlayerName(localPlayer->getName()));
+					//gui->setNextMessage(Chat::msg);
+					udpClient->sendPackets(Packet(Chat::msg, -1));
+					Chat::msg = "";
+				}
 			}
 		}
 	}
