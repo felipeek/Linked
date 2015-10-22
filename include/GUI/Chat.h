@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include "Input.h"
+#include "GUI.h"
 
 #define NUM_KEYS 512
 
@@ -24,6 +25,9 @@
 #define KEY_MOD_ALT 4
 #define KEY_MOD_SUPER 8
 
+class UDPClient;
+class Player;
+class Map;
 
 class Chat
 {
@@ -34,7 +38,12 @@ public:
 	static std::stringstream& getStream();
 	static std::string appendPlayerName(std::string& name);
 	static std::string msg;
+	static void updateGameMultiplayer(UDPClient* udpClient, Player* localPlayer, Map* map);
+	static void updateGameSingleplayer();
 	static void update(int key, int scancode, int action, int mods);
+
+	//GUI
+	static GUI* gui;
 private:
 	static bool chatActive;
 	static int stateChat[NUM_KEYS];	// 0 to 3

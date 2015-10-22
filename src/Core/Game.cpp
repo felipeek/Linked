@@ -42,7 +42,7 @@
 #include <iostream>
 #include <string>
 
-bool Game::multiplayer = false;
+bool Game::multiplayer = true;
 int Game::server_port = 9090;
 std::string Game::server_ip = "127.0.0.1";
 //std::string Game::server_ip = "201.21.40.57";
@@ -233,6 +233,7 @@ void Game::createGUI()
 	for (Skill* s : this->localPlayer->getSkills())
 		this->gui->addSkillIcon(s->getSkillIcon());
 	PacketController::gui = this->gui;
+	Chat::gui = this->gui;
 }
 
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
@@ -484,71 +485,9 @@ void Game::renderSecondsPass()
 void Game::update()
 {
 	if (Game::multiplayer)
-	{
-		udpClient->receivePackets();
-		if (Chat::msg != "")
-		{
-			if (Chat::msg.compare("/where") == 0)
-			{
-				std::stringstream ss;
-				ss << localPlayer->getTransform()->getPosition().x << ", " << localPlayer->getTransform()->getPosition().y << ", " << localPlayer->getTransform()->getPosition().z;
-				gui->setNextMessage(ss.str());
-				Chat::msg = "";
-			}
-			else if (Chat::msg.compare("/wireframe") == 0)
-			{
-				Mesh::wireframe = !Mesh::wireframe;
-				Chat::msg = "";
-			}
-			else{
-
-				if (Chat::msg.substr(0, 3).compare("/tp") == 0)
-				{
-					std::string thisMsg = Chat::msg;
-					int firstSpace = thisMsg.find_first_of(" ");
-					int secondSpace = thisMsg.find_first_of(" ", firstSpace + 1);
-					int endString = thisMsg.length();
-
-					std::string xPos = thisMsg.substr(firstSpace + 1, secondSpace - firstSpace - 1);
-					std::string yPos = thisMsg.substr(secondSpace + 1, endString - secondSpace - 1);
-
-					try{
-						float xPosf = std::stof(xPos);
-						float yPosf = std::stof(yPos);
-					
-						if (xPosf < MAP_SIZE && xPosf > 0 && yPosf < MAP_SIZE && yPosf > 0)
-						{
-							if (!map->coordinateHasCollision(glm::vec3(xPosf, yPosf, PLAYER_HEIGHT)))
-								localPlayer->getTransform()->translate(xPosf, yPosf, PLAYER_HEIGHT);
-							else
-								gui->setNextMessage(std::string("Invalid position!"));
-						}
-						else
-							gui->setNextMessage(std::string("Out of the world!"));
-					}
-					catch (...){
-						gui->setNextMessage(std::string("Invalid input!"));
-					}
-					Chat::msg = "";
-				}
-				else
-				{
-					gui->setNextMessage(Chat::appendPlayerName(localPlayer->getName()));
-					//gui->setNextMessage(Chat::msg);
-					udpClient->sendPackets(Packet(Chat::msg, -1));
-					Chat::msg = "";
-				}
-			}
-		}
-	}
+		Chat::updateGameMultiplayer(udpClient, localPlayer, map);
 	else
-	{
-		if (Chat::msg != "")
-		{
-			gui->setNextMessage(Chat::msg);
-			Chat::msg = "";
-		}
-	}
+		Chat::updateGameSingleplayer();
 
 	// Light update
 	glm::vec3 playerPos = localPlayer->getTransform()->getPosition();

@@ -1,4 +1,9 @@
 #include "Chat.h"
+#include "UDPClient.h"
+#include "Player.h"
+#include "Game.h"
+#include "Map.h"
+#include "Packet.h"
 #include <iostream>
 #include <Windows.h>
 
@@ -8,6 +13,7 @@ short Chat::numLockState = 0;
 std::stringstream Chat::ss;
 std::string Chat::msg = "";
 bool Chat::chatActive = false;
+GUI* Chat::gui = nullptr;
 
 void Chat::nextState()
 {
@@ -56,6 +62,77 @@ void Chat::update(int key, int scancode, int action, int mods)
 		}
 	}
 }
+
+void Chat::updateGameMultiplayer(UDPClient* udpClient, Player* localPlayer, Map* map)
+{
+	udpClient->receivePackets();
+	if (Chat::msg != "")
+	{
+		if (Chat::msg.compare("/where") == 0)
+		{
+			std::stringstream ss;
+			ss << localPlayer->getTransform()->getPosition().x << ", " << localPlayer->getTransform()->getPosition().y << ", " << localPlayer->getTransform()->getPosition().z;
+			gui->setNextMessage(ss.str());
+			Chat::msg = "";
+		}
+		else if (Chat::msg.compare("/wireframe") == 0)
+		{
+			Mesh::wireframe = !Mesh::wireframe;
+			Chat::msg = "";
+		}
+		else{
+
+			if (Chat::msg.substr(0, 3).compare("/tp") == 0)
+			{
+				std::string thisMsg = Chat::msg;
+				int firstSpace = thisMsg.find_first_of(" ");
+				int secondSpace = thisMsg.find_first_of(" ", firstSpace + 1);
+				int endString = thisMsg.length();
+
+				std::string xPos = thisMsg.substr(firstSpace + 1, secondSpace - firstSpace - 1);
+				std::string yPos = thisMsg.substr(secondSpace + 1, endString - secondSpace - 1);
+
+				try{
+					float xPosf = std::stof(xPos);
+					float yPosf = std::stof(yPos);
+
+					if (xPosf < MAP_SIZE && xPosf > 0 && yPosf < MAP_SIZE && yPosf > 0)
+					{
+						if (!map->coordinateHasCollision(glm::vec3(xPosf, yPosf, PLAYER_HEIGHT)))
+							localPlayer->getTransform()->translate(xPosf, yPosf, PLAYER_HEIGHT);
+						else
+							gui->setNextMessage(std::string("Invalid position!"));
+					}
+					else
+						gui->setNextMessage(std::string("Out of the world!"));
+				}
+				catch (...){
+					gui->setNextMessage(std::string("Invalid input!"));
+				}
+				Chat::msg = "";
+			}
+			else
+			{
+				gui->setNextMessage(Chat::appendPlayerName(localPlayer->getName()));
+				//gui->setNextMessage(Chat::msg);
+				udpClient->sendPackets(Packet(Chat::msg, -1));
+				Chat::msg = "";
+			}
+		}
+	}
+	
+}
+
+void Chat::updateGameSingleplayer()
+{
+	if (Chat::msg != "")
+	{
+		if (gui != nullptr)
+			gui->setNextMessage(Chat::msg);
+		Chat::msg = "";
+	}
+}
+
 #ifdef DEBUG
 void Chat::printState(int key)
 {
