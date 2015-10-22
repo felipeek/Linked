@@ -158,7 +158,11 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 				int projectileToBeDestroyed = data[3*i+1];
 				int attack = data[3*i+2];
 
-				PacketController::game->getMonsterOfId(hurtMonsterId)->doDamage(attack);
+				Monster* monster = PacketController::game->getMonsterOfId(hurtMonsterId);
+
+				if (monster != NULL)
+					monster->doDamage(attack);
+				
 				if (projectileToBeDestroyed != -1)
 					PacketController::game->destroyProjectileOfId(projectileToBeDestroyed);
 			}
