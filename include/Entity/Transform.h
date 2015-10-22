@@ -23,6 +23,7 @@ public:
 	void incScale(float x, float y, float z);
 
 	glm::vec3 getPosition();
+	void setPosition(glm::vec3& pos);
 	glm::vec3 getScale();
 	float getAngleY();
 

@@ -14,6 +14,8 @@
 
 #define SHADOW_BUFFER_SIZE 2048
 
+#define PLAYER_HEIGHT 1.39f
+
 class EntityMap;
 class Entity;
 class Camera;

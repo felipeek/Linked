@@ -95,3 +95,8 @@ glm::vec3 Transform::getScale()
 {
 	return mScale;
 }
+
+void Transform::setPosition(glm::vec3& pos)
+{
+	this->mPosition = pos;
+}

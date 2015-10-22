@@ -137,7 +137,7 @@ void Game::createOfflinePlayer()
 {
 
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 12, 0));
-	this->localPlayer = new Player(new Transform(glm::vec3(440, 500, 1.5f), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"), &monsters, map);
+	this->localPlayer = new Player(new Transform(glm::vec3(440, 500, PLAYER_HEIGHT), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"), &monsters, map);
 	this->localPlayer->setHp(100);
 	this->localPlayer->setName("JaOwnes");
 	PacketController::localPlayer = localPlayer;
@@ -178,7 +178,7 @@ void Game::waitForCreationOfOnlinePlayer()
 
 void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 {
-	glm::vec3 localPlayerPosition = glm::vec3(data[8], data[9], data[10]);
+	glm::vec3 localPlayerPosition = glm::vec3(data[8], data[9], PLAYER_HEIGHT);
 	// TODO: delete player Mesh
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 12, 0));
 
@@ -404,7 +404,10 @@ void Game::renderFirstPass()
 	if (Game::multiplayer)
 	{
 		for (Player* player : this->onlinePlayers)
+		{
+			player->hpBarRenderOptions(false);
 			player->render(primitiveShader, gui->getTextRenderer(), projectileShader);
+		}
 	}
 }
 
@@ -466,7 +469,11 @@ void Game::renderSecondsPass()
 	if (Game::multiplayer)
 	{
 		for (Player* player : this->onlinePlayers)
+		{
+			player->hpBarRenderOptions(true);
 			player->render(primitiveShader, gui->getTextRenderer(), projectileShader);
+		}
+			
 	}
 	// Render GUI (Order is important)
 	gui->render();
@@ -484,6 +491,11 @@ void Game::update()
 				std::stringstream ss;
 				ss << localPlayer->getTransform()->getPosition().x << ", " << localPlayer->getTransform()->getPosition().y << ", " << localPlayer->getTransform()->getPosition().z;
 				gui->setNextMessage(ss.str());
+				Chat::msg = "";
+			}
+			else if (Chat::msg.compare("/wireframe") == 0)
+			{
+				Mesh::wireframe = !Mesh::wireframe;
 				Chat::msg = "";
 			}
 			else{
@@ -544,7 +556,7 @@ void Game::input()
 		Input::mouseAttack.update();
 		camera->input();
 		light->input();
-		localPlayer->input(this->map);
+		localPlayer->input(this->map);		
 #ifdef DEBUG
 
 		if (Input::keyStates['t'])

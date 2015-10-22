@@ -28,7 +28,9 @@ UDPClient::~UDPClient()
 void UDPClient::receivePackets()
 {
 	char buffer[RECVBUFFERSIZE] = { 0 };
-	if (recvfrom(connectionSocket, buffer, RECVBUFFERSIZE, 0, (struct sockaddr *) resultAddr->ai_addr, &sizeServerInfo) == SOCKET_ERROR)
+	int bytesReceived = 0;
+	bytesReceived = recvfrom(connectionSocket, buffer, RECVBUFFERSIZE, 0, (struct sockaddr *) resultAddr->ai_addr, &sizeServerInfo);
+	if (bytesReceived == SOCKET_ERROR)
 	{
 		int error = WSAGetLastError();
 		if (error != WSAEWOULDBLOCK)
@@ -39,12 +41,15 @@ void UDPClient::receivePackets()
 		}
 		return;
 	}
-	ClientPacket *cp = new ClientPacket(buffer);
-	PacketController::dispatch(cp);
-	delete cp;
-	#ifdef DEBUG
-	cout << "Servidor: " << ((int*)buffer)[0] << endl;
-	#endif
+	else
+	{
+		ClientPacket *cp = new ClientPacket(buffer);
+		PacketController::dispatch(cp);
+		delete cp;
+#ifdef DEBUG
+		cout << "Servidor: " << ((int*)buffer)[0] << endl;
+#endif
+	}
 }
 
 

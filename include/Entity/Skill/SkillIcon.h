@@ -1,13 +1,13 @@
 #include "Entity.h"
 #include "Skill.h"
 
-#define SKILL_SLOT_SIZE 0.6f*0.03f, 0.03f, 0.03f
-#define SKILL_SLOT_OFFSET_Y -0.933f
+#define SKILL_SLOT_SIZE 0.6f*0.042f, 0.042f, 0.042f
+#define SKILL_SLOT_OFFSET_Y -0.925f
 
-#define SKILL_SLOT1_OFFSET_X -0.63f
-#define SKILL_SLOT2_OFFSET_X -0.585f
-#define SKILL_SLOT3_OFFSET_X -0.54f
-#define SKILL_SLOT4_OFFSET_X -0.495f
+#define SKILL_SLOT1_OFFSET_X -0.588f
+#define SKILL_SLOT2_OFFSET_X -0.532f
+#define SKILL_SLOT3_OFFSET_X -0.476f
+#define SKILL_SLOT4_OFFSET_X -0.420f
 
 #define WIDTHFACTOR 0.6f
 
