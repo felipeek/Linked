@@ -26,55 +26,24 @@ void Chat::nextState(int key)
 
 void Chat::update(int key, int scancode, int action, int mods)
 {
-
+	std::cout <<"Scancode: "<< scancode <<", key: "<< key << std::endl;
 	// Chat system
-	if (key == RETURN_KEY && action == 0 || key == RETURN_KEY && action == 1)
+	if ((key == RETURN_KEY && action == 0) || (key == RETURN_KEY && action == 1) ||
+		(key == RETURN_KEY_NUM && action==0) || (key == RETURN_KEY_NUM && action == 1))
 		Chat::nextState();
 	else if (action == 0 || action == 1)
 		Chat::nextState(key);
 
-	if (stateChat[RETURN_KEY] == 2)
+	if (stateChat[RETURN_KEY] == CHAT_ACTIVE)
 	{
 		chatActive = true;
 		if (action == 1 || action == 2)
 		{
-			// Check keys
-			if (isLetter(key))
-			{
-				char c = getLetter(key, mods);
-				//std::cout << c;
-				ss << c;
-			}
-			else if (isNumber(key, mods))
-			{
-				char c = getNumber(key);
-				//std::cout << c;
-				ss << c;
-			}
-			else if (key == SPACE_KEY)
-			{
-				//std::cout << " ";
-				ss << " ";
-			}
-			else if (key == BACKSPACE_KEY)
-			{
-				std::string s = ss.str();
-				if (s.size() > 0)
-				{
-					ss.clear();
-					s.erase(s.end() - 1, s.end());
-					ss.str(s);
-					ss.seekp(0, std::ios_base::end);
-				}
-			}
-			else if (key == -1 || key == 331)
-			{
-				//std::cout << '/';
-				ss << '/';
-			}
+			// Fill string stream with character typed
+			parseCharTyped(key, mods, scancode);
 		}
 	}
-	if (stateChat[RETURN_KEY] == 0)
+	if (stateChat[RETURN_KEY] == NORMAL_INACTIVE)
 	{
 		chatActive = false;
 		//std::cout << "Chat desativado" << std::endl;
@@ -161,4 +130,115 @@ std::string Chat::appendPlayerName(std::string& name)
 	std::stringstream stream;
 	stream << name << ": "<< msg;
 	return stream.str();
+}
+
+void Chat::parseCharTyped(int key, int mods, int scancode)
+{
+	if (key == -1)
+	{
+		// Keys that are not recognized
+		if (scancode == FSLASH_SCANCODE && mods == NO_MOD)
+			ss << "/";
+		else if (scancode == FSLASH_SCANCODE && mods == KEY_MOD_SHIFT)
+			ss << "?";
+
+	}
+
+	if (mods == KEY_MOD_SHIFT || mods == NO_MOD)
+	{
+		// Equal behavior when shifted
+		// Letters
+		if (isLetter(key))
+		{
+			char c = getLetter(key, mods);
+			ss << c;
+		}
+		// Spacebar
+		else if (key == SPACE_KEY)
+		{
+			ss << " ";
+		}
+		// Backspace
+		else if (key == BACKSPACE_KEY)
+		{
+			std::string s = ss.str();
+			if (s.size() > 0)
+			{
+				ss.clear();
+				s.erase(s.end() - 1, s.end());
+				ss.str(s);
+				ss.seekp(0, std::ios_base::end);
+			}
+		}
+	}
+	if (mods == NO_MOD)
+	{
+		// Numbers
+		if (isNumber(key, mods))
+		{
+			char c = getNumber(key);
+			ss << c;
+		}
+		switch (key)
+		{
+		case KEY_FSLASH: ss << "/"; break;
+		case KEY_APOSTROPHE: ss << "'"; break;
+		case KEY_COMMA: ss << ","; break;
+		case KEY_MINUS: ss << "-"; break;
+		case KEY_PERIOD: ss << "."; break;
+		case KEY_SEMICOLON: ss << ";"; break;
+		case KEY_EQUAL: ss << "="; break;
+		case KEY_LEFTBRACKET: ss << "["; break;
+		case KEY_RIGHTBRACKET: ss << "]"; break;
+		case KEY_BACKSLASH: ss << "\\"; break;
+		//case KEY_CCEDILHA: ss << "ç"; break;		// Breaks the textRenderer
+		//Numpad
+		case KEY_STAR_NUM: ss << "*"; break;
+		case KEY_MINUS_NUM: ss << "-"; break;
+		case KEY_PLUS_NUM: ss << "+"; break;
+		case KEY_COMMA_NUM: ss << ","; break;
+		}
+		std::string ccc = ss.str();
+	}
+	else if (mods == KEY_MOD_SHIFT)
+	{
+		// Forward slash (Left keyboard)
+
+		switch (key)
+		{
+		// Numeric keys
+		case KEY_0: ss << ")"; break;
+		case KEY_1: ss << "!"; break;
+		case KEY_2: ss << "@"; break;
+		case KEY_3: ss << "#"; break;
+		case KEY_4: ss << "$"; break;
+		case KEY_5: ss << "%"; break;
+		//case KEY_6: ss << "¨"; break;		// Breaks the chat
+		case KEY_7: ss << "&"; break;
+		case KEY_8: ss << "*"; break;
+		case KEY_9: ss << "("; break;
+
+		// Special keys
+		case KEY_APOSTROPHE: ss << "\""; break;
+		case KEY_COMMA: ss << "<"; break;
+		case KEY_MINUS: ss << "_"; break;
+		case KEY_PERIOD: ss << ">"; break;
+		case KEY_SEMICOLON: ss << ":"; break;
+		case KEY_EQUAL: ss << "+"; break;
+		case KEY_LEFTBRACKET: ss << "{"; break;
+		case KEY_RIGHTBRACKET: ss << "}"; break;
+		case KEY_BACKSLASH: ss << "|"; break;
+		//case KEY_CCEDILHA: ss << "Ç"; break;		// Breaks the textRenderer
+		}
+	}
+	else if (mods == KEY_MOD_CONTROL)
+	{
+
+	}
+	else if (mods == KEY_MOD_ALT)
+	{
+
+	}
+	// Check keys
+
 }

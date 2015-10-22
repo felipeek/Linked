@@ -102,7 +102,7 @@ void Display::startGlfw(int* argc, char** argv, std::string titulo)
 
 	MainLoop(window);
 }
-#define DEBUG
+
 void Display::MainLoop(GLFWwindow* window)
 {
 	do{

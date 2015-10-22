@@ -2,12 +2,28 @@
 
 #include <string>
 #include <sstream>
+#include "Input.h"
 
 #define NUM_KEYS 512
 
 #define RETURN_KEY 257
+#define RETURN_KEY_NUM 335
 #define SPACE_KEY 32
 #define BACKSPACE_KEY 259
+
+/* CHAT STATES */
+#define NORMAL_INACTIVE 0
+#define NORMAL_ACTIVE 1
+#define CHAT_ACTIVE 2
+#define CHAT_INACTIVE 3
+
+/* KEY MODS */
+#define NO_MOD 0
+#define KEY_MOD_SHIFT 1
+#define KEY_MOD_CONTROL 2
+#define KEY_MOD_ALT 4
+#define KEY_MOD_SUPER 8
+
 
 class Chat
 {
@@ -29,6 +45,8 @@ private:
 
 	static bool isLetter(int key);
 	static bool isNumber(int key, int mods);
+
+	static void parseCharTyped(int key, int mods, int scancode);
 
 	static char getLetter(int key, int mods);
 	static char getNumber(int key);
