@@ -40,7 +40,10 @@ void RangeAttack::createProjectile(glm::vec3 direction, int projId)
 {
 	glm::vec3 playerPos = player->getTransform()->getPosition();
 	playerPos.z = 0;
-	direction.z = 1.0f;
+	direction.z = 0.0f;
+
+	if (direction.x == 0 && direction.y == 0 && direction.z == 0)
+		return;
 
 	Transform* projectileTransform = new Transform(playerPos + glm::vec3(0, 0, playerPos.z), 35, glm::vec3(1, 0, 0), glm::vec3(3, 3, 3));
 	Projectile* entityD = new Projectile(projectileTransform, mesh, texture, speed, direction);
