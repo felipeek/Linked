@@ -476,7 +476,9 @@ void Game::renderSecondsPass()
 			
 	}
 	// Render GUI (Order is important)
+	Mesh::isGUI = true;
 	gui->render();
+	Mesh::isGUI = false;
 }
 
 void Game::update()

@@ -4,6 +4,7 @@
 #include <iostream>
 
 bool Mesh::wireframe = false;
+bool Mesh::isGUI = false;
 
 Mesh::Mesh(std::string fileName, float reflectivity, float glossiness)
 {
@@ -122,7 +123,7 @@ void Mesh::render()
 	glBindBuffer(GL_ARRAY_BUFFER, TextureBufferID);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-	if (wireframe)
+	if (wireframe && !isGUI)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	else
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

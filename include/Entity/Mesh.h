@@ -18,6 +18,7 @@ public:
 	float reflectivity;
 	float glossiness;
 	static bool wireframe;
+	static bool isGUI;
 
 	// returns NULL if quad does not exist
 	Quad* getQuad();
