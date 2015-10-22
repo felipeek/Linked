@@ -32,7 +32,6 @@ void Chat::nextState(int key)
 
 void Chat::update(int key, int scancode, int action, int mods)
 {
-	std::cout <<"Scancode: "<< scancode <<", key: "<< key << std::endl;
 	// Chat system
 	if ((key == RETURN_KEY && action == 0) || (key == RETURN_KEY && action == 1) ||
 		(key == RETURN_KEY_NUM && action==0) || (key == RETURN_KEY_NUM && action == 1))
@@ -269,6 +268,8 @@ void Chat::parseCharTyped(int key, int mods, int scancode)
 		case KEY_RIGHTBRACKET: ss << "]"; break;
 		case KEY_BACKSLASH: ss << "\\"; break;
 		//case KEY_CCEDILHA: ss << "ç"; break;		// Breaks the textRenderer
+		case KEY_TILDA: ss << "~"; break;
+		//case KEY_ACUTE_ACCENT: ss << "´"; break;	// Breaks the textRenderer
 		//Numpad
 		case KEY_STAR_NUM: ss << "*"; break;
 		case KEY_MINUS_NUM: ss << "-"; break;
@@ -290,7 +291,7 @@ void Chat::parseCharTyped(int key, int mods, int scancode)
 		case KEY_3: ss << "#"; break;
 		case KEY_4: ss << "$"; break;
 		case KEY_5: ss << "%"; break;
-		//case KEY_6: ss << "¨"; break;		// Breaks the chat
+		//case KEY_6: ss << "¨"; break;				// Breaks the textRenderer
 		case KEY_7: ss << "&"; break;
 		case KEY_8: ss << "*"; break;
 		case KEY_9: ss << "("; break;

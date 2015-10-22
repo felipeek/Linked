@@ -15,5 +15,8 @@ public:
 
 	void setPosition(glm::vec3 position);
 
+	bool day;
+	float dayDelta;
+	float timeRate;
 };
 

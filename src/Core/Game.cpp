@@ -42,7 +42,7 @@
 #include <iostream>
 #include <string>
 
-bool Game::multiplayer = true;
+bool Game::multiplayer = false;
 int Game::server_port = 9090;
 std::string Game::server_ip = "127.0.0.1";
 //std::string Game::server_ip = "201.21.40.57";
@@ -490,10 +490,7 @@ void Game::update()
 		Chat::updateGameSingleplayer();
 
 	// Light update
-	glm::vec3 playerPos = localPlayer->getTransform()->getPosition();
-	playerPos.x -= 30.0f;
-	playerPos.y -= 30.0f;
-	light->update(playerPos);
+	light->update(localPlayer->getTransform()->getPosition());
 
 	// Player update	
 	localPlayer->update(this->map);

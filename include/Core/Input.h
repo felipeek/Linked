@@ -28,6 +28,8 @@ public:
 #define KEY_TAB 258
 #define KEY_FSLASH 331
 #define KEY_CCEDILHA 59	// BR keyboard
+#define KEY_TILDA 39
+#define KEY_ACUTE_ACCENT 91 // breaks TextRenderer
 
 // numpad
 #define KEY_STAR_NUM 332
