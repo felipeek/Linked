@@ -1,5 +1,3 @@
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
-
 #include "PacketController.h"
 #include "ClientPacket.h"
 #include "network\Packet.h"
@@ -10,6 +8,8 @@
 #include "Game.h"
 #include "Projectile.h"
 #include <iostream>
+
+#define ADDRESS_IPV4_LENGHT 46
 
 std::vector<Player*>* PacketController::players = NULL;
 UDPServer* PacketController::udpServer = NULL;
@@ -104,8 +104,9 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 		{
 			udpServer->addToClients(PacketController::clientPacket->getClientInfo());
 			// Connection Packet
-			std::cout << "Client (" << inet_ntoa(udpServer->getClients()->back()->netInfo.sin_addr) << ":" <<
-				udpServer->getClients()->back()->netInfo.sin_port << ") " <<
+			char address[ADDRESS_IPV4_LENGHT] = { 0 };
+			std::cout << "Client (" << inet_ntop(udpServer->getClients()->back()->netInfo.sin_family, &udpServer->getClients()->back()->netInfo.sin_addr, address, ADDRESS_IPV4_LENGHT)
+				<< ":" << udpServer->getClients()->back()->netInfo.sin_port << ") " <<
 				"connected with ID " << udpServer->getClients()->back()->id << std::endl;
 			// Send their ID back
 			udpServer->sendPackets(Packet(1, 0, udpServer->getClients()->back()->id), udpServer->getClients()->back()->netInfo);
@@ -259,8 +260,9 @@ void PacketController::disconnectClient(int clientId, bool timedOut)
 			}
 			else
 			{
-				std::cout << "Client (" << inet_ntoa((*udpServer->getClients())[i]->netInfo.sin_addr) << ":" <<
-					(*udpServer->getClients())[i]->netInfo.sin_port << ") " <<
+				char address[ADDRESS_IPV4_LENGHT] = { 0 };
+				std::cout << "Client (" << inet_ntop((*udpServer->getClients())[i]->netInfo.sin_family, &(*udpServer->getClients())[i]->netInfo.sin_addr, address, ADDRESS_IPV4_LENGHT)
+					<< ":" << (*udpServer->getClients())[i]->netInfo.sin_port << ") " <<
 					"disconnected." << std::endl;
 			}
 
