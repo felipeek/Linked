@@ -1,8 +1,7 @@
 # Linked
-----
+
 ## What is Linked?
 Linked is a multiplayer game idealized by Hoshoyo. It is currently being developed by Hoshoyo and Felipeek. We are looking for contributors, specially artists that are able to make sprites and 3d objects. Linked is a non-profit project and is being made for fun.
-
 
 ## Game
 ![Player Running](http://3.1m.yt/lxDWB1ylI.png)
@@ -20,7 +19,7 @@ For now, the game can be played Single Player or Multiplayer. However, it is def
 
 To play multiplayer, the server must be running.
 
-Unfortunately, the lib folder are not in the repository, so Linked cannot be built just by cloning our repository.
+Unfortunately, the lib folder is not in the repository, so Linked cannot be built just by cloning our repository.
 
 ## Developer Contact
 1. Felipe Kersting (fekersting@inf.ufrgs.br)
