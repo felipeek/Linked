@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2CD0D693-3DA3-469A-ACFB-C07C19A089EE}</ProjectGuid>
+    <RootNamespace>LinkedServer</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>bin/release/</OutDir>
+    <IntDir>bin/release/</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>bin/debug/</OutDir>
+    <IntDir>bin/debug/</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>./include/External;./include/Game/Factory;./include/Game/Skill;./include/Game/AI;./include/Game;./include/ResourceLoad;./include/Network;./include/Map;./include/Core;./include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>./lib</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>./include/External;./include/Game/Factory;./include/Game/Skill;./include/Game/AI;./include/Game;./include/ResourceLoad;./include/Network;./include/Map;./include/Core;./include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>./lib</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Core\Game.cpp" />
+    <ClCompile Include="src\Core\LinkedTime.cpp" />
+    <ClCompile Include="src\Game\AI\AI.cpp" />
+    <ClCompile Include="src\Game\AI\MonsterAI.cpp" />
+    <ClCompile Include="src\Game\Creature.cpp" />
+    <ClCompile Include="src\Game\Equipment.cpp" />
+    <ClCompile Include="src\Game\Factory\Factory.cpp" />
+    <ClCompile Include="src\Game\Factory\GameEntityFactory.cpp" />
+    <ClCompile Include="src\Game\Factory\MonsterFactory.cpp" />
+    <ClCompile Include="src\Game\GameEntity.cpp" />
+    <ClCompile Include="src\Game\Monster.cpp" />
+    <ClCompile Include="src\Game\Player.cpp" />
+    <ClCompile Include="src\Game\Projectile.cpp" />
+    <ClCompile Include="src\Game\Skill\HoshoyoExplosionSkill.cpp" />
+    <ClCompile Include="src\Game\Skill\Skill.cpp" />
+    <ClCompile Include="src\Game\WorldObject.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Map\Map.cpp" />
+    <ClCompile Include="src\Map\MapEntity.cpp" />
+    <ClCompile Include="src\Map\MapMonster.cpp" />
+    <ClCompile Include="src\Map\MapTerrain.cpp" />
+    <ClCompile Include="src\Network\ClientInfo.cpp" />
+    <ClCompile Include="src\Network\ClientPacket.cpp" />
+    <ClCompile Include="src\Network\Packet.cpp" />
+    <ClCompile Include="src\Network\PacketController.cpp" />
+    <ClCompile Include="src\Network\UDPServer.cpp" />
+    <ClCompile Include="src\ResourceLoad\ImageLoader.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Core\Game.h" />
+    <ClInclude Include="include\Core\LinkedTime.h" />
+    <ClInclude Include="include\Game\AI\AI.h" />
+    <ClInclude Include="include\Game\AI\MonsterAI.h" />
+    <ClInclude Include="include\Game\Creature.h" />
+    <ClInclude Include="include\Game\Equipment.h" />
+    <ClInclude Include="include\Game\Factory\Factory.h" />
+    <ClInclude Include="include\Game\Factory\GameEntityFactory.h" />
+    <ClInclude Include="include\Game\Factory\MonsterFactory.h" />
+    <ClInclude Include="include\Game\GameEntity.h" />
+    <ClInclude Include="include\Game\Monster.h" />
+    <ClInclude Include="include\Game\Movement.h" />
+    <ClInclude Include="include\Game\Player.h" />
+    <ClInclude Include="include\Game\Projectile.h" />
+    <ClInclude Include="include\Game\Skill\HoshoyoExplosionSkill.h" />
+    <ClInclude Include="include\Game\Skill\Skill.h" />
+    <ClInclude Include="include\Game\WorldObject.h" />
+    <ClInclude Include="include\Map\Map.h" />
+    <ClInclude Include="include\Map\MapEntity.h" />
+    <ClInclude Include="include\Map\MapMonster.h" />
+    <ClInclude Include="include\Map\MapTerrain.h" />
+    <ClInclude Include="include\Network\ClientInfo.h" />
+    <ClInclude Include="include\Network\ClientPacket.h" />
+    <ClInclude Include="include\Network\Packet.h" />
+    <ClInclude Include="include\Network\PacketController.h" />
+    <ClInclude Include="include\Network\UDPServer.h" />
+    <ClInclude Include="include\ResourceLoad\ImageLoader.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
