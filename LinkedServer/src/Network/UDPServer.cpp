@@ -93,6 +93,7 @@ void UDPServer::receivePackets()
 		int ierr = WSAGetLastError();
 		if (ierr == WSAEWOULDBLOCK) {  // currently no data available
 			//Sleep(1);  // wait and try again
+			return;
 		}
 		else
 		{
@@ -100,7 +101,6 @@ void UDPServer::receivePackets()
 			cerr << "Error recvfrom :" << WSAGetLastError() << endl;
 			//#endif
 		}
-		return;
 	}
 	else
 	{
