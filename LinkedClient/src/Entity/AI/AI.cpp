@@ -55,8 +55,15 @@ void AI::stopMovingRandomly()
 
 void AI::startRandomMovement(Map* map, glm::vec3 reference, float rangeSpeed)
 {
-	int xRandNumber = rand() % 1001;
-	int yRandNumber = rand() % 1001;
+	int xRandNumber = 0;
+	int yRandNumber = 0;
+
+	do
+	{
+		xRandNumber = rand() % 1001;
+		yRandNumber = rand() % 1001;
+	}
+	while (xRandNumber == 0 && yRandNumber == 0);
 
 	if (rand() % 2)	xRandNumber = -xRandNumber;
 	if (rand() % 2)	yRandNumber = -yRandNumber;
