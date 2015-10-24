@@ -5,7 +5,7 @@ Linked is a multiplayer game idealized by Hoshoyo. It is currently being develop
 
 ## Game
 ![Monster AI](http://puu.sh/kRoVu/7463202ad3.jpg)
-![SinglePlayer](http://puu.sh/kRoVu/7463202ad3.jpg)
+![Night](http://puu.sh/kVyID/37992b7699.jpg)
 ![MultiPlayer](http://puu.sh/kVyA1/de09997992.jpg)
 
 ## Build
