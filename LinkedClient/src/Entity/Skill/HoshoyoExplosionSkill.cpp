@@ -42,7 +42,8 @@ void HoshoyoExplosionSkill::render(Shader* primitiveShader, TextRenderer* textRe
 	{
 		Entity::render(primitiveShader);
 		// temporary (just 4fun)
-		textRenderer->renderText("Hoshoyo's Explosion!", 710, 525, 0.25f, glm::vec3(0.9f, 0.9f, 0.9f));
+		unsigned char skillName[] = "Hoshoyo's Explosion!";
+		textRenderer->renderText(skillName, sizeof(skillName), 710, 525, _18PX, glm::vec3(0.9f, 0.9f, 0.9f));
 	}
 }
 

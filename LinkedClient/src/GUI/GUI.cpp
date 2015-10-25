@@ -96,22 +96,21 @@ void GUI::render()
 	// Render Text
 	// Player Name
 	const float padding = 16.0f;
-	textRenderer->renderText(player->getName(), PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN + 5.0f, PLAYER_STATS_FONT_SIZE, color);
+	textRenderer->renderText((unsigned char*)player->getName().c_str(), player->getName().size(), PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN + 5.0f, PLAYER_STATS_FONT_SIZE, color);
 	// Attributes
-	textRenderer->renderText(pHealth, PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 1, PLAYER_STATS_FONT_SIZE, color);
-	textRenderer->renderText(pAttack, PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 2, PLAYER_STATS_FONT_SIZE, color);
-	textRenderer->renderText(pDefense, PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 3, PLAYER_STATS_FONT_SIZE, color);
-	textRenderer->renderText(pMagicalPower, PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 4, PLAYER_STATS_FONT_SIZE, color);
-	textRenderer->renderText(pAttackSpeed, PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 5, PLAYER_STATS_FONT_SIZE, color);
-	textRenderer->renderText(pSpeed, PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 6, PLAYER_STATS_FONT_SIZE, color);
+	textRenderer->renderText((unsigned char*)pHealth.c_str(), pHealth.size(), PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 1, PLAYER_STATS_FONT_SIZE, color);
+	textRenderer->renderText((unsigned char*)pAttack.c_str(), pAttack.size(), PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 2, PLAYER_STATS_FONT_SIZE, color);
+	textRenderer->renderText((unsigned char*)pDefense.c_str(), pDefense.size(), PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 3, PLAYER_STATS_FONT_SIZE, color);
+	textRenderer->renderText((unsigned char*)pMagicalPower.c_str(), pMagicalPower.size(), PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 4, PLAYER_STATS_FONT_SIZE, color);
+	textRenderer->renderText((unsigned char*)pAttackSpeed.c_str(), pAttackSpeed.size(), PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 5, PLAYER_STATS_FONT_SIZE, color);
+	textRenderer->renderText((unsigned char*)pSpeed.c_str(), pSpeed.size(), PLAYER_STATS_LEFT_ALIGN, PLAYER_STATS_VERT_ALIGN - padding * 6, PLAYER_STATS_FONT_SIZE, color);
 
-	std::string msg = "Superwaffles eh um cara bem legal, pena que naum pode ver o zeh";
 	for (unsigned int i = 0; i < messages.size(); i++)
 	{
-		textRenderer->renderText(messages[i], 1095.0f, 46.0f + (i*CHAT_SPACING), CHAT_LETTER_SIZE, color);
+		textRenderer->renderText((unsigned char*)messages[i].c_str(), messages[i].size(), 1095.0f, 46.0f + (i*CHAT_SPACING), CHAT_LETTER_SIZE, color);
 	}
 
-	textRenderer->renderText(Chat::getStream().str(), 1095.0f, 130.0f - ((CHAT_MAX_MSGS +0.5f) * CHAT_SPACING), CHAT_LETTER_SIZE, activeText);
+	textRenderer->renderText((unsigned char*)Chat::getStream().str().c_str(), Chat::getStream().str().size(), 1095.0f, 130.0f - ((CHAT_MAX_MSGS + 0.5f) * CHAT_SPACING), CHAT_LETTER_SIZE, activeText);
 
 }
 

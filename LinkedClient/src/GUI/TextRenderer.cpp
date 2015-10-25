@@ -8,7 +8,14 @@
 TextRenderer::TextRenderer(Shader* shader, std::string fontName)
 {
 	this->shader = shader;
-	initRenderer(fontName);
+
+	// Gen bitmaps for all these sizes
+	initRenderer(fontName, _12PX, chars12px);
+	initRenderer(fontName, _14PX, chars14px);
+	initRenderer(fontName, _16PX, chars16px);
+	initRenderer(fontName, _18PX, chars18px);
+
+	// gen vao
 	genDynamicVAO();
 }
 
@@ -17,30 +24,33 @@ TextRenderer::~TextRenderer()
 {
 }
 
-void TextRenderer::initRenderer(std::string fontName)
+void TextRenderer::initRenderer(std::string fontName, int fontPixelSize, std::map<unsigned int, Character>& charList)
 {
-	
 	if (FT_Init_FreeType(&ft))
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 
 	if (FT_New_Face(ft, fontName.c_str(), 0, &face))
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
-	FT_Set_Pixel_Sizes(face, LETTER_WIDTH, LETTER_HEIGHT);
-
-	if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
-		std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+	FT_Set_Pixel_Sizes(face, 0, fontPixelSize);
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
 
-	for (GLubyte c = 0; c < 128; c++)
+	for (unsigned long c = 0; c < 256; c++)
 	{
 		// Load character glyph 
-		if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-		{
-			std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+		FT_UInt glyph_index;
+
+		glyph_index = FT_Get_Char_Index(face, c);
+
+		int error = FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT);	// FT_LOAD_RENDER
+		if (error)
 			continue;
-		}
+
+		error = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
+		if (error)
+			continue;
+
 		// Generate texture
 		GLuint texture;
 		glGenTextures(1, &texture);
@@ -68,7 +78,7 @@ void TextRenderer::initRenderer(std::string fontName)
 			glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
 			(GLuint)face->glyph->advance.x
 		};
-		Characters.insert(std::pair<GLchar, Character>(c, character));
+		charList.insert(std::pair<unsigned int, Character>(c, character));
 	}
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -90,7 +100,7 @@ void TextRenderer::genDynamicVAO()
 	glBindVertexArray(0);
 }
 
-void TextRenderer::renderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
+void TextRenderer::renderText(unsigned char* text, int textSize, GLfloat x, GLfloat y, charPixelSize scale, glm::vec3 color)
 {
 	this->shader->useShader();
 	glUniform3f(((TextShader*)shader)->getUniformTextColorLocation(), color.x, color.y, color.z);
@@ -100,15 +110,27 @@ void TextRenderer::renderText(std::string text, GLfloat x, GLfloat y, GLfloat sc
 
 	// Iterate through all characters
 	std::string::const_iterator c;
-	for (c = text.begin(); c != text.end(); c++)
+	std::map<unsigned int, Character>* charsList;
+
+	switch (scale)
 	{
-		Character ch = Characters[*c];
+	case _12PX: charsList = &chars12px; break;
+	case _14PX: charsList = &chars14px; break;
+	case _16PX: charsList = &chars16px; break;
+	case _18PX: charsList = &chars18px; break;
+	default:
+		charsList = &chars14px;
+	}
 
-		GLfloat xpos = x + ch.Bearing.x * scale;
-		GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+	for (unsigned int c = 0; c < textSize; c++)
+	{
+		Character ch = (*charsList)[text[c]];
 
-		GLfloat w = ch.Size.x * scale;
-		GLfloat h = ch.Size.y * scale;
+		GLfloat xpos = x + ch.Bearing.x * FONT_SIZE;
+		GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * FONT_SIZE;
+
+		GLfloat w = ch.Size.x * FONT_SIZE;
+		GLfloat h = ch.Size.y * FONT_SIZE;
 		// Update VBO for each character
 		GLfloat vertices[6][4] = {
 				{ xpos, ypos + h, 0.0, 0.0 },
@@ -132,7 +154,7 @@ void TextRenderer::renderText(std::string text, GLfloat x, GLfloat y, GLfloat sc
 		// Render quad
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-		x += (ch.Advance >> 6) * scale; // Bitshift by 6 to get value in pixels (2^6 = 64)
+		x += (ch.Advance >> 6) * FONT_SIZE; // Bitshift by 6 to get value in pixels (2^6 = 64)
 	}
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);

@@ -18,12 +18,12 @@ enum leftGUIAttribs;
 #define LGUI_G 0.8f
 #define LGUI_B 0.8f
 
-#define PLAYER_STATS_FONT_SIZE 0.16f
+#define PLAYER_STATS_FONT_SIZE _16PX
 #define PLAYER_STATS_LEFT_ALIGN 25.0f
 #define PLAYER_STATS_VERT_ALIGN 118.0f
 
 #define CHAT_SPACING 14
-#define CHAT_LETTER_SIZE 0.15f
+#define CHAT_LETTER_SIZE _16PX
 #define CHAT_MAX_MSGS 7
 
 class GUI

@@ -14,6 +14,7 @@ std::stringstream Chat::ss;
 std::string Chat::msg = "";
 bool Chat::chatActive = false;
 GUI* Chat::gui = nullptr;
+int Chat::altGRstate = 0;
 
 void Chat::nextState()
 {
@@ -60,6 +61,8 @@ void Chat::update(int key, int scancode, int action, int mods)
 			ss.str(std::string());
 		}
 	}
+	//std::cout << GetKeyState(VK_MENU) << std::endl;
+	std::cout << mods << std::endl;
 }
 
 void Chat::updateGameMultiplayer(UDPClient* udpClient, Player* localPlayer, Map* map)
@@ -217,7 +220,6 @@ void Chat::parseCharTyped(int key, int mods, int scancode)
 			ss << "/";
 		else if (scancode == FSLASH_SCANCODE && mods == KEY_MOD_SHIFT)
 			ss << "?";
-
 	}
 
 	if (mods == KEY_MOD_SHIFT || mods == NO_MOD)
@@ -267,9 +269,9 @@ void Chat::parseCharTyped(int key, int mods, int scancode)
 		case KEY_LEFTBRACKET: ss << "["; break;
 		case KEY_RIGHTBRACKET: ss << "]"; break;
 		case KEY_BACKSLASH: ss << "\\"; break;
-		//case KEY_CCEDILHA: ss << "ç"; break;		// Breaks the textRenderer
+		case KEY_CCEDILHA: ss << "ç"; break;
 		case KEY_TILDA: ss << "~"; break;
-		//case KEY_ACUTE_ACCENT: ss << "´"; break;	// Breaks the textRenderer
+		case KEY_ACUTE_ACCENT: ss << "´"; break;
 		//Numpad
 		case KEY_STAR_NUM: ss << "*"; break;
 		case KEY_MINUS_NUM: ss << "-"; break;
@@ -291,7 +293,7 @@ void Chat::parseCharTyped(int key, int mods, int scancode)
 		case KEY_3: ss << "#"; break;
 		case KEY_4: ss << "$"; break;
 		case KEY_5: ss << "%"; break;
-		//case KEY_6: ss << "¨"; break;				// Breaks the textRenderer
+		case KEY_6: ss << "¨"; break;
 		case KEY_7: ss << "&"; break;
 		case KEY_8: ss << "*"; break;
 		case KEY_9: ss << "("; break;
@@ -306,7 +308,7 @@ void Chat::parseCharTyped(int key, int mods, int scancode)
 		case KEY_LEFTBRACKET: ss << "{"; break;
 		case KEY_RIGHTBRACKET: ss << "}"; break;
 		case KEY_BACKSLASH: ss << "|"; break;
-		//case KEY_CCEDILHA: ss << "Ç"; break;		// Breaks the textRenderer
+		case KEY_CCEDILHA: ss << "Ç"; break;
 		}
 	}
 	else if (mods == KEY_MOD_CONTROL)
@@ -316,6 +318,13 @@ void Chat::parseCharTyped(int key, int mods, int scancode)
 	else if (mods == KEY_MOD_ALT)
 	{
 
+	}
+	else if (mods == KEY_MOD_ALTGR)
+	{
+		switch (key)
+		{
+		case 'W': ss << "?"; break;
+		}
 	}
 	// Check keys
 

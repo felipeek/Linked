@@ -23,6 +23,7 @@
 #define KEY_MOD_SHIFT 1
 #define KEY_MOD_CONTROL 2
 #define KEY_MOD_ALT 4
+#define KEY_MOD_ALTGR 6
 #define KEY_MOD_SUPER 8
 
 class UDPClient;
@@ -63,5 +64,7 @@ private:
 	static short numLockState;
 
 	static std::stringstream ss;
+
+	static int altGRstate;
 };
 

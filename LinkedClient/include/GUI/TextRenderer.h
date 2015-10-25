@@ -7,10 +7,19 @@
 
 #include <map>
 
-#define LETTER_WIDTH 0		// 0 to auto
-#define LETTER_HEIGHT 100	// max height
+//#define LETTER_WIDTH 0		// 0 to auto
+//#define LETTER_HEIGHT 100	// max height
 
 class Shader;
+
+#define FONT_SIZE 1.0f
+
+enum charPixelSize{
+	_12PX = 12,
+	_14PX = 14,
+	_16PX = 16,
+	_18PX = 18
+};
 
 struct Character {
 	GLuint     TextureID;  // ID handle of the glyph texture
@@ -25,9 +34,12 @@ public:
 	TextRenderer(Shader* shader, std::string fontName);
 	~TextRenderer();
 
-	void renderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color);
+	void renderText(unsigned char* text, int textSize, GLfloat x, GLfloat y, charPixelSize scale, glm::vec3 color);
 private:
-	std::map<GLchar, Character> Characters;
+	std::map<unsigned int, Character> chars12px;
+	std::map<unsigned int, Character> chars14px;
+	std::map<unsigned int, Character> chars16px;
+	std::map<unsigned int, Character> chars18px;
 
 	GLuint VAO, VBO;
 	Shader* shader;
@@ -35,7 +47,7 @@ private:
 	FT_Library ft;
 	FT_Face face;
 
-	void initRenderer(std::string fontName);
+	void initRenderer(std::string fontName, int fontPixelSize, std::map<unsigned int, Character>& charList);
 	void genDynamicVAO();
 };
 
