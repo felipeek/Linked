@@ -23,7 +23,6 @@ void Chat::nextState()
 	else
 		stateChat[RETURN_KEY]++;
 
-	//printState(key);
 }
 
 void Chat::nextState(int key)
@@ -61,8 +60,6 @@ void Chat::update(int key, int scancode, int action, int mods)
 			ss.str(std::string());
 		}
 	}
-	//std::cout << GetKeyState(VK_MENU) << std::endl;
-	std::cout << mods << std::endl;
 }
 
 void Chat::updateGameMultiplayer(UDPClient* udpClient, Player* localPlayer, Map* map)

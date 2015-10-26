@@ -53,9 +53,9 @@ MapCoordinate Map::getMapCoordinateForMapCreation(glm::vec3 coordinate)
 	else
 		mapCoordinates.mapMonster = MapMonster::initWithNoMonster();
 
-	//if (mapGameEntityLoader != NULL)
-	//	mapCoordinates.mapGameEntity = mapGameEntityLoader->getMapEntity(coordinate);
-	//else
+	if (mapGameEntityLoader != NULL)
+		mapCoordinates.mapGameEntity = mapGameEntityLoader->getMapEntity(coordinate);
+	else
 		mapCoordinates.mapGameEntity = MapGameEntity::initWithNoGameEntity();
 
 	return mapCoordinates;

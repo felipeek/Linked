@@ -53,7 +53,7 @@ Game::Game(int windowWidth, int windowHeight)
 	PacketController::game = this;
 
 	this->createGraphicElements(windowWidth, windowHeight);
-	this->createMap();		// TODO: 8000+ memory leaks here
+	this->createMap();
 	
 	if (Game::multiplayer)
 	{
@@ -65,7 +65,7 @@ Game::Game(int windowWidth, int windowHeight)
 	else
 	{
 		this->createOfflinePlayer();
-		this->loadMonstersAndEntities(true, true);	// TODO: probably alot of memory leaks
+		this->loadMonstersAndEntities(true, true);
 	}
 	this->createGUI();
 }
@@ -538,6 +538,10 @@ void Game::update()
 	for (unsigned int i = 0; i < monsters.size(); i++)
 		if (!monsters[i]->isOnScreen())
 		{
+			monsters[i]->getTexture()->getReferenceCount()--;
+			if (monsters[i]->getTexture()->getReferenceCount() == 0)
+				delete monsters[i]->getTexture();
+
 			delete monsters[i];
 			monsters.erase(monsters.begin() + i);
 		}
