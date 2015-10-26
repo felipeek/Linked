@@ -16,7 +16,7 @@ class MapMonsterImageLoader : public ImageLoader
 {
 public:
 	MapMonsterImageLoader(std::string& filename, int nChannels, MonsterFactory* monsterFactory);
-	~MapMonsterImageLoader();
+	virtual ~MapMonsterImageLoader();
 	MapMonster getMonster(vec3 coordinateVector);
 	bool coordinateHasCollision(vec3 coordinate);
 private:

@@ -23,6 +23,12 @@ ImageLoader::~ImageLoader()
 	//	stbi_image_free(loadedImage);
 }
 
+void ImageLoader::freeLoadedImage()
+{
+	if (loadedImage)
+		stbi_image_free(loadedImage);
+}
+
 vec3 ImageLoader::getPixel(int x, int y)
 {
 	if (y < 0 || x < 0 || y > width || x > height)

@@ -13,10 +13,15 @@ Entity::~Entity()
 {
 	if (transform != NULL)
 		delete transform;
-	//if (mesh != NULL)
-		//delete mesh;
-	//if (texture != NULL)
-		//delete texture;
+
+	//this->texture->getReferenceCount()--;
+	//if (texture->getReferenceCount() == 0)
+	//	delete texture;
+	
+	//this->mesh->getReferenceCount()--;
+	//if (mesh->getReferenceCount() == 0)
+	//	delete mesh;
+
 }
 
 Transform* Entity::getTransform()

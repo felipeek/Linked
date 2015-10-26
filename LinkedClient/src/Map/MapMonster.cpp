@@ -24,6 +24,7 @@ MapMonsterImageLoader::MapMonsterImageLoader(std::string& filename, int nChannel
 
 MapMonsterImageLoader::~MapMonsterImageLoader()
 {
+	freeLoadedImage();
 }
 
 MapMonster MapMonsterImageLoader::getMonster(vec3 coordinateVector)

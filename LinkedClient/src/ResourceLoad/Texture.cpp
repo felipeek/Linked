@@ -99,3 +99,12 @@ GLuint DynamicTexture::genDynamicGLTexture()
 
 	return textureID;
 }
+
+int& Texture::getReferenceCount()
+{
+	return this->referenceCount;
+}
+void Texture::setReferenceCount(int refCount)
+{
+	this->referenceCount = refCount;
+}

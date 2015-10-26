@@ -9,14 +9,16 @@ bool Mesh::isGUI = false;
 Mesh::Mesh(std::string fileName, float reflectivity, float glossiness)
 {
 	ObjModel model(fileName);
-	IndexedModel *indexedModel = model.toIndexedModel();
+	indexedModel = model.toIndexedModel();
 	this->reflectivity = reflectivity;
 	this->glossiness = glossiness;
 
 	genVAO();
 	genVBOS(indexedModel);
-	indicesSize = indexedModel->getIndices()->size() * sizeof(float);
+	indicesSize = indexedModel->indices.size() * sizeof(float);
 	genIndexBuffer(indexedModel);
+
+	this->referenceCount = 0;
 }
 
 Mesh::Mesh(Quad* quad)
@@ -27,8 +29,10 @@ Mesh::Mesh(Quad* quad)
 	this->glossiness = 0;
 	genVAO();
 	genVBOS(quad->getIndexedModel());
-	indicesSize = quad->getIndexedModel()->getIndices()->size() * sizeof(float);
+	indicesSize = quad->getIndexedModel()->indices.size() * sizeof(float);
 	genIndexBuffer(quad->getIndexedModel());
+
+	this->referenceCount = 0;
 }
 
 Mesh::Mesh(Grid* grid)
@@ -39,8 +43,10 @@ Mesh::Mesh(Grid* grid)
 	this->glossiness = 0;
 	genVAO();
 	genVBOS(grid->getIndexedModel());
-	indicesSize = grid->getIndexedModel()->getIndices()->size() * sizeof(float);
+	indicesSize = grid->getIndexedModel()->indices.size() * sizeof(float);
 	genIndexBuffer(grid->getIndexedModel());
+
+	this->referenceCount = 0;
 }
 
 Mesh::~Mesh()
@@ -60,7 +66,8 @@ Mesh::~Mesh()
 		delete grid;
 	if (quad != NULL)
 		delete quad;
-
+	if (indexedModel != NULL)
+		delete indexedModel;
 }
 
 void Mesh::genVAO()
@@ -74,7 +81,7 @@ void Mesh::genVBOS(IndexedModel* iModel)
 	// Vertex Data
 	glGenBuffers(1, &VertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, iModel->getPositions()->size() * sizeof(float) * 3, &iModel->positions[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, iModel->positions.size() * sizeof(float) * 3, &iModel->positions[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glDisableVertexAttribArray(0);
@@ -83,7 +90,7 @@ void Mesh::genVBOS(IndexedModel* iModel)
 	// Normals Data
 	glGenBuffers(1, &NormalsBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, NormalsBufferID);
-	glBufferData(GL_ARRAY_BUFFER, iModel->getNormals()->size() * sizeof(float) * 3, &iModel->normals[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, iModel->normals.size() * sizeof(float) * 3, &iModel->normals[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glDisableVertexAttribArray(1);
@@ -91,7 +98,7 @@ void Mesh::genVBOS(IndexedModel* iModel)
 	// Texture Data
 	glGenBuffers(1, &TextureBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, TextureBufferID);
-	glBufferData(GL_ARRAY_BUFFER, iModel->getTexCoords()->size() * sizeof(float) * 2, &iModel->texCoords[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, iModel->texCoords.size() * sizeof(float) * 2, &iModel->texCoords[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glDisableVertexAttribArray(2);
@@ -141,6 +148,16 @@ Quad* Mesh::getQuad()
 		return NULL;
 	else
 		return quad;
+}
+
+int& Mesh::getReferenceCount()
+{
+	return this->referenceCount;
+}
+
+void Mesh::setReferenceCount(int refCount)
+{
+	this->referenceCount = refCount;
 }
 
 GLuint Mesh::getVertexArrayID()

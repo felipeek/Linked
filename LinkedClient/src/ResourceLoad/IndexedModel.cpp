@@ -28,7 +28,10 @@ ObjModel::ObjModel(string fileName)
 	loadObjFile(fileName);
 }
 
-ObjModel::~ObjModel(){}
+ObjModel::~ObjModel()
+{
+
+}
 
 IndexedModel* ObjModel::toIndexedModel()
 {
@@ -172,4 +175,8 @@ void ObjModel::parseTriangles(string& line)
 	indices.push_back(*result1);
 	indices.push_back(*result2);
 	indices.push_back(*result3);
+
+	delete result1;
+	delete result2;
+	delete result3;
 }

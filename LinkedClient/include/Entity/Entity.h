@@ -9,7 +9,7 @@ class Entity
 {
 public:
 	Entity(Transform* transform, Mesh* mesh, Texture* texture);
-	~Entity();
+	virtual ~Entity();
 	Transform* getTransform();
 	void setTransform(Transform* transform);
 	virtual void render(Shader* shader);

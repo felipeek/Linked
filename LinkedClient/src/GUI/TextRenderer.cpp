@@ -22,6 +22,14 @@ TextRenderer::TextRenderer(Shader* shader, std::string fontName)
 
 TextRenderer::~TextRenderer()
 {
+	for (unsigned int i = 0, size = chars12px.size(); i < size; i++)
+		chars12px.erase(chars12px.begin());
+	for (unsigned int i = 0, size = chars14px.size(); i < size; i++)
+		chars14px.erase(chars14px.begin());
+	for (unsigned int i = 0, size = chars16px.size(); i < size; i++)
+		chars16px.erase(chars16px.begin());
+	for (unsigned int i = 0, size = chars18px.size(); i < size; i++)
+		chars18px.erase(chars18px.begin());
 }
 
 void TextRenderer::initRenderer(std::string fontName, int fontPixelSize, std::map<unsigned int, Character>& charList)
@@ -87,15 +95,23 @@ void TextRenderer::initRenderer(std::string fontName, int fontPixelSize, std::ma
 	FT_Done_FreeType(ft);
 }
 
+int indices[] = { 0, 1, 2, 3, 4, 5 };
+
 void TextRenderer::genDynamicVAO()
 {
 	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
 	glBindVertexArray(VAO);
+
+	glGenBuffers(1, &IBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
@@ -145,14 +161,17 @@ void TextRenderer::renderText(unsigned char* text, int textSize, GLfloat x, GLfl
 		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
 		// Update content of VBO memory
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 
 		// Update shader after binding stuff
 		this->shader->update();
 
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);	
 		// Render quad
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		//glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
 		x += (ch.Advance >> 6) * FONT_SIZE; // Bitshift by 6 to get value in pixels (2^6 = 64)
 	}

@@ -13,6 +13,15 @@ MonsterFactory::MonsterFactory()
 
 MonsterFactory::~MonsterFactory()
 {
+	for (int i = 0, size=monsters.size(); i < size; i++)
+	{
+		monsters[0]->getTexture()->getReferenceCount()--;
+		if (monsters[0]->getTexture()->getReferenceCount() == 0)
+			delete monsters[0]->getTexture();
+			
+		delete monsters[0];
+		monsters.erase(monsters.begin());
+	}
 }
 
 std::vector<Monster*> MonsterFactory::getListOfAllMonsters()
@@ -79,9 +88,12 @@ Monster* MonsterFactory::generateCopyOfMonster(Monster* monster)
 	copy->setTotalCollisionRange(monster->getTotalCollisionRange());
 	copy->setTotalAttackSpeed(monster->getTotalAttackSpeed());
 	// Copy Mesh (A new mesh/quad object must be created for each monster)
-	copy->setMesh(new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7)));
+	Mesh* myMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7));
+	copy->setMesh(myMesh);
 	// Copy Texture (The same texture will be setted for all monsters of same class)
-	copy->setTexture(monster->getTexture());
+	Texture* monsterTexture = monster->getTexture();
+	monsterTexture->getReferenceCount()++;
+	copy->setTexture(monsterTexture);
 	// Copy Transform (A new transform object must be created for each monster)
 	Transform *monsterTransform = monster->getTransform();
 	vec3 monsterTransformPosition = monsterTransform->getPosition();
@@ -103,7 +115,6 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 	{
 		xml_node<> *rootNode = doc.first_node();
 
-		monster->setMesh(new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7)));
 		monster->setTransform(new Transform(MONSTERS_STANDARD_POSITION, MONSTERS_STANDARD_ANGLE, MONSTERS_STANDARD_AXIS, MONSTERS_STANDARD_SCALE));
 
 		for (xml_node<> *child = rootNode->first_node(); child; child = child->next_sibling())
@@ -114,7 +125,11 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 			if (nodeName == MONSTERS_NAME_NODE)
 				monster->setName(std::string(nodeValue));
 			else if (nodeName == MONSTERS_SPRITE_NODE)
-				monster->setTexture(new Texture(MONSTERS_DIRECTORY + std::string(nodeValue)));
+			{
+				Texture* monsterTexture = new Texture(MONSTERS_DIRECTORY + std::string(nodeValue));
+				monsterTexture->setReferenceCount(1);
+				monster->setTexture(monsterTexture);
+			}
 			else if (nodeName == MONSTERS_SIZE_NODE)
 				monster->getTransform()->scale(std::atoi(nodeValue) / 10.0f, std::atoi(nodeValue) / 10.0f, std::atoi(nodeValue) / 10.0f);
 			else if (nodeName == MONSTERS_COLLISIONRANGE_NODE)

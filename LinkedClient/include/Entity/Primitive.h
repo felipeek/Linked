@@ -7,7 +7,7 @@ class Primitive
 {
 public:
 	Primitive();
-	~Primitive();
+	virtual ~Primitive();
 };
 
 class Quad : public Primitive
@@ -15,7 +15,7 @@ class Quad : public Primitive
 public:
 	Quad(glm::vec3 center, float sizeX, float sizeY);
 	Quad(glm::vec3 center, float sizeX, float sizeY, int textureNumRows, int textureIndex);
-	~Quad();
+	virtual ~Quad();
 	IndexedModel* getIndexedModel();
 
 	float getTextureIndex();

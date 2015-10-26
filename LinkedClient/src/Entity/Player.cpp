@@ -46,6 +46,24 @@ Player::~Player()
 	delete hpBar;
 	delete rangeAttack;
 	delete ai;
+	delete mesh;
+	delete texture;
+
+	for (unsigned int i = 0, skillsSize = skills.size(); i < skillsSize; i++)
+	{
+		delete skills[0];
+		skills.erase(skills.begin());
+	}
+	for (unsigned int i = 0, equipsSize = equipments.size(); i < equipsSize; i++)
+	{
+		delete equipments[0];
+		equipments.erase(equipments.begin());
+	}
+	for (unsigned int i = 0, attacksSize = attacks.size(); i < attacksSize; i++)
+	{
+		delete attacks[0];
+		attacks.erase(attacks.begin());
+	}
 }
 
 /* *********************************** */

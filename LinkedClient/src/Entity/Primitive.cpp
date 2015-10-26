@@ -26,28 +26,28 @@ Quad::Quad(glm::vec3 center, float sizeX, float sizeY, int textureNumRows, int t
 	glm::vec3 botL = glm::vec3(center.x - sizeX, center.y - sizeY, 0);	// 2
 	glm::vec3 botR = glm::vec3(center.x + sizeX, center.y - sizeY, 0);	// 3
 
-	model->positions.push_back(topL);
-	model->positions.push_back(topR);
-	model->positions.push_back(botL);
-	model->positions.push_back(botR);
+	model->getPositions()->push_back(topL);
+	model->getPositions()->push_back(topR);
+	model->getPositions()->push_back(botL);
+	model->getPositions()->push_back(botR);
 
 	glm::vec3 normal = glm::vec3(glm::rotate(glm::mat4(), -ANGLE, glm::vec3(1, 0, 0)) * glm::vec4(0,0,1,1));
-	model->normals.push_back(normal);
-	model->normals.push_back(normal);
-	model->normals.push_back(normal);
-	model->normals.push_back(normal);
+	model->getNormals()->push_back(normal);
+	model->getNormals()->push_back(normal);
+	model->getNormals()->push_back(normal);
+	model->getNormals()->push_back(normal);
 
-	model->texCoords.push_back(glm::vec2(0, 1));
-	model->texCoords.push_back(glm::vec2(1, 1));
-	model->texCoords.push_back(glm::vec2(0, 0));
-	model->texCoords.push_back(glm::vec2(1, 0));
+	model->getTexCoords()->push_back(glm::vec2(0, 1));
+	model->getTexCoords()->push_back(glm::vec2(1, 1));
+	model->getTexCoords()->push_back(glm::vec2(0, 0));
+	model->getTexCoords()->push_back(glm::vec2(1, 0));
 
-	model->indices.push_back(0);
-	model->indices.push_back(3);
-	model->indices.push_back(1);
-	model->indices.push_back(0);
-	model->indices.push_back(2);
-	model->indices.push_back(3);
+	model->getIndices()->push_back(0);
+	model->getIndices()->push_back(3);
+	model->getIndices()->push_back(1);
+	model->getIndices()->push_back(0);
+	model->getIndices()->push_back(2);
+	model->getIndices()->push_back(3);
 }
 
 void Quad::calcAtlas()

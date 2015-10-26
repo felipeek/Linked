@@ -33,6 +33,7 @@ Monster::Monster(Transform* transform, Mesh* mesh, Texture* texture) : Entity(tr
 Monster::~Monster()
 {
 	delete this->ai;
+	delete this->mesh;
 }
 
 /* *********************************** */

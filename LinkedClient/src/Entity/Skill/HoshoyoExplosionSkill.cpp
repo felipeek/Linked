@@ -30,8 +30,12 @@ HoshoyoExplosionSkill::HoshoyoExplosionSkill(std::vector<Monster*>* monsters) : 
 
 HoshoyoExplosionSkill::~HoshoyoExplosionSkill()
 {
+	delete aimEntity->getTexture();
+	delete aimEntity->getMesh();
+
 	if (this->aimEntity != NULL)
 		delete this->aimEntity;
+	
 }
 
 void HoshoyoExplosionSkill::render(Shader* primitiveShader, TextRenderer* textRenderer)

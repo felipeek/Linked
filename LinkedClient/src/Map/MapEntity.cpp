@@ -24,9 +24,9 @@ MapGameEntityImageLoader::MapGameEntityImageLoader(std::string& filename, int nC
 	this->gameEntityFactory = gameEntityFactory;
 }
 
-
 MapGameEntityImageLoader::~MapGameEntityImageLoader()
 {
+	freeLoadedImage();
 }
 
 MapGameEntity MapGameEntityImageLoader::getMapEntity(vec3 coordinateVector)

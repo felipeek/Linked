@@ -28,9 +28,13 @@ public:
 	GLuint getTextureBufferID();
 	GLuint getNormalsBufferID();
 	GLuint getIndexBufferID();
+
+	int& getReferenceCount();
+	void setReferenceCount(int refCount);
 private:
 	Quad* quad;
 	Grid* grid;
+	IndexedModel* indexedModel;
 	GLuint VertexArrayID;
 	GLuint VertexBufferID;
 	GLuint TextureBufferID;
@@ -44,6 +48,8 @@ private:
 	void genIndexBuffer(IndexedModel*);
 
 	int indicesSize;
+
+	int referenceCount;
 };
 
 

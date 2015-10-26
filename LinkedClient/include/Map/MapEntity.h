@@ -19,7 +19,7 @@ class MapGameEntityImageLoader : public ImageLoader
 {
 public:
 	MapGameEntityImageLoader(std::string& filename, int nChannels, GameEntityFactory* gameEntityFactory);
-	~MapGameEntityImageLoader();
+	virtual ~MapGameEntityImageLoader();
 	MapGameEntity getMapEntity(vec3 coordinateVector);
 	bool coordinateHasCollision(vec3 coordinate);
 private:

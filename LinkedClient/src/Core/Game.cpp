@@ -53,8 +53,8 @@ Game::Game(int windowWidth, int windowHeight)
 	PacketController::game = this;
 
 	this->createGraphicElements(windowWidth, windowHeight);
-	this->createMap();
-
+	this->createMap();		// TODO: 8000+ memory leaks here
+	
 	if (Game::multiplayer)
 	{
 		this->createUDPConnection();
@@ -65,7 +65,7 @@ Game::Game(int windowWidth, int windowHeight)
 	else
 	{
 		this->createOfflinePlayer();
-		this->loadMonstersAndEntities(true, true);
+		this->loadMonstersAndEntities(true, true);	// TODO: probably alot of memory leaks
 	}
 	this->createGUI();
 }
@@ -77,19 +77,42 @@ Game::~Game()
 	if (primitiveShader != nullptr) delete primitiveShader;
 	if (projectileShader != nullptr) delete projectileShader;
 	if (mapShader != nullptr) delete mapShader;
+	if (commonShader != nullptr) delete commonShader;
 	if (monsterFactory != nullptr) delete monsterFactory;
 	if (gameEntityFactory != nullptr) delete gameEntityFactory;
 	if (this->map != nullptr) delete map;
 	if (this->gui != nullptr) delete gui;
+	if (this->water->getTexture() != nullptr) delete this->water->getTexture();
+	if (this->water->getMesh() != nullptr) delete this->water->getMesh();
 	if (this->water != nullptr) delete water;
+	if (this->entityMap != nullptr) delete entityMap;
+
+	if (this->frameBuffer != nullptr) delete frameBuffer;
 
 	// delete vectors content
 	for (Monster* monster : monsters)
+	{
+		monster->getTexture()->getReferenceCount()--;
+		if (monster->getTexture()->getReferenceCount() == 0)
+			delete monster->getTexture();
+			
 		delete monster;
+	}
+		
 	for (Entity* entity : entities)
 		delete entity;
 	for (GameEntity* entity : gameEntities)
+	{
+		entity->getTexture()->getReferenceCount()--;
+		if (entity->getTexture()->getReferenceCount() == 0)
+			delete entity->getTexture();
+
+		entity->getMesh()->getReferenceCount()--;
+		if (entity->getMesh()->getReferenceCount() == 0)
+			delete entity->getMesh();
+
 		delete entity;
+	}
 
 	if (this->localPlayer != nullptr)	delete localPlayer;
 
@@ -135,7 +158,6 @@ void Game::createMap()
 
 void Game::createOfflinePlayer()
 {
-
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 12, 0));
 	this->localPlayer = new Player(new Transform(glm::vec3(440, 500, PLAYER_HEIGHT), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"), &monsters, map);
 	this->localPlayer->setHp(100);
@@ -269,7 +291,6 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 			Monster *monster = coordinate.mapMonster.monster;
 			GameEntity *gameEntity = coordinate.mapGameEntity.gameEntity;
 			
-
 			if (coordinate.mapMonster.monsterExists)
 			{
 				if (!map->coordinateHasCollision(glm::vec3(i, j, 0)) && loadMonsters)
@@ -278,7 +299,12 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 					monsters.push_back(monster);
 				}
 				else
+				{
+					monster->getTexture()->getReferenceCount()--;
+					if (monster->getTexture()->getReferenceCount() == 0)
+						delete monster->getTexture();
 					delete monster;
+				}
 			}
 			
 			if (coordinate.mapGameEntity.gameEntityExists && loadEntities)
@@ -422,11 +448,11 @@ void Game::renderSecondsPass()
 
 	// Prime render
 	frameBuffer->normalRender(windowWidth, windowHeight);
-
+	
 	// Map
 	entityMap->render(mapShader, frameBuffer->getCamera());
 	water->render(commonShader);
-
+	
 	// Monsters
 	for (Monster* m : monsters)
 	{
@@ -450,7 +476,7 @@ void Game::renderSecondsPass()
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
-
+	
 	// Common static entities
 	for (Entity* e : gameEntities)
 	{
@@ -461,11 +487,11 @@ void Game::renderSecondsPass()
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
-
+	
 	// Player
 	localPlayer->hpBarRenderOptions(true);
 	localPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
-
+	
 	// Second Player
 	if (Game::multiplayer)
 	{
@@ -488,17 +514,17 @@ void Game::update()
 		Chat::updateGameMultiplayer(udpClient, localPlayer, map);
 	else
 		Chat::updateGameSingleplayer();
-
+	
 	// Light update
 	light->update(localPlayer->getTransform()->getPosition());
-
+	
 	// Player update	
 	localPlayer->update(this->map);
-
+	
 	// Camera update
 	camera->updatePlayer(localPlayer->getTransform()->getPosition());
 	frameBuffer->getCamera()->updateLight(light->lightPosition, localPlayer->getTransform()->getPosition());
-
+	
 	if (Game::multiplayer)
 	{
 		for (Player* player : this->onlinePlayers)
@@ -508,14 +534,14 @@ void Game::update()
 	// Monsters update
 	for (unsigned int i = 0; i < monsters.size(); i++)
 		monsters[i]->update(map, localPlayer);
-
+	
 	for (unsigned int i = 0; i < monsters.size(); i++)
 		if (!monsters[i]->isOnScreen())
 		{
 			delete monsters[i];
 			monsters.erase(monsters.begin() + i);
 		}
-
+	
 	// GUI update
 	gui->update();
 }

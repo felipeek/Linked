@@ -19,7 +19,7 @@ class Skill : public Entity
 {
 public:
 	Skill(std::vector<Monster*> *monsters);
-	~Skill();
+	virtual ~Skill();
 
 	virtual void prepareExecution(MovementDirection skillDirection) = 0;
 	virtual void execute(MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId) = 0;

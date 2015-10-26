@@ -11,7 +11,7 @@ MapTerrainImageLoader::MapTerrainImageLoader(std::string& filename, int nChannel
 
 MapTerrainImageLoader::~MapTerrainImageLoader()
 {
-
+	freeLoadedImage();
 }
 
 bool MapTerrainImageLoader::coordinateHasCollision(glm::vec3 coordinateVector){

@@ -14,7 +14,7 @@ class MapTerrainImageLoader : public ImageLoader
 {
 public:
 	MapTerrainImageLoader(std::string& filename, int nChannels);
-	~MapTerrainImageLoader();
+	virtual ~MapTerrainImageLoader();
 	bool MapTerrainImageLoader::coordinateHasCollision(glm::vec3 coordinateVector);
 	MapTerrain getMapTerrainForCoordinate(glm::vec3 coordinateVector);
 private:

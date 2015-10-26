@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <glm/glm.hpp>
-#include <GL\glew.h>
+#include <GL/glew.h>
 
 using namespace glm;
 
@@ -12,7 +12,7 @@ class ImageLoader
 public:
 	ImageLoader(std::string& filename, int nChannels);
 	ImageLoader();
-	~ImageLoader();
+	virtual ~ImageLoader();
 	unsigned char* getLoadedImage();
 	void setLoadedImage(unsigned char*);
 	virtual int getWidth();
@@ -25,4 +25,6 @@ protected:
 	int height;
 	int channels;
 	vec3 getPixel(int x, int y);
+
+	void freeLoadedImage();
 };

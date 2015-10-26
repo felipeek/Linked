@@ -29,6 +29,8 @@ RangeAttack::RangeAttack(Player* player, std::vector<Projectile*>* attacks, std:
 
 RangeAttack::~RangeAttack()
 {
+	delete texture;
+	delete mesh;
 }
 
 std::vector<Projectile*>* RangeAttack::getAttacks()

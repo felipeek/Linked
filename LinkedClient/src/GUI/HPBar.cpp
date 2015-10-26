@@ -15,7 +15,7 @@ HPBar::HPBar(Player* player)
 	this->numBars = NUMBARS;									// Start with full hp
 	this->prevBars = 0;
 
-	hpBar = new DynamicTexture(maxBars, 1, false, MIPMAPBIAS);		// Create Texture
+	hpBar = new DynamicTexture(maxBars, 1, false, MIPMAPBIAS);	// Create Texture
 	hpBarImage = new unsigned char[4 * maxBars];				// Allocate memory for image
 	hpColor = highHP;
 	setHP(maxBars);
@@ -24,7 +24,7 @@ HPBar::HPBar(Player* player)
 
 	maxHP = player->getTotalMaximumHp();
 
-	Mesh* mesh = new Mesh(new Quad(glm::vec3(0, -0.5, 0), 0.5f, 0.1f));
+	mesh = new Mesh(new Quad(glm::vec3(0, -0.5, 0), 0.5f, 0.1f));
 	Transform* transform = new Transform(
 		glm::vec3(0, 0, 0), 30, glm::vec3(1, 0, 0), glm::vec3(3,1.5f,3)
 		);
@@ -38,6 +38,10 @@ HPBar::~HPBar()
 		delete[] hpBarImage;
 	if (quad)
 		delete quad;
+	if (mesh)
+		delete mesh;
+	if (hpBar)
+		delete hpBar;
 }
 
 void HPBar::update()

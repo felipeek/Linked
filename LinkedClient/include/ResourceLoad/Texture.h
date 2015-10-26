@@ -20,13 +20,16 @@ public:
 
 	float getTileAmount();
 	void setTileAmount(float amt);
-
+	int& getReferenceCount();
+	void setReferenceCount(int refCount);
 	// Implement if necessary
 	//virtual unsigned char* getLoadedImage();
 protected:
 	std::string fileName;
 	float bias;
 	float tileAmount;
+
+	int referenceCount;
 };
 
 class DynamicTexture : public Texture

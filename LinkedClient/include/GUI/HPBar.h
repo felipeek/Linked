@@ -4,6 +4,7 @@ class Texture;
 class Player;
 class DynamicTexture;
 class Entity;
+class Mesh;
 
 #define NUMBARS 100
 #define BACKGROUND 255		// 255(black) 0(transparent)
@@ -28,6 +29,7 @@ public:
 private:
 	Player* player;
 	DynamicTexture* hpBar;
+	Mesh* mesh;
 	
 	unsigned char* hpBarImage;
 	unsigned int maxHP;

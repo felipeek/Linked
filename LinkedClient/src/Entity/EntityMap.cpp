@@ -11,10 +11,18 @@ EntityMap::EntityMap(Transform* transform, Mesh* mesh, Texture* texture, Texture
 
 EntityMap::~EntityMap()
 {
-	if (transform != NULL)
-		delete transform;
-	if (mesh != NULL)
+	if (mesh != nullptr)
 		delete mesh;
+	if (texture != nullptr)
+		delete texture;
+	if (texture1 != nullptr)
+		delete texture1;
+	if (texture2 != nullptr)
+		delete texture2;
+	if (texture3 != nullptr)
+		delete texture3;
+	if (blendMap != nullptr)
+		delete blendMap;
 }
 
 void EntityMap::render(MapShader* shader, Camera* lightCamera)

@@ -41,7 +41,7 @@ private:
 	std::map<unsigned int, Character> chars16px;
 	std::map<unsigned int, Character> chars18px;
 
-	GLuint VAO, VBO;
+	GLuint VAO, VBO, IBO;
 	Shader* shader;
 
 	FT_Library ft;
