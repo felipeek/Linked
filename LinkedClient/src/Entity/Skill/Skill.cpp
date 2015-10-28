@@ -12,10 +12,6 @@ Skill::Skill(std::vector<Monster*> *monsters) : Entity(nullptr, nullptr, nullptr
 
 Skill::~Skill()
 {
-	if (mesh != nullptr)
-		delete mesh;
-	if (texture != nullptr)
-		delete texture;
 	if (skillIcon != nullptr)
 		delete skillIcon;
 }

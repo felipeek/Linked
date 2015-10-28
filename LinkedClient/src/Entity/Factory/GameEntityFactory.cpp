@@ -16,14 +16,6 @@ GameEntityFactory::~GameEntityFactory()
 {
 	for (int i = 0, size = gameEntities.size(); i < size; i++)
 	{
-		gameEntities[0]->getTexture()->getReferenceCount()--;
-		if (gameEntities[0]->getTexture()->getReferenceCount() == 0)
-			delete gameEntities[0]->getTexture();
-
-		gameEntities[0]->getMesh()->getReferenceCount()--;
-		if (gameEntities[0]->getMesh()->getReferenceCount() == 0)
-			delete gameEntities[0]->getMesh();
-
 		delete gameEntities[0];
 		gameEntities.erase(gameEntities.begin());
 	}
@@ -85,13 +77,9 @@ GameEntity* GameEntityFactory::generateCopyOfGameEntity(GameEntity* gameEntity)
 	copy->setMapColor(gameEntity->getMapColor());
 	copy->setName(gameEntity->getName());
 	// Copy Mesh (The same mesh will be setted for all gameEntities of same class)
-	Mesh* gameEntityMesh = gameEntity->getMesh();
-	gameEntityMesh->getReferenceCount()++;
-	copy->setMesh(gameEntityMesh);
+	copy->setMesh(gameEntity->getMesh());
 	// Copy Texture (A new texture object must be created for each gameEntity)
-	Texture* gameEntityTexture = gameEntity->getTexture();
-	gameEntityTexture->getReferenceCount()++;
-	copy->setTexture(gameEntityTexture);
+	copy->setTexture(gameEntity->getTexture());
 	// Copy Transform (A new transform object must be created for each gameEntity)
 	Transform *gameEntityTransform = gameEntity->getTransform();
 	glm::vec3 gameEntityTransformPosition = gameEntityTransform->getPosition();
@@ -125,18 +113,9 @@ GameEntity* GameEntityFactory::parseXmlGameEntity(char* monsterPath)
 			if (nodeName == GAMEENTITY_NAME_NODE)
 				gameEntity->setName(std::string(nodeValue));
 			else if (nodeName == GAMEENTITY_TEXTURE_NODE)
-			{
-				Texture* gameEntityTexture = new Texture(GAMEENTITY_DIRECTORY + std::string(nodeValue));
-				gameEntityTexture->setReferenceCount(1);
-				gameEntity->setTexture(gameEntityTexture);
-			}
+				gameEntity->setTexture(new Texture(GAMEENTITY_DIRECTORY + std::string(nodeValue)));
 			else if (nodeName == GAMEENTITY_OBJECT_NODE)
-			{
-				Mesh* gameEntityMesh = new Mesh(GAMEENTITY_DIRECTORY + std::string(nodeValue), 0, 0);
-				gameEntityMesh->setReferenceCount(1);
-				gameEntity->setMesh(gameEntityMesh);
-			}
-				
+				gameEntity->setMesh(new Mesh(GAMEENTITY_DIRECTORY + std::string(nodeValue), 0, 0));
 			else if (nodeName == GAMEENTITY_SIZE_NODE)
 				gameEntity->getTransform()->scale(std::atoi(nodeValue) / 10.0f, std::atoi(nodeValue) / 10.0f, std::atoi(nodeValue) / 10.0f);
 			else if (nodeName == GAMEENTITY_ANGLE_NODE)

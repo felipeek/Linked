@@ -1,6 +1,7 @@
 #include "Entity.h"
 #include "Monster.h"
 #include "Light.h"
+#include <iostream>
 
 Entity::Entity(Transform* transform, Mesh* mesh, Texture* texture)
 {
@@ -8,20 +9,35 @@ Entity::Entity(Transform* transform, Mesh* mesh, Texture* texture)
 	this->mesh = mesh;
 	this->texture = texture;
 }
-
+int t = 0, m = 0;
 Entity::~Entity()
 {
+	std::cout << "Entity Deleted." << std::endl;
 	if (transform != NULL)
 		delete transform;
 
-	//this->texture->getReferenceCount()--;
-	//if (texture->getReferenceCount() == 0)
-	//	delete texture;
+	if (this->texture != NULL)
+	{
+		this->texture->getReferenceCount()--;
+		if (texture->getReferenceCount() == 0)
+		{
+			std::cout << "Texture " << t+1 << " was deleted." << std::endl;
+			t++;
+			delete texture;
+		}
+			
+	}
 	
-	//this->mesh->getReferenceCount()--;
-	//if (mesh->getReferenceCount() == 0)
-	//	delete mesh;
-
+	if (this->mesh != NULL)
+	{
+		this->mesh->getReferenceCount()--;
+		if (mesh->getReferenceCount() == 0)
+		{
+			delete mesh;
+			std::cout << "Mesh " << m + 1 << " was deleted." << std::endl;
+			m++;
+		}
+	}
 }
 
 Transform* Entity::getTransform()
@@ -51,7 +67,9 @@ Texture* Entity::getTexture()
 
 void Entity::setTexture(Texture* texture)
 {
+	if (this->texture != nullptr) this->texture->getReferenceCount()--;
 	this->texture = texture;
+	this->texture->getReferenceCount()++;
 }
 
 void Entity::setTransform(Transform* transform)
@@ -61,7 +79,9 @@ void Entity::setTransform(Transform* transform)
 
 void Entity::setMesh(Mesh* mesh)
 {
+	if (this->mesh != nullptr) this->mesh->getReferenceCount()--;
 	this->mesh = mesh;
+	this->mesh->getReferenceCount()++;
 }
 
 Mesh* Entity::getMesh()

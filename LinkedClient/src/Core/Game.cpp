@@ -82,38 +82,29 @@ Game::~Game()
 	if (gameEntityFactory != nullptr) delete gameEntityFactory;
 	if (this->map != nullptr) delete map;
 	if (this->gui != nullptr) delete gui;
-	if (this->water->getTexture() != nullptr) delete this->water->getTexture();
-	if (this->water->getMesh() != nullptr) delete this->water->getMesh();
 	if (this->water != nullptr) delete water;
 	if (this->entityMap != nullptr) delete entityMap;
 
 	if (this->frameBuffer != nullptr) delete frameBuffer;
 
+	std::cout << "MONSTER STARTED" << std::endl;
+	std::cout << "-----------------" << std::endl;
 	// delete vectors content
 	for (Monster* monster : monsters)
-	{
-		monster->getTexture()->getReferenceCount()--;
-		if (monster->getTexture()->getReferenceCount() == 0)
-			delete monster->getTexture();
-			
 		delete monster;
-	}
 		
+	std::cout << "GENERAL ENTITIES STARTED" << std::endl;
+	std::cout << "-----------------" << std::endl;
 	for (Entity* entity : entities)
 		delete entity;
+
+	std::cout << "GAMEENTITIES STARTED" << std::endl;
+	std::cout << "-----------------" << std::endl;
 	for (GameEntity* entity : gameEntities)
-	{
-		entity->getTexture()->getReferenceCount()--;
-		if (entity->getTexture()->getReferenceCount() == 0)
-			delete entity->getTexture();
-
-		entity->getMesh()->getReferenceCount()--;
-		if (entity->getMesh()->getReferenceCount() == 0)
-			delete entity->getMesh();
-
 		delete entity;
-	}
 
+	std::cout << "rest" << std::endl;
+	std::cout << "-----------------" << std::endl;
 	if (this->localPlayer != nullptr)	delete localPlayer;
 
 	if (Game::multiplayer)
@@ -121,6 +112,8 @@ Game::~Game()
 		udpClient->virtualDisconnection();
 		if (this->udpClient != nullptr) delete udpClient;
 	}
+
+	std::cin.get();
 }
 
 void Game::createGraphicElements(int windowWidth, int windowHeight)
@@ -300,9 +293,6 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 				}
 				else
 				{
-					monster->getTexture()->getReferenceCount()--;
-					if (monster->getTexture()->getReferenceCount() == 0)
-						delete monster->getTexture();
 					delete monster;
 				}
 			}

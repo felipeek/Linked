@@ -15,10 +15,6 @@ MonsterFactory::~MonsterFactory()
 {
 	for (int i = 0, size=monsters.size(); i < size; i++)
 	{
-		monsters[0]->getTexture()->getReferenceCount()--;
-		if (monsters[0]->getTexture()->getReferenceCount() == 0)
-			delete monsters[0]->getTexture();
-			
 		delete monsters[0];
 		monsters.erase(monsters.begin());
 	}
@@ -88,12 +84,9 @@ Monster* MonsterFactory::generateCopyOfMonster(Monster* monster)
 	copy->setTotalCollisionRange(monster->getTotalCollisionRange());
 	copy->setTotalAttackSpeed(monster->getTotalAttackSpeed());
 	// Copy Mesh (A new mesh/quad object must be created for each monster)
-	Mesh* myMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7));
-	copy->setMesh(myMesh);
+	copy->setMesh(new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7)));
 	// Copy Texture (The same texture will be setted for all monsters of same class)
-	Texture* monsterTexture = monster->getTexture();
-	monsterTexture->getReferenceCount()++;
-	copy->setTexture(monsterTexture);
+	copy->setTexture(monster->getTexture());
 	// Copy Transform (A new transform object must be created for each monster)
 	Transform *monsterTransform = monster->getTransform();
 	vec3 monsterTransformPosition = monsterTransform->getPosition();
@@ -125,11 +118,7 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 			if (nodeName == MONSTERS_NAME_NODE)
 				monster->setName(std::string(nodeValue));
 			else if (nodeName == MONSTERS_SPRITE_NODE)
-			{
-				Texture* monsterTexture = new Texture(MONSTERS_DIRECTORY + std::string(nodeValue));
-				monsterTexture->setReferenceCount(1);
-				monster->setTexture(monsterTexture);
-			}
+				monster->setTexture(new Texture(MONSTERS_DIRECTORY + std::string(nodeValue)));
 			else if (nodeName == MONSTERS_SIZE_NODE)
 				monster->getTransform()->scale(std::atoi(nodeValue) / 10.0f, std::atoi(nodeValue) / 10.0f, std::atoi(nodeValue) / 10.0f);
 			else if (nodeName == MONSTERS_COLLISIONRANGE_NODE)

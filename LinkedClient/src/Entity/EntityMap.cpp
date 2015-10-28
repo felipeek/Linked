@@ -11,10 +11,8 @@ EntityMap::EntityMap(Transform* transform, Mesh* mesh, Texture* texture, Texture
 
 EntityMap::~EntityMap()
 {
-	if (mesh != nullptr)
-		delete mesh;
-	if (texture != nullptr)
-		delete texture;
+	/*if (texture != nullptr)
+		delete texture;*/
 	if (texture1 != nullptr)
 		delete texture1;
 	if (texture2 != nullptr)
