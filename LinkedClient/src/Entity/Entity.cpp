@@ -8,6 +8,12 @@ Entity::Entity(Transform* transform, Mesh* mesh, Texture* texture)
 	this->transform = transform;
 	this->mesh = mesh;
 	this->texture = texture;
+
+	if (this->texture != nullptr)
+		this->texture->getReferenceCount()++;
+	if (this->mesh != nullptr)
+		this->mesh->getReferenceCount()++;
+	
 }
 int t = 0, m = 0;
 Entity::~Entity()
@@ -19,6 +25,7 @@ Entity::~Entity()
 	if (this->texture != NULL)
 	{
 		this->texture->getReferenceCount()--;
+		std::cout << "ref count: " << this->texture->getReferenceCount() << std::endl;
 		if (texture->getReferenceCount() == 0)
 		{
 			std::cout << "Texture " << t+1 << " was deleted." << std::endl;

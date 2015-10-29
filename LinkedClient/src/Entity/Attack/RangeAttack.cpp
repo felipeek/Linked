@@ -15,12 +15,14 @@
 
 RangeAttack::RangeAttack(Player* player, std::vector<Projectile*>* attacks, std::vector<Monster*>* monsters, Map* map)
 {
-	this->mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.3f));
+	mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.3f));
+	mesh->setReferenceCount(1);
 	this->player = player;
 	this->attacks = attacks;
 	this->monsters = monsters;
 	this->map = map;
 	texture = new Texture("./res/Textures/energyBall.png");
+	texture->setReferenceCount(1);
 	lastTimeUpdate = 0;
 	lastTimeCreate = 0;
 	setLife(LIFE);
@@ -29,6 +31,8 @@ RangeAttack::RangeAttack(Player* player, std::vector<Projectile*>* attacks, std:
 
 RangeAttack::~RangeAttack()
 {
+	delete texture;
+	delete mesh;
 }
 
 std::vector<Projectile*>* RangeAttack::getAttacks()

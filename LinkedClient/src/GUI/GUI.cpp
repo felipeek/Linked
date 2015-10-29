@@ -42,9 +42,10 @@ GUI::~GUI()
 	delete textRenderer;
 	delete guiShader;
 	delete textShader;
-	delete leftGUIMesh;
-	delete leftGUIChatActiveTexture;
-	delete leftGUIChatInactiveTexture;
+	if (this->leftGUIEntity->getTexture() == leftGUIChatActiveTexture)
+		delete leftGUIChatInactiveTexture;
+	else
+		delete leftGUIChatActiveTexture;
 	delete leftGUIEntity;
 }
 

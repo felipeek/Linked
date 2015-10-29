@@ -97,7 +97,7 @@ Game::~Game()
 	std::cout << "-----------------" << std::endl;
 	for (Entity* entity : entities)
 		delete entity;
-
+	
 	std::cout << "GAMEENTITIES STARTED" << std::endl;
 	std::cout << "-----------------" << std::endl;
 	for (GameEntity* entity : gameEntities)
@@ -113,7 +113,7 @@ Game::~Game()
 		if (this->udpClient != nullptr) delete udpClient;
 	}
 
-	std::cin.get();
+	//std::cin.get();
 }
 
 void Game::createGraphicElements(int windowWidth, int windowHeight)
@@ -528,10 +528,6 @@ void Game::update()
 	for (unsigned int i = 0; i < monsters.size(); i++)
 		if (!monsters[i]->isOnScreen())
 		{
-			monsters[i]->getTexture()->getReferenceCount()--;
-			if (monsters[i]->getTexture()->getReferenceCount() == 0)
-				delete monsters[i]->getTexture();
-
 			delete monsters[i];
 			monsters.erase(monsters.begin() + i);
 		}

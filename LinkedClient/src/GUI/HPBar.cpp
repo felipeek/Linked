@@ -38,10 +38,6 @@ HPBar::~HPBar()
 		delete[] hpBarImage;
 	if (quad)
 		delete quad;
-	if (mesh)
-		delete mesh;
-	if (hpBar)
-		delete hpBar;
 }
 
 void HPBar::update()
