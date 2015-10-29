@@ -8,8 +8,8 @@ Light::Light(glm::vec3 position, glm::vec3 color)
 	lightPosition = position;
 	lightColor = color;
 	day = true;
-	dayDelta = 0;
-	timeRate = 0.05f;
+	dayDelta = 60.0f;
+	timeRate = 0.0f;
 }
 
 
@@ -20,9 +20,9 @@ Light::~Light()
 void Light::input()
 {
 	if (Input::keyStates[1 + 320])
-		lightPosition.z += 1.0f;
+		dayDelta += 0.5f;
 	if (Input::keyStates[9 + 320])
-		lightPosition.z -= 1.0f;
+		dayDelta -= 0.5f;
 }
 
 void Light::update(glm::vec3& playerPosition)

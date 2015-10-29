@@ -105,7 +105,7 @@ Game::~Game()
 
 	std::cout << "rest" << std::endl;
 	std::cout << "-----------------" << std::endl;
-	if (this->localPlayer != nullptr)	delete localPlayer;
+	if (this->localPlayer != nullptr) delete localPlayer;
 
 	if (Game::multiplayer)
 	{

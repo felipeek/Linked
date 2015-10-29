@@ -1,6 +1,7 @@
 #include "Display.h"
 #include <time.h>
 #include <stdlib.h>
+#include <iostream>
 
 //#include <vld.h>
 

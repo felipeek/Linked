@@ -45,7 +45,6 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture, std::vector<M
 Player::~Player()
 {
 	delete hpBar;
-	delete rangeAttack;
 	delete ai;
 
 	for (unsigned int i = 0, skillsSize = skills.size(); i < skillsSize; i++)
@@ -58,11 +57,13 @@ Player::~Player()
 		delete equipments[0];
 		equipments.erase(equipments.begin());
 	}
+	
 	for (unsigned int i = 0, attacksSize = attacks.size(); i < attacksSize; i++)
 	{
 		delete attacks[0];
 		attacks.erase(attacks.begin());
 	}
+	delete rangeAttack;
 }
 
 /* *********************************** */
