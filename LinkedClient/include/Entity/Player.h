@@ -53,6 +53,8 @@ public:
 	~Player();
 
 	/* BASIC ATTRIBUTES */
+	Player* getLink();
+	void setLink(Player* player);
 	short getClientId();	// multiplayer
 	void setClientId(short clientId);	// multiplayer
 	PlayerType getType();	// multiplayer
@@ -125,6 +127,7 @@ public:
 	bool hpBar_shouldRender;
 private:
 	/* FUNDAMENTAL ATTRIBUTES */
+	Player* link;
 	short clientId;
 	std::string name;
 	unsigned int hp;

@@ -18,6 +18,7 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture, std::vector<M
 	setHp(PLAYER_DEFAULT_HP);
 	skills = std::vector<Skill*>();
 	equipments = std::vector<Equipment*>();
+	this->link = NULL;
 	this->hpBar = new HPBar(this);
 	this->rangeAttack = new RangeAttack(this, &attacks, monsters, map);
 	this->ai = new PlayerAI();
@@ -69,6 +70,16 @@ Player::~Player()
 /* *********************************** */
 
 /* BASIC ATTRIBUTES */
+
+Player* Player::getLink()
+{
+	return this->link;
+}
+
+void Player::setLink(Player* link)
+{
+	this->link = link;
+}
 
 short Player::getClientId()
 {

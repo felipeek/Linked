@@ -2,7 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 
-#include <vld.h>
+//#include <vld.h>
 
 int main(int argc, char** argv)
 {
