@@ -13,7 +13,7 @@ SwapSkill::SwapSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vec
 	Texture* disabledSkillIconTexture = new Texture("./res/Skills/swap_icon_black.png");
 	this->skillIcon = new SkillIcon(enabledSkillIconTexture, disabledSkillIconTexture, SLOT_1);
 
-	this->status = SwapSkillStatus::ANIMATION;
+	this->status = SwapSkillStatus::IDLE;
 	this->cooldown = SWAP_SKILL_COOLDOWN;
 }
 
@@ -28,10 +28,13 @@ void SwapSkill::render(Shader* primitiveShader, Shader* skillShader, TextRendere
 
 void SwapSkill::prepareExecution(MovementDirection skillDirection)
 {
-	if (!this->active && !this->isOnCooldown())
+	if (!this->active && !this->isOnCooldown() && this->status == SwapSkillStatus::IDLE)
 	{
 		if (Game::multiplayer)
+		{
+			this->status = SwapSkillStatus::WAITING_FOR_SERVER_RESPONSE;
 			PacketController::sendSkillToServer(this->getSlot(), skillDirection, glm::vec3(0, 0, 0), 0);
+		}
 		else
 			execute(skillDirection, glm::vec3(0, 0, 0), 0);
 	}
@@ -50,9 +53,13 @@ bool SwapSkill::cancelIfPossible()
 
 void SwapSkill::update()
 {
-	if (this->active)
+	if (this->active && this->status != SwapSkillStatus::IDLE)
 	{
-		if (this->status == SwapSkillStatus::ANIMATION)
+		if (this->status == SwapSkillStatus::WAITING_FOR_SERVER_RESPONSE)
+		{
+
+		}
+		else if (this->status == SwapSkillStatus::ANIMATION)
 		{
 			// TO DO
 			this->status = SwapSkillStatus::EXECUTION;
@@ -77,6 +84,7 @@ void SwapSkill::update()
 			this->startCooldownContage();
 			this->checkCooldown = true;
 			this->skillIcon->disableIcon();
+			this->status = SwapSkillStatus::IDLE;
 		}
 	}
 	else if (checkCooldown && !this->isOnCooldown())
