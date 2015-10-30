@@ -1,3 +1,4 @@
+#pragma once
 #include "Entity.h"
 #include "Skill.h"
 
@@ -11,7 +12,6 @@
 
 #define WIDTHFACTOR 0.6f
 
-#pragma once
 class SkillIcon : public Entity
 {
 public:

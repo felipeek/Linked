@@ -1,6 +1,6 @@
 #pragma once
-#include "GameEntity.h"
 #include "Factory.h"
+#include <glm\glm.hpp>
 
 #define GAMEENTITY_DIRECTORY "./res/GameEntities/"
 #define GAMEENTITY_ROOT_NODE "GAMEENTITY"
@@ -12,10 +12,12 @@
 #define GAMEENTITY_RED_NODE "RED"
 #define GAMEENTITY_GREEN_NODE "GREEN"
 #define GAMEENTITY_BLUE_NODE "BLUE"
-#define GAMEENTITY_STANDARD_POSITION vec3(0, 0, 0)
+#define GAMEENTITY_STANDARD_POSITION glm::vec3(0, 0, 0)
 #define GAMEENTITY_STANDARD_ANGLE 90
-#define GAMEENTITY_STANDARD_AXIS vec3(1, 0, 0)
-#define GAMEENTITY_STANDARD_SCALE vec3(1, 1, 1)
+#define GAMEENTITY_STANDARD_AXIS glm::vec3(1, 0, 0)
+#define GAMEENTITY_STANDARD_SCALE glm::vec3(1, 1, 1)
+
+class GameEntity;
 
 class GameEntityNotFoundException : std::exception{};
 

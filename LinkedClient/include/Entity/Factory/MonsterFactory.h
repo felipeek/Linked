@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
 #include <string>
-#include "Monster.h"
 #include "Factory.h"
+#include <glm\glm.hpp>
 
 #define MONSTERS_DIRECTORY "./res/Monsters/"
 #define MONSTERS_ROOT_NODE "MONSTER"
@@ -20,10 +20,12 @@
 #define MONSTERS_RED_NODE "RED"
 #define MONSTERS_GREEN_NODE "GREEN"
 #define MONSTERS_BLUE_NODE "BLUE"
-#define MONSTERS_STANDARD_POSITION vec3(0, 0, 0)
+#define MONSTERS_STANDARD_POSITION glm::vec3(0, 0, 0)
 #define MONSTERS_STANDARD_ANGLE 35
-#define MONSTERS_STANDARD_AXIS vec3(1, 0, 0)
-#define MONSTERS_STANDARD_SCALE vec3(1, 1, 1)
+#define MONSTERS_STANDARD_AXIS glm::vec3(1, 0, 0)
+#define MONSTERS_STANDARD_SCALE glm::vec3(1, 1, 1)
+
+class Monster;
 
 class MonsterNotFoundException : std::exception{};
 

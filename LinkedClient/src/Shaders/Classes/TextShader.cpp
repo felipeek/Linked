@@ -1,7 +1,6 @@
 #include "TextShader.h"
-#include "Entity.h"
-#include "Primitive.h"
 #include "Display.h"
+#include <glm\gtc\matrix_transform.hpp>
 
 TextShader::TextShader(std::string fileName) : Shader(fileName, NULL)
 {

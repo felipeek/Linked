@@ -1,9 +1,6 @@
 #pragma once
 #include "Shader.h"
 
-class Light;
-class Entity;
-
 class GUIShader : public Shader
 {
 public:

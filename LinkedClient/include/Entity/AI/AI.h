@@ -1,6 +1,7 @@
 #pragma once
 #include "glm\glm.hpp"
 #include "Movement.h"
+
 class Map;
 
 #define REACH_DESTINATION_ERROR 0.5f

@@ -3,7 +3,6 @@
 #include <glm\glm.hpp>
 #include <vector>
 #include "Movement.h"
-#include "Skill.h"
 
 class ClientPacket;
 class Player;
@@ -11,6 +10,7 @@ class UDPClient;
 class Map;
 class Game;
 class GUI;
+enum SkillSlot;
 
 // Entity's IDs
 // Second Player 0

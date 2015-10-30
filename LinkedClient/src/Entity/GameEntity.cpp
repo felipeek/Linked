@@ -1,6 +1,5 @@
 #include "GameEntity.h"
 
-
 GameEntity::GameEntity(Transform* transform, Mesh* mesh, Texture* texture) : Entity(transform, mesh, texture)
 {
 }

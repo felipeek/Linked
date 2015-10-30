@@ -1,7 +1,6 @@
 #include "Mesh.h"
-#include "Shader.h"
 #include "Grid.h"
-#include <iostream>
+#include "IndexedModel.h"
 
 bool Mesh::wireframe = false;
 bool Mesh::isGUI = false;
@@ -113,7 +112,6 @@ void Mesh::genIndexBuffer(IndexedModel* iModel)
 
 void Mesh::render()
 {
-	//shader.update(transform);
 	glBindVertexArray(VertexArrayID);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBufferID);

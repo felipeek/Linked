@@ -1,15 +1,14 @@
 #include "GUI.h"
 #include "Player.h"
-#include "Shader.h"
 #include "SkillIcon.h"
 #include "TextShader.h"
 #include "Primitive.h"
 #include "GUIShader.h"
+#include "SkillIcon.h"
 #include "Chat.h"
-#include "Game.h"
+#include "TextRenderer.h"
 
 #include <sstream>
-#include <iostream>
 
 GUI::GUI(Player* player, std::string textShaderFileName, std::string guiShaderFileName, std::string fontName)
 {

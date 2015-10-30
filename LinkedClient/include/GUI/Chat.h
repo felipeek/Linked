@@ -2,8 +2,6 @@
 
 #include <string>
 #include <sstream>
-#include "Input.h"
-#include "GUI.h"
 
 #define NUM_KEYS 512
 
@@ -29,12 +27,11 @@
 class UDPClient;
 class Player;
 class Map;
+class GUI;
 
 class Chat
 {
 public:
-	Chat();
-	~Chat();
 	static bool isChatActive();
 	static std::stringstream& getStream();
 	static std::string appendPlayerName(std::string& name);

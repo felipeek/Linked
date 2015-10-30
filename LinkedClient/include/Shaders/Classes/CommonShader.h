@@ -2,7 +2,6 @@
 #include "Shader.h"
 
 class Light;
-class Entity;
 
 class CommonShader : public Shader
 {

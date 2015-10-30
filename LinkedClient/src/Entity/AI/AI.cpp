@@ -1,10 +1,6 @@
 #include "AI.h"
-#include "Display.h"
 #include "Map.h"
 #include "LinkedTime.h"
-#include <stdlib.h>
-#include <time.h>
-#include <iostream>
 
 AI::AI()
 {
@@ -24,7 +20,7 @@ MovementDefinition AI::movePerfectlyTo(Map* map, glm::vec3 reference, glm::vec3 
 
 	if (distance > REACH_DESTINATION_ERROR)
 	{
-		glm::vec3 range = rangeSpeed*normalize(destination - reference);
+		glm::vec3 range = rangeSpeed*glm::normalize(destination - reference);
 
 		movement.x = movement.x + range.x;
 		movement.y = movement.y + range.y;
@@ -106,7 +102,7 @@ MovementDefinition AI::nextRandomStep()
 			movDef.movement = randomMovementReference;
 			movDef.direction = randomMovementDirection;
 
-			if (length(randomVirtualTravelledDistance) >= RANDOM_KEEP_MOVING_FACTOR / (float)100)
+			if (glm::length(randomVirtualTravelledDistance) >= RANDOM_KEEP_MOVING_FACTOR / (float)100)
 				movingRandomly = false;
 		}
 		else
@@ -139,7 +135,7 @@ bool AI::checkIfMonsterIsStillOnTheSameMapPosition(glm::vec3 currentPosition, gl
 MovementDirection AI::getDirectionBasedOnVector(glm::vec3 vector)
 {
 	glm::vec3 auxVector = glm::vec3(1, 0, 0);
-	float radAngle = acos((glm::dot(vector, auxVector) / (length(vector)*length(auxVector))));
+	float radAngle = acos((glm::dot(vector, auxVector) / (glm::length(vector)*glm::length(auxVector))));
 	float angle = (180 * radAngle) / PI;
 	if (vector.y < 0)
 		angle = -angle;

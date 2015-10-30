@@ -6,7 +6,6 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <string>
 
 #pragma comment (lib, "Ws2_32.lib")
@@ -42,6 +41,5 @@ private:
 	void startWinsock();
 	SOCKET createSocket();
 	void updateServerInfo(std::string ipAddress);
-	void updateClientInfo();
 };
 

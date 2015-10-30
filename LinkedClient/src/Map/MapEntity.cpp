@@ -1,6 +1,5 @@
 #include "MapEntity.h"
-
-using namespace glm;
+#include "GameEntityFactory.h"
 
 MapGameEntity::MapGameEntity()
 {
@@ -29,13 +28,13 @@ MapGameEntityImageLoader::~MapGameEntityImageLoader()
 	freeLoadedImage();
 }
 
-MapGameEntity MapGameEntityImageLoader::getMapEntity(vec3 coordinateVector)
+MapGameEntity MapGameEntityImageLoader::getMapEntity(glm::vec3 coordinateVector)
 {
 	MapGameEntity mapGameEntity = MapGameEntity();
 
 	try
 	{
-		vec3 rgb = getPixel((int)coordinateVector.x, (int)coordinateVector.y);
+		glm::vec3 rgb = getPixel((int)coordinateVector.x, (int)coordinateVector.y);
 		if ((rgb.r == 0 && rgb.g == 0 && rgb.b == 0) || (rgb.r == 255 && rgb.g == 255 && rgb.b == 0))
 		{
 			mapGameEntity.gameEntityExists = false;
@@ -61,9 +60,9 @@ MapGameEntity MapGameEntityImageLoader::getMapEntity(vec3 coordinateVector)
 	return mapGameEntity;
 }
 
-bool MapGameEntityImageLoader::coordinateHasCollision(vec3 coordinate)
+bool MapGameEntityImageLoader::coordinateHasCollision(glm::vec3 coordinate)
 {
-	vec3 rgb = getPixel((int)coordinate.x, (int)coordinate.y);
+	glm::vec3 rgb = getPixel((int)coordinate.x, (int)coordinate.y);
 
 	if (rgb.r == DEFAULT_ENTITIES_MAP_COLOR_RED && rgb.g == DEFAULT_ENTITIES_MAP_COLOR_GREEN && rgb.b == DEFAULT_ENTITIES_MAP_COLOR_BLUE)
 		return false;

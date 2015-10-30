@@ -1,6 +1,5 @@
 #include "ClientPacket.h"
 #include "Packet.h"
-#include <iostream>
 
 using namespace std;
 

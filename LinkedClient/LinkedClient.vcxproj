@@ -33,7 +33,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -165,7 +165,6 @@
     <ClCompile Include="src\Entity\Attack\MouseAttack.cpp" />
     <ClCompile Include="src\Entity\Attack\Projectile.cpp" />
     <ClCompile Include="src\Entity\Attack\RangeAttack.cpp" />
-    <ClCompile Include="src\Entity\Creature.cpp" />
     <ClCompile Include="src\Entity\Entity.cpp" />
     <ClCompile Include="src\Entity\EntityMap.cpp" />
     <ClCompile Include="src\Entity\Equipment.cpp" />
@@ -180,13 +179,11 @@
     <ClCompile Include="src\Entity\Item.cpp" />
     <ClCompile Include="src\Entity\Mesh.cpp" />
     <ClCompile Include="src\Entity\Monster.cpp" />
-    <ClCompile Include="src\Entity\Movement.cpp" />
     <ClCompile Include="src\Entity\Player.cpp" />
     <ClCompile Include="src\Entity\Primitive.cpp" />
     <ClCompile Include="src\Entity\Skill\HoshoyoExplosionSkill.cpp" />
     <ClCompile Include="src\Entity\Skill\Skill.cpp" />
     <ClCompile Include="src\Entity\Skill\SkillIcon.cpp" />
-    <ClCompile Include="src\Entity\Skill\ZurikiRageSkill.cpp" />
     <ClCompile Include="src\Entity\Transform.cpp" />
     <ClCompile Include="src\GUI\Chat.cpp" />
     <ClCompile Include="src\GUI\GUI.cpp" />
@@ -218,6 +215,7 @@
     <ClCompile Include="src\Entity\Skill\SwapSkill.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Common.h" />
     <ClInclude Include="include\Entity\Skill\CureBlessingSkill.h" />
     <ClInclude Include="include\Entity\Cursor.h" />
     <ClInclude Include="include\Core\Display.h" />
@@ -250,7 +248,6 @@
     <ClInclude Include="include\Entity\Skill\HoshoyoExplosionSkill.h" />
     <ClInclude Include="include\Entity\Skill\Skill.h" />
     <ClInclude Include="include\Entity\Skill\SkillIcon.h" />
-    <ClInclude Include="include\Entity\Skill\ZurikiRageSkill.h" />
     <ClInclude Include="include\Entity\Transform.h" />
     <ClInclude Include="include\GUI\Chat.h" />
     <ClInclude Include="include\GUI\GUI.h" />

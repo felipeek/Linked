@@ -1,5 +1,6 @@
 #pragma once
 #include "AI.h"
+
 #define STANDARD_MONSTER_RANGE 50
 #define RANGE_DIVIDER 10.0
 #define BORDER_MOVEMENT_LIMIT 2.0

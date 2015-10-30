@@ -1,10 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include "Creature.h"
-#include "Skill.h"
-#include "Equipment.h"
 #include "Movement.h"
-#include "PlayerAI.h"
 
 #include <vector>
 #include <string>
@@ -39,6 +36,13 @@ class HPBar;
 class RangeAttack;
 class Map;
 class Projectile;
+class Equipment;
+class PlayerAI;
+class Skill;
+class Monster;
+class TextRenderer;
+enum EquipmentClass;
+enum SkillSlot;
 
 enum PlayerType
 {

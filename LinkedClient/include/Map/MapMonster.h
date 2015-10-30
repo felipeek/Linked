@@ -1,6 +1,8 @@
 #pragma once
 #include "ImageLoader.h"
-#include "MonsterFactory.h"
+
+class MonsterFactory;
+class Monster;
 
 class MapMonster
 {
@@ -17,8 +19,8 @@ class MapMonsterImageLoader : public ImageLoader
 public:
 	MapMonsterImageLoader(std::string& filename, int nChannels, MonsterFactory* monsterFactory);
 	virtual ~MapMonsterImageLoader();
-	MapMonster getMonster(vec3 coordinateVector);
-	bool coordinateHasCollision(vec3 coordinate);
+	MapMonster getMonster(glm::vec3 coordinateVector);
+	bool coordinateHasCollision(glm::vec3 coordinate);
 private:
 	MonsterFactory *monsterFactory;
 };

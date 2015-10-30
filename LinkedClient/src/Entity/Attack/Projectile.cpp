@@ -1,6 +1,5 @@
 #include "Projectile.h"
 #include "LinkedTime.h"
-#include "Display.h"
 
 Projectile::Projectile(Transform* transform, Mesh* mesh, Texture* texture, float speed, glm::vec3 direction) : Entity(transform, mesh, texture)
 {

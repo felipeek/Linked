@@ -1,14 +1,8 @@
 #include "FrameBuffer.h"
-#include "Texture.h"
-#include "Shader.h"
-#include "FrameShader.h"
-#include "Mesh.h"
-#include "Primitive.h"
 #include "Entity.h"
 #include "Camera.h"
 
 #include <glm\glm.hpp>
-#include <iostream>
 
 FrameBuffer::FrameBuffer(int width, int height)
 	: width(width), height(height)

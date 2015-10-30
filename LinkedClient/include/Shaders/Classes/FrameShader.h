@@ -1,10 +1,6 @@
 #pragma once
 #include "Shader.h"
-
 #include <string>
-
-class Transform;
-class Entity;
 
 class FrameShader : public Shader
 {

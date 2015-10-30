@@ -61,7 +61,7 @@ MovementDefinition MonsterAI::moveToDestination(Map *monsterMovementMap, glm::ve
 
 		// Tests if there is a collision
 		// If a collision is found, start moving randomly
-		while (length(differenceVector) < differenceVectorOriginalLength)
+		while (glm::length(differenceVector) < differenceVectorOriginalLength)
 		{
 			differenceVector = differenceVector * 1.1f;
 			
@@ -135,7 +135,7 @@ MovementDefinition MonsterAI::nextPositionMovementStep()
 			movDef.direction = positionMovementDirection;
 		}
 
-		if (length(positionVirtualTravelledDistance) >= POSITION_KEEP_MOVING_FACTOR / (float)100)
+		if (glm::length(positionVirtualTravelledDistance) >= POSITION_KEEP_MOVING_FACTOR / (float)100)
 			movingToPosition = false;
 	}
 	else

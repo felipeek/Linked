@@ -9,10 +9,9 @@
 
 //#define LETTER_WIDTH 0		// 0 to auto
 //#define LETTER_HEIGHT 100	// max height
+#define FONT_SIZE 1.0f
 
 class Shader;
-
-#define FONT_SIZE 1.0f
 
 enum charPixelSize{
 	_12PX = 12,

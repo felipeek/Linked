@@ -1,7 +1,5 @@
 #include "Grid.h"
 #include "Map.h"
-#include <cmath>
-#include <iostream>
 
 // TODO: (VERY IMPORTANT) Fix allocation sizes to work dynamically
 

@@ -2,7 +2,6 @@
 #include <glm\glm.hpp>
 #include <vector>
 
-
 #define ASPD 0.3f
 #define ATTACK 20
 #define LIFE 1.0f

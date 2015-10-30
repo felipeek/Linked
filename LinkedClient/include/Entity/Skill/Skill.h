@@ -1,15 +1,13 @@
+#pragma once
 #include "Entity.h"
 #include "Movement.h"
-#include "TextRenderer.h"
 
 #define SKILL_COOLDOWN_DEFAULT 2
 
 class Monster;
-class Text;
 class SkillIcon;
 class Player;
-
-#pragma once
+class TextRenderer;
 
 enum SkillOwner
 {

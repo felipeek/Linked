@@ -1,5 +1,4 @@
 #include "MapTerrain.h"
-#include <string>
 
 using namespace glm;
 
@@ -7,7 +6,6 @@ MapTerrainImageLoader::MapTerrainImageLoader(std::string& filename, int nChannel
 {
 
 }
-
 
 MapTerrainImageLoader::~MapTerrainImageLoader()
 {

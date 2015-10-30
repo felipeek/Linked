@@ -1,13 +1,15 @@
 #pragma once
-#include "Skill.h"
 #include <vector>
 #include <string>
-#include "TextRenderer.h"
+#include <glm\glm.hpp>
 
+class TextRenderer;
 class Player;
 class Mesh;
 class Texture;
 class Shader;
+class SkillIcon;
+class Entity;
 enum leftGUIAttribs;
 
 #define LEFTGUI_PATH_CHATINACTIVE "./res/GUI/GUI_Chat_Inactive1.png"
@@ -55,7 +57,6 @@ private:
 	Shader* guiShader;
 
 	// Left GUI
-	std::vector<Text*> leftGUIText;
 	std::vector<std::string> messages;
 	glm::vec3 color;
 	glm::vec3 activeText;

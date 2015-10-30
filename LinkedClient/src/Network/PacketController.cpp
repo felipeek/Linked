@@ -1,16 +1,14 @@
 #include "PacketController.h"
 #include "ClientPacket.h"
 #include "Packet.h"
+#include "Skill.h"
 #include "Player.h"
 #include "UDPClient.h"
-#include "Primitive.h"
 #include "Game.h"
 #include "Monster.h"
 #include "RangeAttack.h"
 #include "GUI.h"
-#include "Projectile.h"
-#include "HoshoyoExplosionSkill.h"
-#include <iostream>
+#include "Common.h"
 #include <sstream>
 
 Player* PacketController::localPlayer = NULL;

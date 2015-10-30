@@ -1,6 +1,7 @@
 #include "MonsterFactory.h"
 #include "rapidxml_utils.hpp"
 #include "Primitive.h"
+#include "Monster.h"
 
 using namespace rapidxml;
 using namespace std;
@@ -89,8 +90,8 @@ Monster* MonsterFactory::generateCopyOfMonster(Monster* monster)
 	copy->setTexture(monster->getTexture());
 	// Copy Transform (A new transform object must be created for each monster)
 	Transform *monsterTransform = monster->getTransform();
-	vec3 monsterTransformPosition = monsterTransform->getPosition();
-	vec3 monsterTransformScale = monsterTransform->getScale();
+	glm::vec3 monsterTransformPosition = monsterTransform->getPosition();
+	glm::vec3 monsterTransformScale = monsterTransform->getScale();
 	copy->setTransform(new Transform(monsterTransformPosition, MONSTERS_STANDARD_ANGLE, MONSTERS_STANDARD_AXIS, monsterTransformScale));
 
 	return copy;

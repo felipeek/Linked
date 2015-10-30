@@ -1,6 +1,5 @@
 #pragma once
 #include <glm\glm.hpp>
-class Texture;
 class Player;
 class DynamicTexture;
 class Entity;
@@ -24,8 +23,6 @@ public:
 	void update();
 	void input();
 	Entity* quad;
-	
-	void print();
 private:
 	Player* player;
 	DynamicTexture* hpBar;

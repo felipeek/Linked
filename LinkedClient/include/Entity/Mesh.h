@@ -2,10 +2,10 @@
 #include <vector>
 #include <glm\glm.hpp>
 #include <GL\glew.h>
-#include "IndexedModel.h"
 
 class Grid;
 class Quad;
+class IndexedModel;
 
 class Mesh
 {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <glm\glm.hpp>
-
 #include <vector>
 
 #define MAP_SIZE 1024
@@ -21,21 +20,16 @@ class PrimitiveShader;
 class CommonShader;
 class GUIShader;
 class MapShader;
-class TextShader;
 class SkillShader;
 class Map;
 class Light;
 class MonsterFactory;
 class Monster;
-class RangeAttack;
-class Projectile;
 class GameEntityFactory;
 class GameEntity;
 class Player;
 class GUI;
-class TextRenderer;
 class FrameBuffer;
-class Shader;
 class Cursor;
 class UDPClient;
 
@@ -86,7 +80,6 @@ private:
 	CommonShader* projectileShader;
 	SkillShader* skillShader;
 	GUI* gui;
-	TextRenderer* textRenderer;
 	FrameBuffer* frameBuffer;
 	Entity* water;
 

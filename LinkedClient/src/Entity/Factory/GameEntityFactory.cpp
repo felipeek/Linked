@@ -1,7 +1,6 @@
 #include "GameEntityFactory.h"
+#include "GameEntity.h"
 #include "rapidxml_utils.hpp"
-#include "Primitive.h"
-#include <iostream>
 
 using namespace rapidxml;
 using namespace std;

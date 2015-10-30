@@ -6,11 +6,12 @@
 #include "Display.h"
 #include "RangeAttack.h"
 #include "Map.h"
-#include "PacketController.h"
-#include "Projectile.h"
 #include "Game.h"
-
-#include <iostream>
+#include "Skill.h"
+#include "PlayerAI.h"
+#include "Equipment.h"
+#include "Projectile.h"
+#include "Common.h"
 
 Player::Player(Transform* transform, Mesh* mesh, Texture* texture, std::vector<Monster*>* monsters, Map* map) : Entity(transform, mesh, texture)
 {
@@ -79,7 +80,6 @@ Player* Player::getLink()
 
 void Player::setLink(Player* link)
 {
-	std::cout << "linked with player of id " << link->getClientId() << std::endl;
 	this->link = link;
 }
 

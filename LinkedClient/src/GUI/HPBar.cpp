@@ -3,10 +3,6 @@
 #include "Player.h"
 #include "Entity.h"
 #include "Primitive.h"
-#include "Input.h"
-
-#include <iostream>
-
 
 HPBar::HPBar(Player* player)
 {
@@ -91,15 +87,3 @@ void HPBar::input()
 {
 	
 }
-
-
-void HPBar::print()
-{
-	for (unsigned int i = 0; i < 4 * maxBars; i++)
-	{
-		std::cout << (int)hpBarImage[i] << " ";
-		if ((i+1) % 4 == 0)
-			std::cout << i/4 <<": "<< std::endl;
-	}
-}
-

@@ -4,15 +4,13 @@
 #include "Game.h"
 #include "PacketController.h"
 #include "Chat.h"
-
-#include <iostream>
+#include "Common.h"
 
 // Window and Monitor
 GLFWwindow* Display::window = NULL;
 GLFWmonitor* Display::monitor = NULL;
 int Display::monitorWidth = 0;
 int Display::monitorHeight = 0;
-
 
 // Game
 Game* Display::game = NULL;

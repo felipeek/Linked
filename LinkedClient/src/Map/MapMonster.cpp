@@ -1,5 +1,5 @@
 #include "MapMonster.h"
-#include <iostream>
+#include "MonsterFactory.h"
 
 MapMonster::MapMonster()
 {
@@ -27,13 +27,13 @@ MapMonsterImageLoader::~MapMonsterImageLoader()
 	freeLoadedImage();
 }
 
-MapMonster MapMonsterImageLoader::getMonster(vec3 coordinateVector)
+MapMonster MapMonsterImageLoader::getMonster(glm::vec3 coordinateVector)
 {
 	MapMonster mapMonster;
 
 	try
 	{
-		vec3 rgb = getPixel((int)coordinateVector.x, (int)coordinateVector.y);
+		glm::vec3 rgb = getPixel((int)coordinateVector.x, (int)coordinateVector.y);
 		
 		if (rgb.r == 0 && rgb.g == 0 && rgb.b == 0)
 		{
@@ -61,7 +61,7 @@ MapMonster MapMonsterImageLoader::getMonster(vec3 coordinateVector)
 	return mapMonster;
 }
 
-bool MapMonsterImageLoader::coordinateHasCollision(vec3 coordinate)
+bool MapMonsterImageLoader::coordinateHasCollision(glm::vec3 coordinate)
 {
 	return false;
 }

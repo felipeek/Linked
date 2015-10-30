@@ -1,13 +1,7 @@
 #include "Shader.h"
-#include "Camera.h"
-#include "Entity.h"
-#include "Light.h"
-
-#include "glm\glm.hpp"
-#include "glm\gtc\matrix_transform.hpp"
 
 #include <fstream>
-#include <iostream>
+#include "Common.h"
 
 Shader::Shader(std::string filename, Camera* camera)
 {

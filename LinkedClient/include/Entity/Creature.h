@@ -1,9 +1,6 @@
 #pragma once
-class Creature
+struct Creature
 {
-public:
-	Creature();
-	~Creature();
 	virtual unsigned int getHp() = 0;
 	virtual void setHp(unsigned int hp) = 0;
 	virtual unsigned int getTotalMaximumHp() = 0;

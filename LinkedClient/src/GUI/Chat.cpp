@@ -1,10 +1,11 @@
 #include "Chat.h"
 #include "UDPClient.h"
 #include "Player.h"
-#include "Game.h"
 #include "Map.h"
+#include "Game.h"
 #include "Packet.h"
-#include <iostream>
+#include "Input.h"
+#include "GUI.h"
 #include <Windows.h>
 
 int Chat::stateChat[NUM_KEYS] = { 0 };

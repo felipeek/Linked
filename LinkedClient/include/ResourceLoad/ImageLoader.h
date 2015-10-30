@@ -3,8 +3,6 @@
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 
-using namespace glm;
-
 class PixelOutOfBoundsException : std::exception{};
 
 class ImageLoader
@@ -24,7 +22,7 @@ protected:
 	int width;
 	int height;
 	int channels;
-	vec3 getPixel(int x, int y);
+	glm::vec3 getPixel(int x, int y);
 
 	void freeLoadedImage();
 };

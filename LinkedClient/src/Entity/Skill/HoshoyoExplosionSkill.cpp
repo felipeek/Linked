@@ -5,6 +5,7 @@
 #include "Monster.h"
 #include "Game.h"
 #include "PacketController.h"
+#include "TextRenderer.h"
 
 // TODO: Skill Animation flow must be implemented using LinkedTime, not only the update call.
 
@@ -134,7 +135,7 @@ void HoshoyoExplosionSkill::hitEnemiesOnSkillRadius()
 		for (Monster* monster : *(this->monsters))
 		{
 			glm::vec3 diffVector = monster->getTransform()->getPosition() - explosionPosition;
-			if (length(diffVector) < skillRadius && monster->isAlive())
+			if (glm::length(diffVector) < skillRadius && monster->isAlive())
 				monster->doDamage(skillDamage);
 		}
 	}

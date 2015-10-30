@@ -1,9 +1,6 @@
 #include "TextRenderer.h"
-
-#include "Shader.h"
 #include "TextShader.h"
-
-#include <iostream>
+#include "Common.h"
 
 TextRenderer::TextRenderer(Shader* shader, std::string fontName)
 {

@@ -13,6 +13,8 @@
 #include "EntityMap.h"
 #include "MonsterFactory.h"
 #include "GameEntityFactory.h"
+#include "Monster.h"
+#include "GameEntity.h"
 #include "Projectile.h"
 #include "Player.h"
 
@@ -32,7 +34,6 @@
 #include "GUI.h"
 #include "Chat.h"
 #include "HPBar.h"
-#include "ZurikiRageSkill.h"
 #include "HoshoyoExplosionSkill.h"
 #include "CureBlessingSkill.h"
 #include "SwapSkill.h"
@@ -48,7 +49,7 @@
 #include <iostream>
 #include <string>
 
-bool Game::multiplayer = true;
+bool Game::multiplayer = false;
 int Game::server_port = 9090;
 //std::string Game::server_ip = "127.0.0.1";
 std::string Game::server_ip = "201.21.40.57";

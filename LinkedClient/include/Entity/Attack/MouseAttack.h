@@ -9,7 +9,6 @@ class Camera;
 class MouseAttack
 {
 public:
-	MouseAttack(Camera* camera);
 	MouseAttack();
 	~MouseAttack();
 	
@@ -29,7 +28,6 @@ private:
 	glm::vec3 mouseIntersection;
 	double lastTime;
 	
-
 	void calculateIntersection(glm::vec3& worldRay, glm::vec3& cameraPosition);
 	glm::vec3 rayWorld;
 	glm::vec2 screenPos;

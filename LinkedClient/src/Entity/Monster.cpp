@@ -1,13 +1,11 @@
 #include "Monster.h"
-#include "MonsterAI.h"
 #include "Display.h"
+#include "MonsterAI.h"
 #include "Map.h"
 #include "LinkedTime.h"
 #include "Player.h"
 #include "Primitive.h"
 #include "Game.h"
-#include <iostream>
-#include <vector>
 
 Monster::Monster(Transform* transform, Mesh* mesh, Texture* texture) : Entity(transform, mesh, texture)
 {

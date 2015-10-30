@@ -1,3 +1,4 @@
+#pragma once
 #include "Skill.h"
 
 enum class HoshoyoExplosionSkillStatus

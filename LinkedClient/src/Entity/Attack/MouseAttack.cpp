@@ -1,10 +1,7 @@
 #include "MouseAttack.h"
-#include "Input.h"
 #include "LinkedTime.h"
 #include "Camera.h"
 #include "Display.h"
-#include <iostream>
-
 
 MouseAttack::MouseAttack()
 {
