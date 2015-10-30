@@ -102,6 +102,9 @@
     <ClCompile Include="src\Game\Skill\SwapSkill.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Game\Skill\CureBlessingSkill.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Game.h">
@@ -189,6 +192,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Game\Skill\SwapSkill.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Skill\CureBlessingSkill.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

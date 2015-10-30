@@ -207,6 +207,9 @@
     <ClCompile Include="src\Entity\Cursor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Entity\Skill\CureBlessingSkill.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Entity\AI\AI.h">
@@ -396,6 +399,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Entity\Cursor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Entity\Skill\CureBlessingSkill.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

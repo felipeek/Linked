@@ -34,6 +34,7 @@
 #include "HPBar.h"
 #include "ZurikiRageSkill.h"
 #include "HoshoyoExplosionSkill.h"
+#include "CureBlessingSkill.h"
 #include "SwapSkill.h"
 #include "LinkSkill.h"
 
@@ -183,7 +184,7 @@ void Game::createOfflinePlayer()
 	skill2->setSlot(SLOT_2);
 	localPlayer->addNewSkill(skill2);
 	
-	Skill* skill3 = new HoshoyoExplosionSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
+	Skill* skill3 = new CureBlessingSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
 	skill3->setSlot(SLOT_3);
 	localPlayer->addNewSkill(skill3);
 	
@@ -234,7 +235,7 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 	skill2->setSlot(SLOT_2);
 	designedPlayer->addNewSkill(skill2);
 
-	Skill* skill3 = new HoshoyoExplosionSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
+	Skill* skill3 = new CureBlessingSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
 	skill3->setSlot(SLOT_3);
 	designedPlayer->addNewSkill(skill3);
 

@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Entity\Skill\CureBlessingSkill.cpp" />
     <ClCompile Include="src\Entity\Cursor.cpp" />
     <ClCompile Include="src\Shaders\Classes\SkillShader.cpp" />
     <ClCompile Include="src\Entity\Skill\LinkSkill.cpp" />
@@ -217,6 +218,7 @@
     <ClCompile Include="src\Entity\Skill\SwapSkill.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Entity\Skill\CureBlessingSkill.h" />
     <ClInclude Include="include\Entity\Cursor.h" />
     <ClInclude Include="include\Core\Display.h" />
     <ClInclude Include="include\Core\Game.h" />
