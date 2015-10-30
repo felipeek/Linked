@@ -126,7 +126,7 @@ Game::~Game()
 void Game::createGraphicElements(int windowWidth, int windowHeight)
 {
 	// Cursor
-	Transform* t = new Transform(glm::vec3(0, 0, 0), glm::vec3(0.5f, 0.5f, 0.5f));
+	Transform* t = new Transform(glm::vec3(0, 0, 0), glm::vec3(0.3f, 0.3f, 0.3f));
 	Mesh* m = new Mesh(new Quad(glm::vec3(0, 0, 0), ((float)(WHEI) / (float)10000), ((float)(WWID) / (float)10000)));
 	Texture* tx = new Texture("./res/Textures/target.png");
 	cursor = new Entity(t, m, tx);
