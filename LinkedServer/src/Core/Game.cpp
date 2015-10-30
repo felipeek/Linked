@@ -6,6 +6,8 @@
 #include "PacketController.h"
 #include "Projectile.h"
 #include "HoshoyoExplosionSkill.h"
+#include "SwapSkill.h"
+#include "LinkSkill.h"
 
 #define PLAYER_INITIAL_POSITION glm::vec3(133, 600, 2.5f)
 #define PLAYER_MAXHP_BASIS 1000
@@ -66,19 +68,19 @@ Player* Game::createNewPlayer(unsigned short clientId)
 	newPlayer->setSpeedBasis(PLAYER_SPEED_BASIS);
 
 	/* FOR NOW, SKILLS MUST BE THE SAME AS THEY ARE DEFINED CLIENT-SIDE (SAME SLOTS, ALSO) */
-	Skill* skill1 = new HoshoyoExplosionSkill(&monsters);
+	Skill* skill1 = new LinkSkill(PLAYER, &monsters, &players);
 	skill1->setSlot(SLOT_1);
 	newPlayer->addNewSkill(skill1);
 
-	Skill* skill2 = new HoshoyoExplosionSkill(&monsters);
+	Skill* skill2 = new SwapSkill(PLAYER, &monsters, &players);
 	skill2->setSlot(SLOT_2);
 	newPlayer->addNewSkill(skill2);
 
-	Skill* skill3 = new HoshoyoExplosionSkill(&monsters);
+	Skill* skill3 = new HoshoyoExplosionSkill(PLAYER, &monsters, &players);
 	skill3->setSlot(SLOT_3);
 	newPlayer->addNewSkill(skill3);
 
-	Skill* skill4 = new HoshoyoExplosionSkill(&monsters);
+	Skill* skill4 = new HoshoyoExplosionSkill(PLAYER,&monsters, &players);
 	skill4->setSlot(SLOT_4);
 	newPlayer->addNewSkill(skill4);
 

@@ -24,6 +24,7 @@ class CommonShader;
 class GUIShader;
 class MapShader;
 class TextShader;
+class SkillShader;
 class Map;
 class Light;
 class MonsterFactory;
@@ -36,6 +37,7 @@ class Player;
 class GUI;
 class TextRenderer;
 class FrameBuffer;
+class Shader;
 
 class Game
 {
@@ -43,7 +45,6 @@ public:
 	Game();
 	Game(int windowWidth, int windowHeight);
 	~Game();
-
 	static bool multiplayer;
 	static int server_port;
 	static std::string server_ip;
@@ -81,6 +82,7 @@ private:
 	PrimitiveShader* primitiveShader;
 	MapShader* mapShader;
 	CommonShader* projectileShader;
+	SkillShader* skillShader;
 	GUI* gui;
 	TextRenderer* textRenderer;
 	FrameBuffer* frameBuffer;

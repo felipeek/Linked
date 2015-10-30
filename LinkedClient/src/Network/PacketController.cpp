@@ -359,8 +359,7 @@ Player* PacketController::getPlayerOfClient(int clientId)
 {
 	if (PacketController::localPlayer->getClientId() == clientId)
 		return PacketController::localPlayer;
-
-	for (Player* player : *PacketController::onlinePlayers)
+	for (Player* player : *(PacketController::onlinePlayers))
 		if (player->getClientId() == clientId)
 			return player;
 

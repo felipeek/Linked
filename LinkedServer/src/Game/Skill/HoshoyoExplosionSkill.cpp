@@ -3,7 +3,7 @@
 #include "Game.h"
 #include "PacketController.h"
 
-HoshoyoExplosionSkill::HoshoyoExplosionSkill(std::vector<Monster*>* monsters) : Skill(monsters)
+HoshoyoExplosionSkill::HoshoyoExplosionSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vector<Player*>* players) : Skill(owner, monsters, players)
 {
 	this->skillPhase = 0;
 }
@@ -44,13 +44,16 @@ const int skillDamage = 10;
 
 void HoshoyoExplosionSkill::hitEnemiesOnSkillRadius()
 {
-	for (Monster* monster : *(this->monsters))
+	if (this->owner == PLAYER)
 	{
-		glm::vec3 diffVector = monster->getPosition() - explosionPosition;
-		if (glm::length(diffVector) < skillRadius && monster->isAlive())
+		for (Monster* monster : *(this->monsters))
 		{
-			monster->doDamage(skillDamage);
-			PacketController::queueMonsterDamage(monster->getId(), -1, skillDamage);
+			glm::vec3 diffVector = monster->getPosition() - explosionPosition;
+			if (glm::length(diffVector) < skillRadius && monster->isAlive())
+			{
+				monster->doDamage(skillDamage);
+				PacketController::queueMonsterDamage(monster->getId(), -1, skillDamage);
+			}
 		}
 	}
 }

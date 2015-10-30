@@ -35,6 +35,7 @@ public:
 	~TextRenderer();
 
 	void renderText(unsigned char* text, int textSize, GLfloat x, GLfloat y, charPixelSize scale, glm::vec3 color);
+	Shader* getShader();
 private:
 	std::map<unsigned int, Character> chars12px;
 	std::map<unsigned int, Character> chars14px;

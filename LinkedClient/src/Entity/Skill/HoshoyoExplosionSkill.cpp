@@ -6,11 +6,13 @@
 #include "Game.h"
 #include "PacketController.h"
 
-HoshoyoExplosionSkill::HoshoyoExplosionSkill(std::vector<Monster*>* monsters) : Skill(monsters)
+// TODO: Skill Animation flow must be implemented using LinkedTime, not only the update call.
+
+HoshoyoExplosionSkill::HoshoyoExplosionSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vector<Player*>* players, Player** localPlayer) : Skill(owner, monsters, players, localPlayer)
 {
 	/* AIM ENTITY */
 	Mesh* aimMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 1, 12));
-	Transform* aimTransform = new Transform(glm::vec3(520, 500, 0.1f), 0, glm::vec3(1, 0, 0), glm::vec3(10, 10, 10));
+	Transform* aimTransform = new Transform(glm::vec3(0, 0, 0.1f), 0, glm::vec3(1, 0, 0), glm::vec3(10, 10, 10));
 	Texture* aimTexture = new Texture("./res/Skills/aim.png");
 	this->aimEntity = new Entity(aimTransform, aimMesh, aimTexture);
 
@@ -34,11 +36,11 @@ HoshoyoExplosionSkill::~HoshoyoExplosionSkill()
 		delete this->aimEntity;
 }
 
-void HoshoyoExplosionSkill::render(Shader* primitiveShader, TextRenderer* textRenderer)
+void HoshoyoExplosionSkill::render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer)
 {
-	if (this->status == AIM)
+	if (this->status == HoshoyoExplosionSkillStatus::AIM)
 		this->aimEntity->render(primitiveShader);
-	else if (this->status == EXECUTION)
+	else if (this->status == HoshoyoExplosionSkillStatus::EXECUTION)
 	{
 		Entity::render(primitiveShader);
 		// temporary (just 4fun)
@@ -52,7 +54,7 @@ void HoshoyoExplosionSkill::prepareExecution(MovementDirection skillDirection)
 	if (!this->active)
 	{
 		this->active = true;
-		this->status = AIM;
+		this->status = HoshoyoExplosionSkillStatus::AIM;
 	}
 }
 
@@ -60,8 +62,9 @@ void HoshoyoExplosionSkill::update()
 {
 	if (this->isActive())
 	{
-		if (this->status == AIM)
+		if (this->status == HoshoyoExplosionSkillStatus::AIM)
 		{
+			// mouse position related to the world, not the window
 			glm::vec3 mousePos = Input::mouseAttack.getMouseIntersection();
 			this->aimEntity->getTransform()->translate(mousePos.x, mousePos.y, 0.1f);
 
@@ -77,7 +80,7 @@ void HoshoyoExplosionSkill::update()
 				}
 			}
 		}
-		else if (this->status == EXECUTION)
+		else if (this->status == HoshoyoExplosionSkillStatus::EXECUTION)
 		{
 			if (!Game::multiplayer)
 			{
@@ -100,7 +103,7 @@ void HoshoyoExplosionSkill::update()
 
 bool HoshoyoExplosionSkill::cancelIfPossible()
 {
-	if (this->isActive() && this->status == AIM)
+	if (this->isActive() && this->status == HoshoyoExplosionSkillStatus::AIM)
 	{
 		this->active = false;
 		return true;
@@ -110,7 +113,7 @@ bool HoshoyoExplosionSkill::cancelIfPossible()
 
 void HoshoyoExplosionSkill::execute(MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId)
 {
-	this->status = EXECUTION;
+	this->status = HoshoyoExplosionSkillStatus::EXECUTION;
 	explosionPosition = skillTargetPosition;
 	this->getTransform()->translate(skillTargetPosition.x, skillTargetPosition.y, 0.1f);
 	this->currentExplosionTextureIndex = 0;
@@ -123,10 +126,13 @@ const int skillDamage = 10;
 
 void HoshoyoExplosionSkill::hitEnemiesOnSkillRadius()
 {
-	for (Monster* monster : *(this->monsters))
+	if (this->owner == PLAYER)
 	{
-		glm::vec3 diffVector = monster->getTransform()->getPosition() - explosionPosition;
-		if (length(diffVector) < skillRadius && monster->isAlive())
-			monster->doDamage(skillDamage);
+		for (Monster* monster : *(this->monsters))
+		{
+			glm::vec3 diffVector = monster->getTransform()->getPosition() - explosionPosition;
+			if (length(diffVector) < skillRadius && monster->isAlive())
+				monster->doDamage(skillDamage);
+		}
 	}
 }

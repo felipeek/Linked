@@ -28,6 +28,8 @@ public:
 	const static double frameTime;
 	static int monitorWidth;
 	static int monitorHeight;
+
+	static void showCursor(bool show);
 private:
 	static Game* game;
 	static GLFWwindow* window;

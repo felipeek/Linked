@@ -18,6 +18,7 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture, std::vector<M
 	setHp(PLAYER_DEFAULT_HP);
 	skills = std::vector<Skill*>();
 	equipments = std::vector<Equipment*>();
+	this->link = NULL;
 	this->hpBar = new HPBar(this);
 	this->rangeAttack = new RangeAttack(this, &attacks, monsters, map);
 	this->ai = new PlayerAI();
@@ -70,6 +71,17 @@ Player::~Player()
 /* *********************************** */
 
 /* BASIC ATTRIBUTES */
+
+Player* Player::getLink()
+{
+	return this->link;
+}
+
+void Player::setLink(Player* link)
+{
+	std::cout << "linked with player of id " << link->getClientId() << std::endl;
+	this->link = link;
+}
 
 short Player::getClientId()
 {
@@ -505,13 +517,13 @@ void Player::input(Map* map)
 			this->moving = true;
 		}
 
-		if (Input::keyStates['z'] && this->getSkillOfSlot(SLOT_1) != NULL && !this->isPlayerUsingASkill())
+		if (Input::keyStates['1'] && this->getSkillOfSlot(SLOT_1) != NULL && !this->isPlayerUsingASkill())
 			this->getSkillOfSlot(SLOT_1)->prepareExecution(this->currentDirection);
-		else if (Input::keyStates['x'] && this->getSkillOfSlot(SLOT_2) != NULL && !this->isPlayerUsingASkill())
+		else if (Input::keyStates['2'] && this->getSkillOfSlot(SLOT_2) != NULL && !this->isPlayerUsingASkill())
 			this->getSkillOfSlot(SLOT_2)->prepareExecution(this->currentDirection);
-		else if (Input::keyStates['c'] && this->getSkillOfSlot(SLOT_3) != NULL && !this->isPlayerUsingASkill())
+		else if (Input::keyStates['3'] && this->getSkillOfSlot(SLOT_3) != NULL && !this->isPlayerUsingASkill())
 			this->getSkillOfSlot(SLOT_3)->prepareExecution(this->currentDirection);
-		else if (Input::keyStates['v'] && this->getSkillOfSlot(SLOT_4) != NULL && !this->isPlayerUsingASkill())
+		else if (Input::keyStates['4'] && this->getSkillOfSlot(SLOT_4) != NULL && !this->isPlayerUsingASkill())
 			this->getSkillOfSlot(SLOT_4)->prepareExecution(this->currentDirection);
 
 		if (Input::leftMouseButton)
@@ -530,7 +542,7 @@ void Player::input(Map* map)
 	}
 }
 
-void Player::render(Shader* primitiveShader, TextRenderer* textRenderer, Shader* projectileShader)
+void Player::render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer, Shader* projectileShader)
 {
 	Entity::render(primitiveShader);
 	if (hpBar_shouldRender)
@@ -553,7 +565,7 @@ void Player::render(Shader* primitiveShader, TextRenderer* textRenderer, Shader*
 	{
 		try{
 			if (skill->isActive())
-				skill->render(primitiveShader, textRenderer);
+				skill->render(primitiveShader, skillShader, textRenderer);
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;

@@ -18,10 +18,22 @@ Player::Player(glm::vec3 initialPosition, std::vector<Monster*>* monsters, Map* 
 	equipments = std::vector<Equipment*>();
 	this->clientId = 0;
 	this->attributesChanged = false;
+	this->link = nullptr;
 }
 
 Player::~Player()
 {
+}
+
+Player* Player::getLink()
+{
+	return this->link;
+}
+
+void Player::setLink(Player* player)
+{
+	std::cout << "player " << this->getClientId() << " linked with player " << player->getClientId() << std::endl;
+	this->link = link;
 }
 
 unsigned short Player::getClientId()

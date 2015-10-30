@@ -27,7 +27,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Game\Skill\LinkSkill.cpp" />
     <ClCompile Include="src\Core\Game.cpp" />
     <ClCompile Include="src\Core\LinkedTime.cpp" />
     <ClCompile Include="src\Game\AI\AI.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="src\Network\PacketController.cpp" />
     <ClCompile Include="src\Network\UDPServer.cpp" />
     <ClCompile Include="src\ResourceLoad\ImageLoader.cpp" />
+    <ClCompile Include="src\Game\Skill\SwapSkill.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Game.h" />
@@ -185,6 +187,8 @@
     <ClInclude Include="include\Network\PacketController.h" />
     <ClInclude Include="include\Network\UDPServer.h" />
     <ClInclude Include="include\ResourceLoad\ImageLoader.h" />
+    <ClInclude Include="include\Game\Skill\LinkSkill.h" />
+    <ClInclude Include="include\Game\Skill\SwapSkill.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

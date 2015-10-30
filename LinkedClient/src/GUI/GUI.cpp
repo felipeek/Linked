@@ -6,6 +6,7 @@
 #include "Primitive.h"
 #include "GUIShader.h"
 #include "Chat.h"
+#include "Game.h"
 
 #include <sstream>
 #include <iostream>

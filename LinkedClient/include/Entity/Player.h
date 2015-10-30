@@ -53,6 +53,8 @@ public:
 	~Player();
 
 	/* BASIC ATTRIBUTES */
+	Player* getLink();
+	void setLink(Player* player);
 	short getClientId();	// multiplayer
 	void setClientId(short clientId);	// multiplayer
 	PlayerType getType();	// multiplayer
@@ -118,13 +120,14 @@ public:
 	/* METHODS RELATED TO INPUT, UPDATE AND RENDERING */
 	void update(Map* map);
 	void input(Map* map);
-	void render(Shader* primitiveShader, TextRenderer* textRenderer, Shader* projectileShader);
+	void render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer, Shader* projectileShader);
 
 	/* HPBAR RELATED */
 	void hpBarRenderOptions(bool shouldRender);
 	bool hpBar_shouldRender;
 private:
 	/* FUNDAMENTAL ATTRIBUTES */
+	Player* link;
 	short clientId;
 	std::string name;
 	unsigned int hp;

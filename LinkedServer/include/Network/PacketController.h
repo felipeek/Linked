@@ -18,6 +18,8 @@ class Game;
 class PacketController
 {
 public:
+	static Player* getPlayerOfClient(int clientId);
+
 	static void dispatch(ClientPacket* cp);
 
 	static UDPServer* udpServer;
@@ -49,8 +51,6 @@ private:
 	static void dispatchMsg(int id, int xid, char* data, int senderID);
 
 	static void sendEssentialGameInformationToClient(ClientInfo* client);
-
-	static Player* getPlayerOfClient(int clientId);
 
 	static void createPlayerOnAllClientsExcept(ClientInfo* client, Player* newPlayer);
 	static void createAllPlayersOnClient(ClientInfo* client);

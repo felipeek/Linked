@@ -31,6 +31,9 @@ public:
 	Player(glm::vec3 initialPosition, std::vector<Monster*>* monsters, Map* map);
 	~Player();
 
+	Player* getLink();
+	void setLink(Player* link);
+
 	/* NETWORK */
 	unsigned short getClientId();
 	void setClientId(unsigned short clientId);
@@ -97,6 +100,7 @@ public:
 
 private:
 	/* PLAYER ATTRIBUTES/STATUS */
+	Player* link;
 	unsigned short clientId;
 	bool attributesChanged;
 	std::string name;

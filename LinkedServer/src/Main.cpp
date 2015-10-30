@@ -12,9 +12,6 @@
 
 #define CONNECTION_CHECK_TIME 5
 
-
-
-
 using namespace std;
 
 int main(int argc, char** argv)
@@ -62,7 +59,7 @@ int main(int argc, char** argv)
 				if (pingToLastPong >= MAX_DC_TIME && pingToLastPong <= MAX_DC_TIME * 2)
 				{
 					// end of connection for time out
-					PacketController::disconnectClient((*server->getClients())[i]->id, true);
+				//	PacketController::disconnectClient((*server->getClients())[i]->id, true);
 				}
 			}
 			pingTime = 0;
