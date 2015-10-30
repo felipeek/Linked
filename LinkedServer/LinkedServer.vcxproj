@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Game\Skill\CureBlessingSkill.cpp" />
     <ClCompile Include="src\Game\Skill\LinkSkill.cpp" />
     <ClCompile Include="src\Core\Game.cpp" />
     <ClCompile Include="src\Core\LinkedTime.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="src\Game\Skill\SwapSkill.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Game\Skill\CureBlessingSkill.h" />
     <ClInclude Include="include\Core\Game.h" />
     <ClInclude Include="include\Core\LinkedTime.h" />
     <ClInclude Include="include\Game\AI\AI.h" />

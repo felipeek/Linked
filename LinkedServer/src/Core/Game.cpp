@@ -6,6 +6,7 @@
 #include "PacketController.h"
 #include "Projectile.h"
 #include "HoshoyoExplosionSkill.h"
+#include "CureBlessingSkill.h"
 #include "SwapSkill.h"
 #include "LinkSkill.h"
 
@@ -76,7 +77,7 @@ Player* Game::createNewPlayer(unsigned short clientId)
 	skill2->setSlot(SLOT_2);
 	newPlayer->addNewSkill(skill2);
 
-	Skill* skill3 = new HoshoyoExplosionSkill(PLAYER, &monsters, &players);
+	Skill* skill3 = new CureBlessingSkill(PLAYER, &monsters, &players);
 	skill3->setSlot(SLOT_3);
 	newPlayer->addNewSkill(skill3);
 
