@@ -126,7 +126,11 @@ void Chat::updateGameSingleplayer()
 {
 	if (Chat::msg != "")
 	{
-		if (gui != nullptr)
+		if (Chat::msg.compare("/wireframe") == 0)
+		{
+			Mesh::wireframe = !Mesh::wireframe;
+			Chat::msg = "";
+		} else if (gui != nullptr)
 			gui->setNextMessage(Chat::msg);
 		Chat::msg = "";
 	}

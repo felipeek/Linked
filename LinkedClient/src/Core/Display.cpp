@@ -56,13 +56,16 @@ void Display::startGlfw(int* argc, char** argv, std::string titulo)
 	glfwWindowHint(GLFW_OPENGL_CORE_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	window = glfwCreateWindow(WWID, WHEI, titulo.c_str(), NULL, NULL);
-	Display::showCursor(false);
+
 	if (!window)
 	{
 		std::cerr << "Error creating the window!" << std::endl;
 		glfwTerminate();
 		return;
 	}
+
+	// Hide cursor
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	
 	// Get monitor size
 	getSystemInfo();
@@ -250,12 +253,4 @@ void Display::focusedCallBack(GLFWwindow* window, int focused)
 	if (focused != 1)
 		Input::clear();
 
-}
-
-void Display::showCursor(bool show)
-{
-	if (show)
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	else
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 }

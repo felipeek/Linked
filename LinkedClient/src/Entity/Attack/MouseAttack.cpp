@@ -45,6 +45,11 @@ glm::vec2 MouseAttack::getScreenPos()
 	return this->screenPos;
 }
 
+glm::vec2 MouseAttack::getOrthoCoords()
+{
+	return glm::vec2(((float)WWID / (float)WHEI)*this->screenPos.x, this->screenPos.y);
+}
+
 glm::vec3 MouseAttack::attack()
 {
 	glm::vec3 attackVector = (glm::vec3(screenPos, 1.0f) * glm::vec3(VECTORSIZE, VECTORSIZE, 1));

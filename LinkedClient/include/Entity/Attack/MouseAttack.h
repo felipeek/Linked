@@ -22,6 +22,7 @@ public:
 	void setCamera(Camera* camera);
 	void update();
 	glm::vec2 getScreenPos();
+	glm::vec2 getOrthoCoords();
 private:
 	Camera* camera;
 	

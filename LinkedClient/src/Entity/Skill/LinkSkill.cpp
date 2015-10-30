@@ -12,7 +12,7 @@
 LinkSkill::LinkSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vector<Player*>* players, Player** localPlayer) : Skill(owner, monsters, players, localPlayer)
 {
 	/* AIM ENTITY */
-	Mesh* aimMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), ((float)(WHEI)/(float)10000), ((float)(WWID)/(float)10000)));
+	Mesh* aimMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.2f, 0.2f));
 	Transform* aimTransform = new Transform(glm::vec3(0, 0, 0), glm::vec3(0.7f , 0.7f, 0.7f));
 	Texture* aimTexture = new Texture("./res/Skills/small_aim.png");
 	this->aimEntity = new Entity(aimTransform, aimMesh, aimTexture);
@@ -37,7 +37,7 @@ void LinkSkill::prepareExecution(MovementDirection skillDirection)
 	{
 		this->active = true;
 		this->status = LinkSkillStatus::AIM;
-		//Display::showCursor(false);
+		Game::showCursor(false);
 	}
 }
 
@@ -59,7 +59,7 @@ bool LinkSkill::cancelIfPossible()
 	if (this->isActive() && this->status == LinkSkillStatus::AIM)
 	{
 		this->active = false;
-		//Display::showCursor(true);
+		Game::showCursor(true);
 		return true;
 	}
 	return false;
@@ -72,13 +72,13 @@ void LinkSkill::update()
 		if (this->status == LinkSkillStatus::AIM)
 		{
 			// mouse position related to window, not the world
-			glm::vec2 screenPos = Input::mouseAttack.getScreenPos();
+			glm::vec2 screenPos = Input::mouseAttack.getOrthoCoords();
 			glm::vec3 mousePos = glm::vec3(screenPos.x, screenPos.y, 0);
 			this->aimEntity->getTransform()->translate(mousePos.x, mousePos.y, 0);
 
 			if (Input::attack)
 			{
-				//Display::showCursor(true);
+				Game::showCursor(true);
 				Player* targetPlayer = this->getTargetPlayer();
 				if (targetPlayer != NULL)
 				{
