@@ -3,6 +3,8 @@
 
 enum class SwapSkillStatus
 {
+	IDLE,
+	WAITING_FOR_SERVER_RESPONSE,
 	ANIMATION,
 	EXECUTION
 };
