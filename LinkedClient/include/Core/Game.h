@@ -1,7 +1,5 @@
 #pragma once
 
-#include "UDPClient.h"
-
 #include <glm\glm.hpp>
 
 #include <vector>
@@ -39,6 +37,7 @@ class TextRenderer;
 class FrameBuffer;
 class Shader;
 class Cursor;
+class UDPClient;
 
 class Game
 {

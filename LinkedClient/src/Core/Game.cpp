@@ -40,6 +40,7 @@
 
 #include "Packet.h"
 #include "PacketController.h"
+#include "UDPClient.h"
 
 #include "FrameBuffer.h"
 
