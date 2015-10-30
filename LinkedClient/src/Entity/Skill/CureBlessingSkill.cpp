@@ -52,9 +52,7 @@ void CureBlessingSkill::execute(MovementDirection skillDirection, glm::vec3 skil
 	Player* targetPlayer = PacketController::getPlayerOfClient(targetCreatureId);
 
 	if (targetPlayer != nullptr && this->owner == PLAYER)
-	{
 		targetPlayer->setHp(round((CURE_BLESSING_SKILL_PERCENTAGE/100.0f)*(float)targetPlayer->getTotalMaximumHp()));
-	}
 }
 bool CureBlessingSkill::cancelIfPossible()
 {

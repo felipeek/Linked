@@ -1,5 +1,4 @@
 #pragma once
-#include "Game.h"
 
 #include <string>
 #include <GL/glew.h>
