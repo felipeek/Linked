@@ -1,10 +1,12 @@
 #include "Skill.h"
+#include "LinkedTime.h"
 
-Skill::Skill(std::vector<Monster*> *monsters)
+Skill::Skill(SkillOwner owner, std::vector<Monster*> *monsters, std::vector<Player*>* players)
 {
 	slot = SLOT_1;
 	active = false;
 	this->monsters = monsters;
+	this->owner = owner;
 }
 
 Skill::~Skill()
@@ -34,4 +36,39 @@ WorldObject* Skill::getWorldObject()
 void Skill::setWorldObject(WorldObject* worldObject)
 {
 	this->worldObject = worldObject;
+}
+
+void Skill::setSkillOwner(SkillOwner owner)
+{
+	this->owner = owner;
+}
+
+SkillOwner Skill::getSkillOwner() const
+{
+	return this->owner;
+}
+
+int Skill::getCooldown() const
+{
+	return this->cooldown;
+}
+
+bool Skill::isOnCooldown() const
+{
+	if ((LinkedTime::getTime() - cooldownContage) < (double)cooldown)
+		return false;
+	else
+		return true;
+}
+
+/* PRIVATE */
+
+void Skill::startCooldownContage()
+{
+	this->cooldownContage = LinkedTime::getTime();
+}
+
+void Skill::resetCooldownContageForcibly()
+{
+	this->cooldownContage = 0;
 }

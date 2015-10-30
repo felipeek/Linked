@@ -21,14 +21,16 @@ public:
 
 	void setCamera(Camera* camera);
 	void update();
+	glm::vec2 getScreenPos();
 private:
 	Camera* camera;
-	glm::vec2 screenPos;
+	
 	glm::vec3 mouseIntersection;
 	double lastTime;
-	glm::vec3 rayWorld;
+	
 
 	void calculateIntersection(glm::vec3& worldRay, glm::vec3& cameraPosition);
-	
+	glm::vec3 rayWorld;
+	glm::vec2 screenPos;
 };
 

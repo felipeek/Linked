@@ -1,6 +1,6 @@
 #include "Skill.h"
 
-enum SkillStatus
+enum class HoshoyoExplosionSkillStatus
 {
 	AIM,
 	EXECUTION
@@ -10,10 +10,10 @@ enum SkillStatus
 class HoshoyoExplosionSkill : public Skill
 {
 public:
-	HoshoyoExplosionSkill(std::vector<Monster*>* monsters);
+	HoshoyoExplosionSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vector<Player*>* players, Player** localPlayer);
 	~HoshoyoExplosionSkill();
 
-	void render(Shader* primitiveShader, TextRenderer* textRenderer);
+	void render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer);
 	void prepareExecution(MovementDirection skillDirection);
 	void execute(MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId);
 	bool cancelIfPossible();
@@ -22,7 +22,7 @@ private:
 	void hitEnemiesOnSkillRadius();
 	
 	Entity* aimEntity;
-	SkillStatus status;
+	HoshoyoExplosionSkillStatus status;
 	glm::vec3 explosionPosition;
 
 	int currentExplosionTextureIndex;

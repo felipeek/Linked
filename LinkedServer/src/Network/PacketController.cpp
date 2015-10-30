@@ -282,15 +282,6 @@ void PacketController::disconnectClient(int clientId, bool timedOut)
 	}
 }
 
-Player* PacketController::getPlayerOfClient(int clientId)
-{
-	for (Player* player : *PacketController::players)
-		if (player->getClientId() == clientId)
-			return player;
-
-	return NULL;
-}
-
 void PacketController::sendEssentialGameInformationToClient(ClientInfo* client)
 {
 	Player* player = PacketController::game->createNewPlayer(udpServer->getClients()->back()->id);
@@ -647,4 +638,13 @@ void PacketController::dispatchMsg(int id, int xid, char* data, int senderID)
 			udpServer->sendPackets(Packet(msg, senderID), (*udpServer->getClients())[receiverIndex]->netInfo);
 	}
 	
+}
+
+Player* PacketController::getPlayerOfClient(int clientId)
+{
+	for (Player* player : *(PacketController::players))
+		if (player->getClientId() == clientId)
+			return player;
+
+	return NULL;
 }

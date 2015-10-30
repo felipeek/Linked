@@ -56,7 +56,7 @@ void Display::startGlfw(int* argc, char** argv, std::string titulo)
 	glfwWindowHint(GLFW_OPENGL_CORE_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	window = glfwCreateWindow(WWID, WHEI, titulo.c_str(), NULL, NULL);
-
+	Display::showCursor(false);
 	if (!window)
 	{
 		std::cerr << "Error creating the window!" << std::endl;
@@ -208,8 +208,8 @@ void Display::mouseCallBack(GLFWwindow* window, int button, int action, int mods
 	glfwGetWindowSize(window, &width, &height);
 
 	const float aspect = (float)width / height;
-	float screenX = ((float)x / width - 0.5f) * aspect;
-	float screenY = -((float)y / height - 0.5f) * aspect;
+	float screenX = ((float)x * 2 / width - 1.0f);
+	float screenY = -((float)y * 2 / height - 1.0f);
 	
 	if (button == 0)
 	{
@@ -232,8 +232,8 @@ void Display::mousePosCallBack(GLFWwindow* window, double x, double y)
 	glfwGetWindowSize(window, &width, &height);
 
 	const float aspect = (float)width / height;
-	float screenX = ((float)x / width - 0.5f) * aspect;
-	float screenY = -((float)y / height - 0.5f);
+	float screenX = ((float)x * 2 / width - 1.0f);
+	float screenY = -((float)y * 2 / height - 1.0f);
 
 	Input::mouseAttack.setAttackPos(screenX, screenY);
 	Input::mouseAttack.setMouseCoords((int)x, (int)y);
@@ -249,4 +249,12 @@ void Display::focusedCallBack(GLFWwindow* window, int focused)
 	if (focused != 1)
 		Input::clear();
 
+}
+
+void Display::showCursor(bool show)
+{
+	if (show)
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	else
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 }

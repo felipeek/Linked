@@ -22,6 +22,7 @@
 #include "GUIShader.h"
 #include "CommonShader.h"
 #include "TextShader.h"
+#include "SkillShader.h"
 #include "Light.h"
 
 #include "RangeAttack.h"
@@ -32,6 +33,8 @@
 #include "HPBar.h"
 #include "ZurikiRageSkill.h"
 #include "HoshoyoExplosionSkill.h"
+#include "SwapSkill.h"
+#include "LinkSkill.h"
 
 #include "Packet.h"
 #include "PacketController.h"
@@ -47,9 +50,15 @@ int Game::server_port = 9090;
 std::string Game::server_ip = "127.0.0.1";
 //std::string Game::server_ip = "201.21.40.57";
 
+Entity *e;
 Game::Game(int windowWidth, int windowHeight)
 	: windowWidth(windowWidth), windowHeight(windowHeight)
 {	
+	Transform* t = new Transform(glm::vec3(0, 0, 0), glm::vec3(0.5f, 0.5f, 0.5f));
+	Mesh* m = new Mesh(new Quad(glm::vec3(0, 0, 0), ((float)(WHEI) / (float)10000), ((float)(WWID) / (float)10000)));
+	Texture* tx = new Texture("./res/Textures/target.png");
+	e = new Entity(t,m,tx);
+
 	PacketController::game = this;
 
 	this->createGraphicElements(windowWidth, windowHeight);
@@ -130,6 +139,7 @@ void Game::createGraphicElements(int windowWidth, int windowHeight)
 	this->commonShader = new CommonShader("./shaders/commonshader", camera, light);
 	this->projectileShader = new CommonShader("./shaders/projectile", camera, light);
 	this->mapShader = new MapShader("./shaders/mapshader_shadow", camera, light);
+	this->skillShader = new SkillShader("./shaders/fontshader");
 
 	// Shadows
 	frameBuffer = new FrameBuffer(SHADOW_BUFFER_SIZE, SHADOW_BUFFER_SIZE);
@@ -155,6 +165,7 @@ void Game::createOfflinePlayer()
 	this->localPlayer = new Player(new Transform(glm::vec3(440, 500, PLAYER_HEIGHT), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"), &monsters, map);
 	this->localPlayer->setHp(100);
 	this->localPlayer->setName("JaOwnes");
+	this->localPlayer->setClientId(0);
 	PacketController::localPlayer = localPlayer;
 
 	this->localPlayer->setSpeedBasis(26);
@@ -162,19 +173,19 @@ void Game::createOfflinePlayer()
 	this->localPlayer->setDefenseBasis(100);
 	this->localPlayer->setMagicalPowerBasis(20);
 	// TODO delete skill1, 2, 3, 4
-	Skill* skill1 = new HoshoyoExplosionSkill(&monsters);
+	Skill* skill1 = new LinkSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
 	skill1->setSlot(SLOT_1);
 	localPlayer->addNewSkill(skill1);
 	
-	Skill* skill2 = new HoshoyoExplosionSkill(&monsters);
+	Skill* skill2 = new SwapSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
 	skill2->setSlot(SLOT_2);
 	localPlayer->addNewSkill(skill2);
 	
-	Skill* skill3 = new HoshoyoExplosionSkill(&monsters);
+	Skill* skill3 = new HoshoyoExplosionSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
 	skill3->setSlot(SLOT_3);
 	localPlayer->addNewSkill(skill3);
 	
-	Skill* skill4 = new HoshoyoExplosionSkill(&monsters);
+	Skill* skill4 = new HoshoyoExplosionSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
 	skill4->setSlot(SLOT_4);
 	localPlayer->addNewSkill(skill4);
 }
@@ -213,19 +224,19 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 	designedPlayer->setTotalAttackSpeed(data[7]);
 
 	/* FOR NOW, SKILLS MUST BE THE SAME AS THEY ARE DEFINED SERVER-SIDE (SAME SLOTS, ALSO) */
-	Skill* skill1 = new HoshoyoExplosionSkill(&monsters);
+	Skill* skill1 = new LinkSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
 	skill1->setSlot(SLOT_1);
 	designedPlayer->addNewSkill(skill1);
 
-	Skill* skill2 = new HoshoyoExplosionSkill(&monsters);
+	Skill* skill2 = new SwapSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
 	skill2->setSlot(SLOT_2);
 	designedPlayer->addNewSkill(skill2);
 
-	Skill* skill3 = new HoshoyoExplosionSkill(&monsters);
+	Skill* skill3 = new HoshoyoExplosionSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
 	skill3->setSlot(SLOT_3);
 	designedPlayer->addNewSkill(skill3);
 
-	Skill* skill4 = new HoshoyoExplosionSkill(&monsters);
+	Skill* skill4 = new HoshoyoExplosionSkill(PLAYER,&monsters, &onlinePlayers, &localPlayer);
 	skill4->setSlot(SLOT_4);
 	designedPlayer->addNewSkill(skill4);
 
@@ -332,7 +343,6 @@ void Game::createMonster(short* data)
 
 Monster* Game::getMonsterOfId(int id)
 {
-
 	for (unsigned int i = 0; i < monsters.size(); i++)
 		if (monsters[i]->getId() == id)
 			return monsters[i];
@@ -415,7 +425,7 @@ void Game::renderFirstPass()
 
 	// Player
 	localPlayer->hpBarRenderOptions(false);
-	localPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
+	localPlayer->render(primitiveShader, skillShader, gui->getTextRenderer(), projectileShader);
 
 	// Second Player
 	if (Game::multiplayer)
@@ -423,7 +433,7 @@ void Game::renderFirstPass()
 		for (Player* player : this->onlinePlayers)
 		{
 			player->hpBarRenderOptions(false);
-			player->render(primitiveShader, gui->getTextRenderer(), projectileShader);
+			player->render(primitiveShader, skillShader, gui->getTextRenderer(), projectileShader);
 		}
 	}
 }
@@ -480,7 +490,7 @@ void Game::renderSecondsPass()
 	
 	// Player
 	localPlayer->hpBarRenderOptions(true);
-	localPlayer->render(primitiveShader, gui->getTextRenderer(), projectileShader);
+	localPlayer->render(primitiveShader, skillShader, gui->getTextRenderer(), projectileShader);
 	
 	// Second Player
 	if (Game::multiplayer)
@@ -488,7 +498,7 @@ void Game::renderSecondsPass()
 		for (Player* player : this->onlinePlayers)
 		{
 			player->hpBarRenderOptions(true);
-			player->render(primitiveShader, gui->getTextRenderer(), projectileShader);
+			player->render(primitiveShader, skillShader, gui->getTextRenderer(), projectileShader);
 		}
 			
 	}
@@ -496,6 +506,10 @@ void Game::renderSecondsPass()
 	Mesh::isGUI = true;
 	gui->render();
 	Mesh::isGUI = false;
+	
+	
+	e->getTransform()->translate(Input::mouseAttack.getScreenPos().x, Input::mouseAttack.getScreenPos().y, 0);
+	e->render(skillShader);
 }
 
 void Game::update()

@@ -120,7 +120,7 @@ public:
 	/* METHODS RELATED TO INPUT, UPDATE AND RENDERING */
 	void update(Map* map);
 	void input(Map* map);
-	void render(Shader* primitiveShader, TextRenderer* textRenderer, Shader* projectileShader);
+	void render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer, Shader* projectileShader);
 
 	/* HPBAR RELATED */
 	void hpBarRenderOptions(bool shouldRender);

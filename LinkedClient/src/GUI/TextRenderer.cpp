@@ -179,3 +179,8 @@ void TextRenderer::renderText(unsigned char* text, int textSize, GLfloat x, GLfl
 	glBindTexture(GL_TEXTURE_2D, 0);
 	this->shader->stopShader();
 }
+
+Shader* TextRenderer::getShader()
+{
+	return this->shader;
+}

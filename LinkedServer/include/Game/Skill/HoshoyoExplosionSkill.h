@@ -4,7 +4,7 @@
 class HoshoyoExplosionSkill : public Skill
 {
 public:
-	HoshoyoExplosionSkill(std::vector<Monster*>* monsters);
+	HoshoyoExplosionSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vector<Player*>* players);
 	~HoshoyoExplosionSkill();
 
 	void execute(MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId);

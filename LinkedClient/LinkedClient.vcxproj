@@ -33,7 +33,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -151,6 +151,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Shaders\Classes\SkillShader.cpp" />
+    <ClCompile Include="src\Entity\Skill\LinkSkill.cpp" />
     <ClCompile Include="src\Core\Display.cpp" />
     <ClCompile Include="src\Core\Game.cpp" />
     <ClCompile Include="src\Core\Input.cpp" />
@@ -211,6 +213,7 @@
     <ClCompile Include="src\Shaders\Classes\PrimitiveShader.cpp" />
     <ClCompile Include="src\Shaders\Classes\Shader.cpp" />
     <ClCompile Include="src\Shaders\Classes\TextShader.cpp" />
+    <ClCompile Include="src\Entity\Skill\SwapSkill.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Display.h" />
@@ -272,6 +275,9 @@
     <ClInclude Include="include\Shaders\Classes\PrimitiveShader.h" />
     <ClInclude Include="include\Shaders\Classes\Shader.h" />
     <ClInclude Include="include\Shaders\Classes\TextShader.h" />
+    <ClInclude Include="include\Entity\Skill\LinkSkill.h" />
+    <ClInclude Include="include\Entity\Skill\SwapSkill.h" />
+    <ClInclude Include="include\Shaders\Classes\SkillShader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
