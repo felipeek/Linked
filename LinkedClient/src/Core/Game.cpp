@@ -16,6 +16,7 @@
 #include "Projectile.h"
 #include "Player.h"
 
+#include "Cursor.h"
 #include "Camera.h"
 #include "PrimitiveShader.h"
 #include "MapShader.h"
@@ -126,10 +127,7 @@ Game::~Game()
 void Game::createGraphicElements(int windowWidth, int windowHeight)
 {
 	// Cursor
-	Transform* t = new Transform(glm::vec3(0, 0, 0), glm::vec3(0.3f, 0.3f, 0.3f));
-	Mesh* m = new Mesh(new Quad(glm::vec3(0, 0, 0), ((float)(WHEI) / (float)10000), ((float)(WWID) / (float)10000)));
-	Texture* tx = new Texture("./res/Textures/target.png");
-	cursor = new Entity(t, m, tx);
+	this->cursor = new Cursor();
 
 	// Camera
 	this->camera = new Camera(glm::vec3(0, 0, 50), glm::vec3(0, 0, 0), 70.0f, (float)windowWidth / windowHeight, 0.1f, 1000.0f);
@@ -558,8 +556,7 @@ void Game::update()
 	gui->update();
 
 	// Cursor update
-	cursor->getTransform()->translate(Input::mouseAttack.getScreenPos().x, Input::mouseAttack.getScreenPos().y, 0);
-	//cursor->getTransform()->rotate(m2, glm::vec3(0, 0, 1));
+	cursor->update();
 }
 
 void Game::input()

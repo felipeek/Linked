@@ -1,5 +1,6 @@
 #include "SkillShader.h"
 
+#include "Display.h"
 #include "Entity.h"
 #include "Primitive.h"
 
@@ -23,9 +24,11 @@ void SkillShader::getUniformLocations()
 
 void SkillShader::update()
 {
+	glm::mat4 ortho = glm::ortho(-(float)WWID/WHEI, (float)WWID/WHEI, -1.0f, 1.0f);
+	glm::mat4 finalMatrix = ortho * entity->getTransform()->model;
 	glActiveTexture(GL_TEXTURE0);
 	glUniform1i(uniform_TexSampler, 0);
-	glUniformMatrix4fv(uniform_Model, 1, GL_FALSE, &entity->getTransform()->model[0][0]);
+	glUniformMatrix4fv(uniform_Model, 1, GL_FALSE, &finalMatrix[0][0]);
 
 	glUniform2fv(uniform_textureOffset, 1, &entity->getMesh()->getQuad()->getTextureOffset()[0]);
 	glUniform1f(uniform_textureNumRows, entity->getMesh()->getQuad()->getTextureNumRows());

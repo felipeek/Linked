@@ -38,6 +38,7 @@ class GUI;
 class TextRenderer;
 class FrameBuffer;
 class Shader;
+class Cursor;
 
 class Game
 {
@@ -77,7 +78,7 @@ private:
 	void loadMonstersAndEntities(bool loadMonsters, bool loadEntities);
 
 	/* GAME GRAPHIC ELEMENTS */
-	Entity* cursor;
+	Cursor* cursor;
 	Camera* camera;
 	Light* light;
 	CommonShader* commonShader;
@@ -113,6 +114,7 @@ private:
 	void renderSecondsPass();
 
 	static bool mShowCursor;
+	double cursorRot = 0;
 	double lastTime;
 };
 
