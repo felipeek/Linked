@@ -37,7 +37,7 @@ void LinkSkill::prepareExecution(MovementDirection skillDirection)
 	{
 		this->active = true;
 		this->status = LinkSkillStatus::AIM;
-		//Display::showCursor(false);
+		Game::showCursor(false);
 	}
 }
 
@@ -59,7 +59,7 @@ bool LinkSkill::cancelIfPossible()
 	if (this->isActive() && this->status == LinkSkillStatus::AIM)
 	{
 		this->active = false;
-		//Display::showCursor(true);
+		Game::showCursor(true);
 		return true;
 	}
 	return false;
@@ -78,7 +78,7 @@ void LinkSkill::update()
 
 			if (Input::attack)
 			{
-				//Display::showCursor(true);
+				Game::showCursor(true);
 				Player* targetPlayer = this->getTargetPlayer();
 				if (targetPlayer != NULL)
 				{

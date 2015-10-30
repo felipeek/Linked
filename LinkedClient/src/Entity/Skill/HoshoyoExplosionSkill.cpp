@@ -55,6 +55,7 @@ void HoshoyoExplosionSkill::prepareExecution(MovementDirection skillDirection)
 	{
 		this->active = true;
 		this->status = HoshoyoExplosionSkillStatus::AIM;
+		Game::showCursor(false);
 	}
 }
 
@@ -70,6 +71,7 @@ void HoshoyoExplosionSkill::update()
 
 			if (Input::attack)
 			{
+				Game::showCursor(true);
 				if (Game::multiplayer)
 				{
 					PacketController::sendSkillToServer(this->getSlot(), TOP, mousePos, 0);
@@ -105,6 +107,7 @@ bool HoshoyoExplosionSkill::cancelIfPossible()
 {
 	if (this->isActive() && this->status == HoshoyoExplosionSkillStatus::AIM)
 	{
+		Game::showCursor(true);
 		this->active = false;
 		return true;
 	}

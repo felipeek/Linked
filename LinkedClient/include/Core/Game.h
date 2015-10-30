@@ -56,6 +56,7 @@ public:
 	/* AUXILIAR METHODS */
 	Monster* getMonsterOfId(int id);
 	void destroyProjectileOfId(int id);
+	static void showCursor(bool show);
 
 	/* RENDER & UPDATE*/
 	void render();
@@ -76,6 +77,7 @@ private:
 	void loadMonstersAndEntities(bool loadMonsters, bool loadEntities);
 
 	/* GAME GRAPHIC ELEMENTS */
+	Entity* cursor;
 	Camera* camera;
 	Light* light;
 	CommonShader* commonShader;
@@ -110,6 +112,7 @@ private:
 	void renderFirstPass();
 	void renderSecondsPass();
 
+	static bool mShowCursor;
 	double lastTime;
 };
 

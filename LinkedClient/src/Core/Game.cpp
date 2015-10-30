@@ -50,15 +50,11 @@ int Game::server_port = 9090;
 std::string Game::server_ip = "127.0.0.1";
 //std::string Game::server_ip = "201.21.40.57";
 
-Entity *e;
+bool Game::mShowCursor = true;
+
 Game::Game(int windowWidth, int windowHeight)
 	: windowWidth(windowWidth), windowHeight(windowHeight)
 {	
-	Transform* t = new Transform(glm::vec3(0, 0, 0), glm::vec3(0.5f, 0.5f, 0.5f));
-	Mesh* m = new Mesh(new Quad(glm::vec3(0, 0, 0), ((float)(WHEI) / (float)10000), ((float)(WWID) / (float)10000)));
-	Texture* tx = new Texture("./res/Textures/target.png");
-	e = new Entity(t,m,tx);
-
 	PacketController::game = this;
 
 	this->createGraphicElements(windowWidth, windowHeight);
@@ -81,12 +77,14 @@ Game::Game(int windowWidth, int windowHeight)
 
 Game::~Game()
 {
+	if (cursor != nullptr) delete cursor;
 	if (camera != nullptr) delete camera;
 	if (light != nullptr) delete light;
 	if (primitiveShader != nullptr) delete primitiveShader;
 	if (projectileShader != nullptr) delete projectileShader;
 	if (mapShader != nullptr) delete mapShader;
 	if (commonShader != nullptr) delete commonShader;
+	if (skillShader != nullptr) delete skillShader;
 	if (monsterFactory != nullptr) delete monsterFactory;
 	if (gameEntityFactory != nullptr) delete gameEntityFactory;
 	if (this->map != nullptr) delete map;
@@ -127,6 +125,12 @@ Game::~Game()
 
 void Game::createGraphicElements(int windowWidth, int windowHeight)
 {
+	// Cursor
+	Transform* t = new Transform(glm::vec3(0, 0, 0), glm::vec3(0.5f, 0.5f, 0.5f));
+	Mesh* m = new Mesh(new Quad(glm::vec3(0, 0, 0), ((float)(WHEI) / (float)10000), ((float)(WWID) / (float)10000)));
+	Texture* tx = new Texture("./res/Textures/target.png");
+	cursor = new Entity(t, m, tx);
+
 	// Camera
 	this->camera = new Camera(glm::vec3(0, 0, 50), glm::vec3(0, 0, 0), 70.0f, (float)windowWidth / windowHeight, 0.1f, 1000.0f);
 	Input::mouseAttack.setCamera(this->camera);
@@ -363,6 +367,11 @@ void Game::destroyProjectileOfId(int id)
 			}
 }
 
+void Game::showCursor(bool show)
+{
+	Game::mShowCursor = show;
+}
+
 void Game::render()
 {
 	/* FIRST PASS (SHADOW PASS) */
@@ -506,10 +515,9 @@ void Game::renderSecondsPass()
 	Mesh::isGUI = true;
 	gui->render();
 	Mesh::isGUI = false;
-	
-	
-	e->getTransform()->translate(Input::mouseAttack.getScreenPos().x, Input::mouseAttack.getScreenPos().y, 0);
-	e->render(skillShader);
+
+	if (Game::mShowCursor)
+		cursor->render(skillShader);
 }
 
 void Game::update()
@@ -548,6 +556,10 @@ void Game::update()
 	
 	// GUI update
 	gui->update();
+
+	// Cursor update
+	cursor->getTransform()->translate(Input::mouseAttack.getScreenPos().x, Input::mouseAttack.getScreenPos().y, 0);
+	//cursor->getTransform()->rotate(m2, glm::vec3(0, 0, 1));
 }
 
 void Game::input()
