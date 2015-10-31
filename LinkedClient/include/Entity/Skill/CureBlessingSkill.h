@@ -27,5 +27,6 @@ private:
 	CureBlessingSkillStatus status;
 	Player* getTargetPlayer();
 	bool checkCooldown = false;
+	float cursorRot;
 };
 

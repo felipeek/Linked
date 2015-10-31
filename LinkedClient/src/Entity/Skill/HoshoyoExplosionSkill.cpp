@@ -4,6 +4,7 @@
 #include "SkillIcon.h"
 #include "Monster.h"
 #include "Game.h"
+#include "Cursor.h"
 #include "PacketController.h"
 #include "TextRenderer.h"
 
@@ -16,6 +17,13 @@ HoshoyoExplosionSkill::HoshoyoExplosionSkill(SkillOwner owner, std::vector<Monst
 	Transform* aimTransform = new Transform(glm::vec3(0, 0, 0.1f), 0, glm::vec3(1, 0, 0), glm::vec3(10, 10, 10));
 	Texture* aimTexture = new Texture("./res/Skills/aim.png");
 	this->aimEntity = new Entity(aimTransform, aimMesh, aimTexture);
+	this->cursorRot = 0;
+
+	/* RANGE ENTITY */
+	Mesh* rangeMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 1, 12));
+	Transform* rangeTransform = new Transform(glm::vec3(0, 0, 0.1f), 0, glm::vec3(1, 0, 0), glm::vec3(HOSHOYO_EXPLOSION_SKILL_MAX_RADIUS, HOSHOYO_EXPLOSION_SKILL_MAX_RADIUS, HOSHOYO_EXPLOSION_SKILL_MAX_RADIUS));
+	Texture* rangeTexture = new Texture("./res/Skills/range.png");
+	this->rangeEntity = new Entity(rangeTransform, rangeMesh, rangeTexture);
 
 	/* EXPLOSION ENTITY (THIS) */
 	Mesh* hoshoyoExplosionMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 9, 12));
@@ -35,12 +43,19 @@ HoshoyoExplosionSkill::~HoshoyoExplosionSkill()
 {
 	if (this->aimEntity != NULL)
 		delete this->aimEntity;
+	if (this->rangeEntity != NULL)
+		delete this->rangeEntity;
 }
 
 void HoshoyoExplosionSkill::render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer)
 {
 	if (this->status == HoshoyoExplosionSkillStatus::AIM)
+	{
+		primitiveShader->activateAlphaBlend();
 		this->aimEntity->render(primitiveShader);
+		this->rangeEntity->render(primitiveShader);
+		primitiveShader->deactivateAlphaBlend();
+	}
 	else if (this->status == HoshoyoExplosionSkillStatus::EXECUTION)
 	{
 		Entity::render(primitiveShader);
@@ -56,7 +71,7 @@ void HoshoyoExplosionSkill::prepareExecution(MovementDirection skillDirection)
 	{
 		this->active = true;
 		this->status = HoshoyoExplosionSkillStatus::AIM;
-		Game::showCursor(false);
+		Game::cursor->hideCursor();
 	}
 }
 
@@ -68,18 +83,33 @@ void HoshoyoExplosionSkill::update()
 		{
 			// mouse position related to the world, not the window
 			glm::vec3 mousePos = Input::mouseAttack.getMouseIntersection();
-			this->aimEntity->getTransform()->translate(mousePos.x, mousePos.y, 0.1f);
+			glm::vec3 entityPos = this->entity->getTransform()->getPosition();
+			float diff = glm::length(mousePos - entityPos);
+			if (diff < (float)(HOSHOYO_EXPLOSION_SKILL_MAX_RADIUS - 1))
+			{
+				this->aimEntity->getTransform()->translate(mousePos.x, mousePos.y, 0.1f);
+				Game::cursor->hideCursor();
+			}
+			else
+			{
+				glm::vec3 v = (float)(HOSHOYO_EXPLOSION_SKILL_MAX_RADIUS - 1)*glm::normalize(mousePos - entityPos);
+				this->aimEntity->getTransform()->translate((entityPos+v).x, (entityPos + v).y, 0.1f);
+				Game::cursor->showCursor();
+			}
+			this->aimEntity->getTransform()->rotate(cursorRot, glm::vec3(0, 0, 1));
+			cursorRot += CURSOR_ROTATION_SPEED;
+			this->rangeEntity->getTransform()->translate(entityPos.x, entityPos.y, 0.1f);
 
 			if (Input::attack)
 			{
-				Game::showCursor(true);
+				Game::cursor->showCursor();
 				if (Game::multiplayer)
 				{
-					PacketController::sendSkillToServer(this->getSlot(), TOP, mousePos, 0);
+					PacketController::sendSkillToServer(this->getSlot(), TOP, this->aimEntity->getTransform()->getPosition(), 0);
 				}
 				else
 				{
-					this->execute(TOP, mousePos, 0);
+					this->execute(TOP, this->aimEntity->getTransform()->getPosition(), 0);
 				}
 			}
 		}
@@ -108,7 +138,7 @@ bool HoshoyoExplosionSkill::cancelIfPossible()
 {
 	if (this->isActive() && this->status == HoshoyoExplosionSkillStatus::AIM)
 	{
-		Game::showCursor(true);
+		Game::cursor->showCursor();
 		this->active = false;
 		return true;
 	}

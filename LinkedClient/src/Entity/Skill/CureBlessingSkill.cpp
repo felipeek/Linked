@@ -3,6 +3,7 @@
 #include "SkillIcon.h"
 #include "PacketController.h"
 #include "Game.h"
+#include "Cursor.h"
 #include "Input.h"
 #include "Player.h"
 
@@ -12,7 +13,7 @@ CureBlessingSkill::CureBlessingSkill(SkillOwner owner, std::vector<Monster*>* mo
 {
 	/* AIM ENTITY */
 	Mesh* aimMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.2f, 0.2f));
-	Transform* aimTransform = new Transform(glm::vec3(0, 0, 0), glm::vec3(0.7f, 0.7f, 0.7f));
+	Transform* aimTransform = new Transform(glm::vec3(0, 0, 0), glm::vec3(0.5f, 0.5f, 0.5f));
 	Texture* aimTexture = new Texture("./res/Skills/small_aim.png");
 	this->aimEntity = new Entity(aimTransform, aimMesh, aimTexture);
 
@@ -23,10 +24,13 @@ CureBlessingSkill::CureBlessingSkill(SkillOwner owner, std::vector<Monster*>* mo
 
 	this->status = CureBlessingSkillStatus::IDLE;
 	this->cooldown = CURE_BLESSING_SKILL_COOLDOWN;
+	this->cursorRot = 0;
 }
 
 CureBlessingSkill::~CureBlessingSkill()
 {
+	if (this->aimEntity != NULL)
+		delete this->aimEntity;
 }
 
 void CureBlessingSkill::render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer)
@@ -40,7 +44,7 @@ void CureBlessingSkill::prepareExecution(MovementDirection skillDirection)
 	{
 		this->active = true;
 		this->status = CureBlessingSkillStatus::AIM;
-		Game::showCursor(false);
+		Game::cursor->hideCursor();
 	}
 }
 void CureBlessingSkill::execute(MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId)
@@ -59,7 +63,7 @@ bool CureBlessingSkill::cancelIfPossible()
 	if (this->isActive() && this->status == CureBlessingSkillStatus::AIM)
 	{
 		this->active = false;
-		Game::showCursor(true);
+		Game::cursor->showCursor();
 		this->status = CureBlessingSkillStatus::IDLE;
 		return true;
 	}
@@ -75,10 +79,12 @@ void CureBlessingSkill::update()
 			glm::vec2 screenPos = Input::mouseAttack.getOrthoCoords();
 			glm::vec3 mousePos = glm::vec3(screenPos.x, screenPos.y, 0);
 			this->aimEntity->getTransform()->translate(mousePos.x, mousePos.y, 0);
+			this->aimEntity->getTransform()->rotate(cursorRot, glm::vec3(0, 0, 1));
+			cursorRot += CURSOR_ROTATION_SPEED;
 
 			if (Input::attack)
 			{
-				Game::showCursor(true);
+				Game::cursor->showCursor();
 				Player* targetPlayer = this->getTargetPlayer();
 				if (targetPlayer != NULL && targetPlayer->isAlive() == false)
 				{

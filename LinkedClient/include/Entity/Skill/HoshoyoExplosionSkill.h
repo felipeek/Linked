@@ -1,6 +1,8 @@
 #pragma once
 #include "Skill.h"
 
+#define HOSHOYO_EXPLOSION_SKILL_MAX_RADIUS 40
+
 enum class HoshoyoExplosionSkillStatus
 {
 	AIM,
@@ -23,9 +25,11 @@ private:
 	void hitEnemiesOnSkillRadius();
 	
 	Entity* aimEntity;
+	Entity* rangeEntity;
 	HoshoyoExplosionSkillStatus status;
 	glm::vec3 explosionPosition;
 
 	int currentExplosionTextureIndex;
+	float cursorRot;
 };
 

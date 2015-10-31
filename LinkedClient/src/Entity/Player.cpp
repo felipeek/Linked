@@ -565,7 +565,7 @@ void Player::render(Shader* primitiveShader, Shader* skillShader, TextRenderer* 
 	{
 		try{
 			if (skill->isActive())
-				skill->render(primitiveShader, skillShader, textRenderer);
+				skill->render(primitiveShader/*projectileShader*/, skillShader, textRenderer);
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
