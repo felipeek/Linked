@@ -49,12 +49,12 @@
 #include <iostream>
 #include <string>
 
-bool Game::multiplayer = false;
+bool Game::multiplayer = true;
 int Game::server_port = 9090;
 //std::string Game::server_ip = "127.0.0.1";
 std::string Game::server_ip = "201.21.40.57";
 
-bool Game::mShowCursor = true;
+Cursor* Game::cursor = nullptr;
 
 Game::Game(int windowWidth, int windowHeight)
 	: windowWidth(windowWidth), windowHeight(windowHeight)
@@ -130,7 +130,7 @@ Game::~Game()
 void Game::createGraphicElements(int windowWidth, int windowHeight)
 {
 	// Cursor
-	this->cursor = new Cursor();
+	Game::cursor = new Cursor();
 
 	// Camera
 	this->camera = new Camera(glm::vec3(0, 0, 50), glm::vec3(0, 0, 0), 70.0f, (float)windowWidth / windowHeight, 0.1f, 1000.0f);
@@ -368,11 +368,6 @@ void Game::destroyProjectileOfId(int id)
 			}
 }
 
-void Game::showCursor(bool show)
-{
-	Game::mShowCursor = show;
-}
-
 void Game::render()
 {
 	/* FIRST PASS (SHADOW PASS) */
@@ -517,8 +512,7 @@ void Game::renderSecondsPass()
 	gui->render();
 	Mesh::isGUI = false;
 
-	if (Game::mShowCursor)
-		cursor->render(skillShader);
+	cursor->renderCursor(skillShader);
 }
 
 void Game::update()

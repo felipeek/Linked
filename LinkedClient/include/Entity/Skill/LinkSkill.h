@@ -22,5 +22,6 @@ private:
 	Entity* aimEntity;
 	LinkSkillStatus status;
 	bool linked;
+	float cursorRot;
 };
 

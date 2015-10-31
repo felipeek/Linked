@@ -7,7 +7,9 @@
 #include "Monster.h"
 #include "Game.h"
 #include "Projectile.h"
-#include <iostream>
+#include "Common.h"
+
+#define SHOW_PACKETS_LOG 0
 
 #define ADDRESS_IPV4_LENGHT 46
 
@@ -405,7 +407,10 @@ void PacketController::updatePlayersAttributesToAllClients()
 	}
 
 	int playersToUpdate = playersThatShouldHaveTheirAttributesUpdated.size();
-
+#if SHOW_PACKETS_LOG
+	if (playersToUpdate > 0)
+		LOG("PACKET SENT TO CLIENTS: Player Attributes Changed");
+#endif
 	for (unsigned int i = 0; i < playersThatShouldHaveTheirAttributesUpdated.size(); i += 8)
 	{
 		if (playersToUpdate >= 8)
@@ -457,6 +462,11 @@ void PacketController::updatePlayersPositionToAllClients()
 
 	int playersToUpdate = playersThatShouldHaveTheirPositionUpdated.size();
 
+#if SHOW_PACKETS_LOG
+	if (playersToUpdate > 0)
+		LOG("PACKET SENT TO CLIENTS: Player Position Changed");
+#endif
+
 	for (unsigned int i = 0; i < playersThatShouldHaveTheirPositionUpdated.size(); i += 16)
 	{
 		if (playersToUpdate >= 16)
@@ -505,6 +515,11 @@ void PacketController::updateMonstersPositionToAllClients()
 
 		int monstersToUpdate = monstersThatShouldHaveTheirPositionUpdated.size();
 
+#if SHOW_PACKETS_LOG
+		if (monstersToUpdate > 0)
+			LOG("PACKET SENT TO CLIENTS: Monster Position Changed");
+#endif
+
 		for (unsigned int i = 0; i < monstersThatShouldHaveTheirPositionUpdated.size(); i += 16)
 		{
 			if (monstersToUpdate >= 16)
@@ -546,6 +561,11 @@ void PacketController::updateMonstersAttacksToAllClients()
 
 	int monstersAttacksToUpdate = monsterAttacks.size();
 
+#if SHOW_PACKETS_LOG
+	if (monstersAttacksToUpdate > 0)
+		LOG("PACKET SENT TO CLIENTS: Monster Attacked");
+#endif
+
 	for (unsigned int i = 0; i < monsterAttacks.size(); i += 32)
 	{
 		if (monstersAttacksToUpdate >= 32)
@@ -582,6 +602,11 @@ void PacketController::updateMonsterDamagesToAllClients()
 		return;
 
 	int monsterDamagesToUpdate = monsterDamages.size();
+
+#if SHOW_PACKETS_LOG
+	if (monsterDamagesToUpdate > 0)
+		LOG("PACKET SENT TO CLIENTS: Monster Took Damage");
+#endif
 
 	for (unsigned int i = 0; i < monsterDamages.size(); i += 30)
 	{

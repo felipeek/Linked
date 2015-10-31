@@ -43,6 +43,8 @@ public:
 	static int server_port;
 	static std::string server_ip;
 
+	static Cursor* cursor;
+
 	/* INITIALIZATION METHODS */
 	void createOnlinePlayer(short* data, bool isLocalPlayer);
 	void createMonster(short* data);
@@ -50,7 +52,6 @@ public:
 	/* AUXILIAR METHODS */
 	Monster* getMonsterOfId(int id);
 	void destroyProjectileOfId(int id);
-	static void showCursor(bool show);
 
 	/* RENDER & UPDATE*/
 	void render();
@@ -71,7 +72,6 @@ private:
 	void loadMonstersAndEntities(bool loadMonsters, bool loadEntities);
 
 	/* GAME GRAPHIC ELEMENTS */
-	Cursor* cursor;
 	Camera* camera;
 	Light* light;
 	CommonShader* commonShader;
@@ -105,7 +105,6 @@ private:
 	void renderFirstPass();
 	void renderSecondsPass();
 
-	static bool mShowCursor;
 	double cursorRot = 0;
 	double lastTime;
 };

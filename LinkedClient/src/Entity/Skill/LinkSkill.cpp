@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "PacketController.h"
 #include "Game.h"
+#include "Cursor.h"
 
 #define LINK_SKILL_THRESHOLD 3.0f
 
@@ -12,7 +13,7 @@ LinkSkill::LinkSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vec
 {
 	/* AIM ENTITY */
 	Mesh* aimMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.2f, 0.2f));
-	Transform* aimTransform = new Transform(glm::vec3(0, 0, 0), glm::vec3(0.7f , 0.7f, 0.7f));
+	Transform* aimTransform = new Transform(glm::vec3(0, 0, 0), glm::vec3(0.5f , 0.5f, 0.5f));
 	Texture* aimTexture = new Texture("./res/Skills/small_aim.png");
 	this->aimEntity = new Entity(aimTransform, aimMesh, aimTexture);
 
@@ -22,6 +23,7 @@ LinkSkill::LinkSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vec
 	this->skillIcon = new SkillIcon(enabledSkillIconTexture, disabledSkillIconTexture, SLOT_1);
 
 	this->linked = false;
+	this->cursorRot = 0;
 }
 
 LinkSkill::~LinkSkill()
@@ -36,7 +38,7 @@ void LinkSkill::prepareExecution(MovementDirection skillDirection)
 	{
 		this->active = true;
 		this->status = LinkSkillStatus::AIM;
-		Game::showCursor(false);
+		Game::cursor->hideCursor();
 	}
 }
 
@@ -58,7 +60,7 @@ bool LinkSkill::cancelIfPossible()
 	if (this->isActive() && this->status == LinkSkillStatus::AIM)
 	{
 		this->active = false;
-		Game::showCursor(true);
+		Game::cursor->showCursor();
 		return true;
 	}
 	return false;
@@ -74,10 +76,12 @@ void LinkSkill::update()
 			glm::vec2 screenPos = Input::mouseAttack.getOrthoCoords();
 			glm::vec3 mousePos = glm::vec3(screenPos.x, screenPos.y, 0);
 			this->aimEntity->getTransform()->translate(mousePos.x, mousePos.y, 0);
+			this->aimEntity->getTransform()->rotate(cursorRot, glm::vec3(0, 0, 1));
+			cursorRot += CURSOR_ROTATION_SPEED;
 
 			if (Input::attack)
 			{
-				Game::showCursor(true);
+				Game::cursor->showCursor();
 				Player* targetPlayer = this->getTargetPlayer();
 				if (targetPlayer != NULL)
 				{

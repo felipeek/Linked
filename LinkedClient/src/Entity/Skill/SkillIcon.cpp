@@ -18,10 +18,9 @@ SkillIcon::SkillIcon(Texture* enabledTexture, Texture* disabledTexture, SkillSlo
 
 SkillIcon::~SkillIcon()
 {
-	if (!isEnabled())
-		delete enabledTexture;
-	if (isEnabled())
-		delete disabledTexture;
+	this->texture = nullptr;
+	delete enabledTexture;
+	delete disabledTexture;
 }
 
 void SkillIcon::enableIcon()

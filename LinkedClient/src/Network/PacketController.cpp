@@ -11,6 +11,8 @@
 #include "Common.h"
 #include <sstream>
 
+#define SHOW_PACKETS_LOG 0
+
 Player* PacketController::localPlayer = NULL;
 std::vector<Player*>* PacketController::onlinePlayers = NULL;
 Game* PacketController::game = NULL;
@@ -321,6 +323,9 @@ void PacketController::update10()
 	glm::vec3 playerPosition = PacketController::localPlayer->getTransform()->getPosition();
 	if (playerLastPosition.x != playerPosition.x || playerLastPosition.y != playerPosition.y)
 	{
+#if SHOW_PACKETS_LOG
+		LOG("PACKET SENT TO SERVER: Local Player New Position");
+#endif
 		udpClient->sendPackets(Packet(playerPosition, 0, UDPClient::myID));
 		playerLastPosition = playerPosition;
 	}
@@ -328,11 +333,17 @@ void PacketController::update10()
 
 void PacketController::sendAttackToServer(glm::vec3 attackDirection)
 {
+#if SHOW_PACKETS_LOG
+	LOG("PACKET SENT TO SERVER: New Projectile Created");
+#endif
 	udpClient->sendPackets(Packet(attackDirection, 1, UDPClient::myID));
 }
 
 void PacketController::sendAttackCollisionToServer(int monsterId, int attackId)
 {
+#if SHOW_PACKETS_LOG
+	LOG("PACKET SENT TO SERVER: Projectile Hit an Enemy");
+#endif
 	int attackCollisionInformation[3];
 	attackCollisionInformation[0] = monsterId;
 	attackCollisionInformation[1] = attackId;
@@ -343,6 +354,9 @@ void PacketController::sendAttackCollisionToServer(int monsterId, int attackId)
 
 void PacketController::sendSkillToServer(SkillSlot slot, MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId)
 {
+#if SHOW_PACKETS_LOG
+	LOG("PACKET SENT TO SERVER: Skill Used");
+#endif
 	float skillInformation[6];
 	skillInformation[0] = (float)(slot);
 	skillInformation[1] = (float)(skillDirection);

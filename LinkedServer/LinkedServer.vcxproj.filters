@@ -197,5 +197,8 @@
     <ClInclude Include="include\Game\Skill\CureBlessingSkill.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
