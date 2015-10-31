@@ -2,7 +2,7 @@
 
 1.  Limitar distância que os monstros aparecem para o player (DONE)
 2.  Otimizar pacotes enviados constantemente (DONE)
-3.  Implementar skills no servidor
+3.  Implementar skills no servidor (DONE)
 4.  Fazer chat aceitar caracteres especiais
 5.  Bloquear input quando chat estiver ativo (DONE)
 6.  Arrumar HP bar
@@ -10,17 +10,18 @@
 8.  Fazer entidades girarem
 9.  Refactor no codigo de shaders
 10. Implementar forward rendering
-11. Arrumar deletes e includes do codigo
+11. Arrumar deletes e includes do codigo (ALMOST DONE. Not done: Game.cpp, FrameBuffer, Game::multiplayer includes, Display WWID and WHEI problems)
 12. Limitar a quantidade de caracteres do chat
 13. Implementar comandos de client
 14. Implementar comandos de servidor
 15. Fazer menu do jogo
 16. Fazer menu de configuracoes
 17. Suporte para diversos window sizes
-18. Arrumar direcao de projeteis
+18. Arrumar direcao de projeteis (DONE)
 19. Implementar AI para colisao
 20. Implementar players extras como espectadores
-21. arrumar problema do FPS
+21. arrumar problema do FPS (DONE?)
+22. Refazer Movimento dos monstros em multiplayer. Diminuir envio de pacotes e enviar em tempo real
 
 TODO List far future:
 
