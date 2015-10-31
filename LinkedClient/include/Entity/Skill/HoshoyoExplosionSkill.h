@@ -1,7 +1,7 @@
 #pragma once
 #include "Skill.h"
 
-#define HOSHOYO_EXPLOSION_SKILL_MAX_RADIUS 40
+#define HOSHOYO_EXPLOSION_SKILL_MAX_RADIUS 25
 
 enum class HoshoyoExplosionSkillStatus
 {
