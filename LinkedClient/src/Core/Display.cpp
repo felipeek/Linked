@@ -236,7 +236,6 @@ void Display::mousePosCallBack(GLFWwindow* window, double x, double y)
 	float screenX = ((float)x * 2 / width - 1.0f);
 	float screenY = -((float)y * 2 / height - 1.0f);
 
-	std::cout << screenX << " " << screenY << std::endl;
 	Input::mouseAttack.setAttackPos(screenX, screenY);
 	Input::mouseAttack.setMouseCoords((int)x, (int)y);
 }
