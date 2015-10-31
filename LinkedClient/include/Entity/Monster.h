@@ -141,4 +141,7 @@ private:
 	bool isKnockedBack;
 	glm::vec3 destination;
 	bool isMovingTo;
+
+	/* ID */
+	static unsigned short NEXT_ID;
 };

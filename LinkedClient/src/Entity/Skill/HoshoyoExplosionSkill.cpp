@@ -51,10 +51,8 @@ void HoshoyoExplosionSkill::render(Shader* primitiveShader, Shader* skillShader,
 {
 	if (this->status == HoshoyoExplosionSkillStatus::AIM)
 	{
-		primitiveShader->activateAlphaBlend();
 		this->aimEntity->render(primitiveShader);
 		this->rangeEntity->render(primitiveShader);
-		primitiveShader->deactivateAlphaBlend();
 	}
 	else if (this->status == HoshoyoExplosionSkillStatus::EXECUTION)
 	{

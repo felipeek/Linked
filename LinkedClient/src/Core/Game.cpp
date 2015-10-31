@@ -49,7 +49,7 @@
 #include <iostream>
 #include <string>
 
-bool Game::multiplayer = false;
+bool Game::multiplayer = true;
 int Game::server_port = 9090;
 //std::string Game::server_ip = "127.0.0.1";
 std::string Game::server_ip = "201.21.40.57";

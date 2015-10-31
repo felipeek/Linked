@@ -7,6 +7,10 @@
 #include "Primitive.h"
 #include "Game.h"
 
+#define FIRST_ID 1
+
+unsigned short Monster::NEXT_ID = FIRST_ID;
+
 Monster::Monster(Transform* transform, Mesh* mesh, Texture* texture) : Entity(transform, mesh, texture)
 {
 	this->ai = new MonsterAI();
@@ -26,6 +30,9 @@ Monster::Monster(Transform* transform, Mesh* mesh, Texture* texture) : Entity(tr
 	this->lastIndexTexture = MONSTER_FIRST_INDEX_TEXTURE;
 	this->isMovingTo = false;
 	this->isKnockedBack = false;
+
+	if (!Game::multiplayer)
+		this->id = NEXT_ID++;
 }
 
 Monster::~Monster()
