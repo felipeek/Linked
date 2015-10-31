@@ -542,9 +542,9 @@ void Player::input(Map* map)
 	}
 }
 
-void Player::render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer, Shader* projectileShader)
+void Player::render(Shader* primitiveShader, Shader* skillShader, Shader* worldSkillShader, TextRenderer* textRenderer, Shader* projectileShader)
 {
-	Entity::render(primitiveShader);
+	
 	if (hpBar_shouldRender)
 		this->getHPBar()->quad->render(primitiveShader);
 
@@ -564,13 +564,16 @@ void Player::render(Shader* primitiveShader, Shader* skillShader, TextRenderer* 
 	for (Skill* skill : this->getSkills())
 	{
 		try{
+			worldSkillShader->activateAlphaBlend();
 			if (skill->isActive())
-				skill->render(primitiveShader/*projectileShader*/, skillShader, textRenderer);
+				skill->render(worldSkillShader, skillShader, textRenderer);
+			worldSkillShader->deactivateAlphaBlend();
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
+	Entity::render(primitiveShader);
 }
 
 /* *********************************** */

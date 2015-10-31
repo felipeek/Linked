@@ -49,7 +49,7 @@
 #include <iostream>
 #include <string>
 
-bool Game::multiplayer = true;
+bool Game::multiplayer = false;
 int Game::server_port = 9090;
 //std::string Game::server_ip = "127.0.0.1";
 std::string Game::server_ip = "201.21.40.57";
@@ -145,6 +145,7 @@ void Game::createGraphicElements(int windowWidth, int windowHeight)
 	this->projectileShader = new CommonShader("./shaders/projectile", camera, light);
 	this->mapShader = new MapShader("./shaders/mapshader_shadow", camera, light);
 	this->skillShader = new SkillShader("./shaders/fontshader");
+	this->worldSkillShader = new PrimitiveShader("./shaders/skillshader", camera, light);
 
 	// Shadows
 	frameBuffer = new FrameBuffer(SHADOW_BUFFER_SIZE, SHADOW_BUFFER_SIZE);
@@ -430,7 +431,7 @@ void Game::renderFirstPass()
 
 	// Player
 	localPlayer->hpBarRenderOptions(false);
-	localPlayer->render(primitiveShader, skillShader, gui->getTextRenderer(), projectileShader);
+	localPlayer->render(primitiveShader, skillShader, worldSkillShader, gui->getTextRenderer(), projectileShader);
 
 	// Second Player
 	if (Game::multiplayer)
@@ -438,7 +439,7 @@ void Game::renderFirstPass()
 		for (Player* player : this->onlinePlayers)
 		{
 			player->hpBarRenderOptions(false);
-			player->render(primitiveShader, skillShader, gui->getTextRenderer(), projectileShader);
+			player->render(primitiveShader, skillShader, worldSkillShader, gui->getTextRenderer(), projectileShader);
 		}
 	}
 }
@@ -457,7 +458,22 @@ void Game::renderSecondsPass()
 	// Map
 	entityMap->render(mapShader, frameBuffer->getCamera());
 	water->render(commonShader);
+
+	// Player
+	localPlayer->hpBarRenderOptions(true);
+	localPlayer->render(primitiveShader, skillShader, worldSkillShader, gui->getTextRenderer(), projectileShader);
 	
+	// Second Player
+	if (Game::multiplayer)
+	{
+		for (Player* player : this->onlinePlayers)
+		{
+			player->hpBarRenderOptions(true);
+			player->render(primitiveShader, skillShader, worldSkillShader, gui->getTextRenderer(), projectileShader);
+		}
+			
+	}
+
 	// Monsters
 	for (Monster* m : monsters)
 	{
@@ -493,20 +509,6 @@ void Game::renderSecondsPass()
 		}
 	}
 	
-	// Player
-	localPlayer->hpBarRenderOptions(true);
-	localPlayer->render(primitiveShader, skillShader, gui->getTextRenderer(), projectileShader);
-	
-	// Second Player
-	if (Game::multiplayer)
-	{
-		for (Player* player : this->onlinePlayers)
-		{
-			player->hpBarRenderOptions(true);
-			player->render(primitiveShader, skillShader, gui->getTextRenderer(), projectileShader);
-		}
-			
-	}
 	// Render GUI (Order is important)
 	Mesh::isGUI = true;
 	gui->render();

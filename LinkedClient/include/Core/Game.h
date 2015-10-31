@@ -76,6 +76,7 @@ private:
 	Light* light;
 	CommonShader* commonShader;
 	PrimitiveShader* primitiveShader;
+	PrimitiveShader* worldSkillShader;
 	MapShader* mapShader;
 	CommonShader* projectileShader;
 	SkillShader* skillShader;
