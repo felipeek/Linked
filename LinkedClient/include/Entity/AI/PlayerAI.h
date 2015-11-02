@@ -1,7 +1,6 @@
 #pragma once
-#include "AI.h"
 
-class PlayerAI : public AI
+class PlayerAI// : public AI
 {
 public:
 	PlayerAI();

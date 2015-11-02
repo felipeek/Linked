@@ -27,9 +27,6 @@
     <ClCompile Include="src\Core\LinkedTime.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entity\AI\AI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Entity\AI\MonsterAI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -91,9 +88,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Entity\Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Monster.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Entity\Player.cpp">
@@ -201,11 +195,14 @@
     <ClCompile Include="src\Entity\Skill\CureBlessingSkill.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Entity\Monster\Monster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity\Monster\BasicMonster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Entity\AI\AI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Entity\AI\MonsterAI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -270,9 +267,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Entity\Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Monster.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Entity\Player.h">
@@ -393,6 +387,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Entity\Monster\Monster.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Entity\Monster\BasicMonster.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

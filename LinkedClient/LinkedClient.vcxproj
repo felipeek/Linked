@@ -89,7 +89,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>include/Shaders/Classes;include;include/External;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include/Entity/Monster;include/Shaders/Classes;include;include/External;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -120,7 +120,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>include/Shaders/Classes;include;include/External;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include/Entity/Monster;include/Shaders/Classes;include;include/External;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Entity\Monster\BasicMonster.cpp" />
     <ClCompile Include="src\Entity\Skill\CureBlessingSkill.cpp" />
     <ClCompile Include="src\Entity\Cursor.cpp" />
     <ClCompile Include="src\Shaders\Classes\SkillShader.cpp" />
@@ -159,7 +160,6 @@
     <ClCompile Include="src\Core\Game.cpp" />
     <ClCompile Include="src\Core\Input.cpp" />
     <ClCompile Include="src\Core\LinkedTime.cpp" />
-    <ClCompile Include="src\Entity\AI\AI.cpp" />
     <ClCompile Include="src\Entity\AI\MonsterAI.cpp" />
     <ClCompile Include="src\Entity\AI\PlayerAI.cpp" />
     <ClCompile Include="src\Entity\Attack\MouseAttack.cpp" />
@@ -178,7 +178,7 @@
     <ClCompile Include="src\Entity\GameEntity.cpp" />
     <ClCompile Include="src\Entity\Item.cpp" />
     <ClCompile Include="src\Entity\Mesh.cpp" />
-    <ClCompile Include="src\Entity\Monster.cpp" />
+    <ClCompile Include="src\Entity\Monster\Monster.cpp" />
     <ClCompile Include="src\Entity\Player.cpp" />
     <ClCompile Include="src\Entity\Primitive.cpp" />
     <ClCompile Include="src\Entity\Skill\HoshoyoExplosionSkill.cpp" />
@@ -215,6 +215,7 @@
     <ClCompile Include="src\Entity\Skill\SwapSkill.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Entity\Monster\BasicMonster.h" />
     <ClInclude Include="include\Common.h" />
     <ClInclude Include="include\Entity\Skill\CureBlessingSkill.h" />
     <ClInclude Include="include\Entity\Cursor.h" />
@@ -222,7 +223,6 @@
     <ClInclude Include="include\Core\Game.h" />
     <ClInclude Include="include\Core\Input.h" />
     <ClInclude Include="include\Core\LinkedTime.h" />
-    <ClInclude Include="include\Entity\AI\AI.h" />
     <ClInclude Include="include\Entity\AI\MonsterAI.h" />
     <ClInclude Include="include\Entity\AI\PlayerAI.h" />
     <ClInclude Include="include\Entity\Attack\MouseAttack.h" />
@@ -242,7 +242,7 @@
     <ClInclude Include="include\Entity\GameEntity.h" />
     <ClInclude Include="include\Entity\Item.h" />
     <ClInclude Include="include\Entity\Mesh.h" />
-    <ClInclude Include="include\Entity\Monster.h" />
+    <ClInclude Include="include\Entity\Monster\Monster.h" />
     <ClInclude Include="include\Entity\Player.h" />
     <ClInclude Include="include\Entity\Primitive.h" />
     <ClInclude Include="include\Entity\Skill\HoshoyoExplosionSkill.h" />

@@ -18,5 +18,4 @@ class MovementDefinition
 public:
 	glm::vec3 movement;
 	MovementDirection direction;
-	bool doMove;
 };

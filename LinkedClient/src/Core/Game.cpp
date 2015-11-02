@@ -267,7 +267,7 @@ void Game::createGUI()
 	PacketController::gui = this->gui;
 	Chat::gui = this->gui;
 }
-
+int m = 0;
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 {
 	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, this->map));
@@ -303,10 +303,11 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 			
 			if (coordinate.mapMonster.monsterExists)
 			{
-				if (!map->coordinateHasCollision(glm::vec3(i, j, 0)) && loadMonsters)
+				if (!map->coordinateHasCollision(glm::vec3(i, j, 0)) && loadMonsters/* && m < 1*/)
 				{
 					monster->getTransform()->translate((float)i, (float)j, 1.3f);
 					monsters.push_back(monster);
+					m++;
 				}
 				else
 				{
@@ -545,7 +546,7 @@ void Game::update()
 		monsters[i]->update(map, localPlayer);
 	
 	for (unsigned int i = 0; i < monsters.size(); i++)
-		if (!monsters[i]->isOnScreen())
+		if (monsters[i]->shouldBeDeleted())
 		{
 			delete monsters[i];
 			monsters.erase(monsters.begin() + i);

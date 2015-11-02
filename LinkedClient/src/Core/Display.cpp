@@ -16,7 +16,6 @@ int Display::monitorHeight = 0;
 Game* Display::game = NULL;
 
 // Time
-const double Display::frameTime = 1.0 / GAMESPEED;
 double Display::totalTime = 0;
 double Display::timeSinceLastUpdate = 0;
 double Display::elapsedTime = 0;

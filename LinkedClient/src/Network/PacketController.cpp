@@ -294,13 +294,13 @@ void PacketController::dispatchVec3fWithShortArray(int id, int xid, glm::vec3* d
 				Monster* targetMonster = PacketController::game->getMonsterOfId(extraData[i]);
 				if (targetMonster != NULL)
 				{
-					if (targetMonster->shouldRender())
-						targetMonster->startMovementTo(glm::vec3(data[i].x, data[i].y, data[i].z));
-					else
-					{
-						targetMonster->getTransform()->translate(data[i].x, data[i].y, data[i].z);
-						targetMonster->setShouldRender(true);
-					}
+					//if (targetMonster->shouldRender())
+					//	targetMonster->startMovementTo(glm::vec3(data[i].x, data[i].y, data[i].z));
+					//else
+					//{
+					//	targetMonster->getTransform()->translate(data[i].x, data[i].y, data[i].z);
+					//	targetMonster->setShouldRender(true);
+					//}
 				}
 			}
 		}

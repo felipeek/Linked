@@ -22,7 +22,7 @@ public:
 	void incRotateY(float amt);
 	void incScale(float x, float y, float z);
 
-	glm::vec3 getPosition();
+	glm::vec3 getPosition() const;
 	void setPosition(glm::vec3& pos);
 	glm::vec3 getScale();
 	float getAngleY();

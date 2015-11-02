@@ -10,7 +10,7 @@ class Entity
 public:
 	Entity(Transform* transform, Mesh* mesh, Texture* texture);
 	virtual ~Entity();
-	Transform* getTransform();
+	Transform* getTransform() const;
 	void setTransform(Transform* transform);
 	virtual void render(Shader* shader);
 	Texture* getTexture();

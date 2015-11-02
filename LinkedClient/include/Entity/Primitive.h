@@ -23,6 +23,7 @@ public:
 	glm::vec2& getTextureOffset();
 
 	void setIndex(int i);
+	int getIndex();
 private:
 	float index;
 	float numRows;

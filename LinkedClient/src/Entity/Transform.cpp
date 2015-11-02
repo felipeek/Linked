@@ -86,7 +86,7 @@ void Transform::updateModel()
 	model = translationMatrix * rotationMatrix * scaleMatrix;
 }
 
-glm::vec3 Transform::getPosition()
+glm::vec3 Transform::getPosition() const
 {
 	return mPosition;
 }

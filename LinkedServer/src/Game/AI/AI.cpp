@@ -32,8 +32,7 @@ void AI::startRandomMovement(Map* map, glm::vec3 reference, float rangeSpeed)
 	{
 		xRandNumber = rand() % 1001;
 		yRandNumber = rand() % 1001;
-	}
-	while (xRandNumber == 0 && yRandNumber == 0);
+	} while (xRandNumber == 0 && yRandNumber == 0);
 
 	if (rand() % 2)	xRandNumber = -xRandNumber;
 	if (rand() % 2)	yRandNumber = -yRandNumber;
@@ -116,7 +115,7 @@ MovementDirection AI::getDirectionBasedOnVector(glm::vec3 vector)
 	if (vector.y < 0)
 		angle = -angle;
 
-	/* Commented Code: All directions have the same importance. Every direction has a 45º radius. */
+	/* Commented Code: All directions have the same importance. Every direction has a 45? radius. */
 	/* This is preferred if the sprites are TOP, BOTTOM, LEFT and RIGHT */
 
 	/*if (angle >= -22.5f && angle < 22.5f)
@@ -136,7 +135,7 @@ MovementDirection AI::getDirectionBasedOnVector(glm::vec3 vector)
 	else if (angle >= -67.5f && angle < -22.5f)
 	return BOTTOM_RIGHT;*/
 
-	/* Active Code : RIGHT, TOP, LEFT and BOTTOM are ignored. Diagonal Directions have a 90º radius. */
+	/* Active Code : RIGHT, TOP, LEFT and BOTTOM are ignored. Diagonal Directions have a 90? radius. */
 	/* This is preferred if the spriets are TOP_RIGHT, TOP_LEFT, BOTTOM_RIGHT, BOTTOM_LEFT */
 
 	if (angle >= 0 && angle < 90)

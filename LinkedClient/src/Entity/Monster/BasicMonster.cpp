@@ -1,0 +1,235 @@
+#include "BasicMonster.h"
+#include "Player.h"
+#include "MonsterAI.h"
+#include "Primitive.h"
+#include "Map.h"
+
+BasicMonster::BasicMonster(Transform* transform, Mesh* mesh, Texture* texture) : Monster(transform, mesh, texture)
+{
+	this->activeTexture = BasicMonsterActiveTexture::STANDING;
+	this->activeTextureDirection = BOTTOM_LEFT;
+	this->lastTimeTextureWasRefreshed = 0;
+}
+
+BasicMonster::~BasicMonster()
+{
+}
+
+void BasicMonster::update(Map* map, Player* player)
+{
+	double now = LinkedTime::getTime();
+	Monster::update(map, player);
+
+	if (this->isAlive())
+	{
+		if (this->ai->isOnRangeToAttack(player->getTransform()->getPosition()) && player->isAlive())
+		{
+			if (!this->isAttacking()) this->attackCreature(player);
+			this->stop(); // For Texture Management
+		}
+		else if (this->ai->isOnRangeToChaseTarget(player->getTransform()->getPosition()) && this->ai->isPathFreeOfCollisions(map, player->getTransform()->getPosition()) && player->isAlive())
+		{
+			this->moveToAttackPlayer(map, player);
+			this->movingRandomly = false;
+			this->move(this->directedMovement.direction); // For Texture Management
+		}
+		else if (!this->ai->shouldStandStill())
+		{
+			this->moveRandomly(map, player);
+			this->movingToAttackPlayer = false;
+			this->move(this->directedMovement.direction); // For Texture Management
+		}
+		else
+		{
+			this->stop(); // For Texture Management
+		}
+	}
+
+	this->refreshTextureIfNecessary();
+}
+
+void BasicMonster::render(Shader* shader)
+{
+	Monster::render(shader);
+}
+
+void BasicMonster::moveToPosition(glm::vec3 position)
+{
+	this->getTransform()->translate(position.x, position.y, this->getTransform()->getPosition().z);
+}
+
+Monster* BasicMonster::getCopy(Monster* copy)
+{
+	// Create new monster if necessary.
+	if (copy == nullptr) copy = new BasicMonster(nullptr, nullptr, nullptr);
+
+	return Monster::getCopy(copy);
+}
+
+void BasicMonster::moveToAttackPlayer(Map* map, Player* player)
+{
+	glm::vec3 newMonsterPosition = this->ai->getNextStep(this->directedMovement.movement);
+
+	// If the monster is not moving towards the player, starts a new movement towards the player.
+	if (!this->movingToAttackPlayer)
+	{
+		this->directedMovement = this->ai->generateMovementTowardsCoordinate(player->getTransform()->getPosition());
+		this->movingToAttackPlayer = true;
+	}
+	// If the monster was already moving towards the player and reached the destination, it stops moving towards the player.
+	if (this->ai->reachDestination(newMonsterPosition, this->directedMovement.movement) && this->movingToAttackPlayer)
+	{
+		this->movingToAttackPlayer = false;
+	}
+	// If the monster was already moving towards the player and shouldn't stop, it continues moving towards the player.
+	else
+		this->moveToPosition(newMonsterPosition);
+}
+
+void BasicMonster::moveRandomly(Map* map, Player* player)
+{
+	glm::vec3 newMonsterPosition = this->ai->getNextStep(this->directedMovement.movement);
+
+	// If the monster is not moving randomly, starts a new random movment.
+	if (!this->movingRandomly)
+	{
+		this->directedMovement = this->ai->generateRandomMovement(map);
+		this->movingRandomly = true;
+	}
+	// If the monster was already moving randomly and reached the destintation, it stops moving randomly and prepare to stand still.
+	else if (this->ai->reachDestination(newMonsterPosition, this->directedMovement.movement) && this->movingRandomly)
+	{
+		this->movingRandomly = false;
+		this->ai->resetStandStill();
+	}
+	// If the monster was already moving randomly and shouldn't stop, it continues moving randomly.
+	else
+	{
+		if (!map->coordinateHasCollision(newMonsterPosition))
+			this->moveToPosition(newMonsterPosition);
+		else
+		{
+			this->ai->resetStandStill();
+			this->movingRandomly = false;
+		}
+	}
+}
+
+void BasicMonster::refreshTextureIfNecessary()
+{
+	double now = LinkedTime::getTime();
+
+	if (!this->isAlive())
+	{
+		this->changeTextureIndex(0);
+	}
+	else if (this->isAttacking())
+	{
+		bool textureChanged = this->activeTexture != BasicMonsterActiveTexture::ATTACKING || this->activeTextureDirection != this->directedMovement.direction;
+		if (textureChanged || (now - this->lastTimeTextureWasRefreshed) > TEXTURE_CHANGE_TIME_FACTOR)
+		{
+			this->animateActiveTexture();
+			this->activeTexture = BasicMonsterActiveTexture::ATTACKING;
+			this->activeTextureDirection = this->directedMovement.direction;
+			this->lastTimeTextureWasRefreshed = now;
+		}
+			
+	}
+	else if (this->isReceivingDamage())
+	{
+		bool textureChanged = this->activeTexture != BasicMonsterActiveTexture::RECEIVING_DAMAGE || this->activeTextureDirection != this->directedMovement.direction;
+		if (textureChanged || (now - this->lastTimeTextureWasRefreshed) > TEXTURE_CHANGE_TIME_FACTOR)
+		{
+			this->animateActiveTexture();
+			this->activeTexture = BasicMonsterActiveTexture::RECEIVING_DAMAGE;
+			this->activeTextureDirection = this->directedMovement.direction;
+			this->lastTimeTextureWasRefreshed = now;
+		}
+	}
+	else if (this->isMoving())
+	{
+		bool textureChanged = this->activeTexture != BasicMonsterActiveTexture::MOVING || this->activeTextureDirection != this->directedMovement.direction;
+		if (textureChanged || (now - this->lastTimeTextureWasRefreshed) > TEXTURE_CHANGE_TIME_FACTOR)
+		{
+			this->animateActiveTexture();
+			this->activeTexture = BasicMonsterActiveTexture::MOVING;
+			this->activeTextureDirection = this->directedMovement.direction;
+			this->lastTimeTextureWasRefreshed = now;
+		}
+	}
+	else
+	{
+		bool textureChanged = this->activeTexture != BasicMonsterActiveTexture::STANDING || this->activeTextureDirection != this->directedMovement.direction;
+		if (textureChanged || (now - this->lastTimeTextureWasRefreshed) > TEXTURE_CHANGE_TIME_FACTOR)
+		{
+			this->animateActiveTexture();
+			this->activeTexture = BasicMonsterActiveTexture::STANDING;
+			this->activeTextureDirection = this->directedMovement.direction;
+			this->lastTimeTextureWasRefreshed = now;
+		}
+			
+	}
+}
+
+void BasicMonster::animateActiveTexture()
+{
+	int newTextureIndex = this->getCurrentTextureIndex() + 1;
+	int textureQuantity = this->getTextureQuantity();
+	int begin, end;
+
+	switch (this->activeTexture)
+	{
+		case BasicMonsterActiveTexture::DEAD:
+			this->changeTextureIndex(0);
+			break;
+
+		case BasicMonsterActiveTexture::ATTACKING:
+			switch (this->directedMovement.direction)
+			{
+				case BOTTOM_LEFT: begin = 1; end = textureQuantity; break;
+				case BOTTOM_RIGHT: begin = 1 + textureQuantity; end = 2 * textureQuantity; break;
+				case TOP_RIGHT: begin = 1 + 2 * textureQuantity; end = 3 * textureQuantity; break;
+				case TOP_LEFT: begin = 1 + 3 * textureQuantity; end = 4 * textureQuantity; break;
+			}
+			break;
+		case BasicMonsterActiveTexture::RECEIVING_DAMAGE:
+			switch (this->directedMovement.direction)
+			{
+				case BOTTOM_LEFT: begin = 1 + 4 * textureQuantity; end = 5 * textureQuantity; break;
+				case BOTTOM_RIGHT: begin = 1 + 5 * textureQuantity; end = 6 * textureQuantity; break;
+				case TOP_RIGHT: begin = 1 + 6 * textureQuantity; end = 7 * textureQuantity; break;
+				case TOP_LEFT: begin = 1 + 7 * textureQuantity; end = 8 * textureQuantity; break;
+			}
+			break;
+		case BasicMonsterActiveTexture::MOVING:
+			switch (this->directedMovement.direction)
+			{
+				case BOTTOM_LEFT: begin = 1 + 8 * textureQuantity; end = 9 * textureQuantity; break;
+				case BOTTOM_RIGHT: begin = 1 + 9 * textureQuantity; end = 10 * textureQuantity; break;
+				case TOP_RIGHT: begin = 1 + 10 * textureQuantity; end = 11 * textureQuantity; break;
+				case TOP_LEFT: begin = 1 + 11 * textureQuantity; end = 12 * textureQuantity; break;
+			}
+			break;
+		case BasicMonsterActiveTexture::STANDING:
+			switch (this->directedMovement.direction)
+			{
+				case BOTTOM_LEFT: begin = 1 + 12 * textureQuantity; end = 13 * textureQuantity; break;
+				case BOTTOM_RIGHT: begin = 1 + 13 * textureQuantity; end = 14 * textureQuantity; break;
+				case TOP_RIGHT: begin = 1 + 14 * textureQuantity; end = 15 * textureQuantity; break;
+				case TOP_LEFT: begin = 1 + 15 * textureQuantity; end = 16 * textureQuantity; break;
+			}
+			break;
+		default:
+			begin = 0; end = 0; break;
+	}
+
+	if (this->isIntegerOnRange(newTextureIndex, begin, end))
+		this->changeTextureIndex(newTextureIndex);
+	else
+		this->changeTextureIndex(begin);
+}
+
+bool BasicMonster::isIntegerOnRange(int integer, int begin, int end)
+{
+	return ((unsigned)(integer - begin) <= (end - begin)) ? true : false;
+}

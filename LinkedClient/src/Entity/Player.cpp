@@ -389,7 +389,7 @@ bool Player::isReceivingDamage()
 
 void Player::doDamage(unsigned int damage)
 {
-	if (damage > hp)
+	if (damage >= hp)
 		hp = 0;
 	else
 		hp = hp - damage;
@@ -688,9 +688,9 @@ void Player::updateMovement(Map* map)
 	if (isMovingTo)
 	{
 		glm::vec3 pPos = this->getTransform()->getPosition();
-		float frameTime = (float)Display::frameTime;
+		float frameTime = 1/60.0f;
 		float range = frameTime * this->getTotalSpeed();
-		MovementDefinition newPos = this->ai->movePerfectlyTo(map, pPos, this->destination, range);
+		/*MovementDefinition newPos = this->ai->movePerfectlyTo(map, pPos, this->destination, range);
 
 		if (newPos.doMove)
 		{
@@ -702,7 +702,7 @@ void Player::updateMovement(Map* map)
 		{
 			this->moving = false;
 			this->isMovingTo = false;
-		}
+		}*/
 	}
 }
 
@@ -720,7 +720,7 @@ bool Player::checkIfPlayerIsStillOnTheSameMapPosition(glm::vec3 currentPosition,
 
 glm::vec3 Player::getDeltaVectorToDirection(MovementDirection direction)
 {
-	float frameTime = (float)Display::frameTime;
+	float frameTime = 1/60.0f;
 	float range = frameTime * this->getTotalSpeed();
 
 	switch (direction)

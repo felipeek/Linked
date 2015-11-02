@@ -1,6 +1,6 @@
 #include "Display.h"
 #include <time.h>
-
+#include "glm\glm.hpp"
 //#include <vld.h>
 
 int main(int argc, char** argv)
@@ -10,3 +10,4 @@ int main(int argc, char** argv)
 	delete display;
 	return 0;
 }
+

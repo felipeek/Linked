@@ -129,11 +129,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Game\AI\AI.cpp" />
     <ClCompile Include="src\Game\Skill\CureBlessingSkill.cpp" />
     <ClCompile Include="src\Game\Skill\LinkSkill.cpp" />
     <ClCompile Include="src\Core\Game.cpp" />
     <ClCompile Include="src\Core\LinkedTime.cpp" />
-    <ClCompile Include="src\Game\AI\AI.cpp" />
     <ClCompile Include="src\Game\AI\MonsterAI.cpp" />
     <ClCompile Include="src\Game\Creature.cpp" />
     <ClCompile Include="src\Game\Equipment.cpp" />
