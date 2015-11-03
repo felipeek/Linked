@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Monster.h"
 #include "MonsterFactory.h"
 #include "GameEntityFactory.h"
 #include "Map.h"
@@ -139,7 +140,7 @@ void Game::update()
 	}
 
 	for (unsigned int i = 0; i < monsters.size(); i++)
-		if (!monsters[i]->isOnScreen())
+		if (monsters[i]->shouldBeDeleted())
 		{
 			delete monsters[i];
 			monsters.erase(monsters.begin() + i);

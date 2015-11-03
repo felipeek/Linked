@@ -21,13 +21,14 @@ public:
 
 	virtual void update(Map* map, Player* player);
 	virtual void render(Shader* shader);
-	virtual void moveToPosition(glm::vec3 position);
+	virtual void startOnlineMovement(glm::vec3 position);
 
 	/* COPY */
 	virtual Monster* getCopy(Monster* copy);
 private:
 	void moveToAttackPlayer(Map* map, Player* player);
 	void moveRandomly(Map* map, Player* player);
+	void moveOnline(Map* map);
 
 	/* TEXTURE */
 	void refreshTextureIfNecessary();
@@ -39,5 +40,6 @@ private:
 
 	bool movingRandomly = false;
 	bool movingToAttackPlayer = false;
+	bool movingOnline = false;
 	MovementDefinition directedMovement;
 };

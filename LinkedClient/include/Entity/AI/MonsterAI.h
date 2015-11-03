@@ -27,6 +27,7 @@ public:
 	bool shouldStandStill() const;
 	void resetStandStill();
 	glm::vec3 getNextStep(glm::vec3 destination) const;
+	MovementDefinition getMovementDefinitionOfDestination(glm::vec3 destination);
 protected:
 	MovementDirection getDiagonalDirection(glm::vec3 vector) const;
 	MovementDirection getCompleteDirection(glm::vec3 vector) const;

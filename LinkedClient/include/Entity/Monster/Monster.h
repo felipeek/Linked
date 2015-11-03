@@ -12,7 +12,7 @@
 #define MONSTER_DEFAULT_TOTAL_ATTACK_SPEED 10
 #define MONSTER_DEFAULT_TOTAL_RANGE 10
 
-#define ASPD_FACTOR 10
+#define ASPD_FACTOR 25
 #define DEATH_TIME 5.0f
 #define RECEIVE_DAMAGE_DELAY 0.3f
 
@@ -84,7 +84,7 @@ public:
 	virtual void render(Shader* shader);
 
 	/* MOVEMENT */
-	virtual void moveToPosition(glm::vec3 position);
+	virtual void startOnlineMovement(glm::vec3 position);
 
 	/* COPY */
 	// if the "copy" parameter is NULL, it will allocate the monster

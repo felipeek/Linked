@@ -1,7 +1,7 @@
 #pragma once
 #include "WorldObject.h"
 #include "Creature.h"
-#include <iostream>
+#include <string>
 #include <vector>
 
 #define MONSTER_DEFAULT_NAME "unnamed"
@@ -14,40 +14,32 @@
 #define MONSTER_DEFAULT_TOTAL_ATTACK_SPEED 10
 #define MONSTER_DEFAULT_TOTAL_RANGE 10
 
-#define FRAMETIME 1.0f/60.0f
-#define ASPD_FACTOR 10
-#define RECEIVE_DAMAGE_DELAY 0.3f
-
+#define ASPD_FACTOR 25
 #define DEATH_TIME 5.0f
+#define RECEIVE_DAMAGE_DELAY 0.3f
 
 class Player;
 class MonsterAI;
 class Map;
-class MovementDefinition;
 enum MovementDirection;
 
 class Monster : public WorldObject, public Creature
 {
 public:
 	Monster();
-	~Monster();
-	std::string getName();
-	void setName(std::string name);
-	bool isAlive();
-	bool isAttacking();
-	bool isReceivingDamage();
-	bool isMoving();
+	virtual ~Monster();
+
+	/* BASIC ATTRIBUTES */
 	bool wasUpdatedToClient();
 	void setUpdatedToClient(bool updatedToClient);
-	void attack();
-	void receiveDamage();
-	void killMonster();
-	bool isOnScreen();
+	unsigned int getTextureQuantity();
+	void setTextureQuantity(unsigned int textureQuantity);
+	std::string getName();
+	void setName(std::string name);
 	unsigned int getHp();
 	void setHp(unsigned int hp);
 	unsigned int getTotalMaximumHp();
 	void setTotalMaximumHp(unsigned int totalMaximumHp);
-	void doDamage(unsigned int damage);
 	unsigned int getTotalAttack();
 	void setTotalAttack(unsigned int totalAttack);
 	unsigned int getTotalDefense();
@@ -70,19 +62,48 @@ public:
 	void setMapColorBlue(int blue);
 	glm::vec3 getMapColor();
 	void setMapColor(glm::vec3 mapColor);
+
+	/* STATUS */
+	bool isAlive();
+	void killMonster();
+	bool isAttacking();
+	void attack();
+	bool isReceivingDamage();
+	void receiveDamage();
+	bool shouldRender();
+	void setShouldRender(bool shouldRender);
+	bool isMoving();
+	void move(MovementDirection direction);
+	void stop();
+	bool shouldBeDeleted();
+
+	/* COMBAT */
+	void doDamage(unsigned int damage);
 	void attackCreature(Creature* creature);
 
-	void update(Map* map, std::vector<Player*>* players);
-private:
+	/* UPDATE & RENDER */
+	virtual void update(Map* map, std::vector<Player*>* players);
+
+	/* COPY */
+	// if the "copy" parameter is NULL, it will allocate the monster
+	// if not, it will just copy the attributes to the existing monster.
+	virtual Monster* getCopy(Monster* copy);
+
+protected:
+	/* AI */
 	MonsterAI* ai;
 
-	/* MONSTER ATTRIBUTES/STATUS */
+private:
+	/* BASIC ATTRIBUTES */
+	bool updatedToClient = false;
+	unsigned int textureQuantity;
 	std::string name;
-	bool updatedToClient;
+	bool bRender;
 	bool alive;
 	bool attacking;
 	bool receivingDamage;
 	bool moving;
+	MovementDirection movingDirection;
 	unsigned int hp;
 	unsigned int totalMaximumHp;
 	unsigned int totalAttack;
@@ -98,12 +119,4 @@ private:
 	double killTime = 0;
 	double lastAttackTime = 0;
 	double lastReceivedDamageTime = 0;
-
-	/* MOVEMENT AUXILIAR FUNCTIONS */
-	MovementDefinition moveTo(WorldObject* worldObject, Map* map);
-	MovementDefinition moveRandomly(Map* map);
-	bool hasReachedEntity(WorldObject* worldObject);
-	Player* getClosestAlivePlayer(std::vector<Player*>* players);
-
-	bool isKnockedBack;
 };

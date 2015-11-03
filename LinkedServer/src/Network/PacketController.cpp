@@ -9,7 +9,7 @@
 #include "Projectile.h"
 #include "Common.h"
 
-#define SHOW_PACKETS_LOG 0
+#define SHOW_PACKETS_LOG 1
 
 #define ADDRESS_IPV4_LENGHT 46
 
@@ -504,6 +504,7 @@ void PacketController::updateMonstersPositionToAllClients()
 		std::vector<Monster*> monstersThatShouldHaveTheirPositionUpdated;
 
 		for (Monster* monster : *PacketController::monsters)
+		{
 			if (!player->isFogOfWar(monster->getPosition()) && monster->isAlive() && (!monster->wasUpdatedToClient() || monster->didPositionChanged()))
 			{
 				monstersThatShouldHaveTheirPositionUpdated.push_back(monster);
@@ -512,6 +513,7 @@ void PacketController::updateMonstersPositionToAllClients()
 			}
 			else
 				monster->setUpdatedToClient(false);
+		}
 
 		int monstersToUpdate = monstersThatShouldHaveTheirPositionUpdated.size();
 
@@ -542,7 +544,6 @@ void PacketController::updateMonstersPosition(int vectorIndex, int quantity, std
 	for (int i = 0; i < quantity; i++)
 	{
 		Monster* monster = monsters[i + vectorIndex];
-
 		monstersPosition[i] = monster->getPosition();
 		monstersIds[i] = monster->getId();
 	}

@@ -203,6 +203,33 @@ void MonsterAI::resetStandStill()
 	this->standStillTime = LinkedTime::getTime();
 }
 
+glm::vec3 MonsterAI::getNextStep(glm::vec3 destination) const
+{
+	glm::vec3 aiOwnerPosition = this->aiOwner.getTransform()->getPosition();
+
+	if (aiOwnerPosition.x != destination.x && aiOwnerPosition.y != destination.y)
+	{
+		glm::vec3 diffVec = destination - aiOwnerPosition;
+		float speedFactor = this->aiOwner.getTotalSpeed() / 100.0f;
+		glm::vec3 movementVector = speedFactor * glm::normalize(diffVec);
+		glm::vec3 nextStep = movementVector + aiOwnerPosition;
+
+		return nextStep;
+	}
+	else
+		return destination;
+}
+
+MovementDefinition MonsterAI::getMovementDefinitionOfDestination(glm::vec3 destination)
+{
+	MovementDefinition movementDefinition;
+	glm::vec3 aiOwnerPosition = aiOwner.getTransform()->getPosition();
+	glm::vec3 diffVec = destination - aiOwnerPosition;
+	movementDefinition.direction = this->getDiagonalDirection(diffVec);
+	movementDefinition.movement = destination;
+	return movementDefinition;
+}
+
 MovementDirection MonsterAI::getDiagonalDirection(glm::vec3 vector) const
 {
 	float angle = this->getVectorAngle(vector);
@@ -251,15 +278,4 @@ float MonsterAI::getVectorAngle(glm::vec3 vector) const
 	if (vector.y < 0)
 		angle = -angle;
 	return angle;
-}
-
-glm::vec3 MonsterAI::getNextStep(glm::vec3 destination) const
-{
-	glm::vec3 monsterPosition = this->aiOwner.getTransform()->getPosition();
-	glm::vec3 diffVec = destination - monsterPosition;
-	float speedFactor = this->aiOwner.getTotalSpeed() / 100.0f;
-	glm::vec3 movementVector = speedFactor * glm::normalize(diffVec);
-	glm::vec3 nextStep = movementVector + monsterPosition;
-
-	return nextStep;
 }

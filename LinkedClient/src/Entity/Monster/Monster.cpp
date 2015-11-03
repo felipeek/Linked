@@ -315,10 +315,10 @@ void Monster::render(Shader* shader)
 
 /* MOVEMENT */
 
-void Monster::moveToPosition(glm::vec3 position)
+void Monster::startOnlineMovement(glm::vec3 position)
 {
-	glm::vec3 currentPosition = this->getTransform()->getPosition();
-	this->getTransform()->translate(position.x, position.y, currentPosition.z);
+	//glm::vec3 currentPosition = this->getTransform()->getPosition();
+	//this->getTransform()->translate(position.x, position.y, currentPosition.z);
 }
 
 /* COPY */
