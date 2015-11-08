@@ -50,6 +50,41 @@ Quad::Quad(glm::vec3 center, float sizeX, float sizeY, int textureNumRows, int t
 	model->getIndices()->push_back(3);
 }
 
+Quad::Quad(glm::vec3& topLeftCorner, glm::vec3& bottomRightCorner)
+{
+	model = new IndexedModel();
+
+	this->index = 0.0f;
+	this->numRows = 1.0f;
+
+	glm::vec3 bottomLeft = glm::vec3(topLeftCorner.x, bottomRightCorner.y, topLeftCorner.z);
+	glm::vec3 topRight = glm::vec3(bottomRightCorner.x, topLeftCorner.y, bottomRightCorner.z);
+
+	model->positions.push_back(topLeftCorner);
+	model->positions.push_back(topRight);
+	model->positions.push_back(bottomLeft);
+	model->positions.push_back(bottomRightCorner);
+
+	glm::vec3 normal = glm::vec3(0, 1, 0);
+	model->normals.push_back(normal);
+	model->normals.push_back(normal);
+	model->normals.push_back(normal);
+	model->normals.push_back(normal);
+
+	model->texCoords.push_back(glm::vec2(0, 0));	// 0
+	model->texCoords.push_back(glm::vec2(1, 0));	// 1
+	model->texCoords.push_back(glm::vec2(0, 1));	// 2
+	model->texCoords.push_back(glm::vec2(1, 1));	// 3
+
+	model->indices.push_back(0);
+	model->indices.push_back(3);
+	model->indices.push_back(1);
+	model->indices.push_back(0);
+	model->indices.push_back(2);
+	model->indices.push_back(3);
+}
+
+
 void Quad::calcAtlas()
 {
 	int column = (int)index % (int)numRows;

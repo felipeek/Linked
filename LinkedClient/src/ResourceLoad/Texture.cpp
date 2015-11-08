@@ -8,6 +8,7 @@ Texture::Texture(std::string fileName, float bias) : ImageLoader(fileName, 4)
 	this->bias = bias;
 	this->fileName = fileName;
 	this->tileAmount = 1.0f;
+	this->interpolationMethod = TexInterp::NEAREST_MIPMAP;
 	textureID = genGLTexture();
 }
 
@@ -46,15 +47,8 @@ GLuint Texture::genGLTexture()
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-	if (bias < 0)
-	{
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, (GLfloat)bias);
-	}
-	glGenerateMipmap(GL_TEXTURE_2D);
+
+	setInterpolationMethod(interpolationMethod);
 
 	return textureID;
 }
@@ -69,6 +63,40 @@ GLuint Texture::genGLNullTexture(int width, int height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	return textureID;
+}
+
+void Texture::setInterpolationMethod(TexInterp method)
+{
+	this->interpolationMethod = method;
+	if (interpolationMethod == TexInterp::LINEAR_MIPMAP)
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	}
+	else if (interpolationMethod == TexInterp::LINEAR)
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	}
+	else if (interpolationMethod == TexInterp::NEAREST_MIPMAP)
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+	}
+	else if (interpolationMethod == TexInterp::NEAREST)
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	}
+
+	if (interpolationMethod == TexInterp::NEAREST_MIPMAP || interpolationMethod == TexInterp::LINEAR_MIPMAP)
+	{
+		if (bias < 0)
+		{
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, (GLfloat)bias);
+		}
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
 }
 
 DynamicTexture::DynamicTexture(int width, int height, bool mipmap, float bias)

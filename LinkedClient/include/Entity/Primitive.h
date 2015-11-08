@@ -14,6 +14,7 @@ class Quad : public Primitive
 {
 public:
 	Quad(glm::vec3 center, float sizeX, float sizeY);
+	Quad(glm::vec3& topLeftCorner, glm::vec3& bottomRightCorner);
 	Quad(glm::vec3 center, float sizeX, float sizeY, int textureNumRows, int textureIndex);
 	virtual ~Quad();
 	IndexedModel* getIndexedModel();

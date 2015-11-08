@@ -7,6 +7,12 @@ EntityMap::EntityMap(Transform* transform, Mesh* mesh, Texture* texture, Texture
 	this->texture2 = texture2;
 	this->texture3 = texture3;
 	this->blendMap = blendMap;
+	
+	// set all to linear interpolation
+	this->texture1->setInterpolationMethod(TexInterp::LINEAR_MIPMAP);
+	this->texture2->setInterpolationMethod(TexInterp::LINEAR_MIPMAP);
+	this->texture3->setInterpolationMethod(TexInterp::LINEAR_MIPMAP);
+	this->blendMap->setInterpolationMethod(TexInterp::LINEAR_MIPMAP);
 }
 
 EntityMap::~EntityMap()

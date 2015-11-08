@@ -3,6 +3,14 @@
 #include <string>
 #include "ImageLoader.h"
 
+enum class TexInterp
+{
+	NEAREST_MIPMAP,
+	NEAREST,
+	LINEAR_MIPMAP,
+	LINEAR
+};
+
 class Texture : public ImageLoader
 {
 public:
@@ -22,6 +30,7 @@ public:
 	void setTileAmount(float amt);
 	int& getReferenceCount();
 	void setReferenceCount(int refCount);
+	void setInterpolationMethod(TexInterp method);
 	// Implement if necessary
 	//virtual unsigned char* getLoadedImage();
 protected:
@@ -30,6 +39,7 @@ protected:
 	float tileAmount;
 
 	int referenceCount;
+	TexInterp interpolationMethod;
 };
 
 class DynamicTexture : public Texture
@@ -42,6 +52,4 @@ public:
 
 	// Implement if necessary
 	//virtual unsigned char* getLoadedImage();
-private:
-	
 };
