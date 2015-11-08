@@ -4,17 +4,16 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+
 class Game;
 
-#define WWID 1600
-#define WHEI 900
+//#define WWID 1600
+//#define WHEI 900
 #define WINDOW_START_X 100
 #define WINDOW_START_Y 100
 
-#define CLEARCOLOR_R 0.49f
-#define CLEARCOLOR_G 0.75f
-#define CLEARCOLOR_B 0.93f
-#define CLEARCOLOR_A 1.0f
+#define CLEARCOLOR glm::vec4(0.49f, 0.75f, 0.93f, 1.0f)
 
 #define FRAMECAP 60.0
 #define GAMESPEED 60.0
@@ -22,16 +21,22 @@ class Game;
 class Display
 {
 public:
-	Display(int* argc, char** argv, std::string name);
+	Display(int* argc, char** argv, std::string name, int width, int height);
 	~Display();
 	const static double frameTime;
 	static int monitorWidth;
 	static int monitorHeight;
+	static const Display& getCurrentInstance();
 private:
+	int m_width, m_height;
+
+	static Display* currentInstance;
+	static glm::vec4 clearColor;
+
 	static Game* game;
 	static GLFWwindow* window;
 	static GLFWmonitor* monitor;
-	static void startGlfw(int* argc, char** argv, std::string titulo);
+	static void startGlfw(Display* display, int* argc, char** argv, std::string titulo);
 	
 	static void MainLoop(GLFWwindow* window);
 
@@ -55,5 +60,8 @@ private:
 	static int frames;
 
 	static void printOpenGLandGLSLversions();
+public:
+	int getWidth()const{ return m_width; }
+	int getHeight()const{ return m_height; }
 };
 

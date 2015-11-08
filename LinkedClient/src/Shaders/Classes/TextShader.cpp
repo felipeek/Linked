@@ -21,7 +21,7 @@ void TextShader::getUniformLocations()
 
 void TextShader::update()
 {
-	glm::mat4 projection = glm::ortho(0.0f, (float)WWID, 0.0f, (float)WHEI);
+	glm::mat4 projection = glm::ortho(0.0f, (float)Display::getCurrentInstance().getWidth(), 0.0f, (float)Display::getCurrentInstance().getHeight());
 	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, &projection[0][0]);
 	glActiveTexture(GL_TEXTURE0);
 	glUniform1i(uniformText, 0);

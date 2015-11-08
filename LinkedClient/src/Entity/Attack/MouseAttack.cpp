@@ -21,8 +21,8 @@ void MouseAttack::setAttackPos(float x, float y)
 
 void MouseAttack::setMouseCoords(int mouseX, int mouseY)
 {
-	float x = (2.0f * mouseX) / WWID - 1.0f;
-	float y = 1.0f - (2.0f * mouseY) / WHEI;
+	float x = (2.0f * mouseX) / Display::getCurrentInstance().getWidth() - 1.0f;
+	float y = 1.0f - (2.0f * mouseY) / Display::getCurrentInstance().getHeight();
 	float z = 1.0f;
 	//std::cout << x << " " << y << std::endl;
 	glm::vec3 screenPosition = glm::vec3(x, y,z);
@@ -44,7 +44,7 @@ glm::vec2 MouseAttack::getScreenPos()
 
 glm::vec2 MouseAttack::getOrthoCoords()
 {
-	return glm::vec2(((float)WWID / (float)WHEI)*this->screenPos.x, this->screenPos.y);
+	return glm::vec2(((float)Display::getCurrentInstance().getWidth() / (float)Display::getCurrentInstance().getHeight())*this->screenPos.x, this->screenPos.y);
 }
 
 glm::vec3 MouseAttack::attack()

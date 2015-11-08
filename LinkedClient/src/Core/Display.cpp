@@ -6,14 +6,18 @@
 #include "Chat.h"
 #include "Common.h"
 
+// Display related
+Display* Display::currentInstance;
+glm::vec4 Display::clearColor = CLEARCOLOR;
+
 // Window and Monitor
-GLFWwindow* Display::window = NULL;
-GLFWmonitor* Display::monitor = NULL;
+GLFWwindow* Display::window = nullptr;
+GLFWmonitor* Display::monitor = nullptr;
 int Display::monitorWidth = 0;
 int Display::monitorHeight = 0;
 
 // Game
-Game* Display::game = NULL;
+Game* Display::game = nullptr;
 
 // Time
 const double Display::frameTime = 1.0 / GAMESPEED;
@@ -26,20 +30,22 @@ double Display::frameCount = 0;
 double Display::update10Time = 0;
 int Display::frames = 0;
 
-Display::Display(int* argc, char** argv, std::string name)
+Display::Display(int* argc, char** argv, std::string name, int width, int height)
+	: m_width(width), m_height(height)
 {
-	startGlfw(argc, argv, name);
+	currentInstance = this;
+	startGlfw(this, argc, argv, name);
 }
 
 Display::~Display()
 {
-	if (game != NULL)
+	if (game != nullptr)
 		delete game;
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }
 
-void Display::startGlfw(int* argc, char** argv, std::string titulo)
+void Display::startGlfw(Display* display, int* argc, char** argv, std::string titulo)
 {
 	if (glfwInit() == GL_FALSE)
 	{
@@ -53,7 +59,7 @@ void Display::startGlfw(int* argc, char** argv, std::string titulo)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_CORE_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(WWID, WHEI, titulo.c_str(), NULL, NULL);
+	window = glfwCreateWindow(Display::getCurrentInstance().getWidth(), Display::getCurrentInstance().getHeight(), titulo.c_str(), NULL, NULL);
 
 	if (!window)
 	{
@@ -165,13 +171,13 @@ void Display::render()
 
 void Display::initOpenGL()
 {
-	glClearColor(CLEARCOLOR_R, CLEARCOLOR_G, CLEARCOLOR_B, CLEARCOLOR_A);
+	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 	glEnable(GL_DEPTH_TEST);
 
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 
-	game = new Game(WWID, WHEI);
+	game = new Game(Display::getCurrentInstance().getWidth(), Display::getCurrentInstance().getHeight());
 }
 
 void Display::getSystemInfo()
@@ -250,4 +256,9 @@ void Display::focusedCallBack(GLFWwindow* window, int focused)
 	if (focused != 1)
 		Input::clear();
 
+}
+
+const Display& Display::getCurrentInstance()
+{
+	return *Display::currentInstance;
 }

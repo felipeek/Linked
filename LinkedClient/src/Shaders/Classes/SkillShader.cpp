@@ -24,7 +24,9 @@ void SkillShader::getUniformLocations()
 
 void SkillShader::update()
 {
-	glm::mat4 ortho = glm::ortho(-(float)WWID/WHEI, (float)WWID/WHEI, -1.0f, 1.0f);
+	int ww = Display::getCurrentInstance().getWidth();
+	int wh = Display::getCurrentInstance().getHeight();
+	glm::mat4 ortho = glm::ortho(-(float)ww/wh, (float)ww/wh, -1.0f, 1.0f);
 	glm::mat4 finalMatrix = ortho * entity->getTransform()->model;
 	glActiveTexture(GL_TEXTURE0);
 	glUniform1i(uniform_TexSampler, 0);
