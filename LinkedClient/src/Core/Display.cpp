@@ -9,6 +9,7 @@
 // Display related
 Display* Display::currentInstance;
 glm::vec4 Display::clearColor = CLEARCOLOR;
+glm::vec2 Display::cursorPosition;
 
 // Window and Monitor
 GLFWwindow* Display::window = nullptr;
@@ -261,11 +262,17 @@ void Display::focusedCallBack(GLFWwindow* window, int focused)
 
 void Display::resizeCallback(GLFWwindow* window, int width, int height)
 {
-	glViewport(0, 0, width, height);
+	// Set the new size keeping the aspect ratio
+	int newHeight = (int)(width * (1.0f / D_ASPECTRATIO));
+	glfwSetWindowSize(window, width, newHeight);
+
+	glViewport(0, 0, width, newHeight);
+
 	Display::currentInstance->m_width = width;
-	Display::currentInstance->m_height = height;
+	Display::currentInstance->m_height = newHeight;
+
 	game->setWindowWidth(width);
-	game->setWindowHeight(height);
+	game->setWindowHeight(newHeight);
 }
 
 const Display& Display::getCurrentInstance()

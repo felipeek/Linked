@@ -8,10 +8,9 @@
 
 class Game;
 
-//#define WWID 1600
-//#define WHEI 900
 #define WINDOW_START_X 100
 #define WINDOW_START_Y 100
+#define D_ASPECTRATIO 1.777777777
 
 #define CLEARCOLOR glm::vec4(0.49f, 0.75f, 0.93f, 1.0f)
 
@@ -32,6 +31,7 @@ private:
 
 	static Display* currentInstance;
 	static glm::vec4 clearColor;
+	static glm::vec2 cursorPosition;
 
 	static Game* game;
 	static GLFWwindow* window;
@@ -64,5 +64,7 @@ private:
 public:
 	int getWidth()const{ return m_width; }
 	int getHeight()const{ return m_height; }
+	static const glm::vec4& getClearColor() { return clearColor; }
+	static const glm::vec2& getCursorPosition(){ return cursorPosition; }
 };
 

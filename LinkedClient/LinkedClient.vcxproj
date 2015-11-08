@@ -88,8 +88,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>include/Shaders/Classes;include;include/External;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core</AdditionalIncludeDirectories>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>include/WindowApi;include/Shaders/Classes;include;include/External;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -120,7 +120,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>include/Shaders/Classes;include;include/External;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include/WindowApi;include/Shaders/Classes;include;include/External;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -151,8 +151,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\external\freetypegl\platform.c" />
+    <ClCompile Include="include\external\freetypegl\texture-atlas.c" />
+    <ClCompile Include="include\external\freetypegl\texture-font.c" />
+    <ClCompile Include="include\external\freetypegl\vector.c" />
     <ClCompile Include="src\Entity\Skill\CureBlessingSkill.cpp" />
     <ClCompile Include="src\Entity\Cursor.cpp" />
+    <ClCompile Include="src\Shaders\Classes\FontShader.cpp" />
     <ClCompile Include="src\Shaders\Classes\SkillShader.cpp" />
     <ClCompile Include="src\Entity\Skill\LinkSkill.cpp" />
     <ClCompile Include="src\Core\Display.cpp" />
@@ -204,6 +209,7 @@
     <ClCompile Include="src\ResourceLoad\Texture.cpp" />
     <ClCompile Include="src\Shaders\Camera.cpp" />
     <ClCompile Include="src\Shaders\Classes\CommonShader.cpp" />
+    <ClCompile Include="src\Shaders\Classes\WindowShader.cpp" />
     <ClCompile Include="src\Shaders\FrameBuffer.cpp" />
     <ClCompile Include="src\Shaders\Classes\FrameShader.cpp" />
     <ClCompile Include="src\Shaders\Classes\GUIShader.cpp" />
@@ -213,6 +219,11 @@
     <ClCompile Include="src\Shaders\Classes\Shader.cpp" />
     <ClCompile Include="src\Shaders\Classes\TextShader.cpp" />
     <ClCompile Include="src\Entity\Skill\SwapSkill.cpp" />
+    <ClCompile Include="src\WindowApi\Button.cpp" />
+    <ClCompile Include="src\WindowApi\FontRenderer.cpp" />
+    <ClCompile Include="src\WindowApi\Label.cpp" />
+    <ClCompile Include="src\WindowApi\Window.cpp" />
+    <ClCompile Include="src\WindowApi\WindowDiv.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Common.h" />
@@ -249,6 +260,14 @@
     <ClInclude Include="include\Entity\Skill\Skill.h" />
     <ClInclude Include="include\Entity\Skill\SkillIcon.h" />
     <ClInclude Include="include\Entity\Transform.h" />
+    <ClInclude Include="include\external\freetypegl\freetype-gl.h" />
+    <ClInclude Include="include\external\freetypegl\opengl.h" />
+    <ClInclude Include="include\external\freetypegl\platform.h" />
+    <ClInclude Include="include\external\freetypegl\stb_image.h" />
+    <ClInclude Include="include\external\freetypegl\texture-atlas.h" />
+    <ClInclude Include="include\external\freetypegl\texture-font.h" />
+    <ClInclude Include="include\external\freetypegl\vec234.h" />
+    <ClInclude Include="include\external\freetypegl\vector.h" />
     <ClInclude Include="include\GUI\Chat.h" />
     <ClInclude Include="include\GUI\GUI.h" />
     <ClInclude Include="include\GUI\HPBar.h" />
@@ -268,6 +287,8 @@
     <ClInclude Include="include\ResourceLoad\Texture.h" />
     <ClInclude Include="include\Shaders\Camera.h" />
     <ClInclude Include="include\Shaders\Classes\CommonShader.h" />
+    <ClInclude Include="include\Shaders\Classes\FontShader.h" />
+    <ClInclude Include="include\Shaders\Classes\WindowShader.h" />
     <ClInclude Include="include\Shaders\FrameBuffer.h" />
     <ClInclude Include="include\Shaders\Classes\FrameShader.h" />
     <ClInclude Include="include\Shaders\Classes\GUIShader.h" />
@@ -279,6 +300,11 @@
     <ClInclude Include="include\Entity\Skill\LinkSkill.h" />
     <ClInclude Include="include\Entity\Skill\SwapSkill.h" />
     <ClInclude Include="include\Shaders\Classes\SkillShader.h" />
+    <ClInclude Include="include\WindowApi\Button.h" />
+    <ClInclude Include="include\WindowApi\FontRenderer.h" />
+    <ClInclude Include="include\WindowApi\Label.h" />
+    <ClInclude Include="include\WindowApi\Window.h" />
+    <ClInclude Include="include\WindowApi\WindowDiv.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

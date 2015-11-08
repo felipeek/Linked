@@ -12,6 +12,7 @@ class Mesh
 public:
 	Mesh(std::string, float, float);
 	Mesh(Quad* quad);
+	Mesh(Quad* quad, bool dynamicDraw);
 	Mesh(Grid* grid);
 	~Mesh();
 	void render();
@@ -48,6 +49,7 @@ private:
 	void genIndexBuffer(IndexedModel*);
 
 	int indicesSize;
+	int openglDrawHint;
 
 	int referenceCount;
 };
