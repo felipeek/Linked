@@ -108,5 +108,10 @@ private:
 
 	double cursorRot = 0;
 	double lastTime;
+public:
+	inline int getWidth()const { return windowWidth; }
+	inline int getHeight()const { return windowHeight; }
+	inline void setWindowWidth(int width) { windowWidth = width; }
+	inline void setWindowHeight(int height) { windowHeight = height; }
 };
 

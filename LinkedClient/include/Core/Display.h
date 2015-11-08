@@ -45,6 +45,7 @@ private:
 	static void keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static void mouseCallBack(GLFWwindow* window, int button, int action, int mods);
 	static void focusedCallBack(GLFWwindow* window, int focused);
+	static void resizeCallback(GLFWwindow* window, int width, int height);
 
 	static void initOpenGL();
 	static void getSystemInfo();

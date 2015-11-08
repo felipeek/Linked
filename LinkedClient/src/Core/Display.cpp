@@ -54,7 +54,7 @@ void Display::startGlfw(Display* display, int* argc, char** argv, std::string ti
 	}
 
 	glfwWindowHint(GLFW_SAMPLES, 4);
-	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+	//glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_CORE_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -88,6 +88,7 @@ void Display::startGlfw(Display* display, int* argc, char** argv, std::string ti
 	glfwSetScrollCallback(window, wheelCallBack);
 	glfwSetCursorPosCallback(window, mousePosCallBack);
 	glfwSetWindowFocusCallback(window, focusedCallBack);
+	glfwSetWindowSizeCallback(window, resizeCallback);
 
 	// TODO : check if needed
 	glewExperimental = true;
@@ -256,6 +257,15 @@ void Display::focusedCallBack(GLFWwindow* window, int focused)
 	if (focused != 1)
 		Input::clear();
 
+}
+
+void Display::resizeCallback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+	Display::currentInstance->m_width = width;
+	Display::currentInstance->m_height = height;
+	game->setWindowWidth(width);
+	game->setWindowHeight(height);
 }
 
 const Display& Display::getCurrentInstance()
