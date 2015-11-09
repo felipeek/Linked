@@ -1,5 +1,7 @@
 #pragma once
 #define DEBUG 1
+#define GAMESPEED 60.0
+#define FRAMECAP 60.0
 
 #if DEBUG
 #include <iostream>

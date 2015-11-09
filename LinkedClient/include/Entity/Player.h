@@ -19,9 +19,13 @@
 #define PLAYER_DEFAULT_ATTACK_SPEED_BASIS 10
 
 #define PLAYER_FOG_OF_WAR_RADIUS 30
+#define PLAYER_OUTSIDE_RADIUS_AREA 40
 
 #define PLAYER_RECEIVE_DAMAGE_DELAY 0.3f
 #define PLAYER_TEXTURE_CHANGE_DELAY 0.2f
+
+#define ASPD_FACTOR 25
+#define RECEIVE_DAMAGE_DELAY 0.3f
 
 // If PLAYER_FIRST_DIRECTION is changed,
 // PLAYER_FIRST_INDEX_TEXTURE must also be changed.
@@ -108,7 +112,7 @@ public:
 	bool isAlive();
 	bool isMoving();
 	bool isAttacking();
-	void doAttack();
+	void attack();
 	void receiveDamage();
 	bool isReceivingDamage();
 
@@ -120,6 +124,7 @@ public:
 
 	/* AUXILIAR */
 	bool isFogOfWar(glm::vec3 position);
+	bool isOutsideExternalRadiusArea(glm::vec3 position);
 
 	/* METHODS RELATED TO INPUT, UPDATE AND RENDERING */
 	void update(Map* map);
@@ -136,17 +141,17 @@ private:
 	std::string name;
 	unsigned int hp;
 	unsigned int maximumHpBasis;	// single player
-	unsigned int maximumHp;	// multiplayer
+	unsigned int totalMaximumHp;	// multiplayer
 	unsigned int attackBasis;	// single player
-	unsigned int attack;	// multiplayer
+	unsigned int totalAttack;	// multiplayer
 	unsigned int defenseBasis;	// single player
-	unsigned int defense;	// multiplayer
+	unsigned int totalDefense;	// multiplayer
 	unsigned int magicalPowerBasis;	// single player
-	unsigned int magicalPower;	// multiplayer
+	unsigned int totalMagicalPower;	// multiplayer
 	unsigned int speedBasis;	// single player
-	unsigned int speed;	// multiplayer
+	unsigned int totalSpeed;	// multiplayer
 	unsigned int attackSpeedBasis;	// single player
-	unsigned int attackSpeed;	// multiplayer
+	unsigned int totalAttackSpeed;	// multiplayer
 	PlayerType type;
 	std::vector<Skill*> skills;
 	std::vector<Equipment*> equipments;
@@ -179,9 +184,9 @@ private:
 	bool isMovingTo;	// multiplayer
 
 	/* MOVEMENT METHODS */
-	void updateMovement(Map* map);	// multiplater
+	void moveOnline(Map* map);	// multiplater
 
 	/* AUXILIAR METHODS */
 	bool checkIfPlayerIsStillOnTheSameMapPosition(glm::vec3 currentPosition, glm::vec3 nextPosition);
-	glm::vec3 getDeltaVectorToDirection(MovementDirection direction);
+	glm::vec3 getPlayerNextPosition(MovementDirection direction);
 };

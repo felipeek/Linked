@@ -10,3 +10,4 @@ int main(int argc, char** argv)
 	delete display;
 	return 0;
 }
+

@@ -1,477 +1,161 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="include\external\freetypegl\platform.c" />
+    <ClCompile Include="include\external\freetypegl\texture-atlas.c" />
+    <ClCompile Include="include\external\freetypegl\texture-font.c" />
+    <ClCompile Include="include\external\freetypegl\vector.c" />
+    <ClCompile Include="src\Entity\AI\AI.cpp" />
+    <ClCompile Include="src\Entity\Monster\BasicMonster.cpp" />
+    <ClCompile Include="src\Entity\Skill\CureBlessingSkill.cpp" />
+    <ClCompile Include="src\Entity\Cursor.cpp" />
+    <ClCompile Include="src\Shaders\Classes\FontShader.cpp" />
+    <ClCompile Include="src\Shaders\Classes\SkillShader.cpp" />
+    <ClCompile Include="src\Entity\Skill\LinkSkill.cpp" />
+    <ClCompile Include="src\Core\Display.cpp" />
+    <ClCompile Include="src\Core\Game.cpp" />
+    <ClCompile Include="src\Core\Input.cpp" />
+    <ClCompile Include="src\Core\LinkedTime.cpp" />
+    <ClCompile Include="src\Entity\AI\MonsterAI.cpp" />
+    <ClCompile Include="src\Entity\AI\PlayerAI.cpp" />
+    <ClCompile Include="src\Entity\Attack\MouseAttack.cpp" />
+    <ClCompile Include="src\Entity\Attack\Projectile.cpp" />
+    <ClCompile Include="src\Entity\Attack\RangeAttack.cpp" />
+    <ClCompile Include="src\Entity\Entity.cpp" />
+    <ClCompile Include="src\Entity\EntityMap.cpp" />
+    <ClCompile Include="src\Entity\Equipment.cpp" />
+    <ClCompile Include="src\Entity\Factory\EquipmentFactory.cpp" />
+    <ClCompile Include="src\Entity\Factory\Factory.cpp" />
+    <ClCompile Include="src\Entity\Factory\GameEntityFactory.cpp" />
+    <ClCompile Include="src\Entity\Factory\ItemFactory.cpp" />
+    <ClCompile Include="src\Entity\Factory\MonsterFactory.cpp" />
+    <ClCompile Include="src\Entity\Factory\PlayerFactory.cpp" />
+    <ClCompile Include="src\Entity\Factory\SkillFactory.cpp" />
+    <ClCompile Include="src\Entity\GameEntity.cpp" />
+    <ClCompile Include="src\Entity\Item.cpp" />
+    <ClCompile Include="src\Entity\Mesh.cpp" />
+    <ClCompile Include="src\Entity\Monster\Monster.cpp" />
+    <ClCompile Include="src\Entity\Player.cpp" />
+    <ClCompile Include="src\Entity\Primitive.cpp" />
+    <ClCompile Include="src\Entity\Skill\HoshoyoExplosionSkill.cpp" />
+    <ClCompile Include="src\Entity\Skill\Skill.cpp" />
+    <ClCompile Include="src\Entity\Skill\SkillIcon.cpp" />
+    <ClCompile Include="src\Entity\Transform.cpp" />
+    <ClCompile Include="src\GUI\Chat.cpp" />
+    <ClCompile Include="src\GUI\GUI.cpp" />
+    <ClCompile Include="src\GUI\HPBar.cpp" />
+    <ClCompile Include="src\GUI\TextRenderer.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Map\Grid.cpp" />
+    <ClCompile Include="src\Map\Map.cpp" />
+    <ClCompile Include="src\Map\MapEntity.cpp" />
+    <ClCompile Include="src\Map\MapMonster.cpp" />
+    <ClCompile Include="src\Map\MapTerrain.cpp" />
+    <ClCompile Include="src\Network\ClientPacket.cpp" />
+    <ClCompile Include="src\Network\Packet.cpp" />
+    <ClCompile Include="src\Network\PacketController.cpp" />
+    <ClCompile Include="src\Network\UDPClient.cpp" />
+    <ClCompile Include="src\ResourceLoad\ImageLoader.cpp" />
+    <ClCompile Include="src\ResourceLoad\IndexedModel.cpp" />
+    <ClCompile Include="src\ResourceLoad\Texture.cpp" />
+    <ClCompile Include="src\Shaders\Camera.cpp" />
+    <ClCompile Include="src\Shaders\Classes\CommonShader.cpp" />
+    <ClCompile Include="src\Shaders\Classes\WindowShader.cpp" />
+    <ClCompile Include="src\Shaders\FrameBuffer.cpp" />
+    <ClCompile Include="src\Shaders\Classes\FrameShader.cpp" />
+    <ClCompile Include="src\Shaders\Classes\GUIShader.cpp" />
+    <ClCompile Include="src\Shaders\Light.cpp" />
+    <ClCompile Include="src\Shaders\Classes\MapShader.cpp" />
+    <ClCompile Include="src\Shaders\Classes\PrimitiveShader.cpp" />
+    <ClCompile Include="src\Shaders\Classes\Shader.cpp" />
+    <ClCompile Include="src\Shaders\Classes\TextShader.cpp" />
+    <ClCompile Include="src\Entity\Skill\SwapSkill.cpp" />
+    <ClCompile Include="src\WindowApi\Button.cpp" />
+    <ClCompile Include="src\WindowApi\FontRenderer.cpp" />
+    <ClCompile Include="src\WindowApi\Label.cpp" />
+    <ClCompile Include="src\WindowApi\Window.cpp" />
+    <ClCompile Include="src\WindowApi\WindowDiv.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Core\Display.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Input.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\LinkedTime.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\AI\AI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\AI\MonsterAI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\AI\PlayerAI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Attack\MouseAttack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Attack\Projectile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Attack\RangeAttack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Factory\EquipmentFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Factory\Factory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Factory\GameEntityFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Factory\ItemFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Factory\MonsterFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Factory\PlayerFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Factory\SkillFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Skill\HoshoyoExplosionSkill.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Skill\Skill.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Skill\SkillIcon.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Entity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\EntityMap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Equipment.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\GameEntity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Item.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Monster.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Primitive.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Transform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Chat.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\GUI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\HPBar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\TextRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Map\Grid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Map\Map.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Map\MapEntity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Map\MapMonster.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Map\MapTerrain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Network\ClientPacket.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Network\Packet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Network\PacketController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Network\UDPClient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ResourceLoad\ImageLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ResourceLoad\IndexedModel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ResourceLoad\Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shaders\Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shaders\FrameBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shaders\Light.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shaders\Classes\Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shaders\Classes\TextShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shaders\Classes\PrimitiveShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shaders\Classes\MapShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shaders\Classes\GUIShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shaders\Classes\FrameShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shaders\Classes\CommonShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Skill\LinkSkill.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Skill\SwapSkill.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shaders\Classes\SkillShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Cursor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Skill\CureBlessingSkill.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shaders\Classes\FontShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shaders\Classes\WindowShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WindowApi\Button.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WindowApi\FontRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WindowApi\Label.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WindowApi\Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WindowApi\WindowDiv.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\external\freetypegl\platform.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\external\freetypegl\texture-atlas.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\external\freetypegl\texture-font.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\external\freetypegl\vector.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\Entity\AI\AI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\AI\MonsterAI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\AI\PlayerAI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Attack\MouseAttack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Attack\Projectile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Attack\RangeAttack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Factory\EquipmentFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Factory\Factory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Factory\GameEntityFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Factory\ItemFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Factory\MonsterFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Factory\PlayerFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Factory\SkillFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Skill\HoshoyoExplosionSkill.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Skill\Skill.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Skill\SkillIcon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Creature.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\EntityMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Equipment.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\GameEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Item.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Monster.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Primitive.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Transform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Core\Display.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Core\Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Core\Input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Core\LinkedTime.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GUI\Chat.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GUI\GUI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GUI\HPBar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GUI\TextRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Map\Grid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Map\Map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Map\MapEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Map\MapMonster.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Map\MapTerrain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Network\ClientPacket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Network\Packet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Network\PacketController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Network\UDPClient.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ResourceLoad\ImageLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ResourceLoad\IndexedModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ResourceLoad\Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Shaders\Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Shaders\FrameBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Shaders\Light.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Shaders\Classes\TextShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Shaders\Classes\Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Shaders\Classes\PrimitiveShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Shaders\Classes\MapShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Shaders\Classes\GUIShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Shaders\Classes\FrameShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Shaders\Classes\CommonShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Movement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Skill\LinkSkill.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Skill\SwapSkill.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Shaders\Classes\SkillShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Cursor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Entity\Skill\CureBlessingSkill.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Shaders\Classes\FontShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Shaders\Classes\WindowShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\WindowApi\Button.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\WindowApi\FontRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\WindowApi\Label.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\WindowApi\Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\WindowApi\WindowDiv.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\external\freetypegl\freetype-gl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\external\freetypegl\opengl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\external\freetypegl\platform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\external\freetypegl\stb_image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\external\freetypegl\texture-atlas.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\external\freetypegl\texture-font.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\external\freetypegl\vec234.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\external\freetypegl\vector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="include\Entity\AI\AI.h" />
+    <ClInclude Include="include\Entity\Monster\BasicMonster.h" />
+    <ClInclude Include="include\Common.h" />
+    <ClInclude Include="include\Entity\Skill\CureBlessingSkill.h" />
+    <ClInclude Include="include\Entity\Cursor.h" />
+    <ClInclude Include="include\Core\Display.h" />
+    <ClInclude Include="include\Core\Game.h" />
+    <ClInclude Include="include\Core\Input.h" />
+    <ClInclude Include="include\Core\LinkedTime.h" />
+    <ClInclude Include="include\Entity\AI\MonsterAI.h" />
+    <ClInclude Include="include\Entity\AI\PlayerAI.h" />
+    <ClInclude Include="include\Entity\Attack\MouseAttack.h" />
+    <ClInclude Include="include\Entity\Attack\Projectile.h" />
+    <ClInclude Include="include\Entity\Attack\RangeAttack.h" />
+    <ClInclude Include="include\Entity\Creature.h" />
+    <ClInclude Include="include\Entity\Entity.h" />
+    <ClInclude Include="include\Entity\EntityMap.h" />
+    <ClInclude Include="include\Entity\Equipment.h" />
+    <ClInclude Include="include\Entity\Factory\EquipmentFactory.h" />
+    <ClInclude Include="include\Entity\Factory\Factory.h" />
+    <ClInclude Include="include\Entity\Factory\GameEntityFactory.h" />
+    <ClInclude Include="include\Entity\Factory\ItemFactory.h" />
+    <ClInclude Include="include\Entity\Factory\MonsterFactory.h" />
+    <ClInclude Include="include\Entity\Factory\PlayerFactory.h" />
+    <ClInclude Include="include\Entity\Factory\SkillFactory.h" />
+    <ClInclude Include="include\Entity\GameEntity.h" />
+    <ClInclude Include="include\Entity\Item.h" />
+    <ClInclude Include="include\Entity\Mesh.h" />
+    <ClInclude Include="include\Entity\Monster\Monster.h" />
+    <ClInclude Include="include\Entity\Player.h" />
+    <ClInclude Include="include\Entity\Primitive.h" />
+    <ClInclude Include="include\Entity\Skill\HoshoyoExplosionSkill.h" />
+    <ClInclude Include="include\Entity\Skill\Skill.h" />
+    <ClInclude Include="include\Entity\Skill\SkillIcon.h" />
+    <ClInclude Include="include\Entity\Transform.h" />
+    <ClInclude Include="include\external\freetypegl\freetype-gl.h" />
+    <ClInclude Include="include\external\freetypegl\opengl.h" />
+    <ClInclude Include="include\external\freetypegl\platform.h" />
+    <ClInclude Include="include\external\freetypegl\stb_image.h" />
+    <ClInclude Include="include\external\freetypegl\texture-atlas.h" />
+    <ClInclude Include="include\external\freetypegl\texture-font.h" />
+    <ClInclude Include="include\external\freetypegl\vec234.h" />
+    <ClInclude Include="include\external\freetypegl\vector.h" />
+    <ClInclude Include="include\GUI\Chat.h" />
+    <ClInclude Include="include\GUI\GUI.h" />
+    <ClInclude Include="include\GUI\HPBar.h" />
+    <ClInclude Include="include\GUI\TextRenderer.h" />
+    <ClInclude Include="include\Map\Grid.h" />
+    <ClInclude Include="include\Map\Map.h" />
+    <ClInclude Include="include\Map\MapEntity.h" />
+    <ClInclude Include="include\Map\MapMonster.h" />
+    <ClInclude Include="include\Map\MapTerrain.h" />
+    <ClInclude Include="include\Entity\Movement.h" />
+    <ClInclude Include="include\Network\ClientPacket.h" />
+    <ClInclude Include="include\Network\Packet.h" />
+    <ClInclude Include="include\Network\PacketController.h" />
+    <ClInclude Include="include\Network\UDPClient.h" />
+    <ClInclude Include="include\ResourceLoad\ImageLoader.h" />
+    <ClInclude Include="include\ResourceLoad\IndexedModel.h" />
+    <ClInclude Include="include\ResourceLoad\Texture.h" />
+    <ClInclude Include="include\Shaders\Camera.h" />
+    <ClInclude Include="include\Shaders\Classes\CommonShader.h" />
+    <ClInclude Include="include\Shaders\Classes\FontShader.h" />
+    <ClInclude Include="include\Shaders\Classes\WindowShader.h" />
+    <ClInclude Include="include\Shaders\FrameBuffer.h" />
+    <ClInclude Include="include\Shaders\Classes\FrameShader.h" />
+    <ClInclude Include="include\Shaders\Classes\GUIShader.h" />
+    <ClInclude Include="include\Shaders\Light.h" />
+    <ClInclude Include="include\Shaders\Classes\MapShader.h" />
+    <ClInclude Include="include\Shaders\Classes\PrimitiveShader.h" />
+    <ClInclude Include="include\Shaders\Classes\Shader.h" />
+    <ClInclude Include="include\Shaders\Classes\TextShader.h" />
+    <ClInclude Include="include\Entity\Skill\LinkSkill.h" />
+    <ClInclude Include="include\Entity\Skill\SwapSkill.h" />
+    <ClInclude Include="include\Shaders\Classes\SkillShader.h" />
+    <ClInclude Include="include\WindowApi\Button.h" />
+    <ClInclude Include="include\WindowApi\FontRenderer.h" />
+    <ClInclude Include="include\WindowApi\Label.h" />
+    <ClInclude Include="include\WindowApi\Window.h" />
+    <ClInclude Include="include\WindowApi\WindowDiv.h" />
   </ItemGroup>
 </Project>

@@ -66,9 +66,6 @@
     <ClCompile Include="src\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\AI\AI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Game\AI\MonsterAI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -105,12 +102,15 @@
     <ClCompile Include="src\Game\Skill\CureBlessingSkill.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Game\BasicMonster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\AI\AI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Game\AI\AI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Game\AI\MonsterAI.h">
@@ -198,6 +198,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\BasicMonster.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\AI\AI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

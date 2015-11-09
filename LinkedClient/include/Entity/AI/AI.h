@@ -2,38 +2,22 @@
 #include "glm\glm.hpp"
 #include "Movement.h"
 
-class Map;
-
-#define REACH_DESTINATION_ERROR 0.5f
-
-#define STAND_STILL_RANDOM_FACTOR_MINIMUM 6
-#define STAND_STILL_RANDOM_FACTOR_MAXIMUM 10
-#define RANDOM_KEEP_MOVING_FACTOR 1000
+class Entity;
 
 class AI
 {
 public:
-	AI();
+	AI(Entity& aiOwner);
 	~AI();
-	MovementDefinition movePerfectlyTo(Map* map, glm::vec3 reference, glm::vec3 destination, float rangeSpeed);
-	void startRandomMovement(Map* map, glm::vec3 reference, float rangeSpeed);
-	MovementDefinition nextRandomStep();
-	bool isMovingRandomly();
-	void stopMovingRandomly();
+	Entity& getAiOwner() const;
+	bool reachDestination(glm::vec3 nextPosition, glm::vec3 destination) const;
+	MovementDefinition getMovementDefinitionOfDestination(glm::vec3 destination, bool diagonalDirection);
 protected:
-	MovementDirection getDirectionBasedOnVector(glm::vec3 vector);
-	bool checkIfMonsterIsStillOnTheSameMapPosition(glm::vec3 currentPosition, glm::vec3 nextPosition);
+	MovementDirection getCompleteDirection(glm::vec3 vector) const;
+	MovementDirection getDiagonalDirection(glm::vec3 vector) const;
 private:
+	float getVectorAngle(glm::vec3 vector) const;
 	const float PI = 3.14159265358979f;
-	Map* randomMovementMap;
-	glm::vec3 randomMovementReference;
-	float randomMovementRangeSpeed;
-	int randomStandStillFactor;
-	glm::vec3 randomMovementMoveRange;
-	glm::vec3 randomVirtualTravelledDistance;
-	MovementDirection randomMovementDirection;
-	bool movingRandomly;
-	double timeRandomMovementStarted = 0;
-
+	Entity& aiOwner;
 };
 

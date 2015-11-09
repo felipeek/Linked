@@ -1,0 +1,29 @@
+- MONSTER SPRITE ARCHITETURE -
+
+SENTIDO:
+
+(exemplo)
+21 22 23 24 25 26 27
+14 15 16 17 18 19 20
+7  8  9  10 11 12 13
+0  1  2  3  4  5  6
+
+BASIC MONSTER:
+
+1 dead
+n attacking bottom left
+n attacking bottom right
+n attacking top right
+n attacking top left
+n hurt bottom left
+n hurt bottom right
+n hurt top right
+n hurt top left
+n walking bottom left
+n walking bottom right
+n walking top right
+n walking top left
+n standing bottom left
+n standing bottom right
+n standing top right
+n standing top left

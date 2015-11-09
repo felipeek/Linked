@@ -34,7 +34,7 @@ Entity::~Entity()
 	}
 }
 
-Transform* Entity::getTransform()
+Transform* Entity::getTransform() const
 {
 	return transform;
 }

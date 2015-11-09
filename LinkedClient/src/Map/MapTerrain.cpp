@@ -15,15 +15,24 @@ MapTerrainImageLoader::~MapTerrainImageLoader()
 bool MapTerrainImageLoader::coordinateHasCollision(glm::vec3 coordinateVector){
 	try
 	{
-		for (int i = 1; i <= COLLISION_FACTOR; i++)
-			for (int j = i; j >= -i; j--)
-				for (int k = i; k >= -i; k--)
-				{
-					glm::vec3 rgb = getPixel((int)coordinateVector.x + j, (int)coordinateVector.y + k);
-					MapTerrain mapTerrain = transformRgbIntoMapTerrain(rgb);
-					if (mapTerrain == BLOCKED || mapTerrain == WATER)
-						return true;
-				}
+		glm::vec3 rgb;
+		MapTerrain mapTerrain;
+
+		rgb = getPixel(floor(coordinateVector.x), floor(coordinateVector.y));
+		mapTerrain = transformRgbIntoMapTerrain(rgb);
+		if (mapTerrain == BLOCKED || mapTerrain == WATER)
+			return true;
+
+		/* Check if there is a collision in the right and in the top too. */
+		/* This is to refine the collision, since a floor() function is being used. */
+		rgb = getPixel(floor(coordinateVector.x), floor(coordinateVector.y+1));
+		mapTerrain = transformRgbIntoMapTerrain(rgb);
+		if (mapTerrain == BLOCKED || mapTerrain == WATER)
+			return true;
+		rgb = getPixel(floor(coordinateVector.x+1), floor(coordinateVector.y));
+		mapTerrain = transformRgbIntoMapTerrain(rgb);
+		if (mapTerrain == BLOCKED || mapTerrain == WATER)
+			return true;
 	}
 	catch (PixelOutOfBoundsException e)
 	{

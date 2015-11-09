@@ -12,11 +12,8 @@ public:
 	void setPosition(glm::vec3 position);
 	unsigned short getId();
 	void setId(unsigned short id);
-	bool didPositionChanged();
-	void resetPositionChanged();
 private:
 	glm::vec3 position;
-	bool positionChanged;
 	long id;
 	static unsigned short NEXT_ID;
 };

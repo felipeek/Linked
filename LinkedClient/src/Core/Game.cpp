@@ -53,6 +53,7 @@
 
 bool Game::multiplayer = false;
 int Game::server_port = 9090;
+
 //std::string Game::server_ip = "127.0.0.1";
 //std::string Game::server_ip = "201.21.40.57";
 //std::string Game::server_ip = "hoshoyo.servegame.com";
@@ -317,7 +318,7 @@ void Game::createGUI()
 	
 	div2->getButtons().push_back(b);
 }
-
+int m = 0;
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 {
 	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, this->map));
@@ -353,10 +354,11 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 			
 			if (coordinate.mapMonster.monsterExists)
 			{
-				if (!map->coordinateHasCollision(glm::vec3(i, j, 0)) && loadMonsters)
+				if (!map->coordinateHasCollision(glm::vec3(i, j, 0)) && loadMonsters/* && m < 1*/)
 				{
 					monster->getTransform()->translate((float)i, (float)j, 1.3f);
 					monsters.push_back(monster);
+					m++;
 				}
 				else
 				{
@@ -450,18 +452,11 @@ void Game::renderFirstPass()
 		try{
 			if (Game::multiplayer)
 			{
-				if (m->shouldRender())
-				{
-					if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()))
-						m->render(primitiveShader);
-					else
-						m->setShouldRender(false);
-				}
+				if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()) && !m->shouldTranslate())
+					m->render(primitiveShader);
 			}
 			else
-			{
 				m->render(primitiveShader);
-			}
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
@@ -530,18 +525,11 @@ void Game::renderSecondsPass()
 		try{
 			if (Game::multiplayer)
 			{
-				if (m->shouldRender())
-				{
-					if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()))
-						m->render(primitiveShader);
-					else
-						m->setShouldRender(false);
-				}
+				if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()) && !m->shouldTranslate())
+					m->render(primitiveShader);
 			}
 			else
-			{
 				m->render(primitiveShader);
-			}
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
@@ -598,11 +586,17 @@ void Game::update()
 		monsters[i]->update(map, localPlayer);
 	
 	for (unsigned int i = 0; i < monsters.size(); i++)
-		if (!monsters[i]->isOnScreen())
+		if (monsters[i]->shouldBeDeleted())
 		{
 			delete monsters[i];
 			monsters.erase(monsters.begin() + i);
 		}
+
+	for (unsigned int i = 0; i < monsters.size(); i++)
+	{
+		if (localPlayer->isOutsideExternalRadiusArea(monsters[i]->getTransform()->getPosition()))
+			monsters[i]->setShouldTranslate(true);
+	}
 	
 	// GUI update
 	gui->update();

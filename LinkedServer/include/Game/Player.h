@@ -98,6 +98,10 @@ public:
 	/* UPDATE */
 	void update();
 
+	/* NETWORK MOVEMENT */
+	virtual bool mustUpdateDestinationToClients();
+	virtual glm::vec3 getDestination();
+
 private:
 	/* PLAYER ATTRIBUTES/STATUS */
 	Player* link;
@@ -116,4 +120,7 @@ private:
 	std::vector<Skill*> skills;
 	std::vector<Equipment*> equipments;
 	std::vector<Projectile*> attacks;
+
+	/* NETWORK MOVEMENT */
+	glm::vec3 oldPosition;
 };

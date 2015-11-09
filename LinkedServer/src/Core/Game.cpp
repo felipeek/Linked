@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Monster.h"
 #include "MonsterFactory.h"
 #include "GameEntityFactory.h"
 #include "Map.h"
@@ -18,7 +19,7 @@
 #define PLAYER_ASPD_BASIS 20
 #define PLAYER_DEFENSE_BASIS 20
 #define PLAYER_MAGICAL_POWER_BASIS 30
-#define PLAYER_SPEED_BASIS 14
+#define PLAYER_SPEED_BASIS 35
 
 Game::Game()
 {
@@ -139,7 +140,7 @@ void Game::update()
 	}
 
 	for (unsigned int i = 0; i < monsters.size(); i++)
-		if (!monsters[i]->isOnScreen())
+		if (monsters[i]->shouldBeDeleted())
 		{
 			delete monsters[i];
 			monsters.erase(monsters.begin() + i);

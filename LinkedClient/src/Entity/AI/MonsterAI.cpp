@@ -1,160 +1,181 @@
 #include "MonsterAI.h"
 #include "Map.h"
+#include "Monster.h"
+#include "LinkedTime.h"
 
-MonsterAI::MonsterAI()
+MonsterAI::MonsterAI(Monster& aiOwner) : AI(aiOwner)
 {
-	positionVirtualTravelledDistance = glm::vec3(0, 0, 0);
-	this->monsterRange = STANDARD_MONSTER_RANGE;
-	movingToPosition = false;
-}
-
-MonsterAI::MonsterAI(unsigned int monsterRange) : MonsterAI()
-{
-	this->monsterRange = monsterRange;
 }
 
 MonsterAI::~MonsterAI()
 {
 }
 
-unsigned int MonsterAI::getMonsterRange()
+glm::vec3 MonsterAI::getNextStep(glm::vec3 destination) const
 {
-	return this->monsterRange;
-}
+	Monster& aiOwner = (Monster&)this->getAiOwner();
+	glm::vec3 aiOwnerPosition = this->getAiOwner().getTransform()->getPosition();
 
-void MonsterAI::setMonsterRange(unsigned int monsterRange)
-{
-	this->monsterRange = monsterRange;
-}
-
-MovementDefinition MonsterAI::moveToDestination(Map *monsterMovementMap, glm::vec3 monsterMovementReference, glm::vec3 monsterMovementDestination, float monsterMovementRangeSpeed)
-{
-	glm::vec3 movement = glm::vec3(monsterMovementReference.x, monsterMovementReference.y, monsterMovementReference.z);
-	float distance = glm::length(monsterMovementReference - monsterMovementDestination);
-
-	// If the monster is far away from destination
-	if (distance > LIMIT_DISTANCE)
+	if (aiOwnerPosition.x != destination.x || aiOwnerPosition.y != destination.y)
 	{
-		stopMovingToPosition();
-		// Stop moving to position and start moving randomly.
-		if (isMovingRandomly())
-		{
-			MovementDefinition movementDefinition = nextRandomStep();
-			return movementDefinition;
-		}
-		else
-		{
-			startRandomMovement(monsterMovementMap, monsterMovementReference, monsterMovementRangeSpeed);
-			MovementDefinition movementDefinition = nextRandomStep();
-			return movementDefinition;
-		}
-	}
-	// Checks if there is a collision between reference and destination
-	else
-	{
-		// Get vector from reference to destination
-		glm::vec3 differenceVector = 0.1f * glm::normalize(monsterMovementReference - monsterMovementDestination);
-		// Get difference vector length
-		float differenceVectorOriginalLength = (float)(glm::length(monsterMovementReference - monsterMovementDestination) - BORDER_MOVEMENT_LIMIT);
+		glm::vec3 diffVec = destination - aiOwnerPosition;
+		float speedFactor = aiOwner.getTotalSpeed() / 100.0f;
+		glm::vec3 movementVector = speedFactor * glm::normalize(diffVec);
+		glm::vec3 nextStep = movementVector + aiOwnerPosition;
 
-		glm::vec3 lastVec = glm::vec3(0, 0, 0);
-
-		// Tests if there is a collision
-		// If a collision is found, start moving randomly
-		while (glm::length(differenceVector) < differenceVectorOriginalLength)
-		{
-			differenceVector = differenceVector * 1.1f;
-			
-			bool sameVector = checkIfMonsterIsStillOnTheSameMapPosition(lastVec, differenceVector);
-			lastVec = differenceVector;
-
-			if (!sameVector && monsterMovementMap->coordinateHasCollision(monsterMovementReference - differenceVector))
-			{
-				stopMovingToPosition();
-				if (isMovingRandomly())
-				{
-					MovementDefinition movementDefinition = nextRandomStep();
-					return movementDefinition;
-				}
-				else
-				{
-					startRandomMovement(monsterMovementMap, monsterMovementReference, monsterMovementRangeSpeed);
-					MovementDefinition movementDefinition = nextRandomStep();
-					return movementDefinition;
-				}
-			}
-		}
-	}
-
-	stopMovingRandomly();
-
-	if (isMovingToPosition())
-	{
-		MovementDefinition movementDefinition = nextPositionMovementStep();
-		return movementDefinition;
+		return nextStep;
 	}
 	else
-	{
-		startPositionMovement(monsterMovementMap, monsterMovementReference, monsterMovementDestination, monsterMovementRangeSpeed);
-		MovementDefinition movementDefinition = nextPositionMovementStep();
-		return movementDefinition;
-	}
+		return destination;
 }
 
-void MonsterAI::startPositionMovement(Map* map, glm::vec3 reference, glm::vec3 destination, float rangeSpeed)
+MovementDefinition MonsterAI::generateRandomMovement(Map* map) const
 {
-	positionMovementMap = map;
-	positionMovementReference = reference;
-	positionMovementRangeSpeed = rangeSpeed;
-	glm::vec3 directionVector = glm::normalize(destination - positionMovementReference);
-	positionMovementMoveRange = glm::vec3(directionVector.x * positionMovementRangeSpeed, directionVector.y * positionMovementRangeSpeed, 0);
-	positionMovementDirection = this->getDirectionBasedOnVector(positionMovementMoveRange);
-	positionVirtualTravelledDistance.x = 0;
-	positionVirtualTravelledDistance.y = 0;
-	positionVirtualTravelledDistance.z = 0;
-	movingToPosition = true;
-}
+	glm::vec3 aiOwnerPosition = this->getAiOwner().getTransform()->getPosition();
+	MovementDefinition randomMovement;
+	int xRandNumber = 0;
+	int yRandNumber = 0;
+	int tries = 0;
 
-MovementDefinition MonsterAI::nextPositionMovementStep()
-{
-	MovementDefinition movDef = MovementDefinition();
-	movDef.doMove = false;
-
-	if (movingToPosition)
+	do
 	{
-		glm::vec3 oldPositionMovementReference = positionMovementReference;
-		positionMovementReference = positionMovementReference + positionMovementMoveRange;
-		positionVirtualTravelledDistance = positionVirtualTravelledDistance + positionMovementMoveRange;
-
-		bool sameVector = checkIfMonsterIsStillOnTheSameMapPosition(oldPositionMovementReference, positionMovementReference);
-
-		if (sameVector || !positionMovementMap->coordinateHasCollision(positionMovementReference))
+		do
 		{
-			movDef.doMove = true;
-			movDef.movement = positionMovementReference;
-			movDef.direction = positionMovementDirection;
-		}
+			xRandNumber = rand() % 1001;
+			yRandNumber = rand() % 1001;
+		} while (xRandNumber == 0 && yRandNumber == 0);
 
-		if (glm::length(positionVirtualTravelledDistance) >= POSITION_KEEP_MOVING_FACTOR / (float)100)
-			movingToPosition = false;
+		if (rand() % 2)	xRandNumber = -xRandNumber;
+		if (rand() % 2)	yRandNumber = -yRandNumber;
+
+		glm::vec3 normalizedDirectionVector = glm::normalize(glm::vec3(xRandNumber, yRandNumber, 0));
+		glm::vec3 randomMovementDirection = (float)RANDOM_KEEP_MOVING_FACTOR * glm::vec3(normalizedDirectionVector.x, normalizedDirectionVector.y, 0);
+		randomMovement.direction = this->getDiagonalDirection(randomMovementDirection);
+		randomMovement.movement = randomMovementDirection + aiOwnerPosition;
+		tries++;
+	}
+	while (map->coordinateHasCollision(this->getNextStep(randomMovement.movement)) && tries < AVOID_WALLS_INTELLIGENCE);
+
+	return randomMovement;
+}
+
+MovementDefinition MonsterAI::generateMovementTowardsCoordinate(glm::vec3 destination) const
+{
+	glm::vec3 aiOwnerPosition = this->getAiOwner().getTransform()->getPosition();
+	glm::vec3 pathVector = destination - aiOwnerPosition;
+	float pathVectorLength = glm::length(pathVector);
+
+	if (pathVectorLength > (float)DIRECTED_KEEP_MOVING_FACTOR)
+		pathVector = (float)DIRECTED_KEEP_MOVING_FACTOR*glm::normalize(pathVector);
+
+	MovementDefinition directedMovement;
+	directedMovement.movement = aiOwnerPosition + pathVector;
+	directedMovement.direction = this->getDiagonalDirection(pathVector);
+
+	return directedMovement;
+}
+
+bool MonsterAI::isOnRangeToAttack(glm::vec3 worldObjectPosition) const
+{
+	Monster& aiOwner = (Monster&)this->getAiOwner();
+	glm::vec3 aiOwnerPosition = this->getAiOwner().getTransform()->getPosition();
+	glm::vec3 pathVector = worldObjectPosition - aiOwnerPosition;
+	float pathVectorLength = glm::length(pathVector);
+	
+	return (pathVectorLength < (float)aiOwner.getTotalRange()/RANGE_ATTACK_FACTOR) ? true : false;
+}
+
+bool MonsterAI::isOnRangeToChaseTarget(glm::vec3 worldObjectPosition) const
+{
+	glm::vec3 aiOwnerPosition = this->getAiOwner().getTransform()->getPosition();
+	glm::vec3 pathVector = worldObjectPosition - aiOwnerPosition;
+	float pathVectorLength = glm::length(pathVector);
+	return (pathVectorLength < (float)RANGE_CHASE_TARGET) ? true : false;
+}
+
+// Crazy algorithm. Don't try to understand it.
+bool MonsterAI::isPathFreeOfCollisions(Map* map, glm::vec3 destination) const
+{
+	glm::vec3 aiOwnerPosition = this->getAiOwner().getTransform()->getPosition();
+	float xPos1, xPos2, yPos1, yPos2;
+
+	if (aiOwnerPosition.x < destination.x)
+	{
+		xPos1 = aiOwnerPosition.x;
+		xPos2 = destination.x;
+		yPos1 = aiOwnerPosition.y;
+		yPos2 = destination.y;
 	}
 	else
 	{
-		movingToPosition = true;
-		positionVirtualTravelledDistance.x = 0;
-		positionVirtualTravelledDistance.y = 0;
-		positionVirtualTravelledDistance.z = 0;
+		xPos1 = destination.x;
+		xPos2 = aiOwnerPosition.x;
+		yPos1 = destination.y;
+		yPos2 = aiOwnerPosition.y;
 	}
 
-	return movDef;
+	float leftContribution = (floor(xPos1) + 1.0f) - xPos1;
+	float rightContribution = xPos2 - floor(xPos2);
+
+	int numberOfElementsInTheMiddleRange = abs((int)ceil(xPos1) - (int)floor(xPos2));
+
+	float n = 1.0f / (leftContribution + rightContribution + (float)numberOfElementsInTheMiddleRange);
+
+	float realLeftContribution = n * leftContribution;
+	float realRightContribution = n * rightContribution;
+	float realMiddleContribution = n;
+
+	float yDifference = yPos2 - yPos1;
+
+	float leftRange = realLeftContribution * yDifference;
+	float rightRange = realRightContribution * yDifference;
+	float middleRange = realMiddleContribution * yDifference;
+
+	float nextLeftRange = leftRange + yPos1;
+
+	if (yPos2 > yPos1)
+	{
+		for (int i = floor(yPos1); i <= floor(nextLeftRange); i++)
+			if (map->coordinateHasCollision(glm::vec3(floor(xPos1), i, 0)))
+				return false;
+
+		for (int i = 0; i < numberOfElementsInTheMiddleRange; i++, nextLeftRange = nextLeftRange + middleRange)
+			for (int j = floor(nextLeftRange); j <= floor(nextLeftRange + middleRange); j++)
+				if (map->coordinateHasCollision(glm::vec3(floor(xPos1 + i + 1), j, 0)))
+					return false;
+
+		for (int i = floor(nextLeftRange); i <= floor(nextLeftRange + rightRange); i++)
+			if (map->coordinateHasCollision(glm::vec3(floor(xPos2), i, 0)))
+				return false;
+	}
+	else
+	{
+		for (int i = floor(yPos1); i >= floor(nextLeftRange); i--)
+			if (map->coordinateHasCollision(glm::vec3(floor(xPos1), i, 0)))
+				return false;
+
+		for (int i = 0; i < numberOfElementsInTheMiddleRange; i++, nextLeftRange = nextLeftRange + middleRange)
+			for (int j = floor(nextLeftRange); j >= floor(nextLeftRange + middleRange); j--)
+				if (map->coordinateHasCollision(glm::vec3(floor(xPos1 + i + 1), j, 0)))
+					return false;
+
+		for (int i = floor(nextLeftRange); i >= floor(nextLeftRange + rightRange); i--)
+			if (map->coordinateHasCollision(glm::vec3(floor(xPos2), i, 0)))
+				return false;
+	}
+
+	return true;
 }
 
-bool MonsterAI::isMovingToPosition()
+bool MonsterAI::shouldStandStill() const
 {
-	return movingToPosition;
+	double now = LinkedTime::getTime();
+	if ((now - this->standStillTime) < STAND_STILL_TIME)
+		return true;
+	return false;
 }
 
-void MonsterAI::stopMovingToPosition()
+void MonsterAI::resetStandStill()
 {
-	this->movingToPosition = false;
+	this->standStillTime = LinkedTime::getTime();
 }

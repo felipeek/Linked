@@ -1,15 +1,12 @@
 #include "Monster.h"
 #include "MonsterAI.h"
-#include "Map.h"
 #include "LinkedTime.h"
-#include "Player.h"
+#include "Game.h"
 #include "PacketController.h"
-#include <iostream>
-#include <vector>
 
 Monster::Monster()
 {
-	this->ai = new MonsterAI();
+	this->ai = new MonsterAI(*this);
 	setName(MONSTER_DEFAULT_NAME);
 	setHp(MONSTER_DEFAULT_HP);
 	setTotalMaximumHp(MONSTER_DEFAULT_TOTAL_MAX_HP);
@@ -19,25 +16,27 @@ Monster::Monster()
 	setTotalSpeed(MONSTER_DEFAULT_TOTAL_SPEED);
 	setTotalAttackSpeed(MONSTER_DEFAULT_TOTAL_ATTACK_SPEED);
 	setTotalRange(MONSTER_DEFAULT_TOTAL_RANGE);
-
-	this->alive = true;
-	this->updatedToClient = false;
-	this->isKnockedBack = false;
-}
-
-bool Monster::wasUpdatedToClient()
-{
-	return this->updatedToClient;
-}
-
-void Monster::setUpdatedToClient(bool updatedToClient)
-{
-	this->updatedToClient = updatedToClient;
 }
 
 Monster::~Monster()
 {
 	delete this->ai;
+}
+
+/* *********************************** */
+/* ********** PUBLIC METHODS ********* */
+/* *********************************** */
+
+/* BASIC ATTRIBUTES */
+
+unsigned int Monster::getTextureQuantity()
+{
+	return this->textureQuantity;
+}
+
+void Monster::setTextureQuantity(unsigned int textureQuantity)
+{
+	this->textureQuantity = textureQuantity;
 }
 
 std::string Monster::getName()
@@ -48,79 +47,6 @@ std::string Monster::getName()
 void Monster::setName(std::string name)
 {
 	this->name = name;
-}
-
-bool Monster::isAlive()
-{
-	return this->alive;
-}
-
-bool Monster::isAttacking()
-{
-	if (this->attacking)
-	{
-		double now = LinkedTime::getTime();
-		if ((now - lastAttackTime) > ((1.0f / getTotalAttackSpeed()) * ASPD_FACTOR))
-		{
-			this->attacking = false;
-			return false;
-		}
-		else
-			return true;
-	}
-	return false;
-}
-
-bool Monster::isReceivingDamage()
-{
-	if (this->receivingDamage)
-	{
-		double now = LinkedTime::getTime();
-		if ((now - lastReceivedDamageTime) > RECEIVE_DAMAGE_DELAY)
-		{
-			this->receivingDamage = false;
-			return false;
-		}
-		else
-			return true;
-	}
-	return false;
-}
-
-bool Monster::isMoving()
-{
-	return this->moving;
-}
-
-void Monster::attack()
-{
-	this->attacking = true;
-	lastAttackTime = LinkedTime::getTime();
-	PacketController::queueMonsterAttack(this->getId());
-}
-
-void Monster::receiveDamage()
-{
-	this->receivingDamage = true;
-	lastReceivedDamageTime = LinkedTime::getTime();
-	if (rand() % 4) this->isKnockedBack = false;
-	else this->isKnockedBack = true;
-}
-
-bool Monster::isOnScreen()
-{
-	if (!this->isAlive())
-	{
-		double now = LinkedTime::getTime();
-		return (now - killTime) <= DEATH_TIME;
-	}
-	return true;
-}
-
-void Monster::killMonster()
-{
-	this->alive = false;
-	this->killTime = LinkedTime::getTime();
 }
 
 unsigned int Monster::getHp()
@@ -143,19 +69,6 @@ void Monster::setTotalMaximumHp(unsigned int totalMaximumHp)
 	this->totalMaximumHp = totalMaximumHp;
 }
 
-void Monster::doDamage(unsigned int damage)
-{
-	if (damage >= hp)
-	{
-		hp = 0;
-		this->killMonster();
-	}
-	else
-		hp = hp - damage;
-
-	this->receiveDamage();
-}
-
 unsigned int Monster::getTotalAttack()
 {
 	return totalAttack;
@@ -176,16 +89,6 @@ void Monster::setTotalDefense(unsigned int totalDefense)
 	this->totalDefense = totalDefense;
 }
 
-unsigned int Monster::getTotalMagicalPower()
-{
-	return totalMagicalPower;
-}
-
-void Monster::setTotalMagicalPower(unsigned int totalMagicalPower)
-{
-	this->totalMagicalPower = totalMagicalPower;
-}
-
 unsigned int Monster::getTotalSpeed()
 {
 	return totalSpeed;
@@ -203,7 +106,6 @@ unsigned int Monster::getTotalRange()
 
 void Monster::setTotalRange(unsigned int totalRange)
 {
-	this->ai->setMonsterRange(totalRange);
 	this->totalRange = totalRange;
 }
 
@@ -227,14 +129,14 @@ void Monster::setTotalAttackSpeed(unsigned int totalAttackSpeed)
 	this->totalAttackSpeed = totalAttackSpeed;
 }
 
-glm::vec3 Monster::getMapColor()
+unsigned int Monster::getTotalMagicalPower()
 {
-	return mapColor;
+	return totalMagicalPower;
 }
 
-void Monster::setMapColor(glm::vec3 mapColor)
+void Monster::setTotalMagicalPower(unsigned int totalMagicalPower)
 {
-	this->mapColor = mapColor;
+	this->totalMagicalPower = totalMagicalPower;
 }
 
 int Monster::getMapColorRed()
@@ -267,128 +169,159 @@ void Monster::setMapColorBlue(int blue)
 	this->mapColor.b = (float)blue;
 }
 
-MovementDefinition Monster::moveTo(WorldObject* worldObject, Map* map)
+glm::vec3 Monster::getMapColor()
 {
-	float rangeSpeed = getTotalSpeed() * FRAMETIME;
-
-	MovementDefinition movement = ai->moveToDestination(map, this->getPosition(), worldObject->getPosition(), rangeSpeed);
-
-	if (movement.doMove)
-		this->setPosition(movement.movement);
-
-	return movement;
+	return mapColor;
 }
 
-MovementDefinition Monster::moveRandomly(Map* map)
+void Monster::setMapColor(glm::vec3 mapColor)
 {
-	float rangeSpeed = getTotalSpeed() * FRAMETIME;
-	this->ai->stopMovingToPosition();
-
-	if (!ai->isMovingRandomly())
-		ai->startRandomMovement(map, this->getPosition(), rangeSpeed);
-
-	MovementDefinition movement = ai->nextRandomStep();
-
-	if (movement.doMove)
-		this->setPosition(movement.movement);
-
-	return movement;
+	this->mapColor = mapColor;
 }
 
-bool Monster::hasReachedEntity(WorldObject* worldObject)
-{
-	float distance = glm::length(this->getPosition() - worldObject->getPosition());
+/* STATUS */
 
-	if (distance < (getTotalRange() / RANGE_DIVIDER))
-		return true;
+bool Monster::isAlive()
+{
+	return this->alive;
+}
+
+void Monster::killMonster()
+{
+	this->alive = false;
+	this->killTime = LinkedTime::getTime();
+}
+
+bool Monster::isAttacking()
+{
+	return this->attacking;
+}
+
+void Monster::attack()
+{
+	this->attacking = true;
+	lastAttackTime = LinkedTime::getTime();
+	PacketController::queueMonsterAttack(this->getId());
+}
+
+bool Monster::isReceivingDamage()
+{
+	return this->receivingDamage;
+}
+
+void Monster::receiveDamage()
+{
+	this->receivingDamage = true;
+	lastReceivedDamageTime = LinkedTime::getTime();
+}
+
+bool Monster::shouldRender()
+{
+	return this->bRender;
+}
+
+void Monster::setShouldRender(bool bRender)
+{
+	this->bRender = bRender;
+}
+
+void Monster::move(MovementDirection direction)
+{
+	this->movingDirection = direction;
+	this->moving = true;
+}
+
+void Monster::stop()
+{
+	this->moving = false;
+}
+
+bool Monster::isMoving()
+{
+	return this->moving;
+}
+
+bool Monster::shouldBeDeleted()
+{
+	if (!this->isAlive())
+	{
+		double now = LinkedTime::getTime();
+		return (now - killTime) > DEATH_TIME;
+	}
+	return false;
+}
+
+/* COMBAT */
+
+void Monster::doDamage(unsigned int damage)
+{
+	if (damage >= hp)
+	{
+		hp = 0;
+		this->killMonster();
+	}
 	else
-		return false;
+		hp = hp - damage;
+
+	this->receiveDamage();
 }
 
 void Monster::attackCreature(Creature* creature)
 {
-	unsigned int damage = (unsigned int)ceil(getTotalAttack() / (creature->getTotalDefense() / 10.f));
+	unsigned int damage = (unsigned int)ceil(getTotalAttack() / (creature->getTotalDefense() / 10.0f));
 	creature->doDamage(damage);
 	this->attack();
 }
 
+/* UPDATE & RENDER */
+
 void Monster::update(Map* map, std::vector<Player*>* players)
 {
-	Player* targetPlayer = this->getClosestAlivePlayer(players);
-	MovementDefinition movementDefinition;
+	double now = LinkedTime::getTime();
 
-	// If the monster is dead, it can't move.
-	if (!this->isAlive())
-		movementDefinition.doMove = false;
-	// If the monster is attacking, it can't move.
-	else if (this->isAttacking())
-		movementDefinition.doMove = false;
-	// If the monster is receiving damage, it can't move.
-	else if (this->isReceivingDamage() && this->isKnockedBack)
-		movementDefinition.doMove = false;
-	// If the player is dead, the monster will move randomly.
-	else if (targetPlayer == NULL || !targetPlayer->isAlive())
-		movementDefinition = this->moveRandomly(map);
-	// If the monster has reached the player, it will attack the player and not move.
-	else if (targetPlayer != NULL && this->hasReachedEntity(targetPlayer))
-	{
-		this->attackCreature(targetPlayer);
-		movementDefinition.doMove = false;
-	}
-	// If the monster has not reached the player yet, it will move towards the player.
-	else
-		movementDefinition = this->moveTo(targetPlayer, map);
+	// UPDATE 'ATTACKING' STATUS
+	if (this->attacking)
+		if ((now - lastAttackTime) > ((1.0f / getTotalAttackSpeed()) * ASPD_FACTOR))
+			this->attacking = false;
 
-	// Change monster's texture.
-	if (movementDefinition.doMove)
-	{
-		this->moving = true;
-	}
-	else
-	{
-		this->moving = false;
-	}
+	// UPDATE 'RECEIVING DAMAGE' STATUS
+	if (this->receivingDamage)
+		if ((now - lastReceivedDamageTime) > RECEIVE_DAMAGE_DELAY)
+			this->receivingDamage = false;
 }
 
-Player* Monster::getClosestAlivePlayer(std::vector<Player*>* players)
+/* COPY */
+
+Monster* Monster::getCopy(Monster* copy)
 {
-	Player* targetPlayer = NULL;
+	// Create new monster if necessary.
+	if (copy == nullptr) copy = new Monster();
 
-	int i = 0;
+	// Copy Basic Attributes
+	copy->setTextureQuantity(this->getTextureQuantity());
+	copy->setTotalAttack(this->getTotalAttack());
+	copy->setTotalDefense(this->getTotalDefense());
+	copy->setHp(this->getHp());
+	copy->setTotalMaximumHp(this->getTotalMaximumHp());
+	copy->setMapColor(this->getMapColor());
+	copy->setName(this->getName());
+	copy->setTotalSpeed(this->getTotalSpeed());
+	copy->setTotalRange(this->getTotalRange());
+	copy->setTotalCollisionRange(this->getTotalCollisionRange());
+	copy->setTotalAttackSpeed(this->getTotalAttackSpeed());
+	copy->setPosition(this->getPosition());
 
-	if (players->size() > 0)
-	{
-		glm::vec2 mostClosePosition = glm::vec2();
-		bool isFirstPlayer = true;
+	return copy;
+}
 
-		std::vector<Player*> players2 = *players;
+/* NETWORK MOVEMENT */
 
-		i++;
+bool Monster::mustUpdateDestinationToClients()
+{
+	return false;
+}
 
-		for (Player* player : *players)
-		{
-			if (player->isAlive())
-			{
-				if (isFirstPlayer)
-				{
-					mostClosePosition = glm::vec2(player->getPosition().x, player->getPosition().y);
-					isFirstPlayer = false;
-					targetPlayer = player;
-				}
-				else
-				{
-					glm::vec2 pPos = glm::vec2(player->getPosition().x, player->getPosition().y);
-					double currentBestLength = glm::length(glm::vec2(this->getPosition().x, this->getPosition().y) - mostClosePosition);
-					double newLength = glm::length(glm::vec2(this->getPosition().x, this->getPosition().y) - pPos);
-					if (newLength <= currentBestLength)
-					{
-						targetPlayer = player;
-						mostClosePosition = pPos;
-					}
-				}
-			}
-		}
-	}
-
-	return targetPlayer;
+glm::vec3 Monster::getDestination()
+{
+	return glm::vec3(0, 0, 0);
 }

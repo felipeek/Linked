@@ -1,149 +1,80 @@
 #include "AI.h"
-#include "Map.h"
-#include "LinkedTime.h"
+#include "Entity.h"
 
-AI::AI()
+AI::AI(Entity& aiOwner) : aiOwner(aiOwner)
 {
-	movingRandomly = false;
 }
+
 
 AI::~AI()
 {
 }
 
-MovementDefinition AI::movePerfectlyTo(Map* map, glm::vec3 reference, glm::vec3 destination, float rangeSpeed)
+Entity& AI::getAiOwner() const
 {
-	MovementDefinition movDef = MovementDefinition();
-	movDef.doMove = false;
-	float distance = glm::length(glm::vec2(reference.x, reference.y) - glm::vec2(destination.x, destination.y));
-	glm::vec3 movement = glm::vec3(reference.x, reference.y, reference.z);
+	return this->aiOwner;
+}
 
-	if (distance > REACH_DESTINATION_ERROR)
+bool AI::reachDestination(glm::vec3 nextPosition, glm::vec3 destination) const
+{
+	glm::vec3 aiOwnerPosition = aiOwner.getTransform()->getPosition();
+
+	if (aiOwnerPosition.x < destination.x)
 	{
-		glm::vec3 range = rangeSpeed*glm::normalize(destination - reference);
-
-		movement.x = movement.x + range.x;
-		movement.y = movement.y + range.y;
-
-		movDef.direction = getDirectionBasedOnVector(range);
-		movDef.doMove = true;
-
-		if (!map->coordinateHasCollision(movement))
-			movDef.movement = movement;
-		else
-			movDef.movement = destination;
-	}
-	else
-		movDef.doMove = false;
-
-	return movDef;
-}
-
-bool AI::isMovingRandomly()
-{
-	return this->movingRandomly;
-}
-
-void AI::stopMovingRandomly()
-{
-	this->movingRandomly = false;
-}
-
-void AI::startRandomMovement(Map* map, glm::vec3 reference, float rangeSpeed)
-{
-	int xRandNumber = 0;
-	int yRandNumber = 0;
-
-	do
-	{
-		xRandNumber = rand() % 1001;
-		yRandNumber = rand() % 1001;
-	}
-	while (xRandNumber == 0 && yRandNumber == 0);
-
-	if (rand() % 2)	xRandNumber = -xRandNumber;
-	if (rand() % 2)	yRandNumber = -yRandNumber;
-
-	randomMovementMap = map;
-	randomMovementReference = reference;
-	randomMovementRangeSpeed = rangeSpeed;
-	glm::vec3 directionVector = glm::normalize(glm::vec3(xRandNumber, yRandNumber, 0));
-	randomMovementMoveRange = glm::vec3(directionVector.x * rangeSpeed, directionVector.y * rangeSpeed, 0);
-	randomMovementDirection = this->getDirectionBasedOnVector(randomMovementMoveRange);
-	timeRandomMovementStarted = LinkedTime::getTime();
-	randomVirtualTravelledDistance.x = 0;
-	randomVirtualTravelledDistance.y = 0;
-	randomVirtualTravelledDistance.z = 0;
-	randomStandStillFactor = (rand() % (STAND_STILL_RANDOM_FACTOR_MAXIMUM - STAND_STILL_RANDOM_FACTOR_MINIMUM + 1)) + STAND_STILL_RANDOM_FACTOR_MINIMUM;
-	movingRandomly = true;
-}
-
-MovementDefinition AI::nextRandomStep()
-{
-	MovementDefinition movDef = MovementDefinition();
-	movDef.doMove = false;
-
-	bool shouldNotBeMoving = (LinkedTime::getTime() - timeRandomMovementStarted) <= (randomStandStillFactor / (float)10);
-
-	if (shouldNotBeMoving)
-		return movDef;
-
-	if (movingRandomly)
-	{
-		glm::vec3 oldRandomMovementReference = randomMovementReference;
-		randomMovementReference = randomMovementReference + randomMovementMoveRange;
-		randomVirtualTravelledDistance = randomVirtualTravelledDistance + randomMovementMoveRange;
-
-		bool sameVector = checkIfMonsterIsStillOnTheSameMapPosition(oldRandomMovementReference, randomMovementReference);
-
-		if (sameVector || !randomMovementMap->coordinateHasCollision(randomMovementReference))
+		if (aiOwnerPosition.y < destination.y)
 		{
-			movDef.doMove = true;
-			movDef.movement = randomMovementReference;
-			movDef.direction = randomMovementDirection;
-
-			if (glm::length(randomVirtualTravelledDistance) >= RANDOM_KEEP_MOVING_FACTOR / (float)100)
-				movingRandomly = false;
-		}
-		else
-		{
-			movDef.doMove = false;
-			movingRandomly = false;
-		}
-	}
-	else
-	{
-		movingRandomly = true;
-		randomVirtualTravelledDistance.x = 0;
-		randomVirtualTravelledDistance.y = 0;
-		randomVirtualTravelledDistance.z = 0;
-	}
-
-	return movDef;
-}
-
-bool AI::checkIfMonsterIsStillOnTheSameMapPosition(glm::vec3 currentPosition, glm::vec3 nextPosition)
-{
-	if (floor(currentPosition.x) == floor(nextPosition.x))
-		if (floor(currentPosition.y) == floor(nextPosition.y))
-			if (floor(currentPosition.z) == floor(nextPosition.z))
+			if (nextPosition.x >= destination.x && nextPosition.y >= destination.y)
 				return true;
+			else
+				return false;
+		}
+		else
+		{
+			if (nextPosition.x >= destination.x && nextPosition.y <= destination.y)
+				return true;
+			else
+				return false;
+		}
+	}
+	else
+	{
+		if (aiOwnerPosition.y < destination.y)
+		{
+			if (nextPosition.x <= destination.x && nextPosition.y >= destination.y)
+				return true;
+			else
+				return false;
+		}
+		else
+		{
+			if (nextPosition.x <= destination.x && nextPosition.y <= destination.y)
+				return true;
+			else
+				return false;
+		}
+	}
 
-	return false;
+	return true;
 }
 
-MovementDirection AI::getDirectionBasedOnVector(glm::vec3 vector)
+MovementDefinition AI::getMovementDefinitionOfDestination(glm::vec3 destination, bool diagonalDirection)
 {
-	glm::vec3 auxVector = glm::vec3(1, 0, 0);
-	float radAngle = acos((glm::dot(vector, auxVector) / (glm::length(vector)*glm::length(auxVector))));
-	float angle = (180 * radAngle) / PI;
-	if (vector.y < 0)
-		angle = -angle;
+	MovementDefinition movementDefinition;
+	glm::vec3 aiOwnerPosition = aiOwner.getTransform()->getPosition();
+	glm::vec3 diffVec = destination - aiOwnerPosition;
+	if (diagonalDirection)
+		movementDefinition.direction = this->getDiagonalDirection(diffVec);
+	else
+		movementDefinition.direction = this->getCompleteDirection(diffVec);
+	movementDefinition.movement = destination;
+	return movementDefinition;
+}
 
-	/* Commented Code: All directions have the same importance. Every direction has a 45º radius. */
-	/* This is preferred if the sprites are TOP, BOTTOM, LEFT and RIGHT */
+MovementDirection AI::getCompleteDirection(glm::vec3 vector) const
+{
+	float angle = this->getVectorAngle(vector);
 
-	/*if (angle >= -22.5f && angle < 22.5f)
+	if (angle >= -22.5f && angle < 22.5f)
 		return RIGHT;
 	else if (angle >= 22.5f && angle < 67.5f)
 		return TOP_RIGHT;
@@ -158,10 +89,14 @@ MovementDirection AI::getDirectionBasedOnVector(glm::vec3 vector)
 	else if (angle >= -112.5f && angle < -67.5f)
 		return BOTTOM;
 	else if (angle >= -67.5f && angle < -22.5f)
-		return BOTTOM_RIGHT;*/
+		return BOTTOM_RIGHT;
 
-	/* Active Code : RIGHT, TOP, LEFT and BOTTOM are ignored. Diagonal Directions have a 90º radius. */
-	/* This is preferred if the spriets are TOP_RIGHT, TOP_LEFT, BOTTOM_RIGHT, BOTTOM_LEFT */
+	return RIGHT;
+}
+
+MovementDirection AI::getDiagonalDirection(glm::vec3 vector) const
+{
+	float angle = this->getVectorAngle(vector);
 
 	if (angle >= 0 && angle < 90)
 		return TOP_RIGHT;
@@ -172,5 +107,15 @@ MovementDirection AI::getDirectionBasedOnVector(glm::vec3 vector)
 	else if (angle >= -90 && angle < 0)
 		return BOTTOM_RIGHT;
 
-	return RIGHT;
+	return TOP_RIGHT;
+}
+
+float AI::getVectorAngle(glm::vec3 vector) const
+{
+	glm::vec3 auxVector = glm::vec3(1, 0, 0);
+	float radAngle = acos((glm::dot(vector, auxVector) / (glm::length(vector)*glm::length(auxVector))));
+	float angle = (180 * radAngle) / PI;
+	if (vector.y < 0)
+		angle = -angle;
+	return angle;
 }

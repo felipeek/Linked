@@ -1,7 +1,6 @@
 #pragma once
 #include "ImageLoader.h"
 #define THRESHOLD 30
-#define COLLISION_FACTOR 1
 
 enum MapTerrain {
 	NORMAL_FLOOR,

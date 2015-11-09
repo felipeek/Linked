@@ -11,7 +11,7 @@
 #include "Common.h"
 #include <sstream>
 
-#define SHOW_PACKETS_LOG 0
+#define SHOW_PACKETS_LOG 1
 
 Player* PacketController::localPlayer = NULL;
 std::vector<Player*>* PacketController::onlinePlayers = NULL;
@@ -294,12 +294,12 @@ void PacketController::dispatchVec3fWithShortArray(int id, int xid, glm::vec3* d
 				Monster* targetMonster = PacketController::game->getMonsterOfId(extraData[i]);
 				if (targetMonster != NULL)
 				{
-					if (targetMonster->shouldRender())
-						targetMonster->startMovementTo(glm::vec3(data[i].x, data[i].y, data[i].z));
+					if (!targetMonster->shouldTranslate())
+						targetMonster->startOnlineMovement(glm::vec3(data[i].x, data[i].y, data[i].z));
 					else
 					{
 						targetMonster->getTransform()->translate(data[i].x, data[i].y, data[i].z);
-						targetMonster->setShouldRender(true);
+						targetMonster->setShouldTranslate(false);
 					}
 				}
 			}

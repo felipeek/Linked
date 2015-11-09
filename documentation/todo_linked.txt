@@ -3,7 +3,7 @@
 1.  Limitar distância que os monstros aparecem para o player (DONE)
 2.  Otimizar pacotes enviados constantemente (DONE)
 3.  Implementar skills no servidor (DONE)
-4.  Fazer chat aceitar caracteres especiais
+4.  Fazer chat aceitar caracteres especiais (DONE)
 5.  Bloquear input quando chat estiver ativo (DONE)
 6.  Arrumar HP bar
 7.  Fazer monstros morrerem direito (DONE)
@@ -20,8 +20,9 @@
 18. Arrumar direcao de projeteis (DONE)
 19. Implementar AI para colisao
 20. Implementar players extras como espectadores
-21. arrumar problema do FPS (DONE?)
+21. Arrumar problema do FPS (DONE)
 22. Refazer Movimento dos monstros em multiplayer. Diminuir envio de pacotes e enviar em tempo real
+23 . Fazer chat editável
 
 TODO List far future:
 

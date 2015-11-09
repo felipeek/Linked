@@ -120,6 +120,11 @@ void Quad::setIndex(int i)
 	calcAtlas();
 }
 
+int Quad::getIndex()
+{
+	return this->index;
+}
+
 IndexedModel* Quad::getIndexedModel()
 {
 	return model;

@@ -1,36 +1,30 @@
 #pragma once
 #include "AI.h"
-#define STANDARD_MONSTER_RANGE 50
-#define RANGE_DIVIDER 10.0
-#define BORDER_MOVEMENT_LIMIT 2.0
-#define POSITION_KEEP_MOVING_FACTOR 100
-#define LIMIT_DISTANCE 25
+
+class Monster;
+class Map;
+
+#define RANDOM_KEEP_MOVING_FACTOR 10.0f
+#define DIRECTED_KEEP_MOVING_FACTOR 1.5f
+#define STAND_STILL_TIME 1.5f
+#define RANGE_ATTACK_FACTOR 10.0f
+#define RANGE_CHASE_TARGET 20.0f
+#define AVOID_WALLS_INTELLIGENCE 5
 
 class MonsterAI : public AI
 {
 public:
-	MonsterAI();
-	MonsterAI(unsigned int monsterRange);
+	MonsterAI(Monster& aiOwner);
 	~MonsterAI();
-	MovementDefinition moveToDestination(Map *monsterMovementMap, glm::vec3 monsterMovementReference, glm::vec3 monsterMovementDestination, float rangeSpeed);
-
-	unsigned int getMonsterRange();
-	void setMonsterRange(unsigned int monsterRange);
-	void startPositionMovement(Map* map, glm::vec3 reference, glm::vec3 destination, float rangeSpeed);
-	MovementDefinition nextPositionMovementStep();
-	bool isMovingToPosition();
-	void stopMovingToPosition();
+	MovementDefinition generateRandomMovement(Map* map) const;
+	MovementDefinition generateMovementTowardsCoordinate(glm::vec3 destination) const;
+	bool isOnRangeToAttack(glm::vec3 worldObjectPosition) const;
+	bool isOnRangeToChaseTarget(glm::vec3 worldObjectPosition) const;
+	bool isPathFreeOfCollisions(Map* map, glm::vec3 destination) const;
+	bool shouldStandStill() const;
+	void resetStandStill();
+	glm::vec3 getNextStep(glm::vec3 destination) const;
 private:
-
-private:
-	Map* positionMovementMap;
-	glm::vec3 positionMovementReference;
-	MovementDirection positionMovementDirection;
-	glm::vec3 positionMovementMoveRange;
-	glm::vec3 positionVirtualTravelledDistance;
-	float positionMovementRangeSpeed;
-	bool movingToPosition;
-
-	unsigned int monsterRange;
+	double standStillTime = 0;
 };
 

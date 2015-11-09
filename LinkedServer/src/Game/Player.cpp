@@ -262,3 +262,20 @@ void Player::update()
 	for (Skill* skill : this->skills)
 		skill->update();
 }
+
+/* NETWORK MOVEMENT */
+bool Player::mustUpdateDestinationToClients()
+{
+	glm::vec3 currentPosition = this->getPosition();
+
+	if (oldPosition.x != currentPosition.x || oldPosition.y != currentPosition.y)
+		return true;
+	else
+		return false;
+}
+
+glm::vec3 Player::getDestination()
+{
+	this->oldPosition = this->getPosition();
+	return this->getPosition();
+}

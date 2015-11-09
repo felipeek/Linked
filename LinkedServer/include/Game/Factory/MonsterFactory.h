@@ -1,13 +1,16 @@
 #pragma once
 #include <vector>
 #include <string>
-#include "Monster.h"
+#include <rapidxml_utils.hpp>
+#include <glm\glm.hpp>
 #include "Factory.h"
 
 #define MONSTERS_DIRECTORY "./res/Monsters/"
 #define MONSTERS_ROOT_NODE "MONSTER"
+#define MONSTERS_TYPE_NODE "TYPE"
 #define MONSTERS_NAME_NODE "NAME"
 #define MONSTERS_SPRITE_NODE "SPRITE"
+#define MONSTERS_TEXTUREQUANTITY_NODE "TEXTUREQUANTITY"
 #define MONSTERS_SIZE_NODE "SIZE"
 #define MONSTERS_COLLISIONRANGE_NODE "COLLISIONRANGE"
 #define MONSTERS_MAXHP_NODE "MAXHP"
@@ -25,7 +28,16 @@
 #define MONSTERS_STANDARD_AXIS glm::vec3(1, 0, 0)
 #define MONSTERS_STANDARD_SCALE glm::vec3(1, 1, 1)
 
-class MonsterNotFoundException : std::exception{};
+enum class MonsterType
+{
+	GENERIC,
+	BASIC
+};
+
+class Monster;
+class BasicMonster;
+
+class MonsterNotFoundException : std::exception {};
 
 class MonsterFactory : public Factory
 {
@@ -42,8 +54,11 @@ public:
 	bool isMonsterMapColorValid(glm::vec3 color);
 private:
 	Monster* parseXmlMonster(char* monsterPath);
+	void fillGenericMonsterAttributes(Monster* monster, rapidxml::xml_node<> *firstNode);
+	void fillBasicMonsterAttributes(BasicMonster* monster, rapidxml::xml_node<> *firstNode);
 	void parseAllMonstersInDirectory();
+	MonsterType findMonsterType(rapidxml::xml_node<> *firstNode);
 	std::vector<Monster*> monsters;
 	std::vector<glm::vec3> validColors;
-	Monster* generateCopyOfMonster(Monster* monster);
+	MonsterType decodeMonsterType(std::string encodedType);
 };

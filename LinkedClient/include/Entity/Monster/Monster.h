@@ -12,33 +12,26 @@
 #define MONSTER_DEFAULT_TOTAL_ATTACK_SPEED 10
 #define MONSTER_DEFAULT_TOTAL_RANGE 10
 
-#define TEXTURE_CHANGE_DELAY 0.15f
-#define ASPD_FACTOR 10
+#define ASPD_FACTOR 25
 #define DEATH_TIME 5.0f
 #define RECEIVE_DAMAGE_DELAY 0.3f
-
-// If MONSTER_FIRST_DIRECTION is changed,
-// MONSTER_FIRST_INDEX_TEXTURE must also be changed.
-// Plus, the texture index must be an index of a texture which
-// direction is the same as defined on MONSTER_FIRST_DIRECTION
-#define MONSTER_FIRST_DIRECTION BOTTOM
-#define MONSTER_FIRST_INDEX_TEXTURE 20
 
 class Player;
 class MonsterAI;
 class Map;
-class MovementDefinition;
 enum MovementDirection;
 
 class Monster : public Entity, public Creature
 {
 public:
 	Monster(Transform* transform, Mesh* mesh, Texture* texture);
-	~Monster();
+	virtual ~Monster();
 
 	/* BASIC ATTRIBUTES */
 	int getId();
 	void setId(int id);
+	unsigned int getTextureQuantity();
+	void setTextureQuantity(unsigned int textureQuantity);
 	std::string getName();
 	void setName(std::string name);
 	unsigned int getHp();
@@ -75,32 +68,48 @@ public:
 	void attack();
 	bool isReceivingDamage();
 	void receiveDamage();
-	bool shouldRender();
-	void setShouldRender(bool shouldRender);
+	bool shouldTranslate();
+	void setShouldTranslate(bool shouldTranslate);
 	bool isMoving();
-	bool isOnScreen();
+	void move(MovementDirection direction);
+	void stop();
+	bool shouldBeDeleted();
 
 	/* COMBAT */
 	void doDamage(unsigned int damage);
 	void attackCreature(Creature* creature);
 	
+	/* UPDATE & RENDER */
+	virtual void update(Map* map, Player* player);
+	virtual void render(Shader* shader);
+
 	/* MOVEMENT */
-	void startMovementTo(glm::vec3 destination);
-	
-	/* UPDATE */
-	void update(Map* map, Player* player);
-	
-private:
+	virtual void startOnlineMovement(glm::vec3 position);
+
+	/* COPY */
+	// if the "copy" parameter is NULL, it will allocate the monster
+	// if not, it will just copy the attributes to the existing monster.
+	virtual Monster* getCopy(Monster* copy);
+
+protected:
+	/* AI */
 	MonsterAI* ai;
 
+	/* TEXTURE */
+	void changeTextureIndex(int index);
+	int getCurrentTextureIndex();
+
+private:
 	/* BASIC ATTRIBUTES */
 	int id;
+	unsigned int textureQuantity;
 	std::string name;
-	bool bRender;
-	bool alive;
-	bool attacking;
-	bool receivingDamage;
-	bool moving;
+	bool bTranslate;
+	bool alive = true;
+	bool attacking = false;
+	bool receivingDamage = false;
+	bool moving = false;
+	MovementDirection movingDirection;
 	unsigned int hp;
 	unsigned int totalMaximumHp;
 	unsigned int totalAttack;
@@ -116,31 +125,6 @@ private:
 	double killTime = 0;
 	double lastAttackTime = 0;
 	double lastReceivedDamageTime = 0;
-
-	/* TEXTURE MANAGEMENT AUXILIAR FUNCTIONS */
-	void changeTexture(MovementDirection direction);
-	void changeTextureBasedOnDirection(MovementDirection direction, unsigned int initialTextureIndex, unsigned int finalTextureIndex);
-	int decodeMonsterIndex(int index);
-
-	/* TEXTURE MANAGEMENT AUXILIAR VARIABLES */
-	MovementDirection currentDirection;
-	double textureChangeTime = 0;
-	unsigned int lastIndexTexture;
-	bool lastIsAttacking = false;
-	bool lastIsReceivingDamage = false;
-	bool lastIsDead = false;
-	bool lastIsMoving = false;
-
-	/* MOVEMENT AUXILIAR FUNCTIONS */
-	MovementDefinition moveTo(Entity* entity, Map* map); // single player
-	MovementDefinition moveRandomly(Map* map); // single player
-	bool hasReachedEntity(Entity* entity); // single player
-	MovementDefinition updateMovement(Map* map); // multiplayer
-
-	/* MOVEMENT AUXILIAR VARIABLES */
-	bool isKnockedBack;
-	glm::vec3 destination;
-	bool isMovingTo;
 
 	/* ID */
 	static unsigned short NEXT_ID;

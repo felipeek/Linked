@@ -14,15 +14,11 @@ class Game;
 
 #define CLEARCOLOR glm::vec4(0.49f, 0.75f, 0.93f, 1.0f)
 
-#define FRAMECAP 60.0
-#define GAMESPEED 60.0
-
 class Display
 {
 public:
 	Display(int* argc, char** argv, std::string name, int width, int height);
 	~Display();
-	const static double frameTime;
 	static int monitorWidth;
 	static int monitorHeight;
 	static const Display& getCurrentInstance();
