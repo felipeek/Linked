@@ -44,26 +44,21 @@ namespace linked
 			delete m_buttonMesh;
 
 		// delete textures
-		if (m_backgroundTexture)
-		{
-			delete m_backgroundTexture;
-			m_backgroundTexture = nullptr;
-		}
-		if (m_backgroundHeldTexture)
-		{
-			delete m_backgroundHeldTexture;
-			m_backgroundHeldTexture = nullptr;
-		}
-		if (m_backgroundHoveredTexture)
-		{
-			delete m_backgroundHoveredTexture;
-			m_backgroundHoveredTexture = nullptr;
-		}
-		if (m_backgroundNormalTexture)
-		{
-			delete m_backgroundNormalTexture;
-			m_backgroundNormalTexture = nullptr;
-		}
+		//if (m_backgroundHeldTexture)
+		//{
+		//	delete m_backgroundHeldTexture;
+		//	m_backgroundHeldTexture = nullptr;
+		//}
+		//if (m_backgroundHoveredTexture)
+		//{
+		//	delete m_backgroundHoveredTexture;
+		//	m_backgroundHoveredTexture = nullptr;
+		//}
+		//if (m_backgroundNormalTexture)
+		//{
+		//	delete m_backgroundNormalTexture;
+		//	m_backgroundNormalTexture = nullptr;
+		//}
 	}
 
 	void Button::render()

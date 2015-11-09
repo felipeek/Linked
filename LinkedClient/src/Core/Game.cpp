@@ -54,7 +54,9 @@
 bool Game::multiplayer = false;
 int Game::server_port = 9090;
 //std::string Game::server_ip = "127.0.0.1";
-std::string Game::server_ip = "201.21.40.57";
+//std::string Game::server_ip = "201.21.40.57";
+//std::string Game::server_ip = "hoshoyo.servegame.com";
+std::string Game::server_ip = "189.27.184.213";
 
 Cursor* Game::cursor = nullptr;
 
@@ -263,6 +265,14 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 		designedPlayer->setType(NETWORK);
 	}
 }
+linked::Button* b;
+
+void func()
+{
+	std::cout << "CLICKED!" << std::endl;
+}
+
+std::string s1 = "Hoshoyo";
 
 void Game::createGUI()
 {
@@ -273,7 +283,7 @@ void Game::createGUI()
 	Chat::gui = this->gui;
 
 	// Chat window
-	linked::Window* chatWindow = new linked::Window(500, 130, glm::vec2(windowWidth - 510, windowHeight - 140), glm::vec4(0.6f, 0.65f, 0.69f, 0.2f), windowTitle, sizeof(windowTitle),
+	linked::Window* chatWindow = new linked::Window(500, 130, glm::vec2(windowWidth - 510, windowHeight - 140), glm::vec4(0.6f, 0.65f, 0.69f, 0.2f), (unsigned char*)s1.c_str(), s1.size() + 1,
 		linked::W_MOVABLE | linked::W_BORDER | linked::W_HEADER);
 	chatWindow->setBorderColor(glm::vec4(0.1f, 0.22f, 0.28f, 0.88f));
 	chatWindow->setTitleColor(glm::vec4(0.79f, 0.79f, 0.85f, 1.0f));
@@ -288,12 +298,24 @@ void Game::createGUI()
 	skillsWindow->setBorderSizeX(2.0f);
 	skillsWindow->setBorderSizeY(2.0f);
 	
-	linked::WindowDiv* div = new linked::WindowDiv(*chatWindow, 500, 130, 0, 0, glm::vec2(0, 0), glm::vec4(1, 1, 1, 0), 
+	linked::WindowDiv* div = new linked::WindowDiv(*chatWindow, 500, 130, 0, 0, glm::vec2(0, 0), glm::vec4(1, 1, 1, 0.5f), 
 		linked::DIV_ANCHOR_LEFT | linked::DIV_ANCHOR_TOP);
 	chatWindow->divs.push_back(div);
+
+	linked::WindowDiv* div2 = new linked::WindowDiv(*chatWindow, 130, 130, 0, 0, glm::vec2(0, 0), glm::vec4(1, 0, 0, 0),
+		linked::DIV_ANCHOR_TOP | linked::DIV_CENTER_X);
+	chatWindow->divs.push_back(div2);
 	
 	label = new linked::Label(*div, windowTitle, sizeof(windowTitle) - 1, glm::vec2(0, 0), glm::vec4(1, 1, 1, 1), 30, 10, 0);
 	div->getLabels().push_back(label);
+
+	b = new linked::Button(*div2, label, glm::vec2(0, 0), 100, 100, glm::vec4(1, 1, 1, 1));
+	b->setHoveredBGColor(glm::vec4(0, 0, 0, 1));
+	b->setHeldBGColor(glm::vec4(0, 0, 1, 1));
+	b->setClickedCallback(func);
+	b->setNormalBGTexture(new Texture("./res/Textures/button2.png"));
+	
+	div2->getButtons().push_back(b);
 }
 
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
@@ -585,8 +607,8 @@ void Game::update()
 	// GUI update
 	gui->update();
 
-	//label->setString(Chat::getStream().str());
-	//label->setText((unsigned char*)label->m_string.c_str(), label->m_string.size());
+	label->setString(Chat::getStream().str());
+	label->setText((unsigned char*)label->m_string.c_str(), label->m_string.size());
 
 	// Cursor update
 	cursor->update();
