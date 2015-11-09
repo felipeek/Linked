@@ -201,6 +201,9 @@
     <ClCompile Include="src\Entity\Monster\BasicMonster.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Entity\AI\AI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Entity\AI\MonsterAI.h">
@@ -393,6 +396,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Entity\Monster\BasicMonster.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Entity\AI\AI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

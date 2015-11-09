@@ -1,7 +1,6 @@
 #pragma once
-#include "glm\glm.hpp"
-#include "Movement.h"
 #include "LinkedTime.h"
+#include "AI.h"
 
 class Monster;
 class Map;
@@ -13,7 +12,7 @@ class Map;
 #define RANGE_CHASE_TARGET 20.0f
 #define AVOID_WALLS_INTELLIGENCE 5
 
-class MonsterAI
+class MonsterAI : public AI
 {
 public:
 	MonsterAI(Monster& aiOwner);
@@ -23,18 +22,10 @@ public:
 	bool isOnRangeToAttack(glm::vec3 worldObjectPosition) const;
 	bool isOnRangeToChaseTarget(glm::vec3 worldObjectPosition) const;
 	bool isPathFreeOfCollisions(Map* map, glm::vec3 destination) const;
-	bool reachDestination(glm::vec3 nextPosition, glm::vec3 destination) const;
 	bool shouldStandStill() const;
 	void resetStandStill();
-	glm::vec3 getNextStep(glm::vec3 destination) const;
-	MovementDefinition getMovementDefinitionOfDestination(glm::vec3 destination);
-protected:
-	MovementDirection getDiagonalDirection(glm::vec3 vector) const;
-	MovementDirection getCompleteDirection(glm::vec3 vector) const;
 private:
 	Monster& aiOwner;
-	float getVectorAngle(glm::vec3 vector) const;
 	double standStillTime = 0;
-	const float PI = 3.14159265358979f;
 };
 
