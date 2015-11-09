@@ -2,14 +2,14 @@
 #include "glm\glm.hpp"
 #include "Movement.h"
 
-class Entity;
+class WorldObject;
 
 class AI
 {
 public:
-	AI(Entity& aiOwner);
+	AI(WorldObject& aiOwner);
 	~AI();
-	Entity& getAiOwner() const;
+	WorldObject& getAiOwner() const;
 	bool reachDestination(glm::vec3 nextPosition, glm::vec3 destination) const;
 	MovementDefinition getMovementDefinitionOfDestination(glm::vec3 destination, bool diagonalDirection);
 protected:
@@ -18,6 +18,6 @@ protected:
 private:
 	float getVectorAngle(glm::vec3 vector) const;
 	const float PI = 3.14159265358979f;
-	Entity& aiOwner;
+	WorldObject& aiOwner;
 };
 

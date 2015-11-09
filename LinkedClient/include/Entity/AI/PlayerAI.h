@@ -7,8 +7,6 @@ class PlayerAI : public AI
 public:
 	PlayerAI(Player& aiOwner);
 	~PlayerAI();
-	MovementDefinition movePerfectlyTo(Map* map, glm::vec3 reference, glm::vec3 destination, float rangeSpeed) const;
-private:
-	Player& aiOwner;
+	glm::vec3 getNextStep(glm::vec3 destination) const;
 };
 

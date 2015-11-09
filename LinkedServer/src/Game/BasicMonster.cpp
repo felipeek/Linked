@@ -4,6 +4,7 @@
 #include "Map.h"
 #include "Game.h"
 #include "PacketController.h"
+#include "LinkedTime.h"
 
 BasicMonster::BasicMonster()
 {

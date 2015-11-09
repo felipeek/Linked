@@ -1,6 +1,6 @@
 #include "PlayerAI.h"
 
-PlayerAI::PlayerAI(Player& aiOwner) : aiOwner(aiOwner)
+PlayerAI::PlayerAI(Player& aiOwner) : AI(aiOwner)
 {
 }
 
@@ -9,21 +9,20 @@ PlayerAI::~PlayerAI()
 {
 }
 
-
-
-MovementDefinition PlayerAI::movePerfectlyTo(Map* map, glm::vec3 reference, glm::vec3 destination, float rangeSpeed) const
+glm::vec3 PlayerAI::getNextStep(glm::vec3 destination) const
 {
-	MovementDefinition movDef = MovementDefinition();
-	float distance = glm::length(glm::vec2(reference.x, reference.y) - glm::vec2(destination.x, destination.y));
-	glm::vec3 movement = glm::vec3(reference.x, reference.y, reference.z);
+	Player& aiOwner = (Player&)this->getAiOwner();
+	glm::vec3 aiOwnerPosition = aiOwner.getTransform()->getPosition();
 
-	glm::vec3 range = rangeSpeed*glm::normalize(destination - reference);
+	if (aiOwnerPosition.x != destination.x || aiOwnerPosition.y != destination.y)
+	{
+		glm::vec3 diffVec = destination - aiOwnerPosition;
+		float speedFactor = aiOwner.getTotalSpeed() / 100.0f;
+		glm::vec3 movementVector = speedFactor * glm::normalize(diffVec);
+		glm::vec3 nextStep = movementVector + aiOwnerPosition;
 
-	movement.x = movement.x + range.x;
-	movement.y = movement.y + range.y;
-
-	movDef.direction = this->getCompleteDirection(range);
-	movDef.movement = movement;
-
-	return movDef;
+		return nextStep;
+	}
+	else
+		return destination;
 }

@@ -231,14 +231,14 @@ void Monster::receiveDamage()
 	lastReceivedDamageTime = LinkedTime::getTime();
 }
 
-bool Monster::shouldRender()
+bool Monster::shouldTranslate()
 {
-	return this->bRender;
+	return this->bTranslate;
 }
 
-void Monster::setShouldRender(bool bRender)
+void Monster::setShouldTranslate(bool bTranslate)
 {
-	this->bRender = bRender;
+	this->bTranslate = bTranslate;
 }
 
 void Monster::move(MovementDirection direction)

@@ -29,16 +29,6 @@ Monster::~Monster()
 
 /* BASIC ATTRIBUTES */
 
-bool Monster::wasUpdatedToClient()
-{
-	return this->updatedToClient;
-}
-
-void Monster::setUpdatedToClient(bool updatedToClient)
-{
-	this->updatedToClient = updatedToClient;
-}
-
 unsigned int Monster::getTextureQuantity()
 {
 	return this->textureQuantity;

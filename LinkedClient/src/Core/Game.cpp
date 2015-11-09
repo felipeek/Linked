@@ -401,18 +401,11 @@ void Game::renderFirstPass()
 		try{
 			if (Game::multiplayer)
 			{
-				if (m->shouldRender())
-				{
-					if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()))
-						m->render(primitiveShader);
-					else
-						m->setShouldRender(false);
-				}
+				if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()) && !m->shouldTranslate())
+					m->render(primitiveShader);
 			}
 			else
-			{
 				m->render(primitiveShader);
-			}
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
@@ -481,18 +474,11 @@ void Game::renderSecondsPass()
 		try{
 			if (Game::multiplayer)
 			{
-				if (m->shouldRender())
-				{
-					if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()))
-						m->render(primitiveShader);
-					else
-						m->setShouldRender(false);
-				}
+				if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()) && !m->shouldTranslate())
+					m->render(primitiveShader);
 			}
 			else
-			{
 				m->render(primitiveShader);
-			}
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
@@ -551,6 +537,12 @@ void Game::update()
 			delete monsters[i];
 			monsters.erase(monsters.begin() + i);
 		}
+
+	for (unsigned int i = 0; i < monsters.size(); i++)
+	{
+		if (localPlayer->isOutsideExternalRadiusArea(monsters[i]->getTransform()->getPosition()))
+			monsters[i]->setShouldTranslate(true);
+	}
 	
 	// GUI update
 	gui->update();

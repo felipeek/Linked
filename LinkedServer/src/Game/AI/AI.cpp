@@ -1,7 +1,7 @@
 #include "AI.h"
-#include "Entity.h"
+#include "WorldObject.h"
 
-AI::AI(Entity& aiOwner) : aiOwner(aiOwner)
+AI::AI(WorldObject& aiOwner) : aiOwner(aiOwner)
 {
 }
 
@@ -10,14 +10,14 @@ AI::~AI()
 {
 }
 
-Entity& AI::getAiOwner() const
+WorldObject& AI::getAiOwner() const
 {
 	return this->aiOwner;
 }
 
 bool AI::reachDestination(glm::vec3 nextPosition, glm::vec3 destination) const
 {
-	glm::vec3 aiOwnerPosition = aiOwner.getTransform()->getPosition();
+	glm::vec3 aiOwnerPosition = aiOwner.getPosition();
 
 	if (aiOwnerPosition.x < destination.x)
 	{
@@ -60,7 +60,7 @@ bool AI::reachDestination(glm::vec3 nextPosition, glm::vec3 destination) const
 MovementDefinition AI::getMovementDefinitionOfDestination(glm::vec3 destination, bool diagonalDirection)
 {
 	MovementDefinition movementDefinition;
-	glm::vec3 aiOwnerPosition = aiOwner.getTransform()->getPosition();
+	glm::vec3 aiOwnerPosition = aiOwner.getPosition();
 	glm::vec3 diffVec = destination - aiOwnerPosition;
 	if (diagonalDirection)
 		movementDefinition.direction = this->getDiagonalDirection(diffVec);

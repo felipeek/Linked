@@ -3,7 +3,7 @@
 #include "Monster.h"
 #include "LinkedTime.h"
 
-MonsterAI::MonsterAI(Monster& aiOwner) : aiOwner(aiOwner)
+MonsterAI::MonsterAI(Monster& aiOwner) : AI(aiOwner)
 {
 }
 
@@ -13,7 +13,7 @@ MonsterAI::~MonsterAI()
 
 MovementDefinition MonsterAI::generateRandomMovement(Map* map) const
 {
-	glm::vec3 aiOwnerPosition = aiOwner.getPosition();
+	glm::vec3 aiOwnerPosition = this->getAiOwner().getPosition();
 	MovementDefinition randomMovement;
 	int xRandNumber = 0;
 	int yRandNumber = 0;
@@ -42,7 +42,7 @@ MovementDefinition MonsterAI::generateRandomMovement(Map* map) const
 
 MovementDefinition MonsterAI::generateMovementTowardsCoordinate(glm::vec3 destination) const
 {
-	glm::vec3 aiOwnerPosition = aiOwner.getPosition();
+	glm::vec3 aiOwnerPosition = this->getAiOwner().getPosition();
 	glm::vec3 pathVector = destination - aiOwnerPosition;
 	float pathVectorLength = glm::length(pathVector);
 
@@ -58,6 +58,7 @@ MovementDefinition MonsterAI::generateMovementTowardsCoordinate(glm::vec3 destin
 
 bool MonsterAI::isOnRangeToAttack(glm::vec3 worldObjectPosition) const
 {
+	Monster& aiOwner = (Monster&)this->getAiOwner();
 	glm::vec3 aiOwnerPosition = aiOwner.getPosition();
 	glm::vec3 pathVector = worldObjectPosition - aiOwnerPosition;
 	float pathVectorLength = glm::length(pathVector);
@@ -67,7 +68,7 @@ bool MonsterAI::isOnRangeToAttack(glm::vec3 worldObjectPosition) const
 
 bool MonsterAI::isOnRangeToChaseTarget(glm::vec3 worldObjectPosition) const
 {
-	glm::vec3 aiOwnerPosition = aiOwner.getPosition();
+	glm::vec3 aiOwnerPosition = this->getAiOwner().getPosition();
 	glm::vec3 pathVector = worldObjectPosition - aiOwnerPosition;
 	float pathVectorLength = glm::length(pathVector);
 	return (pathVectorLength < (float)RANGE_CHASE_TARGET) ? true : false;
@@ -76,7 +77,7 @@ bool MonsterAI::isOnRangeToChaseTarget(glm::vec3 worldObjectPosition) const
 // Crazy algorithm. Don't try to understand it.
 bool MonsterAI::isPathFreeOfCollisions(Map* map, glm::vec3 destination) const
 {
-	glm::vec3 aiOwnerPosition = aiOwner.getPosition();
+	glm::vec3 aiOwnerPosition = this->getAiOwner().getPosition();
 	float xPos1, xPos2, yPos1, yPos2;
 
 	if (aiOwnerPosition.x < destination.x)
@@ -147,48 +148,6 @@ bool MonsterAI::isPathFreeOfCollisions(Map* map, glm::vec3 destination) const
 	return true;
 }
 
-bool MonsterAI::reachDestination(glm::vec3 nextPosition, glm::vec3 destination) const
-{
-	glm::vec3 aiOwnerPosition = aiOwner.getPosition();
-
-	if (aiOwnerPosition.x < destination.x)
-	{
-		if (aiOwnerPosition.y < destination.y)
-		{
-			if (nextPosition.x >= destination.x && nextPosition.y >= destination.y)
-				return true;
-			else
-				return false;
-		}
-		else
-		{
-			if (nextPosition.x >= destination.x && nextPosition.y <= destination.y)
-				return true;
-			else
-				return false;
-		}
-	}
-	else
-	{
-		if (aiOwnerPosition.y < destination.y)
-		{
-			if (nextPosition.x <= destination.x && nextPosition.y >= destination.y)
-				return true;
-			else
-				return false;
-		}
-		else
-		{
-			if (nextPosition.x <= destination.x && nextPosition.y <= destination.y)
-				return true;
-			else
-				return false;
-		}
-	}
-
-	return true;
-}
-
 bool MonsterAI::shouldStandStill() const
 {
 	double now = LinkedTime::getTime();
@@ -204,12 +163,13 @@ void MonsterAI::resetStandStill()
 
 glm::vec3 MonsterAI::getNextStep(glm::vec3 destination) const
 {
-	glm::vec3 aiOwnerPosition = this->aiOwner.getPosition();
+	Monster& aiOwner = (Monster&)this->getAiOwner();
+	glm::vec3 aiOwnerPosition = aiOwner.getPosition();
 
-	if (aiOwnerPosition.x != destination.x && aiOwnerPosition.y != destination.y)
+	if (aiOwnerPosition.x != destination.x || aiOwnerPosition.y != destination.y)
 	{
 		glm::vec3 diffVec = destination - aiOwnerPosition;
-		float speedFactor = this->aiOwner.getTotalSpeed() / 100.0f;
+		float speedFactor = aiOwner.getTotalSpeed() / 100.0f;
 		glm::vec3 movementVector = speedFactor * glm::normalize(diffVec);
 		glm::vec3 nextStep = movementVector + aiOwnerPosition;
 
@@ -217,64 +177,4 @@ glm::vec3 MonsterAI::getNextStep(glm::vec3 destination) const
 	}
 	else
 		return destination;
-}
-
-MovementDefinition MonsterAI::getMovementDefinitionOfDestination(glm::vec3 destination)
-{
-	MovementDefinition movementDefinition;
-	glm::vec3 aiOwnerPosition = aiOwner.getPosition();
-	glm::vec3 diffVec = destination - aiOwnerPosition;
-	movementDefinition.direction = this->getDiagonalDirection(diffVec);
-	movementDefinition.movement = destination;
-	return movementDefinition;
-}
-
-MovementDirection MonsterAI::getDiagonalDirection(glm::vec3 vector) const
-{
-	float angle = this->getVectorAngle(vector);
-
-	if (angle >= 0 && angle < 90)
-		return TOP_RIGHT;
-	else if (angle >= 90 && angle <= 180)
-		return TOP_LEFT;
-	else if (angle >= -180 && angle < -90)
-		return BOTTOM_LEFT;
-	else if (angle >= -90 && angle < 0)
-		return BOTTOM_RIGHT;
-
-	return RIGHT;
-}
-
-MovementDirection MonsterAI::getCompleteDirection(glm::vec3 vector) const
-{
-	float angle = this->getVectorAngle(vector);
-
-	if (angle >= -22.5f && angle < 22.5f)
-		return RIGHT;
-	else if (angle >= 22.5f && angle < 67.5f)
-		return TOP_RIGHT;
-	else if (angle >= 67.5f && angle < 112.5f)
-		return TOP;
-	else if (angle >= 112.5f && angle < 157.5f)
-		return TOP_LEFT;
-	else if (angle >= 157.5f && angle <= 180.0f || angle >= -180.0f && angle < -157.5f)
-		return LEFT;
-	else if (angle >= -157.5f && angle < -112.5f)
-		return BOTTOM_LEFT;
-	else if (angle >= -112.5f && angle < -67.5f)
-		return BOTTOM;
-	else if (angle >= -67.5f && angle < -22.5f)
-		return BOTTOM_RIGHT;
-
-	return RIGHT;
-}
-
-float MonsterAI::getVectorAngle(glm::vec3 vector) const
-{
-	glm::vec3 auxVector = glm::vec3(1, 0, 0);
-	float radAngle = acos((glm::dot(vector, auxVector) / (glm::length(vector)*glm::length(auxVector))));
-	float angle = (180 * radAngle) / PI;
-	if (vector.y < 0)
-		angle = -angle;
-	return angle;
 }

@@ -30,8 +30,6 @@ public:
 	virtual ~Monster();
 
 	/* BASIC ATTRIBUTES */
-	bool wasUpdatedToClient();
-	void setUpdatedToClient(bool updatedToClient);
 	unsigned int getTextureQuantity();
 	void setTextureQuantity(unsigned int textureQuantity);
 	std::string getName();
@@ -99,7 +97,6 @@ protected:
 
 private:
 	/* BASIC ATTRIBUTES */
-	bool updatedToClient = false;
 	unsigned int textureQuantity;
 	std::string name;
 	bool bRender;

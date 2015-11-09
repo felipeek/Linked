@@ -180,7 +180,7 @@ void RangeAttack::input()
 		else
 		{
 			createProjectileDirectedToMouse();
-			player->doAttack();
+			player->attack();
 		}
 	}
 }

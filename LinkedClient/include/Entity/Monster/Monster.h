@@ -68,8 +68,8 @@ public:
 	void attack();
 	bool isReceivingDamage();
 	void receiveDamage();
-	bool shouldRender();
-	void setShouldRender(bool shouldRender);
+	bool shouldTranslate();
+	void setShouldTranslate(bool shouldTranslate);
 	bool isMoving();
 	void move(MovementDirection direction);
 	void stop();
@@ -104,7 +104,7 @@ private:
 	int id;
 	unsigned int textureQuantity;
 	std::string name;
-	bool bRender;
+	bool bTranslate;
 	bool alive = true;
 	bool attacking = false;
 	bool receivingDamage = false;

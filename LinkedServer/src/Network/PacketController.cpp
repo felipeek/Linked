@@ -499,18 +499,8 @@ void PacketController::updateMonstersPositionToAllClients()
 		std::vector<Monster*> monstersThatShouldHaveTheirPositionUpdated;
 
 		for (Monster* monster : *PacketController::monsters)
-		{
-			if (!player->isFogOfWar(monster->getPosition()) && monster->isAlive() && (!monster->wasUpdatedToClient() || monster->mustUpdateDestinationToClients()))
-			{
+			if (!player->isFogOfWar(monster->getPosition()) && monster->isAlive())
 				monstersThatShouldHaveTheirPositionUpdated.push_back(monster);
-				monster->setUpdatedToClient(true);
-			}
-			else
-			{
-				if (player->isFogOfWar(monster->getPosition()))
-					monster->setUpdatedToClient(false);
-			}
-		}
 
 		int monstersToUpdate = monstersThatShouldHaveTheirPositionUpdated.size();
 

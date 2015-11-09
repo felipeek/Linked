@@ -143,14 +143,14 @@ void Player::setMaximumHpBasis(unsigned int maximumHpBasis){
 
 unsigned int Player::getTotalMaximumHp(){
 	if (Game::multiplayer)
-		return maximumHp;
+		return totalMaximumHp;
 	else
 		return getMaximumHpBasis();
 }
 
 void Player::setTotalMaximumHp(unsigned int maxHp)
 {
-	this->maximumHp = maxHp;
+	this->totalMaximumHp = maxHp;
 }
 
 unsigned int Player::getAttackBasis(){
@@ -163,14 +163,14 @@ void Player::setAttackBasis(unsigned int attackBasis){
 
 unsigned int Player::getTotalAttack(){
 	if (Game::multiplayer)
-		return attack;
+		return totalAttack;
 	else
 		return getAttackBasis();
 }
 
 void Player::setTotalAttack(unsigned int attack)
 {
-	this->attack = attack;
+	this->totalAttack = attack;
 }
 
 unsigned int Player::getDefenseBasis(){
@@ -183,14 +183,14 @@ void Player::setDefenseBasis(unsigned int defenseBasis){
 
 unsigned int Player::getTotalDefense(){
 	if (Game::multiplayer)
-		return defense;
+		return totalDefense;
 	else
 		return getDefenseBasis();
 }
 
 void Player::setTotalDefense(unsigned int defense)
 {
-	this->defense = defense;
+	this->totalDefense = defense;
 }
 
 unsigned int Player::getMagicalPowerBasis(){
@@ -203,14 +203,14 @@ void Player::setMagicalPowerBasis(unsigned int magicalPowerBasis){
 
 unsigned int Player::getTotalMagicalPower(){
 	if (Game::multiplayer)
-		return magicalPower;
+		return totalMagicalPower;
 	else
 		return getMagicalPowerBasis();
 }
 
 void Player::setTotalMagicalPower(unsigned int magicalPower)
 {
-	this->magicalPower = magicalPower;
+	this->totalMagicalPower = magicalPower;
 }
 
 unsigned int Player::getSpeedBasis(){
@@ -223,14 +223,14 @@ void Player::setSpeedBasis(unsigned int speedBasis){
 
 unsigned int Player::getTotalSpeed(){
 	if (Game::multiplayer)
-		return speed;
+		return totalSpeed;
 	else
 		return getSpeedBasis();
 }
 
 void Player::setTotalSpeed(unsigned int speed)
 {
-	this->speed = speed;
+	this->totalSpeed = speed;
 }
 
 unsigned int Player::getAttackSpeedBasis(){
@@ -243,14 +243,14 @@ void Player::setAttackSpeedBasis(unsigned int attackSpeedBasis){
 
 unsigned int Player::getTotalAttackSpeed(){
 	if (Game::multiplayer)
-		return attackSpeed;
+		return totalAttackSpeed;
 	else
 		return getAttackSpeedBasis();
 }
 
 void Player::setTotalAttackSpeed(unsigned int attackSpeed)
 {
-	this->attackSpeed = attackSpeed;
+	this->totalAttackSpeed = attackSpeed;
 }
 
 std::vector<Skill*> Player::getSkills(){
@@ -333,7 +333,7 @@ RangeAttack* Player::getRangeAttack()
 /* STATUS */
 
 bool Player::isAlive(){
-	return getHp() != 0;
+	return this->hp != 0;
 }
 
 bool Player::isMoving()
@@ -343,21 +343,10 @@ bool Player::isMoving()
 
 bool Player::isAttacking()
 {
-	if (this->attacking)
-	{
-		double now = LinkedTime::getTime();
-		if ((now - lastAttackTime) > ((1.0f / getTotalAttackSpeed()) * 10.0f))
-		{
-			this->attacking = false;
-			return false;
-		}
-		else
-			return true;
-	}
-	return false;
+	return this->attacking;
 }
 
-void Player::doAttack()
+void Player::attack()
 {
 	this->attacking = true;
 	lastAttackTime = LinkedTime::getTime();
@@ -371,18 +360,7 @@ void Player::receiveDamage()
 
 bool Player::isReceivingDamage()
 {
-	if (this->receivingDamage)
-	{
-		double now = LinkedTime::getTime();
-		if ((now - lastReceivedDamageTime) > PLAYER_RECEIVE_DAMAGE_DELAY)
-		{
-			this->receivingDamage = false;
-			return false;
-		}
-		else
-			return true;
-	}
-	return false;
+	return this->receivingDamage;
 }
 
 /* COMBAT */
@@ -418,14 +396,35 @@ bool Player::isFogOfWar(glm::vec3 position)
 		return false;
 }
 
+bool Player::isOutsideExternalRadiusArea(glm::vec3 position)
+{
+	glm::vec3 diffVector = position - this->getTransform()->getPosition();
+	float vecLength = glm::length(diffVector);
+
+	if (vecLength > PLAYER_OUTSIDE_RADIUS_AREA)
+		return true;
+	else
+		return false;
+}
+
 /* METHODS RELATED TO INPUT, UPDATE AND RENDERING */
 
 void Player::update(Map* map)
 {
+	double now = LinkedTime::getTime();
+
+	// UPDATE 'ATTACKING' STATUS
+	if (this->attacking)
+		if ((now - lastAttackTime) > ((1.0f / getTotalAttackSpeed()) * ASPD_FACTOR))
+			this->attacking = false;
+
+	// UPDATE 'RECEIVING DAMAGE' STATUS
+	if (this->receivingDamage)
+		if ((now - lastReceivedDamageTime) > RECEIVE_DAMAGE_DELAY)
+			this->receivingDamage = false;
+
 	if (Game::multiplayer)
-	{
-		this->updateMovement(map);
-	}
+		this->moveOnline(map);
 
 	this->hpBar->update();
 	this->rangeAttack->update();
@@ -454,65 +453,65 @@ void Player::input(Map* map)
 	{
 		if (Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
 		{
-			glm::vec3 deltaVector = this->getDeltaVectorToDirection(TOP);
-			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
-				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+			glm::vec3 nextPosition = this->getPlayerNextPosition(TOP);
+			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, nextPosition) || !map->coordinateHasCollision(nextPosition))
+				this->getTransform()->translate(nextPosition.x, nextPosition.y, nextPosition.z);
 			this->currentDirection = TOP;
 			this->moving = true;
 		}
 		else if (Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && Input::keyStates['d'])
 		{
-			glm::vec3 deltaVector = this->getDeltaVectorToDirection(TOP_RIGHT);
-			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
-				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+			glm::vec3 nextPosition = this->getPlayerNextPosition(TOP_RIGHT);
+			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, nextPosition) || !map->coordinateHasCollision(nextPosition))
+				this->getTransform()->translate(nextPosition.x, nextPosition.y, nextPosition.z);
 			this->currentDirection = TOP_RIGHT;
 			this->moving = true;
 		}
 		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && Input::keyStates['d'])
 		{
-			glm::vec3 deltaVector = this->getDeltaVectorToDirection(RIGHT);
-			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
-				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+			glm::vec3 nextPosition = this->getPlayerNextPosition(RIGHT);
+			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, nextPosition) || !map->coordinateHasCollision(nextPosition))
+				this->getTransform()->translate(nextPosition.x, nextPosition.y, nextPosition.z);
 			this->currentDirection = RIGHT;
 			this->moving = true;
 		}
 		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && Input::keyStates['s'] && Input::keyStates['d'])
 		{
-			glm::vec3 deltaVector = this->getDeltaVectorToDirection(BOTTOM_RIGHT);
-			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
-				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+			glm::vec3 nextPosition = this->getPlayerNextPosition(BOTTOM_RIGHT);
+			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, nextPosition) || !map->coordinateHasCollision(nextPosition))
+				this->getTransform()->translate(nextPosition.x, nextPosition.y, nextPosition.z);
 			this->currentDirection = BOTTOM_RIGHT;
 			this->moving = true;
 		}
 		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && Input::keyStates['s'] && !Input::keyStates['d'])
 		{
-			glm::vec3 deltaVector = this->getDeltaVectorToDirection(BOTTOM);
-			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
-				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+			glm::vec3 nextPosition = this->getPlayerNextPosition(BOTTOM);
+			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, nextPosition) || !map->coordinateHasCollision(nextPosition))
+				this->getTransform()->translate(nextPosition.x, nextPosition.y, nextPosition.z);
 			this->currentDirection = BOTTOM;
 			this->moving = true;
 		}
 		else if (!Input::keyStates['w'] && Input::keyStates['a'] && Input::keyStates['s'] && !Input::keyStates['d'])
 		{
-			glm::vec3 deltaVector = this->getDeltaVectorToDirection(BOTTOM_LEFT);
-			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
-				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+			glm::vec3 nextPosition = this->getPlayerNextPosition(BOTTOM_LEFT);
+			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, nextPosition) || !map->coordinateHasCollision(nextPosition))
+				this->getTransform()->translate(nextPosition.x, nextPosition.y, nextPosition.z);
 			this->currentDirection = BOTTOM_LEFT;
 			this->moving = true;
 		}
 		else if (!Input::keyStates['w'] && Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
 		{
-			glm::vec3 deltaVector = this->getDeltaVectorToDirection(LEFT);
-			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
-				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+			glm::vec3 nextPosition = this->getPlayerNextPosition(LEFT);
+			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, nextPosition) || !map->coordinateHasCollision(nextPosition))
+				this->getTransform()->translate(nextPosition.x, nextPosition.y, nextPosition.z);
 			this->currentDirection = LEFT;
 			this->moving = true;
 		}
 		else if (Input::keyStates['w'] && Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
 		{
-			glm::vec3 deltaVector = this->getDeltaVectorToDirection(TOP_LEFT);
-			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, currentPosition + deltaVector) || !map->coordinateHasCollision(currentPosition + deltaVector))
-				this->getTransform()->incTranslate(deltaVector.x, deltaVector.y, deltaVector.z);
+			glm::vec3 nextPosition = this->getPlayerNextPosition(TOP_LEFT);
+			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, nextPosition) || !map->coordinateHasCollision(nextPosition))
+				this->getTransform()->translate(nextPosition.x, nextPosition.y, nextPosition.z);
 			this->currentDirection = TOP_LEFT;
 			this->moving = true;
 		}
@@ -683,14 +682,13 @@ void Player::changeTextureBasedOnDirection(MovementDirection direction, unsigned
 
 /* MOVEMENT METHODS */
 
-void Player::updateMovement(Map* map)
+void Player::moveOnline(Map* map)
 {
 	if (isMovingTo)
 	{
 		glm::vec3 pPos = this->getTransform()->getPosition();
-		float frameTime = 1/60.0f;
-		float range = frameTime * this->getTotalSpeed();
-		MovementDefinition newPos = this->ai->movePerfectlyTo(map, pPos, this->destination, range);
+		glm::vec3 vec3NewPos = this->ai->getNextStep(this->destination);
+		MovementDefinition newPos = this->ai->getMovementDefinitionOfDestination(vec3NewPos, false);
 
 		if (this->ai->reachDestination(newPos.movement, this->destination))
 		{
@@ -724,32 +722,34 @@ bool Player::checkIfPlayerIsStillOnTheSameMapPosition(glm::vec3 currentPosition,
 	return false;
 }
 
-glm::vec3 Player::getDeltaVectorToDirection(MovementDirection direction)
+glm::vec3 Player::getPlayerNextPosition(MovementDirection direction)
 {
-	float frameTime = 1/60.0f;
-	float range = frameTime * this->getTotalSpeed();
+	glm::vec3 deltaVec;
 
 	switch (direction)
 	{
-	case TOP:
-		return glm::vec3(0, range, 0);
-	case TOP_RIGHT:
-		return glm::vec3(range / SQRT2, range / SQRT2, 0);
-	case RIGHT:
-		return glm::vec3(range, 0, 0);
-	case BOTTOM_RIGHT:
-		return glm::vec3(range / SQRT2, -range / SQRT2, 0);
-	case BOTTOM:
-		return glm::vec3(0, -range, 0);
-	case BOTTOM_LEFT:
-		return glm::vec3(-range / SQRT2, -range / SQRT2, 0);
-	case LEFT:
-		return glm::vec3(-range, 0, 0);
-	case TOP_LEFT:
-		return glm::vec3(-range / SQRT2, range / SQRT2, 0);
-	default:
-		return glm::vec3(0, 0, 0);
+		case TOP:
+			deltaVec = glm::vec3(0, 1, 0); break;
+		case TOP_RIGHT:
+			deltaVec = glm::vec3(1 / SQRT2, 1 / SQRT2, 0); break;
+		case RIGHT:
+			deltaVec = glm::vec3(1, 0, 0); break;
+		case BOTTOM_RIGHT:
+			deltaVec = glm::vec3(1 / SQRT2, -1 / SQRT2, 0); break;
+		case BOTTOM:
+			deltaVec = glm::vec3(0, -1, 0); break;
+		case BOTTOM_LEFT:
+			deltaVec = glm::vec3(-1 / SQRT2, -1 / SQRT2, 0); break;
+		case LEFT:
+			deltaVec = glm::vec3(-1, 0, 0); break;
+		case TOP_LEFT:
+			deltaVec = glm::vec3(-1 / SQRT2, 1 / SQRT2, 0); break;
+		default:
+			deltaVec = glm::vec3(0, 0, 0); break;
 	}
+
+	glm::vec3 newDestination = this->getTransform()->getPosition() + deltaVec;
+	return this->ai->getNextStep(newDestination);
 }
 
 /* HPBAR RELATED METHODS */

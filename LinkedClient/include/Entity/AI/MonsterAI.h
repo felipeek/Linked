@@ -17,6 +17,7 @@ class MonsterAI : public AI
 public:
 	MonsterAI(Monster& aiOwner);
 	~MonsterAI();
+	glm::vec3 getNextStep(glm::vec3 destination) const;
 	MovementDefinition generateRandomMovement(Map* map) const;
 	MovementDefinition generateMovementTowardsCoordinate(glm::vec3 destination) const;
 	bool isOnRangeToAttack(glm::vec3 worldObjectPosition) const;
@@ -25,7 +26,6 @@ public:
 	bool shouldStandStill() const;
 	void resetStandStill();
 private:
-	Monster& aiOwner;
 	double standStillTime = 0;
 };
 
