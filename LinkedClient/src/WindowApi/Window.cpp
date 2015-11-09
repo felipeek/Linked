@@ -21,7 +21,7 @@ namespace linked{
 		unsigned char* title,
 		int titleLength,
 		unsigned int hints)
-		: 
+		:
 		m_width(width), m_height(height),
 		m_backgroundColor(backgroundColor),
 		m_attached(false)
@@ -66,8 +66,8 @@ namespace linked{
 
 	void Window::linkedWindowInit()
 	{
-		linked::Window::m_textShader = new FontShader("./shaders/font_shader");
-		m_windowShader = new WindowShader("./shaders/window_shader");
+		linked::Window::m_textShader = new FontShader(FONT_SHADER_PATH);
+		m_windowShader = new WindowShader(WINDOW_SHADER_PATH);
 	}
 
 	void Window::linkedWindowDestroy()
@@ -81,7 +81,7 @@ namespace linked{
 	{
 		Window::m_windowShader->useShader();
 		Window::m_windowShader->activateAlphaBlend();
-		
+
 		// render window on top
 		Window::m_windowShader->setTextColor(m_backgroundColor);
 		Window::m_windowShader->update(m_position);
@@ -240,7 +240,7 @@ namespace linked{
 			m_attached = true;
 			focused = true;
 		}
-		
+
 	}
 	void Window::detachMouse()
 	{
@@ -292,7 +292,7 @@ namespace linked{
 		glm::vec2 basePos = m_position;
 		basePos.x += xoffset;
 		basePos.y += yoffset;
-		basePos.x -= m_width/ 2.0f;
+		basePos.x -= m_width / 2.0f;
 		basePos.y -= m_height / 2.0f;
 
 		basePos.x /= Display::getCurrentInstance().getWidth() / 2.0f;
@@ -321,7 +321,7 @@ namespace linked{
 		}
 
 		m_borderMesh = new Mesh(borderQuad, true);
-		m_borderColor = glm::vec4(1.0f, 1.0f, 0.0f, 0.5f);
+		m_borderColor = glm::vec4(DEFAULT_BORDER_COLOR);
 	}
 
 	void Window::renderWindows()
@@ -339,5 +339,37 @@ namespace linked{
 			w->update();
 	}
 
+	void Window::setBorderSizeY(float newBorderSize)
+	{
+		IndexedModel* im = m_borderMesh->getQuad()->getIndexedModel();
+
+		float currentSizeY = m_borderSizeY * 2.0f;
+
+		im->positions[0].y = im->positions[0].y - currentSizeY + (newBorderSize  * 2.0f);
+		im->positions[1].y = im->positions[1].y - currentSizeY + (newBorderSize  * 2.0f);
+		im->positions[2].y = im->positions[2].y + currentSizeY - (newBorderSize  * 2.0f);
+		im->positions[3].y = im->positions[3].y + currentSizeY - (newBorderSize  * 2.0f);
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_borderMesh->getVertexBufferID());
+		glBufferSubData(GL_ARRAY_BUFFER, 0, im->positions.size() * sizeof(float) * 3, &im->positions[0]);
+
+		this->m_borderSizeY = newBorderSize;
+	}
+	void Window::setBorderSizeX(float newBorderSize)
+	{
+		IndexedModel* im = m_borderMesh->getQuad()->getIndexedModel();
+
+		float currentSizeX = m_borderSizeX * 2.0f;
+
+		im->positions[0].x = im->positions[0].x + currentSizeX - (newBorderSize  * 2.0f);
+		im->positions[1].x = im->positions[1].x - currentSizeX + (newBorderSize  * 2.0f);
+		im->positions[2].x = im->positions[2].x + currentSizeX - (newBorderSize  * 2.0f);
+		im->positions[3].x = im->positions[3].x - currentSizeX + (newBorderSize  * 2.0f);
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_borderMesh->getVertexBufferID());
+		glBufferSubData(GL_ARRAY_BUFFER, 0, im->positions.size() * sizeof(float) * 3, &im->positions[0]);
+
+		this->m_borderSizeX = newBorderSize;
+	}
 }
 

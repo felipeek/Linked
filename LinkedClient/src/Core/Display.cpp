@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "PacketController.h"
 #include "Chat.h"
+#include "Window.h"
 #include "Common.h"
 
 // Display related
@@ -233,6 +234,10 @@ void Display::mouseCallBack(GLFWwindow* window, int button, int action, int mods
 
 	Input::mouseAttack.setAttackPos(screenX, screenY);
 	Input::mouseAttack.setMouseCoords((int)x, (int)y);
+
+	for (unsigned int i = 0; i < linked::Window::openedWindows.size(); i++)
+		linked::Window::openedWindows[i]->mouseCallback(button, action, mods);
+	linked::Button::mouseCallback(button, action, mods);
 }
 
 void Display::mousePosCallBack(GLFWwindow* window, double x, double y)
@@ -246,6 +251,9 @@ void Display::mousePosCallBack(GLFWwindow* window, double x, double y)
 
 	Input::mouseAttack.setAttackPos(screenX, screenY);
 	Input::mouseAttack.setMouseCoords((int)x, (int)y);
+
+	Display::currentInstance->cursorPosition.x = (float)x;
+	Display::currentInstance->cursorPosition.y = (float)y;
 }
 
 void Display::wheelCallBack(GLFWwindow* window, double xoffset, double yoffset)

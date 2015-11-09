@@ -45,6 +45,8 @@
 
 #include "FrameBuffer.h"
 
+#include "Window.h"
+
 // Standard libs
 #include <iostream>
 #include <string>
@@ -76,6 +78,7 @@ Game::Game(int windowWidth, int windowHeight)
 		this->createOfflinePlayer();
 		this->loadMonstersAndEntities(true, true);
 	}
+	linked::Window::linkedWindowInit();
 	this->createGUI();
 }
 
@@ -123,8 +126,7 @@ Game::~Game()
 		udpClient->virtualDisconnection();
 		if (this->udpClient != nullptr) delete udpClient;
 	}
-
-	//std::cin.get();
+	linked::Window::linkedWindowDestroy();
 }
 
 void Game::createGraphicElements(int windowWidth, int windowHeight)
@@ -259,6 +261,8 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 	}
 }
 
+unsigned char windowTitle[] = "Hoshoyo";
+
 void Game::createGUI()
 {
 	this->gui = new GUI(localPlayer, "./shaders/textshader", "./shaders/fontshader", "./fonts/consola.ttf");
@@ -266,6 +270,13 @@ void Game::createGUI()
 		this->gui->addSkillIcon(s->getSkillIcon());
 	PacketController::gui = this->gui;
 	Chat::gui = this->gui;
+
+	linked::Window* w = new linked::Window(300, 100, glm::vec2(windowWidth-310, windowHeight - 110), glm::vec4(0.14, 0.15f, 0.2f, 0.8f), windowTitle, sizeof(windowTitle),
+		linked::W_MOVABLE | linked::W_BORDER | linked::W_HEADER);
+	w->setBorderColor(glm::vec4(1, 1, 1, 1));
+	w->setBorderSizeX(1.0f);
+	w->setBorderSizeY(1.0f);
+
 }
 
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
@@ -513,6 +524,9 @@ void Game::renderSecondsPass()
 	Mesh::isGUI = true;
 	gui->render();
 	Mesh::isGUI = false;
+
+	linked::Window::updateWindows();
+	linked::Window::renderWindows();
 
 	cursor->renderCursor(skillShader);
 }

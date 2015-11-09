@@ -46,8 +46,11 @@ enum divHints{
 
 class Window
 {
+#define WINDOW_SHADER_PATH "./shaders/windowapi/window_shader"
+#define FONT_SHADER_PATH "./shaders/windowapi/font_shader"
 #define DEFAULT_TITLE_COLOR 0.2f, 0.2f, 0.2f, 1.0f
 #define DEFAULT_BORDER_SIZE 2		// pixels
+#define DEFAULT_BORDER_COLOR 0.0f, 0.0f, 0.0f, 1.0f
 #define DEFAULT_HEADER_SIZE 20.0f	// pixels
 public: 
 	// Static
@@ -127,9 +130,9 @@ public: // Getters and Setters
 	inline void setBackGroundColor(const glm::vec4& newBackGroundColor) { this->m_backgroundColor = newBackGroundColor; }
 	
 	inline float getBorderSizeX() const{ return this->m_borderSizeX; }
-	inline void setBorderSizeX(float newBorderSize) { this->m_borderSizeX = newBorderSize; }
+	void setBorderSizeX(float newBorderSize);
 	inline float getBorderSizeY() const{ return this->m_borderSizeY; }
-	inline void setBorderSizeY(float newBorderSize) { this->m_borderSizeY = newBorderSize; }
+	void setBorderSizeY(float newBorderSize);
 	
 	inline void setBorderColor(glm::vec4& newBorderColor){ this->m_borderColor = newBorderColor; }
 	inline glm::vec4 getBorderColor()const{ return this->m_borderColor; }
