@@ -452,13 +452,8 @@ void PacketController::updatePlayersPositionToAllClients()
 	std::vector<Player*> playersThatShouldHaveTheirPositionUpdated;
 
 	for (Player* player : *PacketController::players)
-	{
-		if (player->didPositionChanged())
-		{
+		if (player->mustUpdateDestinationToClients())
 			playersThatShouldHaveTheirPositionUpdated.push_back(player);
-			player->resetPositionChanged();
-		}
-	}
 
 	int playersToUpdate = playersThatShouldHaveTheirPositionUpdated.size();
 
@@ -489,7 +484,7 @@ void PacketController::updatePlayersPosition(int vectorIndex, int quantity, std:
 	{
 		Player* player = players[i + vectorIndex];
 
-		playersPosition[i] = player->getPosition();
+		playersPosition[i] = player->getDestination();
 		playersClientIds[i] = player->getClientId();
 	}
 
@@ -505,14 +500,16 @@ void PacketController::updateMonstersPositionToAllClients()
 
 		for (Monster* monster : *PacketController::monsters)
 		{
-			if (!player->isFogOfWar(monster->getPosition()) && monster->isAlive() && (!monster->wasUpdatedToClient() || monster->didPositionChanged()))
+			if (!player->isFogOfWar(monster->getPosition()) && monster->isAlive() && (!monster->wasUpdatedToClient() || monster->mustUpdateDestinationToClients()))
 			{
 				monstersThatShouldHaveTheirPositionUpdated.push_back(monster);
 				monster->setUpdatedToClient(true);
-				monster->resetPositionChanged();
 			}
 			else
-				monster->setUpdatedToClient(false);
+			{
+				if (player->isFogOfWar(monster->getPosition()))
+					monster->setUpdatedToClient(false);
+			}
 		}
 
 		int monstersToUpdate = monstersThatShouldHaveTheirPositionUpdated.size();
@@ -544,7 +541,7 @@ void PacketController::updateMonstersPosition(int vectorIndex, int quantity, std
 	for (int i = 0; i < quantity; i++)
 	{
 		Monster* monster = monsters[i + vectorIndex];
-		monstersPosition[i] = monster->getPosition();
+		monstersPosition[i] = monster->getDestination();
 		monstersIds[i] = monster->getId();
 	}
 

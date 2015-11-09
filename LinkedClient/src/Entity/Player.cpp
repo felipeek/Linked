@@ -22,7 +22,7 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture, std::vector<M
 	this->link = NULL;
 	this->hpBar = new HPBar(this);
 	this->rangeAttack = new RangeAttack(this, &attacks, monsters, map);
-	this->ai = new PlayerAI();
+	this->ai = new PlayerAI(*this);
 	this->isMovingTo = false;
 	this->type = LOCAL;
 	this->hpBar_shouldRender = true;
@@ -690,19 +690,25 @@ void Player::updateMovement(Map* map)
 		glm::vec3 pPos = this->getTransform()->getPosition();
 		float frameTime = 1/60.0f;
 		float range = frameTime * this->getTotalSpeed();
-		/*MovementDefinition newPos = this->ai->movePerfectlyTo(map, pPos, this->destination, range);
+		MovementDefinition newPos = this->ai->movePerfectlyTo(map, pPos, this->destination, range);
 
-		if (newPos.doMove)
+		if (this->ai->reachDestination(newPos.movement, this->destination))
+		{
+			this->moving = false;
+			this->isMovingTo = false;
+		}
+		else if (map->coordinateHasCollision(newPos.movement))
+		{
+			this->getTransform()->translate(destination.x, destination.y, destination.z);
+			this->moving = false;
+			this->isMovingTo = false;
+		}
+		else
 		{
 			this->getTransform()->translate(newPos.movement.x, newPos.movement.y, newPos.movement.z);
 			this->currentDirection = newPos.direction;
 			this->moving = true;
 		}
-		else
-		{
-			this->moving = false;
-			this->isMovingTo = false;
-		}*/
 	}
 }
 

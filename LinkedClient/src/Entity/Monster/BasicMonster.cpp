@@ -7,8 +7,7 @@
 
 BasicMonster::BasicMonster(Transform* transform, Mesh* mesh, Texture* texture) : Monster(transform, mesh, texture)
 {
-	this->activeTexture = BasicMonsterActiveTexture::STANDING;
-	this->activeTextureDirection = BOTTOM_LEFT;
+	this->directedMovement.direction = BOTTOM_LEFT;
 	this->lastTimeTextureWasRefreshed = 0;
 }
 
@@ -24,15 +23,17 @@ void BasicMonster::update(Map* map, Player* player)
 	if (this->isAlive())
 	{
 		if (Game::multiplayer)
-		{
 			this->moveOnline(map);
-		}
 		else
 		{
-			if ((this->ai->isOnRangeToAttack(player->getTransform()->getPosition()) && player->isAlive()) || this->isAttacking())
+			if ((this->ai->isOnRangeToAttack(player->getTransform()->getPosition()) && player->isAlive()))
 			{
 				if (!this->isAttacking()) this->attackCreature(player);
 				this->stop(); // For Texture Management
+			}
+			else if (this->isAttacking() || this->isReceivingDamage())
+			{
+				this->stop();
 			}
 			else if (this->ai->isOnRangeToChaseTarget(player->getTransform()->getPosition()) && this->ai->isPathFreeOfCollisions(map, player->getTransform()->getPosition()) && player->isAlive())
 			{
@@ -132,8 +133,6 @@ void BasicMonster::moveRandomly(Map* map, Player* player)
 
 void BasicMonster::moveOnline(Map* map)
 {
-	this->move(this->directedMovement.direction);
-
 	if (this->movingOnline)
 	{
 		glm::vec3 newMonsterPosition = this->ai->getNextStep(this->directedMovement.movement);
@@ -141,18 +140,31 @@ void BasicMonster::moveOnline(Map* map)
 		if (this->ai->reachDestination(newMonsterPosition, this->directedMovement.movement))
 		{
 			this->movingOnline = false;
-			//this->stop();
+			if (!this->isAttacking() && !this->isReceivingDamage()) timeStopped++;
 		}
 		else if (!map->coordinateHasCollision(newMonsterPosition))
 		{
 			this->getTransform()->translate(newMonsterPosition.x, newMonsterPosition.y, this->getTransform()->getPosition().z);
-			//this->move(this->directedMovement.direction);
+			this->move(this->directedMovement.direction);
+			timeStopped = 0;
 		}
-		/*else
-			this->stop();*/
+		else
+		{
+			this->movingOnline = false;
+			if (!this->isAttacking() && !this->isReceivingDamage()) timeStopped++;
+		}
 	}
-	/*else
-		this->stop();*/
+	else
+		if (!this->isAttacking() && !this->isReceivingDamage()) timeStopped++;
+
+	// In online mode, we can't just change to the STANDING texture when the monster stops walking.
+	// This happens because sometimes there is a delay with regards to the packets sent by the server.
+	// This delay makes the monster stop for a few milliseconds, which would force a texture change.
+	// When this happens, the monster "flicks".
+	// The line of code below will make the STANDING texture appears only when the monster has stopped walking for a
+	// considerable amount of time.
+	if (timeStopped > 10)
+		this->stop();
 }
 
 void BasicMonster::refreshTextureIfNecessary()
@@ -173,7 +185,6 @@ void BasicMonster::refreshTextureIfNecessary()
 			this->activeTextureDirection = this->directedMovement.direction;
 			this->lastTimeTextureWasRefreshed = now;
 		}
-			
 	}
 	else if (this->isReceivingDamage())
 	{
@@ -207,7 +218,6 @@ void BasicMonster::refreshTextureIfNecessary()
 			this->activeTextureDirection = this->directedMovement.direction;
 			this->lastTimeTextureWasRefreshed = now;
 		}
-			
 	}
 }
 

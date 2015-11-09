@@ -105,10 +105,10 @@ private:
 	unsigned int textureQuantity;
 	std::string name;
 	bool bRender;
-	bool alive;
-	bool attacking;
-	bool receivingDamage;
-	bool moving;
+	bool alive = true;
+	bool attacking = false;
+	bool receivingDamage = false;
+	bool moving = false;
 	MovementDirection movingDirection;
 	unsigned int hp;
 	unsigned int totalMaximumHp;

@@ -6,7 +6,6 @@ WorldObject::WorldObject()
 {
 	this->position = glm::vec3(0, 0, 0);
 	this->id = NEXT_ID++;
-	this->positionChanged = false;
 }
 
 WorldObject::~WorldObject()
@@ -21,7 +20,6 @@ glm::vec3 WorldObject::getPosition()
 void WorldObject::setPosition(glm::vec3 position)
 {
 	this->position = position;
-	this->positionChanged = true;
 }
 
 unsigned short WorldObject::getId()
@@ -32,14 +30,4 @@ unsigned short WorldObject::getId()
 void WorldObject::setId(unsigned short id)
 {
 	this->id = id;
-}
-
-bool WorldObject::didPositionChanged()
-{
-	return this->positionChanged;
-}
-
-void WorldObject::resetPositionChanged()
-{
-	this->positionChanged = false;
 }

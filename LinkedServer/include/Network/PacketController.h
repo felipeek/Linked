@@ -12,9 +12,6 @@ class ClientInfo;
 class Monster;
 class Game;
 
-// Entity's IDs
-// Second Player 0
-
 class PacketController
 {
 public:

@@ -12,6 +12,11 @@ public:
 
 	/* COPY */
 	virtual Monster* getCopy(Monster* copy);
+
+	/* NETWORK MOVEMENT */
+	virtual bool mustUpdateDestinationToClients();
+	virtual glm::vec3 getDestination();
+
 private:
 	void moveToAttackPlayer(Map* map, Player* player);
 	void moveRandomly(Map* map, Player* player);
@@ -19,4 +24,5 @@ private:
 	bool movingRandomly = false;
 	bool movingToAttackPlayer = false;
 	MovementDefinition directedMovement;
+	MovementDefinition oldDirectedMovement;
 };

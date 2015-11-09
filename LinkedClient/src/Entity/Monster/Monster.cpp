@@ -21,8 +21,6 @@ Monster::Monster(Transform* transform, Mesh* mesh, Texture* texture) : Entity(tr
 	setTotalAttackSpeed(MONSTER_DEFAULT_TOTAL_ATTACK_SPEED);
 	setTotalRange(MONSTER_DEFAULT_TOTAL_RANGE);
 
-	this->alive = true;
-
 	if (!Game::multiplayer)
 		this->id = NEXT_ID++;
 }

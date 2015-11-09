@@ -3,6 +3,7 @@
 #include "MonsterAI.h"
 #include "Map.h"
 #include "Game.h"
+#include "PacketController.h"
 
 BasicMonster::BasicMonster()
 {
@@ -14,6 +15,7 @@ BasicMonster::~BasicMonster()
 
 void BasicMonster::update(Map* map, std::vector<Player*>* players)
 {
+	glm::vec3 currentPosition = this->getPosition();
 	Monster::update(map, players);
 
 	if (players->size() > 0)
@@ -23,10 +25,14 @@ void BasicMonster::update(Map* map, std::vector<Player*>* players)
 
 		if (this->isAlive())
 		{
-			if (this->ai->isOnRangeToAttack(player->getPosition()) && player->isAlive() || this->isAttacking())
+			if (this->ai->isOnRangeToAttack(player->getPosition()) && player->isAlive())
 			{
 				if (!this->isAttacking()) this->attackCreature(player);
 				this->stop(); // For Texture Management
+			}
+			else if (this->isAttacking() || this->isReceivingDamage())
+			{
+				this->stop();
 			}
 			else if (this->ai->isOnRangeToChaseTarget(player->getPosition()) && this->ai->isPathFreeOfCollisions(map, player->getPosition()) && player->isAlive())
 			{
@@ -65,11 +71,20 @@ void BasicMonster::moveToAttackPlayer(Map* map, Player* player)
 	{
 		this->directedMovement = this->ai->generateMovementTowardsCoordinate(player->getPosition());
 		this->movingToAttackPlayer = true;
+		if (!map->coordinateHasCollision(newMonsterPosition))
+			this->setPosition(glm::vec3(newMonsterPosition.x, newMonsterPosition.y, this->getPosition().z));
+		else
+			this->movingToAttackPlayer = false;
 	}
 	// If the monster was already moving towards the player and reached the destination, it stops moving towards the player.
 	if (this->ai->reachDestination(newMonsterPosition, this->directedMovement.movement) && this->movingToAttackPlayer)
 	{
-		this->movingToAttackPlayer = false;
+		this->directedMovement = this->ai->generateMovementTowardsCoordinate(player->getPosition());
+		this->movingToAttackPlayer = true;
+		if (!map->coordinateHasCollision(newMonsterPosition))
+			this->setPosition(glm::vec3(newMonsterPosition.x, newMonsterPosition.y, this->getPosition().z));
+		else
+			this->movingToAttackPlayer = false;
 	}
 	// If the monster was already moving towards the player and shouldn't stop, it continues moving towards the player.
 	else
@@ -108,4 +123,23 @@ void BasicMonster::moveRandomly(Map* map, Player* player)
 			this->movingRandomly = false;
 		}
 	}
+}
+
+/* NETWORK MOVEMENT */
+
+bool BasicMonster::mustUpdateDestinationToClients()
+{
+	glm::vec3 oldMov = this->oldDirectedMovement.movement;
+	glm::vec3 curMov = this->directedMovement.movement;
+
+	if (oldMov.x != curMov.x || oldMov.y != curMov.y)
+		return true;
+	else
+		return false;
+}
+
+glm::vec3 BasicMonster::getDestination()
+{
+	this->oldDirectedMovement = this->directedMovement;
+	return this->directedMovement.movement;
 }

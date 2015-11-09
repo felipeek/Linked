@@ -1,7 +1,7 @@
 #include "SkillIcon.h"
 #include "Primitive.h"
 
-SkillIcon::SkillIcon(Texture* enabledTexture, Texture* disabledTexture, SkillSlot slot) : Entity(NULL, NULL, texture)
+SkillIcon::SkillIcon(Texture* enabledTexture, Texture* disabledTexture, SkillSlot slot) : Entity(NULL, NULL, NULL)
 {
 	Transform* skillIconTransform = new Transform(glm::vec3(-0.63f, -0.933f, 0), glm::vec3(0.6f*0.03f, 0.03f, 0.03f));
 	Mesh* skillIconMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f));

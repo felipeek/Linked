@@ -16,8 +16,6 @@ Monster::Monster()
 	setTotalSpeed(MONSTER_DEFAULT_TOTAL_SPEED);
 	setTotalAttackSpeed(MONSTER_DEFAULT_TOTAL_ATTACK_SPEED);
 	setTotalRange(MONSTER_DEFAULT_TOTAL_RANGE);
-
-	this->alive = true;
 }
 
 Monster::~Monster()
@@ -324,4 +322,16 @@ Monster* Monster::getCopy(Monster* copy)
 	copy->setPosition(this->getPosition());
 
 	return copy;
+}
+
+/* NETWORK MOVEMENT */
+
+bool Monster::mustUpdateDestinationToClients()
+{
+	return false;
+}
+
+glm::vec3 Monster::getDestination()
+{
+	return glm::vec3(0, 0, 0);
 }

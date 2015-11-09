@@ -36,6 +36,7 @@ private:
 	double lastTimeTextureWasRefreshed;
 	BasicMonsterActiveTexture activeTexture;
 	MovementDirection activeTextureDirection;
+	int timeStopped = 0;
 	bool isIntegerOnRange(int integer, int begin, int end);
 
 	bool movingRandomly = false;

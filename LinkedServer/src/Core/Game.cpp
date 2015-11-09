@@ -67,7 +67,7 @@ Player* Game::createNewPlayer(unsigned short clientId)
 	newPlayer->setAttackSpeedBasis(PLAYER_ASPD_BASIS);
 	newPlayer->setDefenseBasis(PLAYER_DEFENSE_BASIS);
 	newPlayer->setMagicalPowerBasis(PLAYER_MAGICAL_POWER_BASIS);
-	newPlayer->setSpeedBasis(PLAYER_SPEED_BASIS);
+	newPlayer->setSpeedBasis(20);
 
 	/* FOR NOW, SKILLS MUST BE THE SAME AS THEY ARE DEFINED CLIENT-SIDE (SAME SLOTS, ALSO) */
 	Skill* skill1 = new LinkSkill(PLAYER, &monsters, &players);
