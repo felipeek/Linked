@@ -3,6 +3,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "Primitive.h"
 
 // Remember to delete mesh when extending
 class Entity

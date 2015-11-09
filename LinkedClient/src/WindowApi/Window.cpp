@@ -72,6 +72,8 @@ namespace linked{
 
 	void Window::linkedWindowDestroy()
 	{
+		for (unsigned int i = 0; i < linked::Window::openedWindows.size(); i++)
+			delete linked::Window::openedWindows[i];
 		delete Window::m_windowShader;
 		delete Window::m_textShader;
 		Label::cleanUp();

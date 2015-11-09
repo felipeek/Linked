@@ -42,10 +42,14 @@ GUI::~GUI()
 	delete textRenderer;
 	delete guiShader;
 	delete textShader;
-	if (this->leftGUIEntity->getTexture() == leftGUIChatActiveTexture)
-		delete leftGUIChatInactiveTexture;
-	else
-		delete leftGUIChatActiveTexture;
+	//if (this->leftGUIEntity->getTexture() == leftGUIChatActiveTexture)
+	//	delete leftGUIChatInactiveTexture;
+	//else
+	//	delete leftGUIChatActiveTexture;
+	this->leftGUIEntity->setTexture(nullptr);
+	delete leftGUIChatInactiveTexture;
+	delete leftGUIChatActiveTexture;
+		
 	delete leftGUIEntity;
 }
 
@@ -53,7 +57,9 @@ void GUI::initLeftGUI()
 {
 	leftGUIMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f));
 	leftGUIChatInactiveTexture = new Texture(LEFTGUI_PATH_CHATINACTIVE);
+	//leftGUIChatInactiveTexture->setReferenceCount(1);
 	leftGUIChatActiveTexture = new Texture(LEFTGUI_PATH_CHATACTIVE);
+	//leftGUIChatActiveTexture->setReferenceCount(1);
 	leftGUIEntity = new Entity(new Transform(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)), leftGUIMesh, leftGUIChatInactiveTexture);
 
 	initLeftGUIText(1);

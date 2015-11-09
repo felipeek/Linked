@@ -95,7 +95,8 @@ void Quad::calcAtlas()
 
 Quad::~Quad()
 {
-	delete model;
+	if (model)
+		delete model;
 }
 
 float Quad::getTextureIndex()

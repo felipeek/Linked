@@ -32,6 +32,7 @@ public:
 
 	int& getReferenceCount();
 	void setReferenceCount(int refCount);
+	void setIndexedModel(IndexedModel* im);
 private:
 	Quad* quad;
 	Grid* grid;

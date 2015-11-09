@@ -63,7 +63,8 @@ void Entity::setTexture(Texture* texture)
 {
 	if (this->texture != nullptr) this->texture->getReferenceCount()--;
 	this->texture = texture;
-	this->texture->getReferenceCount()++;
+	if (texture)
+		this->texture->getReferenceCount()++;
 }
 
 void Entity::setTransform(Transform* transform)
@@ -73,8 +74,10 @@ void Entity::setTransform(Transform* transform)
 
 void Entity::setMesh(Mesh* mesh)
 {
-	if (this->mesh != nullptr) this->mesh->getReferenceCount()--;
+	if (this->mesh != nullptr) 
+		this->mesh->getReferenceCount()--;
 	this->mesh = mesh;
+	Quad* q = mesh->getQuad();
 	this->mesh->getReferenceCount()++;
 }
 

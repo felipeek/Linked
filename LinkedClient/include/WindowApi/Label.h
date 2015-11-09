@@ -4,6 +4,7 @@
 #include "Window.h"
 
 #include <glm/glm.hpp>
+#include <string>
 
 #include <vector>
 
@@ -24,6 +25,7 @@ public:
 	static void cleanUp();
 
 	bool defaultLineSpace;
+	std::string m_string;
 private:
 	const WindowDiv& m_div;
 	// Label properties
@@ -33,6 +35,7 @@ private:
 	FontRenderer* m_fontRenderer;
 	// Text properties
 	unsigned char* m_text;
+	
 	int m_textLength;
 	float lineSpace;
 	glm::vec4 m_textColor;
@@ -45,5 +48,7 @@ public:
 
 	inline void setMargin(float margin){ this->m_margin = margin; }
 	inline float getMargin() const{ return this->m_margin; }
+	inline void setText(unsigned char* newText, int length){ this->m_text = newText; this->m_textLength = length; }
+	inline void setString(std::string& str) { this->m_string = str; }
 };
 }

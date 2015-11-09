@@ -5,7 +5,6 @@
 
 class Texture;
 class FrameShader;
-class Mesh;
 class Camera;
 
 #define FRAME_SHADER_PATH "./shaders/frameshader"
@@ -33,7 +32,6 @@ private:
 	GLuint genRenderBuffer(int width, int height);
 
 	FrameShader* shader;
-	Mesh* mesh;
 	Texture* texture;
 	Camera* lightCamera;
 };

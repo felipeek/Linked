@@ -5,6 +5,7 @@ Texture::Texture(std::string fileName) : Texture(fileName, 0){}
 
 Texture::Texture(std::string fileName, float bias) : ImageLoader(fileName, 4)
 {
+	this->referenceCount = 0;
 	this->bias = bias;
 	this->fileName = fileName;
 	this->tileAmount = 1.0f;
@@ -101,6 +102,7 @@ void Texture::setInterpolationMethod(TexInterp method)
 
 DynamicTexture::DynamicTexture(int width, int height, bool mipmap, float bias)
 {
+	this->setReferenceCount(0);
 	this->fileName = "";
 	this->width = width;
 	this->height = height;

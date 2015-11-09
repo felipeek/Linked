@@ -46,7 +46,7 @@ class DynamicTexture : public Texture
 {
 public:
 	DynamicTexture(int width, int height, bool mipmap, float bias);
-	~DynamicTexture();
+	virtual ~DynamicTexture();
 
 	GLuint genDynamicGLTexture();
 

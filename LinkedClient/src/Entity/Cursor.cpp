@@ -8,6 +8,7 @@ Cursor::Cursor() : Entity(nullptr, nullptr, nullptr)
 	// Cursor
 	this->transform = new Transform(glm::vec3(0, 0, 0), glm::vec3(0.3f, 0.3f, 0.3f));
 	this->mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.2f, 0.2f));
+	this->mesh->setReferenceCount(1);
 	this->attackCursorTexture = new Texture("./res/Textures/target.png");
 	this->normalCursorTexture = new Texture("./res/Textures/notarget.png");
 

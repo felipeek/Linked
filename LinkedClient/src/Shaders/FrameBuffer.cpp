@@ -20,10 +20,6 @@ FrameBuffer::~FrameBuffer()
 {
 	if (texture != nullptr)
 		delete texture;
-	if (mesh != nullptr)
-		delete mesh;
-	if (shader != nullptr)
-		delete shader;
 	if (lightCamera != nullptr)
 		delete lightCamera;
 }

@@ -1,5 +1,6 @@
 #include "Mesh.h"
 #include "Grid.h"
+#include "Primitive.h"
 #include "IndexedModel.h"
 
 bool Mesh::wireframe = false;
@@ -11,6 +12,8 @@ Mesh::Mesh(std::string fileName, float reflectivity, float glossiness)
 	indexedModel = model.toIndexedModel();
 	this->reflectivity = reflectivity;
 	this->glossiness = glossiness;
+	this->quad = NULL;
+	this->grid = NULL;
 
 	this->openglDrawHint = GL_STATIC_DRAW;
 
@@ -26,6 +29,7 @@ Mesh::Mesh(Quad* quad) : Mesh(quad, false){}
 
 Mesh::Mesh(Quad* quad, bool dynamicDraw)
 {
+	this->indexedModel = quad->getIndexedModel();
 	this->quad = quad;
 	this->grid = NULL;
 	this->reflectivity = 0;
@@ -45,6 +49,7 @@ Mesh::Mesh(Quad* quad, bool dynamicDraw)
 
 Mesh::Mesh(Grid* grid)
 {
+	this->indexedModel = grid->getIndexedModel();
 	this->grid = grid;
 	this->quad = NULL;
 	this->reflectivity = 0;
@@ -77,8 +82,11 @@ Mesh::~Mesh()
 		delete grid;
 	if (quad != NULL)
 		delete quad;
-	if (indexedModel != NULL)
+	if (indexedModel != nullptr && quad == NULL && grid == NULL)
+	{
 		delete indexedModel;
+		//indexedModel = nullptr;
+	}
 }
 
 void Mesh::genVAO()
@@ -163,6 +171,11 @@ Quad* Mesh::getQuad()
 int& Mesh::getReferenceCount()
 {
 	return this->referenceCount;
+}
+
+void Mesh::setIndexedModel(IndexedModel* im)
+{
+	this->indexedModel = im;
 }
 
 void Mesh::setReferenceCount(int refCount)

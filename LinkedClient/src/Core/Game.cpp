@@ -81,7 +81,8 @@ Game::Game(int windowWidth, int windowHeight)
 	linked::Window::linkedWindowInit();
 	this->createGUI();
 }
-
+unsigned char windowTitle[] = " Chat";
+linked::Label* label;
 Game::~Game()
 {
 	if (cursor != nullptr) delete cursor;
@@ -94,6 +95,7 @@ Game::~Game()
 	if (skillShader != nullptr) delete skillShader;
 	if (monsterFactory != nullptr) delete monsterFactory;
 	if (gameEntityFactory != nullptr) delete gameEntityFactory;
+	if (worldSkillShader != nullptr) delete worldSkillShader;
 	if (this->map != nullptr) delete map;
 	if (this->gui != nullptr) delete gui;
 	if (this->water != nullptr) delete water;
@@ -126,6 +128,7 @@ Game::~Game()
 		udpClient->virtualDisconnection();
 		if (this->udpClient != nullptr) delete udpClient;
 	}
+	
 	linked::Window::linkedWindowDestroy();
 }
 
@@ -180,7 +183,7 @@ void Game::createOfflinePlayer()
 	this->localPlayer->setMaximumHpBasis(100);
 	this->localPlayer->setDefenseBasis(100);
 	this->localPlayer->setMagicalPowerBasis(20);
-	// TODO delete skill1, 2, 3, 4
+
 	Skill* skill1 = new LinkSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
 	skill1->setSlot(SLOT_1);
 	localPlayer->addNewSkill(skill1);
@@ -261,8 +264,6 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 	}
 }
 
-unsigned char windowTitle[] = "Hoshoyo";
-
 void Game::createGUI()
 {
 	this->gui = new GUI(localPlayer, "./shaders/textshader", "./shaders/fontshader", "./fonts/consola.ttf");
@@ -271,12 +272,28 @@ void Game::createGUI()
 	PacketController::gui = this->gui;
 	Chat::gui = this->gui;
 
-	linked::Window* w = new linked::Window(300, 100, glm::vec2(windowWidth-310, windowHeight - 110), glm::vec4(0.14, 0.15f, 0.2f, 0.8f), windowTitle, sizeof(windowTitle),
+	// Chat window
+	linked::Window* chatWindow = new linked::Window(500, 130, glm::vec2(windowWidth - 510, windowHeight - 140), glm::vec4(0.6f, 0.65f, 0.69f, 0.2f), windowTitle, sizeof(windowTitle),
 		linked::W_MOVABLE | linked::W_BORDER | linked::W_HEADER);
-	w->setBorderColor(glm::vec4(1, 1, 1, 1));
-	w->setBorderSizeX(1.0f);
-	w->setBorderSizeY(1.0f);
-
+	chatWindow->setBorderColor(glm::vec4(0.1f, 0.22f, 0.28f, 0.88f));
+	chatWindow->setTitleColor(glm::vec4(0.79f, 0.79f, 0.85f, 1.0f));
+	chatWindow->setBorderSizeX(1.0f);
+	chatWindow->setBorderSizeY(1.0f);
+	
+	// Skills window
+	linked::Window* skillsWindow = new linked::Window(185, 45, glm::vec2(300, windowHeight - 55), glm::vec4(0.6f, 0.65f, 0.69f, 0.2f), 0, 0,
+		linked::W_MOVABLE | linked::W_BORDER);
+	skillsWindow->setBorderColor(glm::vec4(0.1f, 0.22f, 0.28f, 0.88f));
+	skillsWindow->setTitleColor(glm::vec4(0.79f, 0.79f, 0.85f, 1.0f));
+	skillsWindow->setBorderSizeX(2.0f);
+	skillsWindow->setBorderSizeY(2.0f);
+	
+	linked::WindowDiv* div = new linked::WindowDiv(*chatWindow, 500, 130, 0, 0, glm::vec2(0, 0), glm::vec4(1, 1, 1, 0), 
+		linked::DIV_ANCHOR_LEFT | linked::DIV_ANCHOR_TOP);
+	chatWindow->divs.push_back(div);
+	
+	label = new linked::Label(*div, windowTitle, sizeof(windowTitle) - 1, glm::vec2(0, 0), glm::vec4(1, 1, 1, 1), 30, 10, 0);
+	div->getLabels().push_back(label);
 }
 
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
@@ -567,6 +584,9 @@ void Game::update()
 	
 	// GUI update
 	gui->update();
+
+	//label->setString(Chat::getStream().str());
+	//label->setText((unsigned char*)label->m_string.c_str(), label->m_string.size());
 
 	// Cursor update
 	cursor->update();
