@@ -43,6 +43,8 @@ public:
 	glm::vec2 getScreenPosition() const;
 	std::vector<Label*>& getLabels(){ return this->labels; }
 	std::vector<Button*>& getButtons(){ return this->buttons; }
+	void setBackgroundTexture(Texture* texture){ this->m_backgroundTexture = texture; }
+	Texture* getBackgroundTexture(){ return this->m_backgroundTexture; }
 private:
 	// Data
 	float m_margin, m_padding;

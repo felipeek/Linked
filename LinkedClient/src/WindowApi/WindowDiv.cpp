@@ -28,6 +28,8 @@ namespace linked
 		WindowShader* ws = m_window.getWindowShader();
 		ws->useShader();
 		ws->activateAlphaBlend();
+		if (m_backgroundTexture != nullptr)
+			ws->bindTextures(this->m_backgroundTexture->textureID);
 		if (m_render)
 		{
 			// Clips to edge of window and sets the correct blending mode to render divs
@@ -61,6 +63,8 @@ namespace linked
 			if (b->getBackgroundTexture() != nullptr)
 				ws->unbindTextures();
 		}
+		if (m_backgroundTexture != nullptr)
+			ws->unbindTextures();
 		ws->deactivateAlphaBlend();
 		ws->stopShader();
 

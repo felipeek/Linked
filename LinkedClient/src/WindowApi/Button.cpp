@@ -14,7 +14,7 @@ namespace linked
 		m_width(width), m_height(height),
 		clickedCallback(nullptr)
 	{
-		label->setPosition(m_position);
+		label->setPosition(m_position + label->getPosition());
 		m_buttonMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), (float)m_width, (float)m_height), true);
 		
 		m_backgroundTexture = nullptr;

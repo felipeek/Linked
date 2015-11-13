@@ -54,10 +54,9 @@
 bool Game::multiplayer = false;
 int Game::server_port = 9090;
 
-//std::string Game::server_ip = "127.0.0.1";
+std::string Game::server_ip = "127.0.0.1";
 //std::string Game::server_ip = "201.21.40.57";
 //std::string Game::server_ip = "hoshoyo.servegame.com";
-std::string Game::server_ip = "189.27.184.213";
 
 Cursor* Game::cursor = nullptr;
 
@@ -267,13 +266,13 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 	}
 }
 linked::Button* b;
-
+linked::Label *buttonLabel;
 void func()
 {
 	std::cout << "CLICKED!" << std::endl;
 }
 
-std::string s1 = "Hoshoyo";
+std::string s1 = "Enviar";
 
 void Game::createGUI()
 {
@@ -299,26 +298,33 @@ void Game::createGUI()
 	skillsWindow->setBorderSizeX(2.0f);
 	skillsWindow->setBorderSizeY(2.0f);
 	
-	linked::WindowDiv* div = new linked::WindowDiv(*chatWindow, 500, 130, 0, 0, glm::vec2(0, 0), glm::vec4(1, 1, 1, 0.5f), 
+	linked::WindowDiv* div = new linked::WindowDiv(*chatWindow, 500, 130, 0, 0, glm::vec2(0, 0), glm::vec4(1, 1, 1, 0.0f), 
 		linked::DIV_ANCHOR_LEFT | linked::DIV_ANCHOR_TOP);
 	chatWindow->divs.push_back(div);
 
-	linked::WindowDiv* div2 = new linked::WindowDiv(*chatWindow, 130, 130, 0, 0, glm::vec2(0, 0), glm::vec4(1, 0, 0, 0),
-		linked::DIV_ANCHOR_TOP | linked::DIV_CENTER_X);
+	linked::WindowDiv* div2 = new linked::WindowDiv(*chatWindow, 100, 30, 3, 0, glm::vec2(0, 0), glm::vec4(1, 0, 0, 0.1f),
+		linked::DIV_ANCHOR_BOTTOM | linked::DIV_ANCHOR_RIGHT);
 	chatWindow->divs.push_back(div2);
+	//div2->setBackgroundTexture(new Texture("./res/GameEntities/Textures/house.png"));
 	
 	label = new linked::Label(*div, windowTitle, sizeof(windowTitle) - 1, glm::vec2(0, 0), glm::vec4(1, 1, 1, 1), 30, 10, 0);
 	div->getLabels().push_back(label);
 
-	b = new linked::Button(*div2, label, glm::vec2(0, 0), 100, 100, glm::vec4(1, 1, 1, 1));
+	buttonLabel = new linked::Label(*div2, (unsigned char*)s1.c_str(), s1.size(), glm::vec2(20, 3), glm::vec4(1, 1, 1, 0.8f), 40, 0, 0);
+
+	b = new linked::Button(*div2, buttonLabel, glm::vec2(0, 0), 100, 30, glm::vec4(1, 0, 0, 0.75f));
 	b->setHoveredBGColor(glm::vec4(0, 0, 0, 1));
 	b->setHeldBGColor(glm::vec4(0, 0, 1, 1));
 	b->setClickedCallback(func);
-	b->setNormalBGTexture(new Texture("./res/Textures/button2.png"));
+	b->setNormalBGTexture(new Texture("./res/GUI/Buttons/button_normal.png"));
+	b->setHoveredBGTexture(new Texture("./res/GUI/Buttons/button_hovered.png"));
+	b->setHeldBGTexture(new Texture("./res/GUI/Buttons/button_pressed.png"));
+	b->setNormalTextColor(glm::vec4(0.8f, 0.8f, 1, 0.8f));
+	b->setHoveredTextColor(glm::vec4(1, 1, 1, 0.8f));
 	
 	div2->getButtons().push_back(b);
 }
-int m = 0;
+
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 {
 	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, this->map));
@@ -358,7 +364,7 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 				{
 					monster->getTransform()->translate((float)i, (float)j, 1.3f);
 					monsters.push_back(monster);
-					m++;
+					//m++;
 				}
 				else
 				{
@@ -548,9 +554,9 @@ void Game::renderSecondsPass()
 	}
 	
 	// Render GUI (Order is important)
-	Mesh::isGUI = true;
-	gui->render();
-	Mesh::isGUI = false;
+	//Mesh::isGUI = true;
+	//gui->render();
+	//Mesh::isGUI = false;
 
 	linked::Window::updateWindows();
 	linked::Window::renderWindows();
