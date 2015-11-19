@@ -1,15 +1,13 @@
 #pragma once
+#include "Window.h"
+
 #include <vector>
 #include <string>
 #include <glm\glm.hpp>
 
-class TextRenderer;
 class Player;
-class Mesh;
-class Texture;
-class Shader;
 class SkillIcon;
-class Entity;
+class Shader;
 enum leftGUIAttribs;
 
 #define LEFTGUI_PATH_CHATINACTIVE "./res/GUI/GUI_Chat_Inactive1.png"
@@ -31,7 +29,7 @@ enum leftGUIAttribs;
 class GUI
 {
 public:
-	GUI(Player* player, std::string textShaderFileName, std::string guiShaderFileName, std::string fontName);
+	GUI(Player* player);
 	~GUI();
 
 	void render();
@@ -39,22 +37,17 @@ public:
 
 	void addSkillIcon(SkillIcon* skillIcon);
 
-	void setLeftGUITextColor(glm::vec3& color);
-	void setFontSize(int size);
-
 	void setNextMessage(std::string& msg);
-
-	Shader* getGUIShader();
-	TextRenderer* getTextRenderer();
+	void resizeCallback(int width, int height);
 private:
-	TextRenderer* textRenderer;
 	Player* player;
-	Mesh* leftGUIMesh;
-	Entity* leftGUIEntity;
-	Texture* leftGUIChatInactiveTexture;
-	Texture* leftGUIChatActiveTexture;
-	Shader* textShader;
 	Shader* guiShader;
+
+	linked::Window* leftGUI;
+	linked::WindowDiv* messagesDiv;
+	linked::WindowDiv* chatDiv;
+
+	int currentDisplayWidth, currentDisplayHeight;
 
 	// Left GUI
 	std::vector<std::string> messages;
@@ -63,7 +56,7 @@ private:
 	int fontSize;
 
 	void initLeftGUI();
-	void initLeftGUIText(int attribsHint);
+	void initLeftGUIText(linked::WindowDiv* div);
 	void initLeftGUISkills();
 
 	// Player attribs
@@ -81,6 +74,13 @@ private:
 	std::string pMagicalPower;
 	std::string pAttackSpeed;
 	std::string pSpeed;
+
+	std::string chatString;
+
+	linked::Label* healthLabel, *attackLabel, *defenseLabel,
+		*magicalPowerLabel, *attackSpeedLabel, *speedLabel;
+
+	linked::Label* chatLabel;
 
 	void setPlayerHealth(unsigned int health, unsigned int maxHealth);
 	void setPlayerAttack(unsigned int attack);

@@ -6,6 +6,7 @@
 #include "Chat.h"
 #include "Window.h"
 #include "Common.h"
+#include "GUI.h"
 
 // Display related
 Display* Display::currentInstance;
@@ -280,6 +281,8 @@ void Display::resizeCallback(GLFWwindow* window, int width, int height)
 
 	game->setWindowWidth(width);
 	game->setWindowHeight(newHeight);
+
+	game->getGui()->resizeCallback(width, newHeight);
 }
 
 const Display& Display::getCurrentInstance()

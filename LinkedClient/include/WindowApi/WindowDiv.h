@@ -43,6 +43,8 @@ public:
 	glm::vec2 getScreenPosition() const;
 	std::vector<Label*>& getLabels(){ return this->labels; }
 	std::vector<Button*>& getButtons(){ return this->buttons; }
+	void setBackgroundColor(glm::vec4& color){ this->m_backGroundColor = color; }
+	glm::vec4 getBackgroundColor()const { return this->m_backGroundColor; }
 	void setBackgroundTexture(Texture* texture){ this->m_backgroundTexture = texture; }
 	Texture* getBackgroundTexture(){ return this->m_backgroundTexture; }
 private:

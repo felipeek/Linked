@@ -75,6 +75,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>bin/release/</OutDir>
     <IntDir>bin/release/</IntDir>
+    <IncludePath>$(ProjectDir)/include/Entity/Monster;$(ProjectDir)/include/WindowApi;$(ProjectDir)/include/Shaders/Classes;$(ProjectDir)/include;$(ProjectDir)/include/External;$(ProjectDir)/include/Entity/Skill;$(ProjectDir)/include/Entity/Attack;$(ProjectDir)/include/Entity/Factory;$(ProjectDir)/include/Shaders;$(ProjectDir)/include/Entity/AI;$(ProjectDir)/include/Map;$(ProjectDir)/include/Entity;$(ProjectDir)/include/Network;$(ProjectDir)/include/ResourceLoad;$(ProjectDir)/include/GUI;$(ProjectDir)/include/Core;C:\Program Files %28x86%29\Visual Leak Detector\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>bin/</OutDir>
@@ -120,7 +121,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>include/Entity/Monster;include/WindowApi;include/Shaders/Classes;include;include/External;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>

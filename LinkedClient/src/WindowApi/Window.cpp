@@ -29,7 +29,7 @@ namespace linked{
 		m_windowShader->setTextColor(this->m_backgroundColor);
 		m_windowMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), (float)width, (float)height), true);
 
-		m_fontRenderer = new FontRenderer(30, 512);
+		m_fontRenderer = new FontRenderer(35, 512);
 
 		setTitle(title, titleLength);
 		setTitleColor(glm::vec4(DEFAULT_TITLE_COLOR));
@@ -135,7 +135,10 @@ namespace linked{
 			Window::m_textShader->clipBR = glm::vec2((float)Display::getCurrentInstance().getWidth(), (float)Display::getCurrentInstance().getHeight());
 			Window::m_textShader->update();
 
-			glm::vec2 winPos = getWindowBasePosition(0, -5);
+			float xpos = 0;
+			if (m_titleCentered)
+				xpos = m_width / 2.0f - (m_titleLength / 2.0f * 10);
+			glm::vec2 winPos = getWindowBasePosition(xpos, -5);
 			float rightLimit = getWindowBasePosition((float)m_width, 0).x;
 			m_fontRenderer->renderText(m_title, m_titleLength - 1, glm::vec2(winPos.x, -winPos.y), rightLimit, 0, m_titleColor, m_textShader);
 			Window::m_textShader->stopShader();
