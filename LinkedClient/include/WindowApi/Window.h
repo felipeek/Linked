@@ -87,6 +87,7 @@ private:
 	// Data
 	int m_width, m_height;
 	int m_titleLength;
+	bool m_titleCentered;
 	unsigned char* m_title;
 	glm::vec4 m_titleColor;
 	glm::vec2 m_position;
@@ -141,6 +142,8 @@ public: // Getters and Setters
 	inline void setTitleColor(const glm::vec4& titleColor){ m_titleColor = titleColor; }
 	
 	inline bool isFocused() const{ return focused; }
+
+	inline void setTitleCentered(bool value){ this->m_titleCentered = value; }
 
 	glm::vec2 getWindowBasePosition(float xoffset, float yoffset) const;
 	WindowShader* getWindowShader()const{ return m_windowShader; }

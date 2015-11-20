@@ -113,5 +113,6 @@ public:
 	inline int getHeight()const { return windowHeight; }
 	inline void setWindowWidth(int width) { windowWidth = width; }
 	inline void setWindowHeight(int height) { windowHeight = height; }
+	inline GUI* getGui(){ return this->gui; }
 };
 

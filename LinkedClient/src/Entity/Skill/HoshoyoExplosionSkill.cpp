@@ -57,9 +57,6 @@ void HoshoyoExplosionSkill::render(Shader* primitiveShader, Shader* skillShader,
 	else if (this->status == HoshoyoExplosionSkillStatus::EXECUTION)
 	{
 		Entity::render(primitiveShader);
-		// temporary (just 4fun)
-		unsigned char skillName[] = "Hoshoyo's Explosion!";
-		textRenderer->renderText(skillName, sizeof(skillName), 710, 525, _18PX, glm::vec3(0.9f, 0.9f, 0.9f));
 	}
 }
 

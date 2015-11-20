@@ -33,6 +33,7 @@
 
 #include "GUI.h"
 #include "Chat.h"
+#include "Menu.h"
 #include "HPBar.h"
 #include "HoshoyoExplosionSkill.h"
 #include "CureBlessingSkill.h"
@@ -44,8 +45,6 @@
 #include "UDPClient.h"
 
 #include "FrameBuffer.h"
-
-#include "Window.h"
 
 // Standard libs
 #include <iostream>
@@ -81,11 +80,9 @@ Game::Game(int windowWidth, int windowHeight)
 		this->createOfflinePlayer();
 		this->loadMonstersAndEntities(true, true);
 	}
-	linked::Window::linkedWindowInit();
 	this->createGUI();
 }
-unsigned char windowTitle[] = " Chat";
-linked::Label* label;
+
 Game::~Game()
 {
 	if (cursor != nullptr) delete cursor;
@@ -131,8 +128,6 @@ Game::~Game()
 		udpClient->virtualDisconnection();
 		if (this->udpClient != nullptr) delete udpClient;
 	}
-	
-	linked::Window::linkedWindowDestroy();
 }
 
 void Game::createGraphicElements(int windowWidth, int windowHeight)
@@ -266,59 +261,16 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 		designedPlayer->setType(NETWORK);
 	}
 }
-linked::Button* b;
-
-void func()
-{
-	std::cout << "CLICKED!" << std::endl;
-}
-
-std::string s1 = "Hoshoyo";
 
 void Game::createGUI()
 {
-	this->gui = new GUI(localPlayer, "./shaders/textshader", "./shaders/fontshader", "./fonts/consola.ttf");
+	this->gui = new GUI(localPlayer);
 	for (Skill* s : this->localPlayer->getSkills())
 		this->gui->addSkillIcon(s->getSkillIcon());
 	PacketController::gui = this->gui;
-	Chat::gui = this->gui;
-
-	// Chat window
-	linked::Window* chatWindow = new linked::Window(500, 130, glm::vec2(windowWidth - 510, windowHeight - 140), glm::vec4(0.6f, 0.65f, 0.69f, 0.2f), (unsigned char*)s1.c_str(), s1.size() + 1,
-		linked::W_MOVABLE | linked::W_BORDER | linked::W_HEADER);
-	chatWindow->setBorderColor(glm::vec4(0.1f, 0.22f, 0.28f, 0.88f));
-	chatWindow->setTitleColor(glm::vec4(0.79f, 0.79f, 0.85f, 1.0f));
-	chatWindow->setBorderSizeX(1.0f);
-	chatWindow->setBorderSizeY(1.0f);
-	
-	// Skills window
-	linked::Window* skillsWindow = new linked::Window(185, 45, glm::vec2(300, windowHeight - 55), glm::vec4(0.6f, 0.65f, 0.69f, 0.2f), 0, 0,
-		linked::W_MOVABLE | linked::W_BORDER);
-	skillsWindow->setBorderColor(glm::vec4(0.1f, 0.22f, 0.28f, 0.88f));
-	skillsWindow->setTitleColor(glm::vec4(0.79f, 0.79f, 0.85f, 1.0f));
-	skillsWindow->setBorderSizeX(2.0f);
-	skillsWindow->setBorderSizeY(2.0f);
-	
-	linked::WindowDiv* div = new linked::WindowDiv(*chatWindow, 500, 130, 0, 0, glm::vec2(0, 0), glm::vec4(1, 1, 1, 0.5f), 
-		linked::DIV_ANCHOR_LEFT | linked::DIV_ANCHOR_TOP);
-	chatWindow->divs.push_back(div);
-
-	linked::WindowDiv* div2 = new linked::WindowDiv(*chatWindow, 130, 130, 0, 0, glm::vec2(0, 0), glm::vec4(1, 0, 0, 0),
-		linked::DIV_ANCHOR_TOP | linked::DIV_CENTER_X);
-	chatWindow->divs.push_back(div2);
-	
-	label = new linked::Label(*div, windowTitle, sizeof(windowTitle) - 1, glm::vec2(0, 0), glm::vec4(1, 1, 1, 1), 30, 10, 0);
-	div->getLabels().push_back(label);
-
-	b = new linked::Button(*div2, label, glm::vec2(0, 0), 100, 100, glm::vec4(1, 1, 1, 1));
-	b->setHoveredBGColor(glm::vec4(0, 0, 0, 1));
-	b->setHeldBGColor(glm::vec4(0, 0, 1, 1));
-	b->setClickedCallback(func);
-	b->setNormalBGTexture(new Texture("./res/Textures/button2.png"));
-	
-	div2->getButtons().push_back(b);
+	Chat::gui = this->gui;	
 }
-int m = 0;
+
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 {
 	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, this->map));
@@ -358,7 +310,7 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 				{
 					monster->getTransform()->translate((float)i, (float)j, 1.3f);
 					monsters.push_back(monster);
-					m++;
+					//m++;
 				}
 				else
 				{
@@ -476,7 +428,7 @@ void Game::renderFirstPass()
 
 	// Player
 	localPlayer->hpBarRenderOptions(false);
-	localPlayer->render(primitiveShader, skillShader, worldSkillShader, gui->getTextRenderer(), projectileShader);
+	localPlayer->render(primitiveShader, skillShader, worldSkillShader, nullptr, projectileShader);
 
 	// Second Player
 	if (Game::multiplayer)
@@ -484,7 +436,7 @@ void Game::renderFirstPass()
 		for (Player* player : this->onlinePlayers)
 		{
 			player->hpBarRenderOptions(false);
-			player->render(primitiveShader, skillShader, worldSkillShader, gui->getTextRenderer(), projectileShader);
+			player->render(primitiveShader, skillShader, worldSkillShader, nullptr, projectileShader);
 		}
 	}
 }
@@ -506,7 +458,7 @@ void Game::renderSecondsPass()
 
 	// Player
 	localPlayer->hpBarRenderOptions(true);
-	localPlayer->render(primitiveShader, skillShader, worldSkillShader, gui->getTextRenderer(), projectileShader);
+	localPlayer->render(primitiveShader, skillShader, worldSkillShader, nullptr, projectileShader);
 	
 	// Second Player
 	if (Game::multiplayer)
@@ -514,7 +466,7 @@ void Game::renderSecondsPass()
 		for (Player* player : this->onlinePlayers)
 		{
 			player->hpBarRenderOptions(true);
-			player->render(primitiveShader, skillShader, worldSkillShader, gui->getTextRenderer(), projectileShader);
+			player->render(primitiveShader, skillShader, worldSkillShader, nullptr, projectileShader);
 		}
 			
 	}
@@ -548,109 +500,68 @@ void Game::renderSecondsPass()
 	}
 	
 	// Render GUI (Order is important)
-	Mesh::isGUI = true;
 	gui->render();
-	Mesh::isGUI = false;
-
-	linked::Window::updateWindows();
-	linked::Window::renderWindows();
 
 	cursor->renderCursor(skillShader);
 }
 
 void Game::update()
 {
-	if (Game::multiplayer)
-		Chat::updateGameMultiplayer(udpClient, localPlayer, map);
-	else
-		Chat::updateGameSingleplayer();
-	
-	// Light update
-	light->update(localPlayer->getTransform()->getPosition());
-	
-	// Player update	
-	localPlayer->update(this->map);
-	
-	// Camera update
-	camera->updatePlayer(localPlayer->getTransform()->getPosition());
-	frameBuffer->getCamera()->updateLight(light->lightPosition, localPlayer->getTransform()->getPosition());
-	
-	if (Game::multiplayer)
+	if (!Menu::isMenuActive())
 	{
-		for (Player* player : this->onlinePlayers)
-			player->update(this->map);
-	}
-	
-	// Monsters update
-	for (unsigned int i = 0; i < monsters.size(); i++)
-		monsters[i]->update(map, localPlayer);
-	
-	for (unsigned int i = 0; i < monsters.size(); i++)
-		if (monsters[i]->shouldBeDeleted())
+		if (Game::multiplayer)
+			Chat::updateGameMultiplayer(udpClient, localPlayer, map);
+		else
+			Chat::updateGameSingleplayer();
+
+		// Light update
+		light->update(localPlayer->getTransform()->getPosition());
+
+		// Player update	
+		localPlayer->update(this->map);
+
+		// Camera update
+		camera->updatePlayer(localPlayer->getTransform()->getPosition());
+		frameBuffer->getCamera()->updateLight(light->lightPosition, localPlayer->getTransform()->getPosition());
+
+		if (Game::multiplayer)
 		{
-			delete monsters[i];
-			monsters.erase(monsters.begin() + i);
+			for (Player* player : this->onlinePlayers)
+				player->update(this->map);
 		}
 
-	for (unsigned int i = 0; i < monsters.size(); i++)
-	{
-		if (localPlayer->isOutsideExternalRadiusArea(monsters[i]->getTransform()->getPosition()))
-			monsters[i]->setShouldTranslate(true);
+		// Monsters update
+		for (unsigned int i = 0; i < monsters.size(); i++)
+			monsters[i]->update(map, localPlayer);
+
+		for (unsigned int i = 0; i < monsters.size(); i++)
+			if (monsters[i]->shouldBeDeleted())
+			{
+				delete monsters[i];
+				monsters.erase(monsters.begin() + i);
+			}
+
+		for (unsigned int i = 0; i < monsters.size(); i++)
+		{
+			if (localPlayer->isOutsideExternalRadiusArea(monsters[i]->getTransform()->getPosition()))
+				monsters[i]->setShouldTranslate(true);
+		}
+
+		// GUI update
+		gui->update();
 	}
-	
-	// GUI update
-	gui->update();
-
-	label->setString(Chat::getStream().str());
-	label->setText((unsigned char*)label->m_string.c_str(), label->m_string.size());
-
 	// Cursor update
 	cursor->update();
+
 }
 
 void Game::input()
 {	
-	if (!Chat::isChatActive())
+	if (!Chat::isChatActive() && !Menu::isMenuActive())
 	{
 		Input::mouseAttack.update();
 		camera->input();
 		light->input();
-		localPlayer->input(this->map);		
-#ifdef DEBUG
-
-		if (Input::keyStates['t'])
-		{
-			double now = Time::getTime();
-			double delta = now - lastTime;
-
-			if (delta >= 0.3)
-			{
-				int randomNumberX;
-				int randomNumberY;
-				glm::vec3 newPos;
-				do {
-					randomNumberX = std::rand() % MAP_SIZE;
-					randomNumberY = std::rand() % MAP_SIZE;
-					newPos = glm::vec3((float)randomNumberX, (float)randomNumberY, 0);
-				} while (map->getMapCoordinateForMapCreation(newPos).terrain != NORMAL_FLOOR);
-
-				lastTime = Time::getTime();
-				localPlayer->getTransform()->translate(newPos.x, newPos.y, localPlayer->getTransform()->getPosition().z);
-			}
-		}
-
-		/*if (Input::keyStates['l'])
-		{
-			double now = Time::getTime();
-			if (now - lastTime >= 0.3)
-			{
-				if (Mesh::drawForm == GL_TRIANGLES)
-					Mesh::drawForm = GL_LINES;
-				else
-					Mesh::drawForm = GL_TRIANGLES;
-				lastTime = Time::getTime();
-			}
-		}*/
-#endif
+		localPlayer->input(this->map);
 	}
 }

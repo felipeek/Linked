@@ -75,6 +75,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>bin/release/</OutDir>
     <IntDir>bin/release/</IntDir>
+    <IncludePath>$(ProjectDir)/include/Entity/Monster;$(ProjectDir)/include/WindowApi;$(ProjectDir)/include/Shaders/Classes;$(ProjectDir)/include;$(ProjectDir)/include/External;$(ProjectDir)/include/Entity/Skill;$(ProjectDir)/include/Entity/Attack;$(ProjectDir)/include/Entity/Factory;$(ProjectDir)/include/Shaders;$(ProjectDir)/include/Entity/AI;$(ProjectDir)/include/Map;$(ProjectDir)/include/Entity;$(ProjectDir)/include/Network;$(ProjectDir)/include/ResourceLoad;$(ProjectDir)/include/GUI;$(ProjectDir)/include/Core;C:\Program Files %28x86%29\Visual Leak Detector\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>bin/</OutDir>
@@ -120,7 +121,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>include/Entity/Monster;include/WindowApi;include/Shaders/Classes;include;include/External;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -155,6 +157,7 @@
     <ClCompile Include="include\external\freetypegl\texture-atlas.c" />
     <ClCompile Include="include\external\freetypegl\texture-font.c" />
     <ClCompile Include="include\external\freetypegl\vector.c" />
+    <ClCompile Include="src\GUI\Menu.cpp" />
     <ClCompile Include="src\Entity\AI\AI.cpp" />
     <ClCompile Include="src\Entity\Monster\BasicMonster.cpp" />
     <ClCompile Include="src\Entity\Skill\CureBlessingSkill.cpp" />
@@ -309,6 +312,7 @@
     <ClInclude Include="include\WindowApi\Window.h" />
     <ClInclude Include="include\WindowApi\WindowDiv.h" />
     <ClInclude Include="include\Entity\Monster\TurretMonster.h" />
+    <ClInclude Include="include\GUI\Menu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

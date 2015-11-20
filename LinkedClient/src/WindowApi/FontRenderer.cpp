@@ -8,7 +8,7 @@
 FontRenderer::FontRenderer(float fontSize, int textureQuality)
 {
 	atlas = ftgl::texture_atlas_new(textureQuality, textureQuality, 1);
-	font = ftgl::texture_font_new_from_file(atlas, fontSize, "./fonts/arial.ttf");
+	font = ftgl::texture_font_new_from_file(atlas, fontSize, "./fonts/consola.ttf");
 
 	ascender = font->ascender;
 	this->fontSize = fontSize;
