@@ -7,6 +7,7 @@
 #include <string>
 
 #include <vector>
+#include <iostream>
 
 namespace linked
 {
@@ -48,7 +49,17 @@ public:
 
 	inline void setMargin(float margin){ this->m_margin = margin; }
 	inline float getMargin() const{ return this->m_margin; }
-	inline void setText(unsigned char* newText, int length){ this->m_text = newText; this->m_textLength = length; }
+	inline void setText(unsigned char* newText, int length){ 
+		this->m_text = newText; 
+		this->m_textLength = length; 
+	}
+	inline void setText2(unsigned char* newText, int length){
+		std::cout << "teste" << std::endl;
+		this->m_text = newText;
+		std::cout << "teste2" << std::endl;
+		this->m_textLength = length;
+		std::cout << "teste3" << std::endl;
+	}
 	inline void setTextLength(int length){ this->m_textLength = length; }
 	inline void setString(std::string& str) { this->m_string = str; }
 };

@@ -5,6 +5,12 @@
 #include "GUIShader.h"
 
 #include <sstream>
+#include <iostream>
+
+std::vector<std::string> GUI::messages;
+linked::Window* GUI::leftGUI;
+linked::WindowDiv* GUI::messagesDiv;
+linked::WindowDiv* GUI::chatDiv;
 
 GUI::GUI(Player* player)
 {
@@ -277,10 +283,14 @@ void GUI::setNextMessage(std::string& msg)
 		messages.erase(messages.begin()+messages.size()-1);
 		messages.insert(messages.begin(), msg);
 	}
+
 	for (unsigned int i = 0; i < messages.size(); i++)
 	{
-		messagesDiv->getLabels()[i]->setText((unsigned char*)messages[i].c_str(), messages[i].size());
+		//linked::Label* l = linked::Window::openedWindows[1]->divs[1]->getLabels()[i];
+		linked::Label* l = messagesDiv->getLabels()[i];
+		l->setText((unsigned char*)messages[i].c_str(), messages[i].size());
 	}
+
 }
 
 void GUI::resizeCallback(int width, int height)
