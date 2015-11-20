@@ -5,6 +5,20 @@
 #include "GUIShader.h"
 
 #include <sstream>
+#include <iostream>
+
+std::vector<std::string> GUI::messages;
+
+linked::Window* GUI::leftGUI;
+linked::Window* GUI::chatGUI;
+linked::Window* GUI::skillsGUI;
+
+linked::WindowDiv* GUI::messagesDiv;
+linked::WindowDiv* GUI::chatDiv;
+linked::WindowDiv* GUI::skill1;
+linked::WindowDiv* GUI::skill2;
+linked::WindowDiv* GUI::skill3;
+linked::WindowDiv* GUI::skill4;
 
 GUI::GUI(Player* player)
 {
@@ -20,11 +34,6 @@ GUI::GUI(Player* player)
 	this->color = glm::vec3(LGUI_R, LGUI_G, LGUI_B);
 	this->activeText = glm::vec3(0.8f, 0.8f, 0.95f);
 
-	this->skillIconSlot1 = NULL;
-	this->skillIconSlot2 = NULL;
-	this->skillIconSlot3 = NULL;
-	this->skillIconSlot4 = NULL;
-
 	this->guiShader = new GUIShader("./shaders/fontshader");
 
 	linked::Window::linkedWindowInit();
@@ -33,11 +42,18 @@ GUI::GUI(Player* player)
 	currentDisplayHeight = Display::getCurrentInstance().getHeight();
 
 	initLeftGUI();
+	initLeftGUISkills();
 }
 
 
 GUI::~GUI()
 {
+	// temp code
+	skill1->setBackgroundTexture(nullptr);
+	skill2->setBackgroundTexture(nullptr);
+	skill3->setBackgroundTexture(nullptr);
+	skill4->setBackgroundTexture(nullptr);
+
 	delete this->guiShader;
 	linked::Window::linkedWindowDestroy();
 }
@@ -71,6 +87,8 @@ void GUI::initLeftGUI()
 	chat->setBorderColor(glm::vec4(0, 0, 0.1f, 0.6f));
 	chat->setBorderSizeX(1);
 	chat->setBorderSizeY(1);
+	chatGUI = chat;
+
 	chatDiv = new WindowDiv(*chat, 500, 25, 0, 0, glm::vec2(0, 0), glm::vec4(0, 0, 0, 0.3f),
 		DIV_ANCHOR_BOTTOM | DIV_ANCHOR_LEFT);
 	chat->divs.push_back(chatDiv);
@@ -132,6 +150,31 @@ void GUI::initLeftGUIText(linked::WindowDiv* div)
 void GUI::initLeftGUISkills()
 {
 	using namespace linked;
+
+	int displayHeight = Display::getCurrentInstance().getHeight();
+	Window* skills = new Window(200, 50, glm::vec2(10 + 300 + 10, displayHeight - 60), glm::vec4(0.16f, 0.15f, 0.2f, 0.5f), nullptr, 0, W_BORDER | W_MOVABLE);
+	skills->setBorderSizeX(1);
+	skills->setBorderSizeY(1);
+	skills->setBorderColor(glm::vec4(0, 0, 0, 1));
+	skillsGUI = skills;
+
+	const float divWidths = 200.0f / 4;
+
+	skill1 = new WindowDiv(*skills, divWidths, 50, 0, 0, glm::vec2(0			, 0), glm::vec4(1, 0, 0, 1), DIV_ANCHOR_LEFT | DIV_ANCHOR_TOP);
+	skill2 = new WindowDiv(*skills, divWidths, 50, 0, 0, glm::vec2(divWidths * 1, 0), glm::vec4(0, 1, 0, 1), DIV_ANCHOR_LEFT | DIV_ANCHOR_TOP);
+	skill3 = new WindowDiv(*skills, divWidths, 50, 0, 0, glm::vec2(divWidths * 2, 0), glm::vec4(1, 0, 1, 1), DIV_ANCHOR_LEFT | DIV_ANCHOR_TOP);
+	skill4 = new WindowDiv(*skills, divWidths, 50, 0, 0, glm::vec2(divWidths * 3, 0), glm::vec4(1, 1, 0, 1), DIV_ANCHOR_LEFT | DIV_ANCHOR_TOP);
+	
+	
+	skill1->setBackgroundTexture(player->getSkills()[0]->getSkillIcon()->getTexture());
+	skill2->setBackgroundTexture(player->getSkills()[1]->getSkillIcon()->getTexture());
+	skill3->setBackgroundTexture(player->getSkills()[2]->getSkillIcon()->getTexture());
+	skill4->setBackgroundTexture(player->getSkills()[3]->getSkillIcon()->getTexture());
+	
+	skills->divs.push_back(skill1);
+	skills->divs.push_back(skill2);
+	skills->divs.push_back(skill3);
+	skills->divs.push_back(skill4);
 }
 
 void GUI::render()
@@ -277,17 +320,25 @@ void GUI::setNextMessage(std::string& msg)
 		messages.erase(messages.begin()+messages.size()-1);
 		messages.insert(messages.begin(), msg);
 	}
+
 	for (unsigned int i = 0; i < messages.size(); i++)
 	{
-		messagesDiv->getLabels()[i]->setText((unsigned char*)messages[i].c_str(), messages[i].size());
+		//linked::Label* l = linked::Window::openedWindows[1]->divs[1]->getLabels()[i];
+		linked::Label* l = messagesDiv->getLabels()[i];
+		l->setText((unsigned char*)messages[i].c_str(), messages[i].size());
 	}
+
 }
 
 void GUI::resizeCallback(int width, int height)
 {
 	int diffx = currentDisplayWidth - width;
 	int diffy = currentDisplayHeight - height;
-	leftGUI->setPosition(leftGUI->getPosition() + glm::vec2(diffx / 2.0f, - diffy / 2.0f));
+
+	leftGUI->setPosition(leftGUI->getPosition() + glm::vec2(diffx / 2.0f, -diffy / 2.0f));
+	chatGUI->setPosition(chatGUI->getPosition() + glm::vec2(-diffx / 2.0f, -diffy / 2.0f));
+	skillsGUI->setPosition(skillsGUI->getPosition() + glm::vec2(diffx / 2.0f, -diffy / 2.0f));
+
 	currentDisplayWidth = width;
 	currentDisplayHeight = height;
 }

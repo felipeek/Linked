@@ -43,14 +43,17 @@ private:
 	Player* player;
 	Shader* guiShader;
 
-	linked::Window* leftGUI;
-	linked::WindowDiv* messagesDiv;
-	linked::WindowDiv* chatDiv;
+	static linked::Window* leftGUI;
+	static linked::Window* chatGUI;
+	static linked::Window* skillsGUI;
+	static linked::WindowDiv* messagesDiv;
+	static linked::WindowDiv* chatDiv;
+	static linked::WindowDiv* skill1, *skill2, *skill3, *skill4;
 
 	int currentDisplayWidth, currentDisplayHeight;
 
 	// Left GUI
-	std::vector<std::string> messages;
+	static std::vector<std::string> messages;
 	glm::vec3 color;
 	glm::vec3 activeText;
 	int fontSize;
