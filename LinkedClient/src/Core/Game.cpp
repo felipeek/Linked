@@ -499,9 +499,11 @@ void Game::renderSecondsPass()
 	}
 	
 	// Render GUI (Order is important)
+	bool wire = Mesh::wireframe;
+	Mesh::wireframe = false;
 	gui->render();
-
 	cursor->renderCursor(skillShader);
+	Mesh::wireframe = wire;
 }
 
 void Game::update()

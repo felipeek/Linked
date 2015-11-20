@@ -44,8 +44,11 @@ private:
 	Shader* guiShader;
 
 	static linked::Window* leftGUI;
+	static linked::Window* chatGUI;
+	static linked::Window* skillsGUI;
 	static linked::WindowDiv* messagesDiv;
 	static linked::WindowDiv* chatDiv;
+	static linked::WindowDiv* skill1, *skill2, *skill3, *skill4;
 
 	int currentDisplayWidth, currentDisplayHeight;
 
