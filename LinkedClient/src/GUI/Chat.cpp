@@ -7,6 +7,7 @@
 #include "Input.h"
 #include "GUI.h"
 #include <Windows.h>
+#include <iostream>
 
 int Chat::stateChat[NUM_KEYS] = { 0 };
 short Chat::capsLockState = 0;
@@ -23,7 +24,6 @@ void Chat::nextState()
 		stateChat[RETURN_KEY] = 0;
 	else
 		stateChat[RETURN_KEY]++;
-
 }
 
 void Chat::nextState(int key)

@@ -75,6 +75,7 @@
     <ClCompile Include="src\WindowApi\Label.cpp" />
     <ClCompile Include="src\WindowApi\Window.cpp" />
     <ClCompile Include="src\WindowApi\WindowDiv.cpp" />
+    <ClCompile Include="src\GUI\Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Entity\AI\AI.h" />
@@ -157,5 +158,6 @@
     <ClInclude Include="include\WindowApi\Label.h" />
     <ClInclude Include="include\WindowApi\Window.h" />
     <ClInclude Include="include\WindowApi\WindowDiv.h" />
+    <ClInclude Include="include\GUI\Menu.h" />
   </ItemGroup>
 </Project>

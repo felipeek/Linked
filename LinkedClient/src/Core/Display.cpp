@@ -7,6 +7,7 @@
 #include "Window.h"
 #include "Common.h"
 #include "GUI.h"
+#include "Menu.h"
 
 // Display related
 Display* Display::currentInstance;
@@ -146,7 +147,7 @@ void Display::MainLoop(GLFWwindow* window)
 		}
 		if (Game::multiplayer)
 		{
-			if (update10Time >= 1.0 / 7)				// Send packets 10 times per second
+			if (update10Time >= 1.0 / 7)				// Send packets 7 times per second
 			{
 				update10Time = 0;
 				PacketController::update10();
@@ -156,7 +157,7 @@ void Display::MainLoop(GLFWwindow* window)
 		if (frameCount >= 1.0)
 		{
 #ifdef DEBUG
-			std::cout << frames << std::endl;
+			//std::cout << frames << std::endl;
 #endif
 			frameCount = 0;
 			frames = 0;
@@ -207,6 +208,7 @@ void Display::keyCallBack(GLFWwindow* window, int key, int scancode, int action,
 		Input::keyStates[key + 32] = value;
 
 	Chat::update(key, scancode, action, mods);
+	Menu::update(key, scancode, action, mods);
 }
 
 void Display::mouseCallBack(GLFWwindow* window, int button, int action, int mods)

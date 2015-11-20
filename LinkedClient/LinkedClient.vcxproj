@@ -157,6 +157,7 @@
     <ClCompile Include="include\external\freetypegl\texture-atlas.c" />
     <ClCompile Include="include\external\freetypegl\texture-font.c" />
     <ClCompile Include="include\external\freetypegl\vector.c" />
+    <ClCompile Include="src\GUI\Menu.cpp" />
     <ClCompile Include="src\Entity\AI\AI.cpp" />
     <ClCompile Include="src\Entity\Monster\BasicMonster.cpp" />
     <ClCompile Include="src\Entity\Skill\CureBlessingSkill.cpp" />
@@ -309,6 +310,7 @@
     <ClInclude Include="include\WindowApi\Label.h" />
     <ClInclude Include="include\WindowApi\Window.h" />
     <ClInclude Include="include\WindowApi\WindowDiv.h" />
+    <ClInclude Include="include\GUI\Menu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

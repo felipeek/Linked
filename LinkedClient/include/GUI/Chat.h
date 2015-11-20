@@ -6,6 +6,7 @@
 #define NUM_KEYS 512
 
 #define RETURN_KEY 257
+#define ESCAPE_KEY 256
 #define RETURN_KEY_NUM 335
 #define SPACE_KEY 32
 #define BACKSPACE_KEY 259

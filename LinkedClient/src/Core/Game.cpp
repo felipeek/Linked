@@ -33,6 +33,7 @@
 
 #include "GUI.h"
 #include "Chat.h"
+#include "Menu.h"
 #include "HPBar.h"
 #include "HoshoyoExplosionSkill.h"
 #include "CureBlessingSkill.h"
@@ -505,54 +506,57 @@ void Game::renderSecondsPass()
 
 void Game::update()
 {
-	if (Game::multiplayer)
-		Chat::updateGameMultiplayer(udpClient, localPlayer, map);
-	else
-		Chat::updateGameSingleplayer();
-	
-	// Light update
-	light->update(localPlayer->getTransform()->getPosition());
-	
-	// Player update	
-	localPlayer->update(this->map);
-	
-	// Camera update
-	camera->updatePlayer(localPlayer->getTransform()->getPosition());
-	frameBuffer->getCamera()->updateLight(light->lightPosition, localPlayer->getTransform()->getPosition());
-	
-	if (Game::multiplayer)
+	if (!Menu::isMenuActive())
 	{
-		for (Player* player : this->onlinePlayers)
-			player->update(this->map);
-	}
-	
-	// Monsters update
-	for (unsigned int i = 0; i < monsters.size(); i++)
-		monsters[i]->update(map, localPlayer);
-	
-	for (unsigned int i = 0; i < monsters.size(); i++)
-		if (monsters[i]->shouldBeDeleted())
+		if (Game::multiplayer)
+			Chat::updateGameMultiplayer(udpClient, localPlayer, map);
+		else
+			Chat::updateGameSingleplayer();
+
+		// Light update
+		light->update(localPlayer->getTransform()->getPosition());
+
+		// Player update	
+		localPlayer->update(this->map);
+
+		// Camera update
+		camera->updatePlayer(localPlayer->getTransform()->getPosition());
+		frameBuffer->getCamera()->updateLight(light->lightPosition, localPlayer->getTransform()->getPosition());
+
+		if (Game::multiplayer)
 		{
-			delete monsters[i];
-			monsters.erase(monsters.begin() + i);
+			for (Player* player : this->onlinePlayers)
+				player->update(this->map);
 		}
 
-	for (unsigned int i = 0; i < monsters.size(); i++)
-	{
-		if (localPlayer->isOutsideExternalRadiusArea(monsters[i]->getTransform()->getPosition()))
-			monsters[i]->setShouldTranslate(true);
-	}
-	
-	// GUI update
-	gui->update();
+		// Monsters update
+		for (unsigned int i = 0; i < monsters.size(); i++)
+			monsters[i]->update(map, localPlayer);
 
+		for (unsigned int i = 0; i < monsters.size(); i++)
+			if (monsters[i]->shouldBeDeleted())
+			{
+				delete monsters[i];
+				monsters.erase(monsters.begin() + i);
+			}
+
+		for (unsigned int i = 0; i < monsters.size(); i++)
+		{
+			if (localPlayer->isOutsideExternalRadiusArea(monsters[i]->getTransform()->getPosition()))
+				monsters[i]->setShouldTranslate(true);
+		}
+
+		// GUI update
+		gui->update();
+	}
 	// Cursor update
 	cursor->update();
+
 }
 
 void Game::input()
 {	
-	if (!Chat::isChatActive())
+	if (!Chat::isChatActive() && !Menu::isMenuActive())
 	{
 		Input::mouseAttack.update();
 		camera->input();

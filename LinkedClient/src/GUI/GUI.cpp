@@ -38,6 +38,7 @@ GUI::GUI(Player* player)
 
 GUI::~GUI()
 {
+	delete this->guiShader;
 	linked::Window::linkedWindowDestroy();
 }
 
