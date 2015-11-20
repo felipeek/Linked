@@ -289,6 +289,10 @@ void Monster::attackCreature(Creature* creature)
 	this->attack();
 }
 
+void Monster::action(glm::vec3 vector)
+{
+}
+
 /* UPDATE & RENDER */
 
 void Monster::update(Map* map, Player* player)
@@ -315,8 +319,6 @@ void Monster::render(Shader* shader)
 
 void Monster::startOnlineMovement(glm::vec3 position)
 {
-	//glm::vec3 currentPosition = this->getTransform()->getPosition();
-	//this->getTransform()->translate(position.x, position.y, currentPosition.z);
 }
 
 /* COPY */
@@ -339,7 +341,7 @@ Monster* Monster::getCopy(Monster* copy)
 	copy->setTotalCollisionRange(this->getTotalCollisionRange());
 	copy->setTotalAttackSpeed(this->getTotalAttackSpeed());
 	// Copy Mesh (A new mesh/quad object must be created for each monster)
-	copy->setMesh(new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7)));
+	if (copy->getMesh() == nullptr)	copy->setMesh(new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7)));
 	// Copy Texture (The same texture will be setted for all monsters of same class)
 	copy->setTexture(this->getTexture());
 	// Copy Transform (A new transform object must be created for each monster)

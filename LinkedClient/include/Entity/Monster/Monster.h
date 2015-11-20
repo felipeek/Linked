@@ -78,6 +78,7 @@ public:
 	/* COMBAT */
 	void doDamage(unsigned int damage);
 	void attackCreature(Creature* creature);
+	virtual void action(glm::vec3 vector);
 	
 	/* UPDATE & RENDER */
 	virtual void update(Map* map, Player* player);

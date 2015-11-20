@@ -1,7 +1,7 @@
 #include "Display.h"
 #include <time.h>
 
-#include <vld.h>
+//#include <vld.h>
 
 int main(int argc, char** argv)
 {

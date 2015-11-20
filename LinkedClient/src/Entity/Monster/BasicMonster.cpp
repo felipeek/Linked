@@ -66,8 +66,10 @@ void BasicMonster::startOnlineMovement(glm::vec3 position)
 {
 	this->movingOnline = true;
 	this->directedMovement = this->ai->getMovementDefinitionOfDestination(position, true);
-	
-	//this->getTransform()->translate(this->directedMovement.movement.x, this->directedMovement.movement.y, this->getTransform()->getPosition().z);
+}
+
+void BasicMonster::action(glm::vec3 vector)
+{
 }
 
 Monster* BasicMonster::getCopy(Monster* copy)

@@ -1,6 +1,7 @@
 #include "MonsterFactory.h"
 #include "Primitive.h"
 #include "BasicMonster.h"
+#include "TurretMonster.h"
 
 MonsterFactory::MonsterFactory()
 {
@@ -92,6 +93,13 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 			this->fillGenericMonsterAttributes(genericMonster, rootNode->first_node());
 			parsedMonster = genericMonster;
 		}
+		else if (type == MonsterType::TURRET)
+		{
+			TurretMonster* turretMonster = new TurretMonster(nullptr, nullptr, nullptr);
+			this->fillTurretMonsterAttributes(turretMonster, rootNode->first_node());
+			this->fillGenericMonsterAttributes(turretMonster, rootNode->first_node());
+			parsedMonster = turretMonster;
+		}
 	}
 
 	return parsedMonster;
@@ -161,12 +169,19 @@ void MonsterFactory::fillBasicMonsterAttributes(BasicMonster* monster, rapidxml:
 
 }
 
+void MonsterFactory::fillTurretMonsterAttributes(TurretMonster* monster, rapidxml::xml_node<> *firstNode)
+{
+
+}
+
 MonsterType MonsterFactory::decodeMonsterType(std::string encodedType)
 {
 	if (encodedType.compare("BASIC") == 0)
 		return MonsterType::BASIC;
 	else if (encodedType.compare("GENERIC") == 0)
 		return MonsterType::GENERIC;
+	else if (encodedType.compare("TURRET") == 0)
+		return MonsterType::TURRET;
 
 	return MonsterType::GENERIC;
 }

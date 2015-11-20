@@ -27,13 +27,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -225,6 +225,7 @@
     <ClCompile Include="src\WindowApi\Label.cpp" />
     <ClCompile Include="src\WindowApi\Window.cpp" />
     <ClCompile Include="src\WindowApi\WindowDiv.cpp" />
+    <ClCompile Include="src\Entity\Monster\TurretMonster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Entity\AI\AI.h" />
@@ -307,6 +308,7 @@
     <ClInclude Include="include\WindowApi\Label.h" />
     <ClInclude Include="include\WindowApi\Window.h" />
     <ClInclude Include="include\WindowApi\WindowDiv.h" />
+    <ClInclude Include="include\Entity\Monster\TurretMonster.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
