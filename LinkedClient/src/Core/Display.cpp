@@ -22,6 +22,7 @@ int Display::monitorHeight = 0;
 
 // Game
 Game* Display::game = nullptr;
+bool Display::shouldExit = false;
 
 // Time
 double Display::totalTime = 0;
@@ -165,7 +166,7 @@ void Display::MainLoop(GLFWwindow* window)
 			frames = 0;
 		}
 
-	} while (glfwWindowShouldClose(window) == false);
+	} while (glfwWindowShouldClose(window) == false && !shouldExit);
 }
 
 void Display::render()
@@ -201,6 +202,11 @@ void Display::startGame()
 	// Hide cursor
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	timeSinceLastUpdate = LinkedTime::getTime();		// Ignores time spent to instantiate game (fixed speed up when starting)
+}
+
+void Display::exitGame()
+{
+	shouldExit = true;
 }
 
 void Display::getSystemInfo()

@@ -23,8 +23,10 @@ public:
 	static int monitorHeight;
 	static const Display& getCurrentInstance();
 	static void startGame();
+	static void exitGame();
 private:
 	int m_width, m_height;
+	static bool shouldExit;
 
 	static Display* currentInstance;
 	static glm::vec4 clearColor;

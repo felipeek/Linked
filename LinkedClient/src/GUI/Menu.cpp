@@ -6,6 +6,7 @@
 #include <iostream>
 
 bool Menu::m_menuActive = true;
+bool Menu::multiplayerCanceled = false;
 int Menu::stateMenu = 0;
 linked::Window* Menu::menu = nullptr;
 linked::Window* Menu::serverIpMenu = nullptr;
@@ -13,8 +14,11 @@ linked::Window* Menu::serverIpMenu = nullptr;
 std::string Menu::newSinglePlayerString = std::string("Single Player");
 std::string Menu::newMultiPlayerString = std::string("Multi Player");
 std::string Menu::exitGameString = std::string("Exit");
-std::string Menu::serverIpString = std::string("Type the server IP address");
+std::string Menu::serverIpString = std::string("Type the server IP address and port");
 std::string Menu::defaultIp = std::string("localhost");
+std::string Menu::defaultPort = std::string("9090");
+std::string Menu::confirmString = std::string("Ok");
+std::string Menu::cancelString = std::string("Cancel");
 
 void Menu::nextState()
 {
@@ -43,7 +47,7 @@ void Menu::update(int key, int scancode, int action, int mods)
 
 void Menu::update()
 {
-	if (stateMenu == MENU_ACTIVE)
+	if (stateMenu == MENU_ACTIVE && menu == nullptr)
 	{
 		m_menuActive = true;
 		createMenu();
@@ -57,6 +61,22 @@ void Menu::update()
 			delete menu;
 			menu = nullptr;
 		}
+		if (serverIpMenu != nullptr)
+		{
+			deleteWindow(serverIpMenu);
+			delete serverIpMenu;
+			serverIpMenu = nullptr;
+		}
+	}
+	if (multiplayerCanceled)
+	{
+		if (serverIpMenu != nullptr)
+		{
+			deleteWindow(serverIpMenu);
+			delete serverIpMenu;
+			serverIpMenu = nullptr;
+		}
+		multiplayerCanceled = false;
 	}
 }
 
@@ -111,11 +131,12 @@ void Menu::createServerIpMenu()
 	const float menuWidth = Display::getCurrentInstance().getWidth() / 2.0f;
 	const float menuHeight = Display::getCurrentInstance().getHeight() / 2.0f;
 	// Menu Window
-	serverIpMenu = new linked::Window(500, 150, glm::vec2(menuWidth - 250, menuHeight + 100), glm::vec4(0.043, 0.045f, 0.05f, 0.95f), (unsigned char*)serverIpString.c_str(), serverIpString.size() + 1, 
+	serverIpMenu = new linked::Window(500, 200, glm::vec2(menuWidth - 250, menuHeight - 100), glm::vec4(0.043, 0.045f, 0.05f, 0.95f), (unsigned char*)serverIpString.c_str(), serverIpString.size() + 1, 
 		linked::W_BORDER | linked::W_MOVABLE | linked::W_HEADER);
 	serverIpMenu->setBorderColor(glm::vec4(0.89f, 0.88f, 0.9f, 1));
+	serverIpMenu->setTitleCentered(false);
 	// Menu div
-	linked::WindowDiv* div = new linked::WindowDiv(*serverIpMenu, 400, 100, 0, 0, glm::vec2(0, 0), glm::vec4(1, 0, 0, 1), linked::DIV_CENTER_X | linked::DIV_CENTER_Y);
+	linked::WindowDiv* div = new linked::WindowDiv(*serverIpMenu, 480, 50, 0, 0, glm::vec2(0, 10), glm::vec4(1, 0, 0, 1), linked::DIV_CENTER_X | linked::DIV_ANCHOR_TOP);
 	div->m_render = false;
 	serverIpMenu->divs.push_back(div);
 
@@ -123,6 +144,33 @@ void Menu::createServerIpMenu()
 	linked::Label* ipAddress = new linked::Label(*div, (unsigned char*)defaultIp.c_str(), defaultIp.size(), 100);
 	ipAddress->setTextColor(glm::vec4(1, 1, 1, 0.7f));
 	div->getLabels().push_back(ipAddress);
+
+	linked::Label* portLabel = new linked::Label(*div, (unsigned char*)defaultPort.c_str(), defaultPort.size(), glm::vec2(0, 60), 100);
+	portLabel->setTextColor(glm::vec4(1, 1, 1, 0.7f));
+	div->getLabels().push_back(portLabel);
+
+	// Cancel and confirm labels
+	linked::Label* confirmLabel = new linked::Label(*div, (unsigned char*)confirmString.c_str(), confirmString.size(), glm::vec2(70, 0), 100);
+	confirmLabel->setTextColor(glm::vec4(1, 1, 1, 0.7f));
+
+	linked::Label* cancelLabel = new linked::Label(*div, (unsigned char*)cancelString.c_str(), cancelString.size(), glm::vec2(20, 0), 100);
+	confirmLabel->setTextColor(glm::vec4(1, 1, 1, 0.7f));
+
+	// Buttons
+	linked::Button* confirmButton = new linked::Button(*div, confirmLabel, glm::vec2(0, 130), 200, 50, glm::vec4(1, 1, 1, 0.5f));
+	confirmButton->setHoveredTextColor(glm::vec4(1, 1, 1, 0.9f));
+	confirmButton->setHeldText(glm::vec4(1, 1, 1, 0.7f));
+	confirmButton->setHoveredBGColor(glm::vec4(1, 1, 1, 0.4f));
+	confirmButton->setClickedCallback(startMultiplayer);
+	div->getButtons().push_back(confirmButton);
+
+	linked::Button* cancelButton = new linked::Button(*div, cancelLabel, glm::vec2(280, 130), 200, 50, glm::vec4(1, 1, 1, 0.5f));
+	cancelButton->setNormalTextColor(glm::vec4(1, 1, 1, 0.7f));
+	cancelButton->setHoveredTextColor(glm::vec4(1, 1, 1, 0.9f));
+	cancelButton->setHeldText(glm::vec4(1, 1, 1, 0.7f));
+	cancelButton->setHoveredBGColor(glm::vec4(1, 1, 1, 0.4f));
+	cancelButton->setClickedCallback(cancelMultiplayer);
+	div->getButtons().push_back(cancelButton);
 }
 
 void Menu::deleteWindow(linked::Window* w)
@@ -137,6 +185,11 @@ void Menu::deleteWindow(linked::Window* w)
 void Menu::singlePlayer()
 {
 	Game::multiplayer = false;
+	startSinglePlayer();
+}
+
+void Menu::startSinglePlayer()
+{
 	Display::startGame();
 	stateMenu = NORMAL_INACTIVE;
 }
@@ -151,11 +204,20 @@ void Menu::multiPlayer()
 		serverIpMenu = nullptr;
 	}
 	createServerIpMenu();
-	//Display::startGame();
-	//stateMenu = NORMAL_INACTIVE;
+}
+
+void Menu::startMultiplayer()
+{
+	Display::startGame();
+	stateMenu = NORMAL_INACTIVE;
+}
+
+void Menu::cancelMultiplayer()
+{
+	multiplayerCanceled = true;
 }
 
 void Menu::exitGame()
 {
-	stateMenu = NORMAL_INACTIVE;
+	Display::exitGame();
 }

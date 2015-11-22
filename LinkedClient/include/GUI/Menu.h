@@ -27,7 +27,10 @@ private:
 		newMultiPlayerString,
 		exitGameString,
 		serverIpString,
-		defaultIp;
+		defaultIp,
+		defaultPort,
+		confirmString,
+		cancelString;
 
 	static bool m_menuActive;
 	static int stateMenu;
@@ -40,4 +43,9 @@ private:
 	static void singlePlayer();
 	static void multiPlayer();
 	static void exitGame();
+	static void startMultiplayer();
+	static void cancelMultiplayer();
+	static void startSinglePlayer();
+
+	static bool multiplayerCanceled;
 };
