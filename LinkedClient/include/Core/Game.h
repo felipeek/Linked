@@ -59,6 +59,7 @@ public:
 
 	/* GAME INPUT */
 	void input();
+
 private:
 	int windowWidth;
 	int windowHeight;

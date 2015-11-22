@@ -36,8 +36,6 @@ GUI::GUI(Player* player)
 
 	this->guiShader = new GUIShader("./shaders/fontshader");
 
-	linked::Window::linkedWindowInit();
-
 	currentDisplayWidth = Display::getCurrentInstance().getWidth();
 	currentDisplayHeight = Display::getCurrentInstance().getHeight();
 
@@ -55,7 +53,6 @@ GUI::~GUI()
 	skill4->setBackgroundTexture(nullptr);
 
 	delete this->guiShader;
-	linked::Window::linkedWindowDestroy();
 }
 
 void GUI::initLeftGUI()
@@ -205,7 +202,6 @@ void GUI::render()
 
 	chatLabel->setText((unsigned char*)chatString.c_str(), chatString.size());
 
-	linked::Window::renderWindows();
 }
 
 void GUI::setPlayerHealth(unsigned int health, unsigned int maxHealth)
@@ -284,8 +280,6 @@ void GUI::update()
 		setPlayerSpeed(player->getTotalSpeed());
 		speedLabel->setTextLength(pSpeed.size());
 	}
-
-	linked::Window::updateWindows();
 }
 
 void GUI::addSkillIcon(SkillIcon* skillIcon)

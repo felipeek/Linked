@@ -60,6 +60,8 @@ std::string Game::server_ip = "127.0.0.1";
 
 Cursor* Game::cursor = nullptr;
 
+bool runningGame = false;
+
 Game::Game(int windowWidth, int windowHeight)
 	: windowWidth(windowWidth), windowHeight(windowHeight)
 {	
@@ -103,24 +105,16 @@ Game::~Game()
 
 	if (this->frameBuffer != nullptr) delete frameBuffer;
 
-	std::cout << "MONSTER STARTED" << std::endl;
-	std::cout << "-----------------" << std::endl;
 	// delete vectors content
 	for (Monster* monster : monsters)
 		delete monster;
 		
-	std::cout << "GENERAL ENTITIES STARTED" << std::endl;
-	std::cout << "-----------------" << std::endl;
 	for (Entity* entity : entities)
 		delete entity;
 	
-	std::cout << "GAMEENTITIES STARTED" << std::endl;
-	std::cout << "-----------------" << std::endl;
 	for (GameEntity* entity : gameEntities)
 		delete entity;
 
-	std::cout << "rest" << std::endl;
-	std::cout << "-----------------" << std::endl;
 	if (this->localPlayer != nullptr) delete localPlayer;
 
 	if (Game::multiplayer)
@@ -380,6 +374,13 @@ void Game::render()
 
 	/* SECOND PASS (COLOR PASS) */
 	renderSecondsPass();
+	
+	// Render GUI and Cursor (Order is important)
+	bool wire = Mesh::wireframe;
+	Mesh::wireframe = false;
+	gui->render();
+	cursor->renderCursor(skillShader);
+	Mesh::wireframe = wire;
 }
 
 void Game::renderFirstPass()
@@ -451,7 +452,7 @@ void Game::renderSecondsPass()
 
 	// Prime render
 	frameBuffer->normalRender(windowWidth, windowHeight);
-	
+
 	// Map
 	entityMap->render(mapShader, frameBuffer->getCamera());
 	water->render(commonShader);
@@ -459,7 +460,7 @@ void Game::renderSecondsPass()
 	// Player
 	localPlayer->hpBarRenderOptions(true);
 	localPlayer->render(primitiveShader, skillShader, worldSkillShader, nullptr, projectileShader);
-	
+
 	// Second Player
 	if (Game::multiplayer)
 	{
@@ -468,7 +469,7 @@ void Game::renderSecondsPass()
 			player->hpBarRenderOptions(true);
 			player->render(primitiveShader, skillShader, worldSkillShader, nullptr, projectileShader);
 		}
-			
+
 	}
 
 	// Monsters
@@ -487,7 +488,7 @@ void Game::renderSecondsPass()
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
-	
+
 	// Common static entities
 	for (Entity* e : gameEntities)
 	{
@@ -498,68 +499,58 @@ void Game::renderSecondsPass()
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
-	
-	// Render GUI (Order is important)
-	bool wire = Mesh::wireframe;
-	Mesh::wireframe = false;
-	gui->render();
-	cursor->renderCursor(skillShader);
-	Mesh::wireframe = wire;
 }
 
 void Game::update()
 {
-	if (!Menu::isMenuActive())
+	if (Game::multiplayer)
+		Chat::updateGameMultiplayer(udpClient, localPlayer, map);
+	else
+		Chat::updateGameSingleplayer();
+
+	// Light update
+	light->update(localPlayer->getTransform()->getPosition());
+
+	// Player update	
+	localPlayer->update(this->map);
+
+	// Camera update
+	camera->updatePlayer(localPlayer->getTransform()->getPosition());
+	frameBuffer->getCamera()->updateLight(light->lightPosition, localPlayer->getTransform()->getPosition());
+
+	if (Game::multiplayer)
 	{
-		if (Game::multiplayer)
-			Chat::updateGameMultiplayer(udpClient, localPlayer, map);
-		else
-			Chat::updateGameSingleplayer();
-
-		// Light update
-		light->update(localPlayer->getTransform()->getPosition());
-
-		// Player update	
-		localPlayer->update(this->map);
-
-		// Camera update
-		camera->updatePlayer(localPlayer->getTransform()->getPosition());
-		frameBuffer->getCamera()->updateLight(light->lightPosition, localPlayer->getTransform()->getPosition());
-
-		if (Game::multiplayer)
-		{
-			for (Player* player : this->onlinePlayers)
-				player->update(this->map);
-		}
-
-		// Monsters update
-		for (unsigned int i = 0; i < monsters.size(); i++)
-			monsters[i]->update(map, localPlayer);
-
-		for (unsigned int i = 0; i < monsters.size(); i++)
-			if (monsters[i]->shouldBeDeleted())
-			{
-				delete monsters[i];
-				monsters.erase(monsters.begin() + i);
-			}
-
-		for (unsigned int i = 0; i < monsters.size(); i++)
-		{
-			if (localPlayer->isOutsideExternalRadiusArea(monsters[i]->getTransform()->getPosition()))
-				monsters[i]->setShouldTranslate(true);
-		}
-
-		// GUI update
-		gui->update();
+		for (Player* player : this->onlinePlayers)
+			player->update(this->map);
 	}
+
+	// Monsters update
+	for (unsigned int i = 0; i < monsters.size(); i++)
+		monsters[i]->update(map, localPlayer);
+
+	for (unsigned int i = 0; i < monsters.size(); i++)
+		if (monsters[i]->shouldBeDeleted())
+		{
+			delete monsters[i];
+			monsters.erase(monsters.begin() + i);
+		}
+
+	for (unsigned int i = 0; i < monsters.size(); i++)
+	{
+		if (localPlayer->isOutsideExternalRadiusArea(monsters[i]->getTransform()->getPosition()))
+			monsters[i]->setShouldTranslate(true);
+	}
+
+	// GUI update
+	gui->update();
+	
 	// Cursor update
 	cursor->update();
-
 }
 
 void Game::input()
 {	
-	if (!Chat::isChatActive() && !Menu::isMenuActive())
+	if (!Chat::isChatActive())
 	{
 		Input::mouseAttack.update();
 		camera->input();

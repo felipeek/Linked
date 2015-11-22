@@ -44,6 +44,8 @@ Display::~Display()
 {
 	if (game != nullptr)
 		delete game;
+
+	linked::Window::linkedWindowDestroy();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }
@@ -71,9 +73,6 @@ void Display::startGlfw(Display* display, int* argc, char** argv, std::string ti
 		return;
 	}
 
-	// Hide cursor
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-	
 	// Get monitor size
 	getSystemInfo();
 
@@ -117,7 +116,6 @@ void Display::startGlfw(Display* display, int* argc, char** argv, std::string ti
 void Display::MainLoop(GLFWwindow* window)
 {
 	do{
-		//totalTime = glfwGetTime();
 		totalTime = LinkedTime::getTime();
 
 		if (timeSinceLastUpdate == 0)
@@ -132,20 +130,24 @@ void Display::MainLoop(GLFWwindow* window)
 		frameCount += elapsedTime;
 		update10Time += elapsedTime;
 
-		if (gameTime >= 1.0 / GAMESPEED)			// Updates GAMESPEED times per second
+		if (gameTime >= 1.0 / GAMESPEED)				// Updates GAMESPEED times per second
 		{
-			game->update();
-			game->input();
+			if (game != nullptr)
+			{
+				game->update();
+				game->input();
+			}
+			Menu::update();
 			glfwPollEvents();
-			gameTime = gameTime - (1.0/GAMESPEED);
+			gameTime = gameTime - (1.0 / GAMESPEED);
 		}
-		if (sumTime >= 1.0 / FRAMECAP)				// Renders at most FRAMECAP times per second
+		if (sumTime >= 1.0 / FRAMECAP)					// Renders at most FRAMECAP times per second
 		{
 			sumTime = 0;
 			render();
 			frames++;
 		}
-		if (Game::multiplayer)
+		if (Game::multiplayer && game != nullptr)
 		{
 			if (update10Time >= 1.0 / 7)				// Send packets 7 times per second
 			{
@@ -169,7 +171,12 @@ void Display::MainLoop(GLFWwindow* window)
 void Display::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	game->render();
+	if (game != nullptr)
+		game->render();
+
+	linked::Window::updateWindows();
+	linked::Window::renderWindows();
+
 	glfwSwapBuffers(window);
 }
 
@@ -181,7 +188,19 @@ void Display::initOpenGL()
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 
+	linked::Window::linkedWindowInit();
+	Menu::setStateMenu(MENU_ACTIVE);
+	Menu::update();
+
+	game = nullptr;
+}
+
+void Display::startGame()
+{
 	game = new Game(Display::getCurrentInstance().getWidth(), Display::getCurrentInstance().getHeight());
+	// Hide cursor
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	timeSinceLastUpdate = LinkedTime::getTime();		// Ignores time spent to instantiate game (fixed speed up when starting)
 }
 
 void Display::getSystemInfo()
@@ -208,7 +227,6 @@ void Display::keyCallBack(GLFWwindow* window, int key, int scancode, int action,
 		Input::keyStates[key + 32] = value;
 
 	Chat::update(key, scancode, action, mods);
-	Menu::update(key, scancode, action, mods);
 }
 
 void Display::mouseCallBack(GLFWwindow* window, int button, int action, int mods)
@@ -267,7 +285,6 @@ void Display::focusedCallBack(GLFWwindow* window, int focused)
 {
 	if (focused != 1)
 		Input::clear();
-
 }
 
 void Display::resizeCallback(GLFWwindow* window, int width, int height)

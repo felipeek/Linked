@@ -22,6 +22,7 @@ public:
 	static int monitorWidth;
 	static int monitorHeight;
 	static const Display& getCurrentInstance();
+	static void startGame();
 private:
 	int m_width, m_height;
 
