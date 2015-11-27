@@ -188,14 +188,19 @@ void Game::createOfflinePlayer()
 
 void Game::waitForCreationOfOnlinePlayer()
 {
-	do
-	{
+	double time = LinkedTime::getTime();
+	double totalTime = 0;
+	do{
 		this->udpClient->receivePackets();
+		totalTime = LinkedTime::getTime() - time;
+
+		if (totalTime >= 10)
+			exit(EXIT_FAILURE);
+
 		Sleep(100);
 	}
 	while (this->localPlayer == nullptr);
-
-	this->localPlayer = PacketController::localPlayer;
+	//this->localPlayer = PacketController::localPlayer;
 }
 
 void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
@@ -549,5 +554,6 @@ void Game::input()
 		camera->input();
 		light->input();
 		localPlayer->input(this->map);
+
 	}
 }

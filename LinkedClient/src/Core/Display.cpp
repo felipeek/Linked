@@ -23,6 +23,8 @@ int Display::monitorHeight = 0;
 // Game
 Game* Display::game = nullptr;
 bool Display::shouldExit = false;
+bool Display::shouldGoToMenu = false;
+bool Display::gameIsInitialized = false;
 
 // Time
 double Display::totalTime = 0;
@@ -133,7 +135,7 @@ void Display::MainLoop(GLFWwindow* window)
 
 		if (gameTime >= 1.0 / GAMESPEED)				// Updates GAMESPEED times per second
 		{
-			if (game != nullptr)
+			if (gameIsInitialized)
 			{
 				game->update();
 				game->input();
@@ -165,7 +167,6 @@ void Display::MainLoop(GLFWwindow* window)
 			frameCount = 0;
 			frames = 0;
 		}
-
 	} while (glfwWindowShouldClose(window) == false && !shouldExit);
 }
 
@@ -198,7 +199,11 @@ void Display::initOpenGL()
 
 void Display::startGame()
 {
-	game = new Game(Display::getCurrentInstance().getWidth(), Display::getCurrentInstance().getHeight());
+	if (!gameIsInitialized)
+	{
+		gameIsInitialized = true;
+		game = new Game(Display::getCurrentInstance().getWidth(), Display::getCurrentInstance().getHeight());
+	}
 	// Hide cursor
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	timeSinceLastUpdate = LinkedTime::getTime();		// Ignores time spent to instantiate game (fixed speed up when starting)
@@ -313,4 +318,9 @@ void Display::resizeCallback(GLFWwindow* window, int width, int height)
 const Display& Display::getCurrentInstance()
 {
 	return *Display::currentInstance;
+}
+
+void Display::destroyGameAndGotoMenu()
+{
+	shouldGoToMenu = true;
 }

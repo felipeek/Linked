@@ -24,9 +24,12 @@ public:
 	static const Display& getCurrentInstance();
 	static void startGame();
 	static void exitGame();
+	static void destroyGameAndGotoMenu();
 private:
 	int m_width, m_height;
 	static bool shouldExit;
+	static bool shouldGoToMenu;
+	static bool gameIsInitialized;
 
 	static Display* currentInstance;
 	static glm::vec4 clearColor;
