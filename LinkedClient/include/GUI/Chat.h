@@ -25,10 +25,19 @@
 #define KEY_MOD_ALTGR 6
 #define KEY_MOD_SUPER 8
 
+#define MAX_CHAT_LENGTH 128
+
 class UDPClient;
 class Player;
 class Map;
 class GUI;
+
+enum ChatRestriction
+{
+	CHAT_ALL,
+	CHAT_NUMBER_ONLY,
+	CHAT_NO_SPECIAL
+};
 
 class Chat
 {
@@ -40,10 +49,18 @@ public:
 	static void updateGameMultiplayer(UDPClient* udpClient, Player* localPlayer, Map* map);
 	static void updateGameSingleplayer();
 	static void update(int key, int scancode, int action, int mods);
+	static void disable();
+	static void enable();
 
+	static bool isEnabled(){ return m_enabled; }
 	//GUI
 	static GUI* gui;
+
+	// Restrictions
+	static void setRestriction(ChatRestriction r);
+	static void setMaxMsgLength(int maxLength);
 private:
+	static bool m_enabled;
 	static bool chatActive;
 	static int stateChat[NUM_KEYS];	// 0 to 3
 	// Normal 0, Normal 1, Chat 0, Chat 1
@@ -60,6 +77,8 @@ private:
 	static char getNumber(int key);
 	static short capsLockState;		// 0 deactive, 1 active
 	static short numLockState;
+	static int m_restriction;
+	static int m_maxLength;
 
 	static std::stringstream ss;
 

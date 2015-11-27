@@ -12,6 +12,15 @@
 
 #define ESCAPE_KEY 256
 
+#define MAX_PORT 5
+#define MAX_ADDRESS 25
+
+enum FocusedLabel{
+	F_NONE,
+	F_IP_LABEL,
+	F_PORT_LABEL
+};
+
 class Menu
 {
 public:
@@ -22,6 +31,9 @@ public:
 private:
 	static linked::Window* menu;
 	static linked::Window* serverIpMenu;
+
+	static linked::Label* ipLabel;
+	static linked::Label* portLabel;
 	
 	static std::string newSinglePlayerString,
 		newMultiPlayerString,
@@ -46,6 +58,11 @@ private:
 	static void startMultiplayer();
 	static void cancelMultiplayer();
 	static void startSinglePlayer();
+
+	static void focusIpLabel();
+	static void focusPortLabel();
+
+	static int m_focusedLabel;
 
 	static bool multiplayerCanceled;
 };

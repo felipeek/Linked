@@ -15,8 +15,11 @@ short Chat::numLockState = 0;
 std::stringstream Chat::ss;
 std::string Chat::msg = "";
 bool Chat::chatActive = false;
+bool Chat::m_enabled = true;
 GUI* Chat::gui = nullptr;
 int Chat::altGRstate = 0;
+int Chat::m_restriction = CHAT_ALL;
+int Chat::m_maxLength = 255;
 
 void Chat::nextState()
 {
@@ -33,34 +36,62 @@ void Chat::nextState(int key)
 
 void Chat::update(int key, int scancode, int action, int mods)
 {
-	// Chat system
-	if ((key == RETURN_KEY && action == 0) || (key == RETURN_KEY && action == 1) ||
-		(key == RETURN_KEY_NUM && action==0) || (key == RETURN_KEY_NUM && action == 1))
-		Chat::nextState();
-	else if (action == 0 || action == 1)
-		Chat::nextState(key);
-
+	if (m_enabled)
+	{
+		// Chat system
+		if ((key == RETURN_KEY && action == 0) || (key == RETURN_KEY && action == 1) ||
+			(key == RETURN_KEY_NUM && action == 0) || (key == RETURN_KEY_NUM && action == 1))
+			Chat::nextState();
+		else if (action == 0 || action == 1)
+			Chat::nextState(key);
+	}
 	if (stateChat[RETURN_KEY] == CHAT_ACTIVE)
 	{
 		chatActive = true;
 		if (action == 1 || action == 2)
 		{
-			// Fill string stream with character typed
-			parseCharTyped(key, mods, scancode);
+			// Fill string stream with character typed if shorter than length
+			if (Chat::ss.str().size() < m_maxLength || key == BACKSPACE_KEY)
+				parseCharTyped(key, mods, scancode);
 		}
 	}
 	if (stateChat[RETURN_KEY] == NORMAL_INACTIVE)
 	{
-		chatActive = false;
 		//std::cout << "Chat desativado" << std::endl;
+		chatActive = false;
 		if (ss.rdbuf()->in_avail() != 0)
 		{
-			//std::cout << std::endl << ss.str() << std::endl;
 			msg = ss.str();
 			ss.clear();
 			ss.str(std::string());
 		}
 	}
+}
+
+void Chat::disable()
+{
+	m_enabled = false;
+	chatActive = true;
+	stateChat[RETURN_KEY] = CHAT_ACTIVE;
+	if (ss.rdbuf()->in_avail() != 0)
+	{
+		ss.clear();
+		ss.str(std::string());
+	}
+}
+
+void Chat::enable()
+{
+	m_enabled = true;
+	chatActive = false;
+	stateChat[RETURN_KEY] = NORMAL_INACTIVE;
+	if (ss.rdbuf()->in_avail() != 0)
+	{
+		ss.clear();
+		ss.str(std::string());
+	}
+	Chat::setRestriction(CHAT_ALL);
+	Chat::setMaxMsgLength(MAX_CHAT_LENGTH);
 }
 
 void Chat::updateGameMultiplayer(UDPClient* udpClient, Player* localPlayer, Map* map)
@@ -137,19 +168,6 @@ void Chat::updateGameSingleplayer()
 	}
 }
 
-#ifdef DEBUG
-void Chat::printState(int key)
-{
-	switch (stateChat[key])
-	{
-	case 0:	std::cout << "Normal 0" << std::endl; break;
-	case 1:	std::cout << "Normal 1" << std::endl; break;
-	case 2:	std::cout << "Chat 0" << std::endl; break;
-	case 3:	std::cout << "Chat 1" << std::endl; break;
-	}
-}
-#endif
-
 bool Chat::isLetter(int key)
 {
 	if (key >= 65 && key <= 90)
@@ -213,9 +231,19 @@ std::string Chat::appendPlayerName(std::string& name)
 	return stream.str();
 }
 
+void Chat::setRestriction(ChatRestriction r)
+{
+	m_restriction = (int)r;
+}
+
+void Chat::setMaxMsgLength(int maxLength)
+{
+	m_maxLength = maxLength;
+}
+
 void Chat::parseCharTyped(int key, int mods, int scancode)
 {
-	if (key == -1)
+	if (key == -1 && m_restriction == CHAT_ALL)
 	{
 		// Keys that are not recognized
 		if (scancode == FSLASH_SCANCODE && mods == NO_MOD)
@@ -228,13 +256,13 @@ void Chat::parseCharTyped(int key, int mods, int scancode)
 	{
 		// Equal behavior when shifted
 		// Letters
-		if (isLetter(key))
+		if (isLetter(key) && m_restriction != CHAT_NUMBER_ONLY)
 		{
 			char c = getLetter(key, mods);
 			ss << c;
 		}
 		// Spacebar
-		else if (key == SPACE_KEY)
+		else if (key == SPACE_KEY && m_restriction != CHAT_NUMBER_ONLY)
 		{
 			ss << " ";
 		}
@@ -259,33 +287,34 @@ void Chat::parseCharTyped(int key, int mods, int scancode)
 			char c = getNumber(key);
 			ss << c;
 		}
-		switch (key)
+		if (m_restriction == CHAT_ALL)
 		{
-		case KEY_FSLASH: ss << "/"; break;
-		case KEY_APOSTROPHE: ss << "'"; break;
-		case KEY_COMMA: ss << ","; break;
-		case KEY_MINUS: ss << "-"; break;
-		case KEY_PERIOD: ss << "."; break;
-		case KEY_SEMICOLON: ss << ";"; break;
-		case KEY_EQUAL: ss << "="; break;
-		case KEY_LEFTBRACKET: ss << "["; break;
-		case KEY_RIGHTBRACKET: ss << "]"; break;
-		case KEY_BACKSLASH: ss << "\\"; break;
-		case KEY_CCEDILHA: ss << "ç"; break;
-		case KEY_TILDA: ss << "~"; break;
-		case KEY_ACUTE_ACCENT: ss << "´"; break;
-		//Numpad
-		case KEY_STAR_NUM: ss << "*"; break;
-		case KEY_MINUS_NUM: ss << "-"; break;
-		case KEY_PLUS_NUM: ss << "+"; break;
-		case KEY_COMMA_NUM: ss << ","; break;
+			switch (key)
+			{
+			case KEY_FSLASH: ss << "/"; break;
+			case KEY_APOSTROPHE: ss << "'"; break;
+			case KEY_COMMA: ss << ","; break;
+			case KEY_MINUS: ss << "-"; break;
+			case KEY_PERIOD: ss << "."; break;
+			case KEY_SEMICOLON: ss << ";"; break;
+			case KEY_EQUAL: ss << "="; break;
+			case KEY_LEFTBRACKET: ss << "["; break;
+			case KEY_RIGHTBRACKET: ss << "]"; break;
+			case KEY_BACKSLASH: ss << "\\"; break;
+			case KEY_CCEDILHA: ss << "ç"; break;
+			case KEY_TILDA: ss << "~"; break;
+			case KEY_ACUTE_ACCENT: ss << "´"; break;
+			//Numpad
+			case KEY_STAR_NUM: ss << "*"; break;
+			case KEY_MINUS_NUM: ss << "-"; break;
+			case KEY_PLUS_NUM: ss << "+"; break;
+			case KEY_COMMA_NUM: ss << ","; break;
+			}
 		}
-		std::string ccc = ss.str();
 	}
-	else if (mods == KEY_MOD_SHIFT)
+	else if (mods == KEY_MOD_SHIFT && m_restriction == CHAT_ALL)
 	{
 		// Forward slash (Left keyboard)
-
 		switch (key)
 		{
 		// Numeric keys
@@ -313,15 +342,15 @@ void Chat::parseCharTyped(int key, int mods, int scancode)
 		case KEY_CCEDILHA: ss << "Ç"; break;
 		}
 	}
-	else if (mods == KEY_MOD_CONTROL)
+	else if (mods == KEY_MOD_CONTROL && m_restriction == CHAT_ALL)
 	{
 
 	}
-	else if (mods == KEY_MOD_ALT)
+	else if (mods == KEY_MOD_ALT && m_restriction == CHAT_ALL)
 	{
 
 	}
-	else if (mods == KEY_MOD_ALTGR)
+	else if (mods == KEY_MOD_ALTGR && m_restriction == CHAT_ALL)
 	{
 		switch (key)
 		{

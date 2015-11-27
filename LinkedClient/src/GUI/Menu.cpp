@@ -11,6 +11,11 @@ int Menu::stateMenu = 0;
 linked::Window* Menu::menu = nullptr;
 linked::Window* Menu::serverIpMenu = nullptr;
 
+linked::Label* Menu::ipLabel = nullptr;
+linked::Label* Menu::portLabel = nullptr;
+
+int Menu::m_focusedLabel = F_NONE;
+
 std::string Menu::newSinglePlayerString = std::string("Single Player");
 std::string Menu::newMultiPlayerString = std::string("Multi Player");
 std::string Menu::exitGameString = std::string("Exit");
@@ -47,12 +52,15 @@ void Menu::update(int key, int scancode, int action, int mods)
 
 void Menu::update()
 {
+	// If the menu needs to be created
 	if (stateMenu == MENU_ACTIVE && menu == nullptr)
 	{
 		m_menuActive = true;
 		createMenu();
 	}
-	if (stateMenu == NORMAL_INACTIVE)
+
+	// If user chooses an option and is no longer in the menu
+	if (stateMenu == NORMAL_INACTIVE && menu != nullptr)
 	{
 		m_menuActive = false;
 		deleteWindow(menu);
@@ -68,6 +76,8 @@ void Menu::update()
 			serverIpMenu = nullptr;
 		}
 	}
+
+	// If the multiplayer menu was canceled delete it
 	if (multiplayerCanceled)
 	{
 		if (serverIpMenu != nullptr)
@@ -77,6 +87,21 @@ void Menu::update()
 			serverIpMenu = nullptr;
 		}
 		multiplayerCanceled = false;
+		m_focusedLabel = F_NONE;
+		Chat::enable();
+	}
+	if (serverIpMenu != nullptr)
+	{
+		if (m_focusedLabel == F_PORT_LABEL)
+		{
+			defaultPort = Chat::getStream().str();
+			portLabel->setText((unsigned char*)defaultPort.c_str(), defaultPort.size());
+		}
+		else if (m_focusedLabel == F_IP_LABEL)
+		{
+			defaultIp = Chat::getStream().str();
+			ipLabel->setText((unsigned char*)defaultIp.c_str(), defaultIp.size());
+		}
 	}
 }
 
@@ -128,6 +153,9 @@ void Menu::createMenu()
 
 void Menu::createServerIpMenu()
 {
+	// None of the labels are initially focused
+	m_focusedLabel = F_NONE;
+
 	const float menuWidth = Display::getCurrentInstance().getWidth() / 2.0f;
 	const float menuHeight = Display::getCurrentInstance().getHeight() / 2.0f;
 	// Menu Window
@@ -141,13 +169,13 @@ void Menu::createServerIpMenu()
 	serverIpMenu->divs.push_back(div);
 
 	// Menu labels
-	linked::Label* ipAddress = new linked::Label(*div, (unsigned char*)defaultIp.c_str(), defaultIp.size(), 100);
-	ipAddress->setTextColor(glm::vec4(1, 1, 1, 0.7f));
-	div->getLabels().push_back(ipAddress);
+	ipLabel = new linked::Label(*div, (unsigned char*)defaultIp.c_str(), defaultIp.size(), 70);
+	ipLabel->setTextColor(glm::vec4(1, 1, 1, 0.7f));
+	//div->getLabels().push_back(ipAddress);
 
-	linked::Label* portLabel = new linked::Label(*div, (unsigned char*)defaultPort.c_str(), defaultPort.size(), glm::vec2(0, 60), 100);
+	portLabel = new linked::Label(*div, (unsigned char*)defaultPort.c_str(), defaultPort.size(), 70);
 	portLabel->setTextColor(glm::vec4(1, 1, 1, 0.7f));
-	div->getLabels().push_back(portLabel);
+	//div->getLabels().push_back(portLabel);
 
 	// Cancel and confirm labels
 	linked::Label* confirmLabel = new linked::Label(*div, (unsigned char*)confirmString.c_str(), confirmString.size(), glm::vec2(70, 0), 100);
@@ -157,20 +185,33 @@ void Menu::createServerIpMenu()
 	confirmLabel->setTextColor(glm::vec4(1, 1, 1, 0.7f));
 
 	// Buttons
-	linked::Button* confirmButton = new linked::Button(*div, confirmLabel, glm::vec2(0, 130), 200, 50, glm::vec4(1, 1, 1, 0.5f));
+	// Confirm
+	linked::Button* confirmButton = new linked::Button(*div, confirmLabel, glm::vec2(0, 130), 200, 50, glm::vec4(0.55f, 1, 0.74f, 0.5f));
 	confirmButton->setHoveredTextColor(glm::vec4(1, 1, 1, 0.9f));
 	confirmButton->setHeldText(glm::vec4(1, 1, 1, 0.7f));
-	confirmButton->setHoveredBGColor(glm::vec4(1, 1, 1, 0.4f));
+	confirmButton->setHoveredBGColor(glm::vec4(0.55f, 1, 0.74f, 0.4f));
 	confirmButton->setClickedCallback(startMultiplayer);
 	div->getButtons().push_back(confirmButton);
-
-	linked::Button* cancelButton = new linked::Button(*div, cancelLabel, glm::vec2(280, 130), 200, 50, glm::vec4(1, 1, 1, 0.5f));
+	// Cancel
+	linked::Button* cancelButton = new linked::Button(*div, cancelLabel, glm::vec2(280, 130), 200, 50, glm::vec4(1, 0.58f, 0.55f, 0.5f));
 	cancelButton->setNormalTextColor(glm::vec4(1, 1, 1, 0.7f));
 	cancelButton->setHoveredTextColor(glm::vec4(1, 1, 1, 0.9f));
 	cancelButton->setHeldText(glm::vec4(1, 1, 1, 0.7f));
-	cancelButton->setHoveredBGColor(glm::vec4(1, 1, 1, 0.4f));
+	cancelButton->setHoveredBGColor(glm::vec4(1, 0.58f, 0.55f, 0.4f));
 	cancelButton->setClickedCallback(cancelMultiplayer);
 	div->getButtons().push_back(cancelButton);
+
+	// IP label button
+	linked::Button* ipLabelButton = new linked::Button(*div, ipLabel, glm::vec2(0, 0), 480, 50, glm::vec4(1, 1, 1, 0.5f));
+	ipLabelButton->setHoveredBGColor(glm::vec4(1, 1, 1, 0.4f));
+	ipLabelButton->setClickedCallback(focusIpLabel);
+	div->getButtons().push_back(ipLabelButton);
+
+	// Port label button
+	linked::Button* portLabelButton = new linked::Button(*div, portLabel, glm::vec2(0, 60), 480, 50, glm::vec4(1, 1, 1, 0.5f));
+	portLabelButton->setHoveredBGColor(glm::vec4(1, 1, 1, 0.4f));
+	portLabelButton->setClickedCallback(focusPortLabel);
+	div->getButtons().push_back(portLabelButton);
 }
 
 void Menu::deleteWindow(linked::Window* w)
@@ -208,6 +249,17 @@ void Menu::multiPlayer()
 
 void Menu::startMultiplayer()
 {
+	// Return chat to normal state
+	m_focusedLabel = F_NONE;
+	Chat::enable();
+
+	// Setup game
+	if (defaultIp.size() > 0 && defaultPort.size() > 0)
+	{
+		Game::server_ip = defaultIp;
+		Game::server_port = std::stoi(defaultPort);
+	}
+
 	Display::startGame();
 	stateMenu = NORMAL_INACTIVE;
 }
@@ -220,4 +272,28 @@ void Menu::cancelMultiplayer()
 void Menu::exitGame()
 {
 	Display::exitGame();
+}
+
+void Menu::focusIpLabel()
+{
+	//if (Chat::isEnabled())
+	//{
+		Chat::setRestriction(CHAT_ALL);
+		Chat::setMaxMsgLength(MAX_ADDRESS);
+		Chat::disable();
+		Chat::getStream() << defaultIp;
+	//}
+	m_focusedLabel = F_IP_LABEL;
+}
+
+void Menu::focusPortLabel()
+{
+	//if (Chat::isEnabled())
+	//{
+		Chat::setRestriction(CHAT_NUMBER_ONLY);
+		Chat::setMaxMsgLength(MAX_PORT);
+		Chat::disable();
+		Chat::getStream() << defaultPort;
+	//}
+	m_focusedLabel = F_PORT_LABEL;
 }

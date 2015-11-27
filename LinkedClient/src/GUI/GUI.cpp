@@ -69,12 +69,12 @@ void GUI::initLeftGUI()
 	stats->setTitleCentered(true);
 	leftGUI = stats;
 
-	WindowDiv* playerInfo = new WindowDiv(*stats, 180, 140, 0, 0, glm::vec2(0, 0), glm::vec4(1, 1, 1, 0),
+	WindowDiv* playerInfo = new WindowDiv(*stats, 190, 140, 0, 0, glm::vec2(0, 0), glm::vec4(1, 1, 1, 0),
 		DIV_ANCHOR_LEFT | DIV_ANCHOR_TOP);
 	stats->divs.push_back(playerInfo);
 	initLeftGUIText(playerInfo);
 
-	WindowDiv* playerEquips = new WindowDiv(*stats, 120, 140, 0, 0, glm::vec2(0, 0), glm::vec4(0, 0, 0, 0.1f),
+	WindowDiv* playerEquips = new WindowDiv(*stats, 110, 140, 0, 0, glm::vec2(0, 0), glm::vec4(0, 0, 0, 0.1f),
 		DIV_ANCHOR_RIGHT | DIV_ANCHOR_TOP);
 	stats->divs.push_back(playerEquips);
 
