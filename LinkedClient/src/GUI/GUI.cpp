@@ -248,38 +248,37 @@ void GUI::update()
 	if (player->getHp() != playerHealth)
 	{
 		setPlayerHealth(player->getHp(), player->getTotalMaximumHp());
-		healthLabel->setTextLength(pHealth.size());
 		healthLabel->setText((unsigned char*)pHealth.c_str(), pHealth.size());
 	}
 	
 	if (player->getTotalAttack() != playerAttack)
 	{
 		setPlayerAttack(player->getTotalAttack());
-		attackLabel->setTextLength(pAttack.size());
+		attackLabel->setText((unsigned char*)pAttack.c_str(), pAttack.size());
 	}
 
 	if (player->getTotalDefense() != playerDefense)
 	{
 		setPlayerDefense(player->getTotalDefense());
-		defenseLabel->setTextLength(pDefense.size());
+		defenseLabel->setText((unsigned char*)pDefense.c_str(), pDefense.size());
 	}
 
 	if (player->getTotalMagicalPower() != playerMagicalPower)
 	{
 		setPlayerMagicalPower(player->getTotalMagicalPower());
-		magicalPowerLabel->setTextLength(pMagicalPower.size());
+		magicalPowerLabel->setText((unsigned char*)pMagicalPower.c_str(), pMagicalPower.size());
 	}
 
 	if (player->getTotalAttackSpeed() != playerAttackSpeed)
 	{
 		setPlayerAttackSpeed(player->getTotalAttackSpeed());
-		attackSpeedLabel->setTextLength(pAttackSpeed.size());
+		attackSpeedLabel->setText((unsigned char*)pAttackSpeed.c_str(), pAttackSpeed.size());
 	}
 
 	if (player->getTotalSpeed() != playerSpeed)
 	{
 		setPlayerSpeed(player->getTotalSpeed());
-		speedLabel->setTextLength(pSpeed.size());
+		speedLabel->setText((unsigned char*)pSpeed.c_str(), pSpeed.size());
 	}
 }
 
