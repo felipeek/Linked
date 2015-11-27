@@ -32,23 +32,6 @@ void Menu::nextState()
 	else
 		stateMenu++;
 }
-/*
-void Menu::update(int key, int scancode, int action, int mods)
-{
-	if ((key == ESCAPE_KEY && action == 0) || (key == ESCAPE_KEY && action == 1))
-		Menu::nextState();
-
-	if (stateMenu == MENU_ACTIVE)
-	{
-		m_menuActive = true;
-		createMenu();
-	}
-	if (stateMenu == NORMAL_INACTIVE)
-	{
-		m_menuActive = false;
-		deleteMenu();
-	}
-}*/
 
 void Menu::update()
 {

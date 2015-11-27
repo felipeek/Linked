@@ -149,7 +149,7 @@ void GUI::initLeftGUISkills()
 	using namespace linked;
 
 	int displayHeight = Display::getCurrentInstance().getHeight();
-	Window* skills = new Window(200, 50, glm::vec2(10 + 300 + 10, displayHeight - 60), glm::vec4(0.16f, 0.15f, 0.2f, 0.5f), nullptr, 0, W_BORDER | W_MOVABLE);
+	Window* skills = new Window(200, 50, glm::vec2(10 + 300 + 10, displayHeight - 60), glm::vec4(0.76f, 0.75f, 0.8f, 0.1f), nullptr, 0, W_BORDER | W_MOVABLE);
 	skills->setBorderSizeX(1);
 	skills->setBorderSizeY(1);
 	skills->setBorderColor(glm::vec4(0, 0, 0, 1));
@@ -249,6 +249,7 @@ void GUI::update()
 	{
 		setPlayerHealth(player->getHp(), player->getTotalMaximumHp());
 		healthLabel->setTextLength(pHealth.size());
+		healthLabel->setText((unsigned char*)pHealth.c_str(), pHealth.size());
 	}
 	
 	if (player->getTotalAttack() != playerAttack)
