@@ -16,7 +16,7 @@ After building Linked, two binaries will be created: LinkedClient.exe and Linked
 To execute LinkedClient.exe:
 
 - The directories **LinkedClient\res**, **LinkedClient\shaders** and **LinkedClient\fonts** must be in the same directory as LinkedClient.exe
-- The "FreeType" dll must also be in the same directory. The dll is at **LinkedClient\lib\vcVERSION\freetype261_vcVERSION.dll**
+- The "FreeType" dll must also be in the same directory. The dll is inside **LinkedClient\lib\vcVERSION\**. You can find the correct dll depending on your VS version.
 
 To execute LinkedServer.exe:
 - The directory **LinkedServer\res** must be in the same directory as LinkedServer.exe
