@@ -1,6 +1,7 @@
 #pragma once
 
 #include "external/freetypegl/freetype-gl.h"
+
 #include <glm/glm.hpp>
 
 class FontShader;
