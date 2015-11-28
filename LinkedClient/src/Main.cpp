@@ -7,12 +7,13 @@
 // VC 2013
 #pragma comment(lib, "./lib/vc2013/glew32s_vc2013.lib")
 #pragma comment(lib, "./lib/vc2013/freetype261_vc2013.lib")
+#pragma comment(lib, "./lib/vc2013/glfw3.lib")
 #elif _MSC_VER < 2000
 // VC 2015
-#pragma comment(lib, "./lib/vc2013/glew32s_vc2015.lib")
-#pragma comment(lib, "./lib/vc2013/freetype261_vc2015.lib")
+#pragma comment(lib, "./lib/vc2015/glew32s_vc2015.lib")
+#pragma comment(lib, "./lib/vc2015/freetype261_vc2015.lib")
+#pragma comment(lib, "./lib/vc2015/glfw3.lib")
 #endif
-#pragma comment(lib, "./lib/glfw3.lib")
 #pragma comment(lib, "opengl32.lib")
 
 int main(int argc, char** argv)
