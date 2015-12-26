@@ -9,17 +9,22 @@ Linked is a multiplayer game idealized by Hoshoyo. It is currently being develop
 ![MultiPlayer](http://puu.sh/kVyA1/de09997992.jpg)
 
 ## Build
-Linked can be built with Visual Studio 2013 or Visual Studio 2015. Maybe you will have to retarget the solution when building it.
+To build Linked, you must open the solution Linked.sln in Visual Studio. Linked can be built with Visual Studio 2013 or Visual Studio 2015. When opening the solution, maybe you will be asked to retarget Linked's solution. In that case, retarget it (just make sure you are using VS2013 OR VS2015). Then, just build the solution on Build > Build Solution.
 
-For now, the game can be played Single Player or Multiplayer. However, it is defined at compile-time. You can change it in Game.cpp:
+After building Linked, two binaries will be created: LinkedClient.exe and LinkedServer.exe. However, to correctly execute these files, you must follow the steps:
 
-    bool Game::multiplayer = false/true;
-    int Game::server_port = 9090;
-    std::string Game::server_ip = Server IP (string);
+To execute LinkedClient.exe:
 
-To play multiplayer, the server must be running.
+- The directories **LinkedClient\res**, **LinkedClient\shaders** and **LinkedClient\fonts** must be in the same directory as LinkedClient.exe
+- The "FreeType" dll must also be in the same directory. The dll is inside **LinkedClient\lib\vcVERSION\**. You can find the correct dll depending on your VS version.
 
-Unfortunately, the lib folder is not in the repository, so Linked cannot be built just by cloning our repository.
+To execute LinkedServer.exe:
+- The directory **LinkedServer\res** must be in the same directory as LinkedServer.exe
+
+Copy all the required directories to the same path as the executables and the game can be initialized.
+
+## Play
+To play the game Single Player, only the client is necessary. To play multiplayer, you must have the server running. To run the server, execute LinkedServer.exe, and to run the client, execute LinkedClient.exe.
 
 ## Developer Contact
 1. Felipe Kersting (fekersting@inf.ufrgs.br)
