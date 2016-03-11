@@ -339,7 +339,7 @@ void PacketController::sendAttackToServer(glm::vec3 attackDirection)
 	udpClient->sendPackets(Packet(attackDirection, 1, UDPClient::myID));
 }
 
-void PacketController::sendAttackCollisionToServer(int monsterId, int attackId)
+void PacketController::sendAttackCollisionToServer(int monsterId, int attackId, int damage)
 {
 #if SHOW_PACKETS_LOG
 	LOG("PACKET SENT TO SERVER: Projectile Hit an Enemy");
@@ -347,7 +347,7 @@ void PacketController::sendAttackCollisionToServer(int monsterId, int attackId)
 	int attackCollisionInformation[3];
 	attackCollisionInformation[0] = monsterId;
 	attackCollisionInformation[1] = attackId;
-	attackCollisionInformation[2] = 20;	// TO DO: damage
+	attackCollisionInformation[2] = damage;
 
 	udpClient->sendPackets(Packet(attackCollisionInformation, 3, 2, UDPClient::myID));
 }

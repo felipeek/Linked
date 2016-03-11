@@ -309,10 +309,13 @@ void Display::resizeCallback(GLFWwindow* window, int width, int height)
 	Display::currentInstance->m_width = width;
 	Display::currentInstance->m_height = newHeight;
 
-	game->setWindowWidth(width);
-	game->setWindowHeight(newHeight);
+	if (game)
+	{
+		game->setWindowWidth(width);
+		game->setWindowHeight(newHeight);
 
-	game->getGui()->resizeCallback(width, newHeight);
+		game->getGui()->resizeCallback(width, newHeight);
+	}
 }
 
 const Display& Display::getCurrentInstance()

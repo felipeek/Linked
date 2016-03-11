@@ -77,12 +77,13 @@ void Projectile::update(Map* map, std::vector<Monster*>* monsters, Player* local
 			if (hitMonsterIndex >= 0)
 			{
 				Monster *hitMonster = (*monsters)[hitMonsterIndex];
+				int damageOnMonster = (unsigned int)ceil(this->power / (hitMonster->getTotalDefense() / 10.0f));
 
 				if (Game::multiplayer)
-					PacketController::sendAttackCollisionToServer(hitMonster->getId(), this->id);
+					PacketController::sendAttackCollisionToServer(hitMonster->getId(), this->id, damageOnMonster);
 
 				this->dead = true;
-				hitMonster->doDamage((unsigned int)ceil(this->power / (hitMonster->getTotalDefense() / 10.0f)));
+				hitMonster->doDamage(damageOnMonster);
 			}
 		}
 	}
