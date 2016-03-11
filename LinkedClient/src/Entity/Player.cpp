@@ -13,7 +13,7 @@
 #include "Projectile.h"
 #include "Common.h"
 
-Player::Player(Transform* transform, Mesh* mesh, Texture* texture, std::vector<Monster*>* monsters, Map* map) : Entity(transform, mesh, texture)
+Player::Player(Transform* transform, Mesh* mesh, Texture* texture) : Entity(transform, mesh, texture)
 {
 	setName(PLAYER_DEFAULT_NAME);
 	setHp(PLAYER_DEFAULT_HP);
@@ -21,7 +21,7 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture, std::vector<M
 	equipments = std::vector<Equipment*>();
 	this->link = NULL;
 	this->hpBar = new HPBar(this);
-	this->rangeAttack = new RangeAttack(this, &attacks, monsters, map);
+	this->rangeAttack = new RangeAttack(this, &attacks);
 	this->ai = new PlayerAI(*this);
 	this->isMovingTo = false;
 	this->type = LOCAL;
@@ -409,7 +409,7 @@ bool Player::isOutsideExternalRadiusArea(glm::vec3 position)
 
 /* METHODS RELATED TO INPUT, UPDATE AND RENDERING */
 
-void Player::update(Map* map)
+void Player::update(Map* map, std::vector<Monster*>* monsters)
 {
 	double now = LinkedTime::getTime();
 
@@ -427,7 +427,7 @@ void Player::update(Map* map)
 		this->moveOnline(map);
 
 	this->hpBar->update();
-	this->rangeAttack->update();
+	this->rangeAttack->update(map, monsters);
 	this->refreshTexture();
 
 	for (Skill* skill : this->skills)

@@ -17,26 +17,19 @@ class Mesh;
 class RangeAttack
 {
 public:
-	RangeAttack(Player* player, std::vector<Projectile*>* attacks, std::vector<Monster*>* monsters, Map* map);
+	RangeAttack(Player* player, std::vector<Projectile*>* attacks);
 	~RangeAttack();
 
 	std::vector<Projectile*>* getAttacks();
 	void createProjectile(glm::vec3 direction, int projId);
-	void setSpeed(float value);
-	void setLife(float value);
 
-	void update();
+	void update(Map* map, std::vector<Monster*>* monsters);
 	void input();
 private:
-	float speed;
-	float life;
 	double lastTimeUpdate;
 	double lastTimeCreate;
 	std::vector<Projectile*>* attacks;
-	std::vector<Monster*>* monsters;
-	Map* map;
 
-	bool monsterCollision(Projectile* projectile, int* hitMonsterIndex);
 	bool createProjectileDirectedToMouse();
 	void sendAttackToServer();
 

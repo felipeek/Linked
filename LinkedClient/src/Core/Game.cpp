@@ -158,7 +158,7 @@ void Game::createMap()
 void Game::createOfflinePlayer()
 {
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 12, 0));
-	this->localPlayer = new Player(new Transform(glm::vec3(440, 500, PLAYER_HEIGHT), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"), &monsters, map);
+	this->localPlayer = new Player(new Transform(glm::vec3(440, 500, PLAYER_HEIGHT), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
 	this->localPlayer->setHp(100);
 	this->localPlayer->setName("JaOwnes");
 	this->localPlayer->setClientId(0);
@@ -211,7 +211,7 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 
 	// TODO: delete designedPlayer, and his transform/texture
 
-	Player* designedPlayer = new Player(new Transform(localPlayerPosition, 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"), &monsters, map);
+	Player* designedPlayer = new Player(new Transform(localPlayerPosition, 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
 	
 	designedPlayer->setName("new player");
 	designedPlayer->setClientId(data[0]);
@@ -510,7 +510,7 @@ void Game::update()
 	light->update(localPlayer->getTransform()->getPosition());
 
 	// Player update	
-	localPlayer->update(this->map);
+	localPlayer->update(this->map, &this->monsters);
 
 	// Camera update
 	camera->updatePlayer(localPlayer->getTransform()->getPosition());
@@ -519,7 +519,7 @@ void Game::update()
 	if (Game::multiplayer)
 	{
 		for (Player* player : this->onlinePlayers)
-			player->update(this->map);
+			player->update(this->map, &this->monsters);
 	}
 
 	// Monsters update

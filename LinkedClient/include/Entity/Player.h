@@ -57,7 +57,7 @@ enum PlayerType
 class Player : public Entity, public Creature
 {
 public:
-	Player(Transform* transform, Mesh* mesh, Texture* texture, std::vector<Monster*>* monsters, Map* map);
+	Player(Transform* transform, Mesh* mesh, Texture* texture);
 	~Player();
 
 	/* BASIC ATTRIBUTES */
@@ -127,7 +127,7 @@ public:
 	bool isOutsideExternalRadiusArea(glm::vec3 position);
 
 	/* METHODS RELATED TO INPUT, UPDATE AND RENDERING */
-	void update(Map* map);
+	void update(Map* map, std::vector<Monster*>* monsters);
 	void input(Map* map);
 	void render(Shader* primitiveShader, Shader* skillShader, Shader* worldSkillShader, TextRenderer* textRenderer, Shader* projectileShader);
 

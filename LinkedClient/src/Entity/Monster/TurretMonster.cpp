@@ -29,7 +29,16 @@ void TurretMonster::update(Map* map, Player* player)
 		this->changeTextureIndex(1);
 
 	for (Projectile* p : this->projectiles)
-		p->update();
+		p->update(map, nullptr, player, true);
+
+	for (unsigned int i = 0; i < this->projectiles.size(); i++)
+	{
+		if ((this->projectiles)[i]->shouldBeDeleted())
+		{
+			delete (this->projectiles)[i];
+			this->projectiles.erase(this->projectiles.begin() + i);
+		}
+	}
 }
 
 void TurretMonster::render(Shader* shader)
@@ -89,7 +98,7 @@ void TurretMonster::createProjectile(glm::vec3 direction, int projId)
 		return;
 
 	Transform* projectileTransform = new Transform(monsterPos + glm::vec3(0, 0, this->getTransform()->getPosition().z), 35, glm::vec3(1, 0, 0), glm::vec3(3, 3, 3));
-	Projectile* entityD = new Projectile(projectileTransform, projectileMesh, projectileTexture, 0.4f , direction);
+	Projectile* entityD = new Projectile(projectileTransform, projectileMesh, projectileTexture, 0.4f , direction, ProjectileType::MONSTER_ATTACK);
 	entityD->setId(projId);
 	projectiles.push_back(entityD);
 }
