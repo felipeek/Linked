@@ -17,25 +17,28 @@ enum class ProjectileType
 class Projectile : public Entity
 {
 public:
-	Projectile(Transform* transform, Mesh* mesh, Texture* texture, float speed, glm::vec3 direction, ProjectileType type);
+	Projectile(Transform* transform, Mesh* mesh, Texture* texture, glm::vec3 direction, ProjectileType type);
 	~Projectile();
 
 	int getId();
 	void setId(int id);
-	double getSpawnTime();
 	ProjectileType getType();
 
 	void update(Map* map, std::vector<Monster*>* monsters, Player* localPlayer, bool checkCollision);
 	bool shouldBeDeleted();
-	void setLife(float life);
+
+	void setDistance(float distance);
+	void setSpeed(float speed);
+	void setPower(unsigned int power);
 private:
 	glm::vec3 direction;
+	glm::vec3 originalPosition;
 	float speed;
 	int id;
-	double spawnTime;
 	ProjectileType type;
 	bool dead;
-	float life;
+	float distance;
+	unsigned int power;
 
 	bool monsterCollision(std::vector<Monster*>* monsters, int* hitMonsterIndex);
 	bool doesProjectileCollidedWithEntity(glm::vec3 entityPosition, float entitySize);

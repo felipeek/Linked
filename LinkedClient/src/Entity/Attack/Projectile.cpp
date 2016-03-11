@@ -6,20 +6,26 @@
 #include "PacketController.h"
 #include "Player.h"
 
-Projectile::Projectile(Transform* transform, Mesh* mesh, Texture* texture, float speed, glm::vec3 direction, ProjectileType type) : Entity(transform, mesh, texture)
+Projectile::Projectile(Transform* transform, Mesh* mesh, Texture* texture, glm::vec3 direction, ProjectileType type) : Entity(transform, mesh, texture)
 {
-	this->speed = (speed / 1000.0f);
-	this->direction = glm::normalize(direction) * glm::vec3(speed, speed, speed);
-	this->spawnTime = LinkedTime::getTime();
+	this->originalPosition = transform->getPosition();
+	this->direction = glm::normalize(direction);
 	this->id = 0;
 	this->type = type;
 	this->dead = false;
-	this->life = 1;
+	this->distance = 1;
+	this->speed = 1;
+	this->power = 10;
 }
 
 Projectile::~Projectile()
 {
 
+}
+
+void Projectile::setSpeed(float speed)
+{
+	this->speed = speed;
 }
 
 bool Projectile::shouldBeDeleted()
@@ -32,14 +38,9 @@ ProjectileType Projectile::getType()
 	return this->type;
 }
 
-double Projectile::getSpawnTime()
+void Projectile::setDistance(float distance)
 {
-	return this->spawnTime;
-}
-
-void Projectile::setLife(float life)
-{
-	this->life = life;
+	this->distance = distance;
 }
 
 int Projectile::getId()
@@ -55,7 +56,7 @@ void Projectile::setId(int id)
 void Projectile::update(Map* map, std::vector<Monster*>* monsters, Player* localPlayer, bool checkCollision)
 {
 	double now = LinkedTime::getTime();
-	glm::vec3 newPos = this->transform->getPosition() + this->direction;
+	glm::vec3 newPos = this->transform->getPosition() + (this->direction * glm::vec3(this->speed, this->speed, this->speed));
 	int hitMonsterIndex;
 
 	// if projectile hit wall it must be deleted
@@ -63,8 +64,8 @@ void Projectile::update(Map* map, std::vector<Monster*>* monsters, Player* local
 	{
 		this->dead = true;
 	}
-	// if projectile lived long enough it must be deleted
-	else if ((now - this->getSpawnTime()) >= this->life)
+	// if projectile reached its limit distance it must be deleted.
+	else if (glm::length(newPos - originalPosition) >= this->distance)
 	{
 		this->dead = true;
 	}
@@ -81,7 +82,7 @@ void Projectile::update(Map* map, std::vector<Monster*>* monsters, Player* local
 					PacketController::sendAttackCollisionToServer(hitMonster->getId(), this->id);
 
 				this->dead = true;
-				hitMonster->doDamage(20);
+				hitMonster->doDamage((unsigned int)ceil(this->power / (hitMonster->getTotalDefense() / 10.0f)));
 			}
 		}
 	}
@@ -91,9 +92,9 @@ void Projectile::update(Map* map, std::vector<Monster*>* monsters, Player* local
 		float playerSize = PLAYER_COLLISION_RANGE;
 
 		// TODO : projetil na parede
-		if (this->doesProjectileCollidedWithEntity(playerPos, playerSize))
+		if (localPlayer->isAlive() && this->doesProjectileCollidedWithEntity(playerPos, playerSize))
 		{
-			localPlayer->doDamage(10);
+			localPlayer->doDamage((unsigned int)ceil(this->power / (localPlayer->getTotalDefense() / 10.0f)));
 			this->dead = true;
 		}
 	}
@@ -127,4 +128,9 @@ bool Projectile::doesProjectileCollidedWithEntity(glm::vec3 entityPosition, floa
 	float difference = glm::length(glm::vec2(entityPosition) - glm::vec2(this->getTransform()->getPosition()));
 
 	return difference < entitySize;
+}
+
+void Projectile::setPower(unsigned int power)
+{
+	this->power = power;
 }

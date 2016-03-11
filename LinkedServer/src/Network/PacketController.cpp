@@ -136,6 +136,8 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 			if (hurtMonster != NULL)
 				hurtMonster->doDamage(attack);
 
+			//PacketController::game->destroyProjectileOfId(projectileToBeDestroyed);
+
 			for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
 				if ((*udpServer->getClients())[i]->id != xid || projectileToBeDestroyed == -1)
 					udpServer->sendPackets(Packet(data, 3, 4, xid), (*udpServer->getClients())[i]->netInfo);
@@ -227,6 +229,9 @@ void PacketController::dispatchVec3fArray(int id, int xid, glm::vec3* data, int 
 
 			for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
 				udpServer->sendPackets(Packet(info, 3, xid), (*udpServer->getClients())[i]->netInfo);
+
+			// projectile is being deleted because server side is not using it
+			PacketController::game->destroyProjectileOfId(newProjectile->getId());
 		}
 		break;
 	}

@@ -46,7 +46,10 @@ void RangeAttack::createProjectile(glm::vec3 direction, int projId)
 		return;
 
 	Transform* projectileTransform = new Transform(playerPos + glm::vec3(0, 0, playerPos.z), 35, glm::vec3(1, 0, 0), glm::vec3(3, 3, 3));
-	Projectile* entityD = new Projectile(projectileTransform, mesh, texture, SPEED, direction, ProjectileType::PLAYER_ATTACK);
+	Projectile* entityD = new Projectile(projectileTransform, mesh, texture, direction, ProjectileType::PLAYER_ATTACK);
+	entityD->setSpeed(PLAYER_PROJECTILE_SPEED);
+	entityD->setDistance(PLAYER_PROJECTILE_DISTANCE);
+	entityD->setPower(this->player->getTotalAttack());
 	entityD->setId(projId);
 	(*attacks).push_back(entityD);
 
@@ -57,7 +60,7 @@ bool RangeAttack::createProjectileDirectedToMouse()
 {
 	double now = LinkedTime::getTime();
 
-	if (now - lastTimeCreate >= ASPD)
+	if (now - lastTimeCreate >= PLAYER_ASPD)
 	{
 		glm::vec3 playerPos = player->getTransform()->getPosition();
 		glm::vec3 direction = Input::mouseAttack.getMouseIntersection() - playerPos;
@@ -76,7 +79,7 @@ void RangeAttack::sendAttackToServer()
 {
 	double now = LinkedTime::getTime();
 
-	if (now - lastTimeCreate >= ASPD)
+	if (now - lastTimeCreate >= PLAYER_ASPD)
 	{
 		glm::vec3 playerPos = player->getTransform()->getPosition();
 		glm::vec3 direction = Input::mouseAttack.getMouseIntersection() - playerPos;

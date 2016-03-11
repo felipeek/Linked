@@ -2,10 +2,9 @@
 #include <glm\glm.hpp>
 #include <vector>
 
-#define ASPD 0.3f
-#define ATTACK 20
-#define LIFE 1.0f
-#define SPEED 0.4f
+#define PLAYER_ASPD 0.3f
+#define PLAYER_PROJECTILE_DISTANCE 20
+#define PLAYER_PROJECTILE_SPEED 0.4f
 
 class Projectile;
 class Player;

@@ -7,7 +7,7 @@ TurretMonster::TurretMonster(Transform* transform, Mesh* mesh, Texture* texture)
 {
 	this->projectileMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.3f));
 	projectileMesh->setReferenceCount(1);
-	this->projectileTexture = new Texture("./res/Textures/energyBall.png");
+	this->projectileTexture = new Texture("./res/Textures/enemyBall.png");
 	projectileTexture->setReferenceCount(1);
 }
 
@@ -73,11 +73,11 @@ Monster* TurretMonster::getCopy(Monster* copy)
 void TurretMonster::tryToCreateProjectile(Player* player)
 {
 	double now = LinkedTime::getTime();
-	//bool shouldCreateProjectile = PROJECTILE_CHANCE > (float)(rand() % 10000)/(float)100;
+
 	glm::vec3 playerPosition = player->getTransform()->getPosition();
 	glm::vec3 monsterPosition = this->getTransform()->getPosition();
 
-	if ((now - lastProjectileTime) > PROJECTILE_TIME)
+	if ((now - lastProjectileTime) > TURRET_MONSTER_PROJECTILE_TIME && player->isAlive() && glm::length(monsterPosition - playerPosition) < TURRET_MONSTER_PROJECTILE_RANGE)
 	{
 		this->lastProjectileTime = now;
 		if (playerPosition.x != monsterPosition.x || playerPosition.y != monsterPosition.y)
@@ -98,7 +98,10 @@ void TurretMonster::createProjectile(glm::vec3 direction, int projId)
 		return;
 
 	Transform* projectileTransform = new Transform(monsterPos + glm::vec3(0, 0, this->getTransform()->getPosition().z), 35, glm::vec3(1, 0, 0), glm::vec3(3, 3, 3));
-	Projectile* entityD = new Projectile(projectileTransform, projectileMesh, projectileTexture, 0.4f , direction, ProjectileType::MONSTER_ATTACK);
+	Projectile* entityD = new Projectile(projectileTransform, projectileMesh, projectileTexture, direction, ProjectileType::MONSTER_ATTACK);
+	entityD->setSpeed(TURRET_MONSTER_PROJECTILE_SPEED);
+	entityD->setDistance(TURRET_MONSTER_PROJECTILE_RANGE);
+	entityD->setPower(this->getTotalAttack());
 	entityD->setId(projId);
 	projectiles.push_back(entityD);
 }

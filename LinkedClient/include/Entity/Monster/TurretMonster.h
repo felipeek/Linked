@@ -2,7 +2,9 @@
 #include "Monster.h"
 
 //#define PROJECTILE_CHANCE 0.2f // in % (from 0.01f to 99.99f)
-#define PROJECTILE_TIME 1.0f
+#define TURRET_MONSTER_PROJECTILE_TIME 0.5f
+#define TURRET_MONSTER_PROJECTILE_RANGE 30.0f
+#define TURRET_MONSTER_PROJECTILE_SPEED 0.6f
 
 class Projectile;
 class Player;

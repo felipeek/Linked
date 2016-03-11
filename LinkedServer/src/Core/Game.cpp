@@ -15,7 +15,7 @@
 #define PLAYER_MAXHP_BASIS 1000
 #define PLAYER_HP_BASIS 1000
 #define PLAYER_NAME "New Player"
-#define PLAYER_ATTACK_BASIS 20
+#define PLAYER_ATTACK_BASIS 50
 #define PLAYER_ASPD_BASIS 20
 #define PLAYER_DEFENSE_BASIS 20
 #define PLAYER_MAGICAL_POWER_BASIS 30
@@ -154,4 +154,16 @@ Monster* Game::getMonsterOfId(int id)
 			return monsters[i];
 
 	return NULL;
+}
+
+void Game::destroyProjectileOfId(int id)
+{
+	for (int i = 0; i < this->projectiles.size(); i++)
+	{
+		if (this->projectiles[i]->getId() == id)
+		{
+			delete (this->projectiles)[i];
+			this->projectiles.erase(this->projectiles.begin() + i);
+		}
+	}
 }
