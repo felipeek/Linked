@@ -315,6 +315,18 @@ void PacketController::dispatchMsg(int id, int xid, char* data)
 
 	ss << "My New Player: " << msg;
 	gui->setNextMessage(ss.str());
+
+	if (!Display::isWindowFocused())
+	{
+		FLASHWINFO fwi;
+		fwi.cbSize = sizeof(FLASHWINFO);
+		fwi.dwFlags = FLASHW_ALL;
+		fwi.dwTimeout = 0;
+		fwi.hwnd = (HWND)Display::windowHandle;
+		fwi.uCount = 2;
+
+		FlashWindowEx(&fwi);
+	}
 }
 
 void PacketController::update10()

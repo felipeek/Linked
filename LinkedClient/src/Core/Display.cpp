@@ -8,6 +8,7 @@
 #include "Common.h"
 #include "GUI.h"
 #include "Menu.h"
+#include <windows.h>
 
 // Display related
 Display* Display::currentInstance;
@@ -19,6 +20,7 @@ GLFWwindow* Display::window = nullptr;
 GLFWmonitor* Display::monitor = nullptr;
 int Display::monitorWidth = 0;
 int Display::monitorHeight = 0;
+int Display::windowHandle;
 
 // Game
 Game* Display::game = nullptr;
@@ -83,6 +85,8 @@ void Display::startGlfw(Display* display, int* argc, char** argv, std::string ti
 	glfwSetWindowPos(window, WINDOW_START_X, WINDOW_START_Y);
 
 	glfwMakeContextCurrent(window);
+
+	windowHandle = (int)GetActiveWindow();
 
 	// Disable vsync
 	//glfwSwapInterval(0);
@@ -225,6 +229,11 @@ void Display::getSystemInfo()
 void Display::printOpenGLandGLSLversions()
 {
 	std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl << "GLSL " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+}
+
+bool Display::isWindowFocused()
+{
+	return (int)GetFocus() == windowHandle;
 }
 
 void Display::keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods)

@@ -25,6 +25,8 @@ public:
 	static void startGame();
 	static void exitGame();
 	static void destroyGameAndGotoMenu();
+	static bool isWindowFocused();
+	static int windowHandle;
 private:
 	int m_width, m_height;
 	static bool shouldExit;

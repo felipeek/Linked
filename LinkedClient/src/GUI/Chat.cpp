@@ -6,7 +6,6 @@
 #include "Packet.h"
 #include "Input.h"
 #include "GUI.h"
-#include <Windows.h>
 #include <iostream>
 
 int Chat::stateChat[NUM_KEYS] = { 0 };
