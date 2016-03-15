@@ -8,6 +8,11 @@
 #pragma comment(lib, "./lib/vc2013/glew32s_vc2013.lib")
 #pragma comment(lib, "./lib/vc2013/freetype261_vc2013.lib")
 #pragma comment(lib, "./lib/vc2013/glfw3.lib")
+#if _DEBUG
+#pragma comment(lib, "./lib/vc2013/sfml-audio-d.lib")
+#else
+#pragma comment(lib, "./lib/vc2013/sfml-audio.lib")
+#endif
 #elif _MSC_VER < 2000
 // VC 2015
 #pragma comment(lib, "./lib/vc2015/glew32s_vc2015.lib")

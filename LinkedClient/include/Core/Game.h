@@ -9,7 +9,7 @@
 #define ENTITIES_MAP_PATH "./res/Maps/entities2.png"
 #define MONSTER_MAP_PATH "./res/Maps/monsters.png"
 #define THEME_AUDIO_PATH "./res/Audio/theme.wav"
-#define THEME_AUDIO_VOLUME 30
+#define THEME_AUDIO_VOLUME 50
 
 #define SHADOW_BUFFER_SIZE 2048
 
