@@ -95,7 +95,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>lib;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>./lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>msvcrt;libcmt;</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -153,6 +153,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="AudioController.cpp" />
     <ClCompile Include="include\external\freetypegl\platform.c" />
     <ClCompile Include="include\external\freetypegl\texture-atlas.c" />
     <ClCompile Include="include\external\freetypegl\texture-font.c" />
@@ -231,6 +233,8 @@
     <ClCompile Include="src\Entity\Monster\TurretMonster.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Audio.h" />
+    <ClInclude Include="include\AudioController.h" />
     <ClInclude Include="include\Entity\AI\AI.h" />
     <ClInclude Include="include\Entity\Monster\BasicMonster.h" />
     <ClInclude Include="include\Common.h" />

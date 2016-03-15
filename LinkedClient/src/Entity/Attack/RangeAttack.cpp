@@ -11,8 +11,6 @@
 #include "PacketController.h"
 #include "Game.h"
 
-#include <iostream>
-
 RangeAttack::RangeAttack(Player* player, std::vector<Projectile*>* attacks)
 {
 	mesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.3f, 0.3f));
@@ -115,8 +113,7 @@ void RangeAttack::input()
 		}
 		else
 		{
-			createProjectileDirectedToMouse();
-			player->attack();
+			if (createProjectileDirectedToMouse()) player->attack();
 		}
 	}
 }

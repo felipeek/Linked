@@ -13,6 +13,11 @@
 #pragma comment(lib, "./lib/vc2015/glew32s_vc2015.lib")
 #pragma comment(lib, "./lib/vc2015/freetype261_vc2015.lib")
 #pragma comment(lib, "./lib/vc2015/glfw3.lib")
+#if _DEBUG
+#pragma comment(lib, "./lib/vc2015/sfml-audio-d.lib")
+#else
+#pragma comment(lib, "./lib/vc2015/sfml-audio.lib")
+#endif
 #endif
 #pragma comment(lib, "opengl32.lib")
 

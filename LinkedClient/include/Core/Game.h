@@ -8,6 +8,8 @@
 #define TERRAIN_MAP_PATH "./res/Maps/map_64.png"
 #define ENTITIES_MAP_PATH "./res/Maps/entities2.png"
 #define MONSTER_MAP_PATH "./res/Maps/monsters.png"
+#define THEME_AUDIO_PATH "./res/Audio/theme.wav"
+#define THEME_AUDIO_VOLUME 30
 
 #define SHADOW_BUFFER_SIZE 2048
 
@@ -32,6 +34,7 @@ class GUI;
 class FrameBuffer;
 class Cursor;
 class UDPClient;
+class Audio;
 
 class Game
 {
@@ -71,6 +74,7 @@ private:
 	void createGUI();
 	void createUDPConnection();
 	void loadMonstersAndEntities(bool loadMonsters, bool loadEntities);
+	void initializateThemeAudio();
 
 	/* GAME GRAPHIC ELEMENTS */
 	Camera* camera;
@@ -106,6 +110,9 @@ private:
 	/* GAME RENDER PASSES */
 	void renderFirstPass();
 	void renderSecondsPass();
+
+	/* GAME THEME AUDIO */
+	Audio* themeAudio;
 
 	double cursorRot = 0;
 	double lastTime;
