@@ -313,6 +313,14 @@
     <ClInclude Include="include\WindowApi\WindowDiv.h" />
     <ClInclude Include="include\Entity\Monster\TurretMonster.h" />
     <ClInclude Include="include\GUI\Menu.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
+    <Image Include="LinkedIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="LinkedClient.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
