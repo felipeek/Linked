@@ -7,6 +7,7 @@
 #include "Cursor.h"
 #include "PacketController.h"
 #include "TextRenderer.h"
+#include "Audio.h"
 
 // TODO: Skill Animation flow must be implemented using LinkedTime, not only the update call.
 
@@ -37,6 +38,9 @@ HoshoyoExplosionSkill::HoshoyoExplosionSkill(SkillOwner owner, std::vector<Monst
 	Texture* enabledSkillIconTexture = new Texture("./res/Skills/hoshoyoexplosion_icon.png");
 	Texture* disabledSkillIconTexture = new Texture("./res/Skills/hoshoyoexplosion_icon_black.png");
 	this->skillIcon = new SkillIcon(enabledSkillIconTexture, disabledSkillIconTexture, SLOT_1);
+
+	/* SKILL AUDIO */
+	this->skillAudio = new Audio("./res/Audio/hoshoyo_explosion_skill.wav", AudioType::SOUND);
 }
 
 HoshoyoExplosionSkill::~HoshoyoExplosionSkill()
@@ -45,6 +49,8 @@ HoshoyoExplosionSkill::~HoshoyoExplosionSkill()
 		delete this->aimEntity;
 	if (this->rangeEntity != NULL)
 		delete this->rangeEntity;
+	if (this->skillAudio != NULL)
+		delete this->skillAudio;
 }
 
 void HoshoyoExplosionSkill::render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer)
@@ -148,6 +154,7 @@ void HoshoyoExplosionSkill::execute(MovementDirection skillDirection, glm::vec3 
 	this->currentExplosionTextureIndex = 0;
 	this->skillIcon->disableIcon();
 	this->active = true;
+	this->skillAudio->play();
 }
 
 const float skillRadius = 10.0f;

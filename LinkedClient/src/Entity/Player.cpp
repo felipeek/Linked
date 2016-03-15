@@ -12,6 +12,7 @@
 #include "Equipment.h"
 #include "Projectile.h"
 #include "Common.h"
+#include "Audio.h"
 
 Player::Player(Transform* transform, Mesh* mesh, Texture* texture) : Entity(transform, mesh, texture)
 {
@@ -41,6 +42,9 @@ Player::Player(Transform* transform, Mesh* mesh, Texture* texture) : Entity(tran
 
 	this->currentDirection = PLAYER_FIRST_DIRECTION;
 	this->lastIndexTexture = PLAYER_FIRST_INDEX_TEXTURE;
+
+	this->receiveDamageAudio = new Audio("./res/Audio/player_hit.wav", AudioType::SOUND);
+	this->attackSound = new Audio("./res/Audio/attack.wav", AudioType::SOUND);
 }
 
 Player::~Player()
@@ -65,6 +69,9 @@ Player::~Player()
 		attacks.erase(attacks.begin());
 	}
 	delete rangeAttack;
+
+	delete this->receiveDamageAudio;
+	delete this->attackSound;
 }
 
 /* *********************************** */
@@ -348,12 +355,14 @@ bool Player::isAttacking()
 
 void Player::attack()
 {
+	this->attackSound->play();
 	this->attacking = true;
 	lastAttackTime = LinkedTime::getTime();
 }
 
 void Player::receiveDamage()
 {
+	this->receiveDamageAudio->play();
 	this->receivingDamage = true;
 	lastReceivedDamageTime = LinkedTime::getTime();
 }

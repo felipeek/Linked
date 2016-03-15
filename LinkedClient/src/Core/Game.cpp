@@ -45,6 +45,7 @@
 #include "UDPClient.h"
 
 #include "FrameBuffer.h"
+#include "Audio.h"
 
 // Standard libs
 #include <iostream>
@@ -76,6 +77,7 @@ Game::Game(int windowWidth, int windowHeight)
 		this->loadMonstersAndEntities(true, true);
 	}
 	this->createGUI();
+	this->initializateThemeAudio();
 }
 
 Game::~Game()
@@ -115,6 +117,8 @@ Game::~Game()
 		udpClient->virtualDisconnection();
 		if (this->udpClient != nullptr) delete udpClient;
 	}
+
+	if (this->themeAudio != nullptr) delete this->themeAudio;
 }
 
 void Game::createGraphicElements(int windowWidth, int windowHeight)
@@ -262,6 +266,14 @@ void Game::createGUI()
 		this->gui->addSkillIcon(s->getSkillIcon());
 	PacketController::gui = this->gui;
 	Chat::gui = this->gui;	
+}
+
+void Game::initializateThemeAudio()
+{
+	this->themeAudio = new Audio(THEME_AUDIO_PATH, AudioType::MUSIC);
+	this->themeAudio->setVolume(THEME_AUDIO_VOLUME);
+	this->themeAudio->setLoop(true);
+	this->themeAudio->play();
 }
 
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)

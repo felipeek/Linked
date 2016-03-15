@@ -9,14 +9,14 @@ Linked is a multiplayer game idealized by Hoshoyo. It is currently being develop
 ![MultiPlayer](http://puu.sh/kVyA1/de09997992.jpg)
 
 ## Build
-To build Linked, you must open the solution Linked.sln in Visual Studio. Linked can be built with Visual Studio 2013 or Visual Studio 2015. When opening the solution, maybe you will be asked to retarget Linked's solution. In that case, retarget it (just make sure you are using VS2013 OR VS2015). Then, just build the solution on Build > Build Solution.
+To build Linked, you must open the solution Linked.sln in Visual Studio. Linked can be built with Visual Studio 2013 or Visual Studio 2015. When opening the solution, maybe you will be asked to retarget Linked's solution. In that case, retarget it (just make sure you are using VS2013 OR VS2015). Then, just build the solution on Build > Build Solution (x86)).
 
 After building Linked, two binaries will be created: LinkedClient.exe and LinkedServer.exe. However, to correctly execute these files, you must follow the steps:
 
 To execute LinkedClient.exe:
 
 - The directories **LinkedClient\res**, **LinkedClient\shaders** and **LinkedClient\fonts** must be in the same directory as LinkedClient.exe
-- The "FreeType" dll must also be in the same directory. The dll is inside **LinkedClient\lib\vcVERSION\**. You can find the correct dll depending on your VS version.
+- All dlls inside **LinkedClient\lib\vcVERSION\** must be in the same directory as LinkedClient.exe. Just make sure you are opening the correct folder depending on your Visual Studio version.
 
 To execute LinkedServer.exe:
 - The directory **LinkedServer\res** must be in the same directory as LinkedServer.exe

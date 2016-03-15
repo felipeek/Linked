@@ -3,6 +3,7 @@
 #include "LinkedTime.h"
 #include "Primitive.h"
 #include "Game.h"
+#include "Audio.h"
 
 #define FIRST_ID 1
 
@@ -11,6 +12,7 @@ unsigned short Monster::NEXT_ID = FIRST_ID;
 Monster::Monster(Transform* transform, Mesh* mesh, Texture* texture) : Entity(transform, mesh, texture)
 {
 	this->ai = new MonsterAI(*this);
+	this->receiveDamageSound = new Audio("./res/Audio/monster_hit.wav", AudioType::SOUND);
 	setName(MONSTER_DEFAULT_NAME);
 	setHp(MONSTER_DEFAULT_HP);
 	setTotalMaximumHp(MONSTER_DEFAULT_TOTAL_MAX_HP);
@@ -28,6 +30,7 @@ Monster::Monster(Transform* transform, Mesh* mesh, Texture* texture) : Entity(tr
 Monster::~Monster()
 {
 	delete this->ai;
+	delete this->receiveDamageSound;
 }
 
 /* *********************************** */
@@ -227,6 +230,7 @@ bool Monster::isReceivingDamage()
 
 void Monster::receiveDamage()
 {
+	this->receiveDamageSound->play();
 	this->receivingDamage = true;
 	lastReceivedDamageTime = LinkedTime::getTime();
 }

@@ -77,6 +77,7 @@
     <ClCompile Include="src\WindowApi\WindowDiv.cpp" />
     <ClCompile Include="src\Entity\Monster\TurretMonster.cpp" />
     <ClCompile Include="src\GUI\Menu.cpp" />
+    <ClCompile Include="src\Core\Audio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Entity\AI\AI.h" />
@@ -169,5 +170,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LinkedClient.rc" />
+    <ClInclude Include="include\Audio.h" />
+    <ClInclude Include="include\AudioController.h" />
+    <ClInclude Include="include\Core\Audio.h" />
+
   </ItemGroup>
 </Project>

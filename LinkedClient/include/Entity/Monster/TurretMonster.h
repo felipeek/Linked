@@ -8,6 +8,7 @@
 
 class Projectile;
 class Player;
+class Audio;
 
 class TurretMonster : public Monster
 {
@@ -36,5 +37,6 @@ private:
 	Mesh* projectileMesh;
 	Texture* projectileTexture;
 	double lastProjectileTime = 0;
+	Audio* attackSound;
 };
 

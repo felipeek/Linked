@@ -19,6 +19,7 @@
 class Player;
 class MonsterAI;
 class Map;
+class Audio;
 enum MovementDirection;
 
 class Monster : public Entity, public Creature
@@ -126,6 +127,9 @@ private:
 	double killTime = 0;
 	double lastAttackTime = 0;
 	double lastReceivedDamageTime = 0;
+
+	/* AUDIO-RELATED ATTRIBUTES */
+	Audio* receiveDamageSound;
 
 	/* ID */
 	static unsigned short NEXT_ID;
