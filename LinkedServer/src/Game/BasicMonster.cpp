@@ -18,10 +18,10 @@ void BasicMonster::update(Map* map, std::vector<Player*>* players)
 {
 	glm::vec3 currentPosition = this->getPosition();
 	Monster::update(map, players);
+	Player* player = this->ai->findClosestWorldObjectToAttack(map, players);
 
-	if (players->size() > 0)
+	if (player != nullptr)
 	{
-		Player* player = (*players)[0];
 		double now = LinkedTime::getTime();
 
 		if (this->isAlive())

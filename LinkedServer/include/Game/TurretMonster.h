@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 #include "Monster.h"
 
 //#define PROJECTILE_CHANCE 0.2f // in % (from 0.01f to 99.99f)
@@ -8,22 +9,19 @@
 
 class Projectile;
 class Player;
-class Audio;
 
 class TurretMonster : public Monster
 {
 public:
-	TurretMonster(Transform* transform, Mesh* mesh, Texture* texture);
+	TurretMonster();
 	~TurretMonster();
 
 	/* UPDATE & RENDER */
-	virtual void update(Map* map, Player* player);
-	virtual void render(Shader* shader);
+	virtual void update(Map* map, std::vector<Player*>* players);
 
-	/* MOVEMENT */
-	virtual void startOnlineMovement(glm::vec3 position);
-
-	virtual void action(int actionId, int xid, glm::vec3 vector);
+	/* NETWORK MOVEMENT */
+	virtual bool mustUpdateDestinationToClients();
+	virtual glm::vec3 getDestination();
 
 	/* COPY */
 	// if the "copy" parameter is NULL, it will allocate the monster
@@ -32,12 +30,7 @@ public:
 
 private:
 	void tryToCreateProjectile(Player* player);
-	std::vector<Projectile*> projectiles;
-	void createProjectile(glm::vec3 direction, int projId);
-	void destroyProjectile(int projId);
-	Mesh* projectileMesh;
-	Texture* projectileTexture;
+	void createProjectile(glm::vec3 direction, int projId, int playerId);
 	double lastProjectileTime = 0;
-	Audio* attackSound;
 };
 

@@ -11,6 +11,7 @@ class UDPServer;
 class ClientInfo;
 class Monster;
 class Game;
+class Projectile;
 
 class PacketController
 {
@@ -24,6 +25,9 @@ public:
 	static std::vector<Player*>* players;
 	static std::vector<Monster*>* monsters;
 	static Game* game;
+
+	// Function below must be optimized.
+	static void sendProjectileAttackByTurretMonster(int monsterId, Projectile* direction);
 
 	static void disconnectClient(int clientId, bool timedOut);
 	static void update10();

@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "LinkedTime.h"
 #include "Audio.h"
+#include "Game.h"
 
 TurretMonster::TurretMonster(Transform* transform, Mesh* mesh, Texture* texture) : Monster(transform, mesh, texture)
 {
@@ -25,7 +26,7 @@ void TurretMonster::update(Map* map, Player* player)
 	Monster::update(map, player);
 	if (this->isAlive())
 	{
-		this->tryToCreateProjectile(player);
+		if (!Game::multiplayer) this->tryToCreateProjectile(player);
 		this->changeTextureIndex(0);
 	}
 	else
@@ -57,9 +58,16 @@ void TurretMonster::startOnlineMovement(glm::vec3 position)
 
 }
 
-void TurretMonster::action(glm::vec3 vector)
+void TurretMonster::action(int actionId, int xid, glm::vec3 vector)
 {
-
+	switch (actionId)
+	{
+		// Create Projectile Action
+		case 0: this->createProjectile(vector, xid); break;
+		// Destroy Projectile Action
+		case 1: this->destroyProjectile(xid); break;
+		default: break;
+	}
 }
 
 Monster* TurretMonster::getCopy(Monster* copy)
@@ -101,7 +109,7 @@ void TurretMonster::createProjectile(glm::vec3 direction, int projId)
 		return;
 
 	Transform* projectileTransform = new Transform(monsterPos + glm::vec3(0, 0, this->getTransform()->getPosition().z), 35, glm::vec3(1, 0, 0), glm::vec3(3, 3, 3));
-	Projectile* entityD = new Projectile(projectileTransform, projectileMesh, projectileTexture, direction, ProjectileType::MONSTER_ATTACK);
+	Projectile* entityD = new Projectile(projectileTransform, projectileMesh, projectileTexture, direction, ProjectileType::MONSTER_ATTACK, this->getId());
 	entityD->setSpeed(TURRET_MONSTER_PROJECTILE_SPEED);
 	entityD->setDistance(TURRET_MONSTER_PROJECTILE_RANGE);
 	entityD->setPower(this->getTotalAttack());
@@ -109,4 +117,16 @@ void TurretMonster::createProjectile(glm::vec3 direction, int projId)
 	projectiles.push_back(entityD);
 
 	this->attackSound->play();
+}
+
+void TurretMonster::destroyProjectile(int projId)
+{
+	for (unsigned int i = 0; i < this->projectiles.size(); i++)
+	{
+		if ((this->projectiles)[i]->getId() == projId)
+		{
+			delete (this->projectiles)[i];
+			this->projectiles.erase(this->projectiles.begin() + i);
+		}
+	}
 }

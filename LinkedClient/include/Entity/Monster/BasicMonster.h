@@ -22,7 +22,7 @@ public:
 	virtual void update(Map* map, Player* player);
 	virtual void render(Shader* shader);
 	virtual void startOnlineMovement(glm::vec3 position);
-	virtual void action(glm::vec3 vector);
+	virtual void action(int actionId, int xid, glm::vec3 vector);
 
 	/* COPY */
 	virtual Monster* getCopy(Monster* copy);

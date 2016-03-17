@@ -12,8 +12,8 @@
 #include "LinkSkill.h"
 
 #define PLAYER_INITIAL_POSITION glm::vec3(133, 600, 2.5f)
-#define PLAYER_MAXHP_BASIS 1000
-#define PLAYER_HP_BASIS 1000
+#define PLAYER_MAXHP_BASIS 10000
+#define PLAYER_HP_BASIS 10000
 #define PLAYER_NAME "New Player"
 #define PLAYER_ATTACK_BASIS 50
 #define PLAYER_ASPD_BASIS 20

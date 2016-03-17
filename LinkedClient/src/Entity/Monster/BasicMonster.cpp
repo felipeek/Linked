@@ -68,7 +68,7 @@ void BasicMonster::startOnlineMovement(glm::vec3 position)
 	this->directedMovement = this->ai->getMovementDefinitionOfDestination(position, true);
 }
 
-void BasicMonster::action(glm::vec3 vector)
+void BasicMonster::action(int actionId, int xid, glm::vec3 vector)
 {
 }
 

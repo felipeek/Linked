@@ -17,7 +17,7 @@ enum class ProjectileType
 class Projectile : public Entity
 {
 public:
-	Projectile(Transform* transform, Mesh* mesh, Texture* texture, glm::vec3 direction, ProjectileType type);
+	Projectile(Transform* transform, Mesh* mesh, Texture* texture, glm::vec3 direction, ProjectileType type, long ownerId);
 	~Projectile();
 
 	int getId();
@@ -39,6 +39,7 @@ private:
 	bool dead;
 	float distance;
 	unsigned int power;
+	long ownerId;
 
 	bool monsterCollision(std::vector<Monster*>* monsters, int* hitMonsterIndex);
 	bool doesProjectileCollidedWithEntity(glm::vec3 entityPosition, float entitySize);

@@ -147,6 +147,7 @@
     <ClCompile Include="src\Game\Projectile.cpp" />
     <ClCompile Include="src\Game\Skill\HoshoyoExplosionSkill.cpp" />
     <ClCompile Include="src\Game\Skill\Skill.cpp" />
+    <ClCompile Include="src\Game\TurretMonster.cpp" />
     <ClCompile Include="src\Game\WorldObject.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Map\Map.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="include\Game\Projectile.h" />
     <ClInclude Include="include\Game\Skill\HoshoyoExplosionSkill.h" />
     <ClInclude Include="include\Game\Skill\Skill.h" />
+    <ClInclude Include="include\Game\TurretMonster.h" />
     <ClInclude Include="include\Game\WorldObject.h" />
     <ClInclude Include="include\Map\Map.h" />
     <ClInclude Include="include\Map\MapEntity.h" />

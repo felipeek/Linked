@@ -1,8 +1,10 @@
 #pragma once
 #include "AI.h"
+#include <vector>
 
 class Monster;
 class Map;
+class Player;
 
 #define RANDOM_KEEP_MOVING_FACTOR 10.0f
 #define DIRECTED_KEEP_MOVING_FACTOR 1.5f
@@ -24,6 +26,7 @@ public:
 	bool shouldStandStill() const;
 	void resetStandStill();
 	glm::vec3 getNextStep(glm::vec3 destination) const;
+	Player* findClosestWorldObjectToAttack(Map* map, std::vector<Player*>* players);
 private:
 	double standStillTime = 0;
 };
