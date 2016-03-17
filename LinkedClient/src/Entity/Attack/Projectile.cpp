@@ -6,7 +6,7 @@
 #include "PacketController.h"
 #include "Player.h"
 
-Projectile::Projectile(Transform* transform, Mesh* mesh, Texture* texture, glm::vec3 direction, ProjectileType type) : Entity(transform, mesh, texture)
+Projectile::Projectile(Transform* transform, Mesh* mesh, Texture* texture, glm::vec3 direction, ProjectileType type, long ownerId) : Entity(transform, mesh, texture)
 {
 	this->originalPosition = transform->getPosition();
 	this->direction = glm::normalize(direction);
@@ -16,6 +16,7 @@ Projectile::Projectile(Transform* transform, Mesh* mesh, Texture* texture, glm::
 	this->distance = 1;
 	this->speed = 1;
 	this->power = 10;
+	this->ownerId = ownerId;
 }
 
 Projectile::~Projectile()
@@ -95,8 +96,13 @@ void Projectile::update(Map* map, std::vector<Monster*>* monsters, Player* local
 		// TODO : projetil na parede
 		if (localPlayer->isAlive() && this->doesProjectileCollidedWithEntity(playerPos, playerSize))
 		{
-			localPlayer->doDamage((unsigned int)ceil(this->power / (localPlayer->getTotalDefense() / 10.0f)));
+			int damageOnPlayer = (unsigned int)ceil(this->power / (localPlayer->getTotalDefense() / 10.0f));
+
+			if (Game::multiplayer)
+				PacketController::sendMonsterAttackCollisionToServer(ownerId, this->id, damageOnPlayer);
+
 			this->dead = true;
+			localPlayer->doDamage(damageOnPlayer);
 		}
 	}
 

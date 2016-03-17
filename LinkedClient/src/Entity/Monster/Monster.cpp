@@ -293,7 +293,7 @@ void Monster::attackCreature(Creature* creature)
 	this->attack();
 }
 
-void Monster::action(glm::vec3 vector)
+void Monster::action(int actionId, int xid, glm::vec3 vector)
 {
 }
 

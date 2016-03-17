@@ -197,6 +197,29 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 			}
 		}
 		break;
+	// MONSTER ATTACK HIT A PLAYER
+	case 11:
+		if ((dataSize % (3 * sizeof(int))) == 0)
+		{
+			int numberOfAttacks = dataSize / (3 * sizeof(int));
+
+			for (int i = 0; i < numberOfAttacks; i++)
+			{
+				int monsterId = data[3 * i];
+				int projectileToBeDestroyed = data[3 * i + 1];
+				int attack = data[3 * i + 2];
+
+				Player* hurtPlayer = PacketController::getPlayerOfClient(xid);
+				Monster* monster = PacketController::game->getMonsterOfId(monsterId);
+
+				if (hurtPlayer != NULL)
+					hurtPlayer->doDamage(attack);
+
+				if (projectileToBeDestroyed != -1 && monster != NULL)
+					monster->action(1, projectileToBeDestroyed, glm::vec3(0, 0, 0));
+			}
+		}
+		break;
 	}
 }
 void PacketController::dispatchFloatArray(int id, int xid, float* data, int dataSize)
@@ -238,14 +261,26 @@ void PacketController::dispatchVec4fArray(int id, int xid, glm::vec4* data, int 
 {
 	switch (id)
 	{
-	// CREATE NEW PROJECTILE (ATTACK)
-	case 3:
-		Player* player = PacketController::getPlayerOfClient(xid);
-		if (player != NULL && dataSize == sizeof(glm::vec4))
+		// CREATE NEW PROJECTILE (ATTACK)
+		case 3:
 		{
-			player->getRangeAttack()->createProjectile(glm::vec3(data[0].x, data[0].y, data[0].z), (int)data[0].w);
+			Player* player = PacketController::getPlayerOfClient(xid);
+			if (player != NULL && dataSize == sizeof(glm::vec4))
+			{
+				player->getRangeAttack()->createProjectile(glm::vec3(data[0].x, data[0].y, data[0].z), (int)data[0].w);
+			}
+			break;
 		}
-		break;
+		// TURRET MONSTER CREATED A PROJECTILE (ATTACK)
+		case 10:
+		{
+			Monster* monster = PacketController::game->getMonsterOfId(xid);
+			if (monster != NULL && dataSize == sizeof(glm::vec4))
+			{
+				monster->action(0, (int)data[0].w, glm::vec3(data[0].x, data[0].y, data[0].z));
+			}
+			break;
+		}
 	}
 }
 void PacketController::dispatchVec3fArray(int id, int xid, glm::vec3* data, int dataSize)
@@ -362,6 +397,19 @@ void PacketController::sendAttackCollisionToServer(int monsterId, int attackId, 
 	attackCollisionInformation[2] = damage;
 
 	udpClient->sendPackets(Packet(attackCollisionInformation, 3, 2, UDPClient::myID));
+}
+
+void PacketController::sendMonsterAttackCollisionToServer(int monsterId, int attackId, int damage)
+{
+#if SHOW_PACKETS_LOG
+	LOG("PACKET SENT TO SERVER: Enemy Projectile Hit Player");
+#endif
+	int attackCollisionInformation[3];
+	attackCollisionInformation[0] = monsterId;
+	attackCollisionInformation[1] = attackId;
+	attackCollisionInformation[2] = damage;
+
+	udpClient->sendPackets(Packet(attackCollisionInformation, 3, 11, UDPClient::myID));
 }
 
 void PacketController::sendSkillToServer(SkillSlot slot, MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId)

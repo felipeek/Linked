@@ -2,6 +2,7 @@
 #include "Map.h"
 #include "Monster.h"
 #include "LinkedTime.h"
+#include "Player.h"
 
 MonsterAI::MonsterAI(Monster& aiOwner) : AI(aiOwner)
 {
@@ -177,4 +178,39 @@ glm::vec3 MonsterAI::getNextStep(glm::vec3 destination) const
 	}
 	else
 		return destination;
+}
+
+Player* MonsterAI::findClosestWorldObjectToAttack(Map* map, std::vector<Player*>* worldObjects)
+{
+	Player* closestWorldObject = nullptr;
+	float closestDistance = -1;
+	bool findPathWithoutCollisions = false;
+
+	for (Player* worldObject : (*worldObjects))
+	{
+		if (worldObject->isAlive())
+		{
+			glm::vec3 worldObjectPosition = worldObject->getPosition();
+			float currentDistance = glm::length(worldObjectPosition - this->getAiOwner().getPosition());
+
+			if (!findPathWithoutCollisions && (closestWorldObject == nullptr || (closestDistance != -1 && closestDistance > currentDistance)))
+			{
+				closestWorldObject = worldObject;
+				closestDistance = currentDistance;
+			}
+
+			if (this->isPathFreeOfCollisions(map, worldObjectPosition))
+			{
+				findPathWithoutCollisions = true;
+
+				if (closestWorldObject == nullptr || (closestDistance != -1 && closestDistance > currentDistance))
+				{
+					closestWorldObject = worldObject;
+					closestDistance = currentDistance;
+				}
+			}
+		}
+	}
+
+	return closestWorldObject;
 }

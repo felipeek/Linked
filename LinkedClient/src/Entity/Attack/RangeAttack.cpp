@@ -44,7 +44,7 @@ void RangeAttack::createProjectile(glm::vec3 direction, int projId)
 		return;
 
 	Transform* projectileTransform = new Transform(playerPos + glm::vec3(0, 0, playerPos.z), 35, glm::vec3(1, 0, 0), glm::vec3(3, 3, 3));
-	Projectile* entityD = new Projectile(projectileTransform, mesh, texture, direction, ProjectileType::PLAYER_ATTACK);
+	Projectile* entityD = new Projectile(projectileTransform, mesh, texture, direction, ProjectileType::PLAYER_ATTACK, this->player->getClientId());
 	entityD->setSpeed(PLAYER_PROJECTILE_SPEED);
 	entityD->setDistance(PLAYER_PROJECTILE_DISTANCE);
 	entityD->setPower(this->player->getTotalAttack());

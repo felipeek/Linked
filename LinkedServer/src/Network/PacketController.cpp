@@ -143,6 +143,27 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 					udpServer->sendPackets(Packet(data, 3, 4, xid), (*udpServer->getClients())[i]->netInfo);
 		}
 		break;
+	// MONSTER ATTACK COLLISION
+	case 11:
+		if (dataSize == 3 * sizeof(int))
+		{
+			int monsterId = data[0];
+			int projectileToBeDestroyed = data[1];
+			int attack = data[2];
+
+			//std::cout << "Projectile " << projectileToBeDestroyed << " hit a monster. It will be destroyed." << std::endl;
+
+			Player* hurtPlayer = PacketController::getPlayerOfClient(xid);
+			if (hurtPlayer != NULL)
+				hurtPlayer->doDamage(attack);
+
+			//PacketController::game->destroyProjectileOfId(projectileToBeDestroyed);
+
+			for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
+				if ((*udpServer->getClients())[i]->id != xid || projectileToBeDestroyed == -1)
+					udpServer->sendPackets(Packet(data, 3, 11, xid), (*udpServer->getClients())[i]->netInfo);
+		}
+		break;
 	}
 }
 void PacketController::dispatchFloatArray(int id, int xid, float* data, int dataSize)
@@ -633,6 +654,18 @@ void PacketController::updateMonsterDamages(int vectorIndex, int quantity, std::
 
 	for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
 		udpServer->sendPackets(Packet(monsterDamages, quantity, 4, 0), (*udpServer->getClients())[i]->netInfo);
+}
+
+void PacketController::sendProjectileAttackByTurretMonster(int monsterId, Projectile* projectile)
+{
+	glm::vec4 info;
+	info.x = projectile->getDirection().x;
+	info.y = projectile->getDirection().y;
+	info.z = projectile->getDirection().z;
+	info.w = projectile->getId();
+
+	for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
+		udpServer->sendPackets(Packet(info, 10, monsterId), (*udpServer->getClients())[i]->netInfo);
 }
 
 void PacketController::dispatchMsg(int id, int xid, char* data, int senderID)
