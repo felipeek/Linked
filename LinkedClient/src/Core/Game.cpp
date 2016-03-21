@@ -270,8 +270,9 @@ void Game::createGUI()
 
 void Game::initializateThemeAudio()
 {
+	Audio::setMusicVolume(MUSIC_VOLUME);
+	Audio::setSoundVolume(EFFECT_VOLUME);
 	this->themeAudio = new Audio(THEME_AUDIO_PATH, AudioType::MUSIC);
-	this->themeAudio->setVolume(THEME_AUDIO_VOLUME);
 	this->themeAudio->setLoop(true);
 	this->themeAudio->play();
 }
