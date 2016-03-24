@@ -17,10 +17,12 @@ DistanceMonster::~DistanceMonster()
 void DistanceMonster::attackCreature(Creature* creature)
 {
 	TurretMonster::tryToCreateProjectile((Player*)creature);
+	this->attack();
 }
 
 void DistanceMonster::update(Map* map, Player* player)
 {
+	Monster::update(map, player);
 	BasicMonster::updateMovement(map, player);
 	TurretMonster::updateProjectiles(map, player);
 	BasicMonster::refreshTextureIfNecessary();
