@@ -1,5 +1,6 @@
 #include "ContextWindow.h"
 #include "WindowInput.h"
+#include "Window.h"
 
 #include <GL/glew.h>
 #include "../resource.h"
@@ -87,4 +88,12 @@ void ContextWindow::InitOpenGL()
 	{
 		LOG("Erro ao inicializar GLEW!");
 	}
+
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glEnable(GL_DEPTH_TEST);
+
+	glEnable(GL_CULL_FACE);
+	glFrontFace(GL_CCW);
+
+	linked::Window::linkedWindowInit();
 }

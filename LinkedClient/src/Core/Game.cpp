@@ -390,7 +390,7 @@ void Game::render()
 	// Render GUI and Cursor (Order is important)
 	bool wire = Mesh::wireframe;
 	Mesh::wireframe = false;
-	gui->render();
+	//gui->render();
 	cursor->renderCursor(skillShader);
 	Mesh::wireframe = wire;
 }
@@ -554,10 +554,10 @@ void Game::update()
 	}
 
 	// GUI update
-	gui->update();
+	//gui->update();
 	
 	// Cursor update
-	cursor->update();
+	//cursor->update();
 }
 
 void Game::input()

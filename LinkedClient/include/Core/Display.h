@@ -4,8 +4,8 @@
 
 #include <string>
 
+/*
 class Game;
-
 class Display
 {
 public:
@@ -55,3 +55,4 @@ public:
 	static const glm::vec2& getCursorPosition(){ return s_CursorPosition; }
 };
 
+*/

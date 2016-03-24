@@ -1,5 +1,5 @@
 #include "Menu.h"
-#include "Display.h"
+#include "ContextWindow.h"
 #include "Chat.h"
 #include "Game.h"
 #include <vector>
@@ -92,8 +92,8 @@ void Menu::createMenu()
 {
 	if (menu == nullptr)
 	{
-		const float menuWidth = Display::getCurrentInstance().getWidth();
-		const float menuHeight = Display::getCurrentInstance().getHeight();
+		const float menuWidth = ContextWindow::getCurrent().getWidth();
+		const float menuHeight = ContextWindow::getCurrent().getHeight();
 
 		// Menu Window
 		menu = new linked::Window(menuWidth, menuHeight, glm::vec2(0, 0), glm::vec4(0.043, 0.045f, 0.05f, 1), nullptr, 0, linked::W_BORDER);
@@ -139,8 +139,8 @@ void Menu::createServerIpMenu()
 	// None of the labels are initially focused
 	m_focusedLabel = F_NONE;
 
-	const float menuWidth = Display::getCurrentInstance().getWidth() / 2.0f;
-	const float menuHeight = Display::getCurrentInstance().getHeight() / 2.0f;
+	const float menuWidth = ContextWindow::getCurrent().getWidth() / 2.0f;
+	const float menuHeight = ContextWindow::getCurrent().getHeight() / 2.0f;
 	// Menu Window
 	serverIpMenu = new linked::Window(500, 200, glm::vec2(menuWidth - 250, menuHeight - 100), glm::vec4(0.043, 0.045f, 0.05f, 0.95f), (unsigned char*)serverIpString.c_str(), serverIpString.size() + 1, 
 		linked::W_BORDER | linked::W_MOVABLE | linked::W_HEADER);
@@ -214,7 +214,7 @@ void Menu::singlePlayer()
 
 void Menu::startSinglePlayer()
 {
-	Display::startGame();
+	ContextWindow::startGame();
 	stateMenu = NORMAL_INACTIVE;
 }
 
@@ -243,7 +243,7 @@ void Menu::startMultiplayer()
 		Game::server_port = std::stoi(defaultPort);
 	}
 
-	Display::startGame();
+	ContextWindow::startGame();
 	stateMenu = NORMAL_INACTIVE;
 }
 
@@ -254,7 +254,7 @@ void Menu::cancelMultiplayer()
 
 void Menu::exitGame()
 {
-	Display::exitGame();
+	ContextWindow::exitGame();
 }
 
 void Menu::focusIpLabel()

@@ -1,5 +1,6 @@
 #include "Label.h"
 #include "WindowDiv.h"
+#include "ContextWindow.h"
 
 namespace linked
 {
@@ -65,7 +66,7 @@ namespace linked
 		if (defaultLineSpace)
 			yOffsetValue = yRenderOffset.y - renderPosition.y;
 		else
-			yOffsetValue = (lineSpace / (Display::getCurrentInstance().getHeight() / 2.0f));
+			yOffsetValue = (lineSpace / (ContextWindow::getCurrent().getHeight() / 2.0f));
 
 		// Calculate the right limit of the div
 		float rightLimit = m_div.getDivBasePosition((float)m_div.getWidth() - m_margin, 0).x;

@@ -2,6 +2,7 @@
 #include "MouseAttack.h"
 
 #define KEYSTATES 512
+#include <glm/glm.hpp>
 
 class Input
 {
@@ -11,6 +12,9 @@ public:
 	static bool leftMouseButton;
 	static MouseAttack mouseAttack;
 	static int wheel;
+	static bool mouseDown;
+	static glm::vec2 mousePos;
+	inline static glm::vec2& GetMousePos() { return mousePos; }
 
 	static void clear();
 };

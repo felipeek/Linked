@@ -1,5 +1,6 @@
 #pragma once
 #include "Common.h"
+#include <glm/glm.hpp>
 
 #include <windows.h>
 #include <windowsx.h>
@@ -39,5 +40,9 @@ public:	// Getters and Setters
 	inline static const ContextWindow& getCurrent() { return *current; }
 	inline int getWidth() const { return m_width; }
 	inline int getHeight() const { return m_height; }
+	glm::vec2& getCursorPosition() const { return glm::vec2(0, 0); }	// TODO: implement
+	glm::vec4& getClearColor() const { return glm::vec4(0, 0, 0, 1); }	// TODO: implement
+	static void startGame() {}	// TODO: fix
+	static void exitGame() {}	// TODO: fix
 };
 

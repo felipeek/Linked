@@ -1,6 +1,7 @@
 #include "TextShader.h"
-#include "Display.h"
-#include <glm\gtc\matrix_transform.hpp>
+#include "ContextWindow.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
 
 TextShader::TextShader(std::string fileName) : Shader(fileName, NULL)
 {
@@ -21,7 +22,7 @@ void TextShader::getUniformLocations()
 
 void TextShader::update()
 {
-	glm::mat4 projection = glm::ortho(0.0f, (float)Display::getCurrentInstance().getWidth(), 0.0f, (float)Display::getCurrentInstance().getHeight());
+	glm::mat4 projection = glm::ortho(0.0f, (float)ContextWindow::getCurrent().getWidth(), 0.0f, (float)ContextWindow::getCurrent().getHeight());
 	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, &projection[0][0]);
 	glActiveTexture(GL_TEXTURE0);
 	glUniform1i(uniformText, 0);

@@ -2,10 +2,11 @@
 #include <time.h>
 
 #include "Common.h"
-#include "Display.h"
+#include "GL/glew.h"
 #include "native/ContextWindow.h"
 #include "Core/Game.h"
 #include "Core/LinkedTime.h"
+#include "Window.h"
 
 #if _MSC_VER < 1900
 // VC 2013
@@ -50,16 +51,22 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	bool running = true;
 
 	// Initialize window, OpenGL context and game
-	window = new ContextWindow(nCmdShow, hInstance, 800 * 1.5f, 450 * 1.5f, std::string("hoengine_opengl"), std::string("HoEngine"));
+	window = new ContextWindow(nCmdShow, hInstance, 800 * 1.5f, 450 * 1.5f, std::string("hoengine_opengl"), std::string("Linked - v2.0"));
 	window->InitOpenGL();
-	game = new Game();
-
+	game = new Game(window->getWidth(), window->getHeight());
 
 #if DEBUG
 	AllocConsole();
 	FILE* pCout;
 	freopen_s(&pCout, "CONOUT$", "w", stdout);
 #endif
+
+	glewExperimental = true;
+	// Start glew
+	GLenum result = glewInit();
+	if (result != GLEW_OK) {
+		std::cerr << "Erro na chamada de glewInit()" << std::endl;
+	}
 
 	// Message/Game Loop
 	const double FPS = 120.0;
@@ -100,8 +107,13 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		if (GameTime >= 1.0 / FPS)
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 			game->update();
 			game->render();
+
+			linked::Window::updateWindows();
+			linked::Window::renderWindows();
+
 			SwapBuffers(window->getHDC());
 			GameTime = GameTime - (1.0 / FPS);
 			Frames++;

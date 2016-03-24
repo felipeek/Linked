@@ -3,6 +3,7 @@
 #include "SkillIcon.h"
 #include "Chat.h"
 #include "GUIShader.h"
+#include "ContextWindow.h"
 
 #include <sstream>
 #include <iostream>
@@ -36,8 +37,8 @@ GUI::GUI(Player* player)
 
 	this->guiShader = new GUIShader("./shaders/fontshader");
 
-	currentDisplayWidth = Display::getCurrentInstance().getWidth();
-	currentDisplayHeight = Display::getCurrentInstance().getHeight();
+	currentDisplayWidth = ContextWindow::getCurrent().getWidth();
+	currentDisplayHeight = ContextWindow::getCurrent().getHeight();
 
 	initLeftGUI();
 	initLeftGUISkills();
@@ -148,7 +149,7 @@ void GUI::initLeftGUISkills()
 {
 	using namespace linked;
 
-	int displayHeight = Display::getCurrentInstance().getHeight();
+	int displayHeight = ContextWindow::getCurrent().getHeight();
 	Window* skills = new Window(200, 50, glm::vec2(10 + 300 + 10, displayHeight - 60), glm::vec4(0.76f, 0.75f, 0.8f, 0.1f), nullptr, 0, W_BORDER | W_MOVABLE);
 	skills->setBorderSizeX(1);
 	skills->setBorderSizeY(1);

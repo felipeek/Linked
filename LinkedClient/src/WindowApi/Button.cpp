@@ -1,5 +1,6 @@
 #include "Button.h"
 #include "WindowDiv.h"
+#include "ContextWindow.h"
 
 namespace linked
 {
@@ -108,7 +109,7 @@ namespace linked
 
 	bool Button::isHovered() const
 	{
-		glm::vec2 cursorPosition = Display::getCurrentInstance().getCursorPosition();
+		glm::vec2 cursorPosition = ContextWindow::getCurrent().getCursorPosition();
 
 		glm::vec2 buttonPosition = getScreenPosition();
 		

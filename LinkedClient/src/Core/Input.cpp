@@ -5,6 +5,8 @@ int Input::wheel = 0;
 bool Input::attack = false;
 bool Input::leftMouseButton = false;	
 MouseAttack Input::mouseAttack;
+bool Input::mouseDown;
+glm::vec2 Input::mousePos;
 
 void Input::clear()
 {

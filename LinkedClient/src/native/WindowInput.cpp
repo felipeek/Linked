@@ -1,4 +1,5 @@
 #include "WindowInput.h"
+#include "ContextWindow.h"
 #include "Input.h"
 
 #include <GL/glew.h>
@@ -20,7 +21,7 @@ LRESULT CALLBACK WindowInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 	case WM_LBUTTONDOWN:
 		Input::mouseDown = true;
 		Input::mousePos = Input::GetMousePos();
-		SetCapture(Window::getCurrent().getHandler());
+		SetCapture(ContextWindow::getCurrent().getHandler());
 		break;
 	case WM_LBUTTONUP:
 		Input::mouseDown = false;

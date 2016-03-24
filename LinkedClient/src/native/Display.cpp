@@ -9,7 +9,7 @@
 #include "GUI.h"
 #include "Menu.h"
 #include <windows.h>
-
+/*
 // Display related
 Display* Display::s_CurrentInstance;
 const glm::vec4 Display::s_ClearColor = glm::vec4(0.49f, 0.75f, 0.93f, 1.0f);
@@ -62,6 +62,7 @@ void Display::startGlfw(Display* display, int* argc, char** argv, std::string ti
 #endif
 	initOpenGL();
 }
+*/
 /*
 void Display::MainLoop(GLFWwindow* window)
 {
@@ -117,6 +118,7 @@ void Display::MainLoop(GLFWwindow* window)
 	} while (glfwWindowShouldClose(window) == false && !shouldExit);
 }
 */
+/*
 void Display::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -268,4 +270,4 @@ const Display& Display::getCurrentInstance()
 void Display::destroyGameAndGotoMenu()
 {
 	shouldGoToMenu = true;
-}
+}*/
