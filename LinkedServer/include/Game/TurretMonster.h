@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include "Monster.h"
 
 //#define PROJECTILE_CHANCE 0.2f // in % (from 0.01f to 99.99f)
