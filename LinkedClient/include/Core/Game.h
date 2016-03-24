@@ -41,6 +41,7 @@ class Audio;
 class Game
 {
 public:
+	bool running;
 	Game();
 	Game(int windowWidth, int windowHeight);
 	~Game();

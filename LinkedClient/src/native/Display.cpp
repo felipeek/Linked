@@ -11,16 +11,11 @@
 #include <windows.h>
 
 // Display related
-Display* Display::currentInstance;
-glm::vec4 Display::clearColor = CLEARCOLOR;
-glm::vec2 Display::cursorPosition;
+Display* Display::s_CurrentInstance;
+const glm::vec4 Display::s_ClearColor = glm::vec4(0.49f, 0.75f, 0.93f, 1.0f);
+glm::vec2 Display::s_CursorPosition;
 
 // Window and Monitor
-GLFWwindow* Display::window = nullptr;
-GLFWmonitor* Display::monitor = nullptr;
-int Display::monitorWidth = 0;
-int Display::monitorHeight = 0;
-int Display::windowHandle;
 
 // Game
 Game* Display::game = nullptr;
@@ -38,11 +33,10 @@ double Display::frameCount = 0;
 double Display::update10Time = 0;
 int Display::frames = 0;
 
-Display::Display(int* argc, char** argv, std::string name, int width, int height)
+Display::Display(std::string& name, int width, int height)
 	: m_width(width), m_height(height)
 {
-	currentInstance = this;
-	startGlfw(this, argc, argv, name);
+	s_CurrentInstance = this;
 }
 
 Display::~Display()
@@ -51,75 +45,24 @@ Display::~Display()
 		delete game;
 
 	linked::Window::linkedWindowDestroy();
-	glfwDestroyWindow(window);
-	glfwTerminate();
 }
 
 void Display::startGlfw(Display* display, int* argc, char** argv, std::string titulo)
 {
-	if (glfwInit() == GL_FALSE)
-	{
-		std::cerr << "Error initializing glfw!" << std::endl;
-		return;
-	}
+	// Setup OpenGL context
 
-	glfwWindowHint(GLFW_SAMPLES, 4);
-	//glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_CORE_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	window = glfwCreateWindow(Display::getCurrentInstance().getWidth(), Display::getCurrentInstance().getHeight(), titulo.c_str(), NULL, NULL);
-
-	if (!window)
-	{
-		std::cerr << "Error creating the window!" << std::endl;
-		glfwTerminate();
-		return;
-	}
-
-	// Get monitor size
-	getSystemInfo();
-
-	// Set window starting position
-	glfwSetWindowPos(window, WINDOW_START_X, WINDOW_START_Y);
-
-	glfwMakeContextCurrent(window);
-
-	windowHandle = (int)GetActiveWindow();
-
-	// Disable vsync
-	//glfwSwapInterval(0);
-
-	// Set callbacks for input
-	glfwSetKeyCallback(window, keyCallBack);
-	glfwSetMouseButtonCallback(window, mouseCallBack);
-	glfwSetScrollCallback(window, wheelCallBack);
-	glfwSetCursorPosCallback(window, mousePosCallBack);
-	glfwSetWindowFocusCallback(window, focusedCallBack);
-	glfwSetWindowSizeCallback(window, resizeCallback);
-
-	// TODO : check if needed
 	glewExperimental = true;
-	
-#ifdef DEBUG
-	if (glewExperimental)
-		std::cout << "Using glew experimental." << std::endl;
-#endif
-
 	// Start glew
 	GLenum result = glewInit();
 	if (result != GLEW_OK) {
 		std::cerr << "Erro na chamada de glewInit()" << std::endl;
 	}
 #ifdef DEBUG
-	printOpenGLandGLSLversions();
+	PrintOpenGLVersion();
 #endif
 	initOpenGL();
-
-	MainLoop(window);
 }
-
+/*
 void Display::MainLoop(GLFWwindow* window)
 {
 	do{
@@ -173,7 +116,7 @@ void Display::MainLoop(GLFWwindow* window)
 		}
 	} while (glfwWindowShouldClose(window) == false && !shouldExit);
 }
-
+*/
 void Display::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -183,12 +126,12 @@ void Display::render()
 	linked::Window::updateWindows();
 	linked::Window::renderWindows();
 
-	glfwSwapBuffers(window);
+	//glfwSwapBuffers(window);
 }
 
 void Display::initOpenGL()
 {
-	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+	glClearColor(s_ClearColor.r, s_ClearColor.g, s_ClearColor.b, s_ClearColor.a);
 	glEnable(GL_DEPTH_TEST);
 
 	glEnable(GL_CULL_FACE);
@@ -208,8 +151,6 @@ void Display::startGame()
 		gameIsInitialized = true;
 		game = new Game(Display::getCurrentInstance().getWidth(), Display::getCurrentInstance().getHeight());
 	}
-	// Hide cursor
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	timeSinceLastUpdate = LinkedTime::getTime();		// Ignores time spent to instantiate game (fixed speed up when starting)
 }
 
@@ -218,15 +159,7 @@ void Display::exitGame()
 	shouldExit = true;
 }
 
-void Display::getSystemInfo()
-{
-	monitor = glfwGetPrimaryMonitor();
-	GLFWvidmode* mode = (GLFWvidmode*)glfwGetVideoMode(monitor);
-	monitorWidth = mode->width;
-	monitorHeight = mode->height;
-}
-
-void Display::printOpenGLandGLSLversions()
+void Display::PrintOpenGLVersion()
 {
 	std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl << "GLSL " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 }
