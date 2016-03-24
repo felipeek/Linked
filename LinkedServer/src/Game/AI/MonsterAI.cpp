@@ -188,7 +188,7 @@ Player* MonsterAI::findClosestWorldObjectToAttack(Map* map, std::vector<Player*>
 
 	for (Player* worldObject : (*worldObjects))
 	{
-		if (worldObject->isAlive())
+		if (worldObject->isAlive() && this->isOnRangeToChaseTarget(worldObject->getPosition()))
 		{
 			glm::vec3 worldObjectPosition = worldObject->getPosition();
 			float currentDistance = glm::length(worldObjectPosition - this->getAiOwner().getPosition());

@@ -2,7 +2,7 @@
 #include "Monster.h"
 #include "Movement.h"
 
-class BasicMonster : public Monster
+class BasicMonster : public virtual Monster
 {
 public:
 	BasicMonster();
@@ -17,9 +17,12 @@ public:
 	virtual bool mustUpdateDestinationToClients();
 	virtual glm::vec3 getDestination();
 
+protected:
+	void updateMovement(Map* map, std::vector<Player*>* players);
+
 private:
 	void moveToAttackPlayer(Map* map, Player* player);
-	void moveRandomly(Map* map, Player* player);
+	void moveRandomly(Map* map);
 
 	bool movingRandomly = false;
 	bool movingToAttackPlayer = false;

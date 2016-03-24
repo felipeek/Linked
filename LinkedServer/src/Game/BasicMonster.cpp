@@ -16,41 +16,47 @@ BasicMonster::~BasicMonster()
 
 void BasicMonster::update(Map* map, std::vector<Player*>* players)
 {
-	glm::vec3 currentPosition = this->getPosition();
 	Monster::update(map, players);
+	this->updateMovement(map, players);
+}
+
+void BasicMonster::updateMovement(Map* map, std::vector<Player*>* players)
+{
+	glm::vec3 currentPosition = this->getPosition();
 	Player* player = this->ai->findClosestWorldObjectToAttack(map, players);
 
-	if (player != nullptr)
-	{
-		double now = LinkedTime::getTime();
+	double now = LinkedTime::getTime();
 
-		if (this->isAlive())
+	if (this->isAlive())
+	{
+		if (player != nullptr && player->isAlive() && this->ai->isOnRangeToAttack(player->getPosition()))
 		{
-			if (this->ai->isOnRangeToAttack(player->getPosition()) && player->isAlive())
-			{
-				if (!this->isAttacking()) this->attackCreature(player);
-				this->stop(); // For Texture Management
-			}
-			else if (this->isAttacking() || this->isReceivingDamage())
-			{
-				this->stop();
-			}
-			else if (this->ai->isOnRangeToChaseTarget(player->getPosition()) && this->ai->isPathFreeOfCollisions(map, player->getPosition()) && player->isAlive())
-			{
-				this->moveToAttackPlayer(map, player);
-				this->movingRandomly = false;
-				this->move(this->directedMovement.direction); // For Texture Management
-			}
-			else if (!this->ai->shouldStandStill())
-			{
-				this->moveRandomly(map, player);
-				this->movingToAttackPlayer = false;
-				this->move(this->directedMovement.direction); // For Texture Management
-			}
-			else
-			{
-				this->stop(); // For Texture Management
-			}
+			if (!this->isAttacking()) this->attackCreature(player);
+			this->stop(); // For Texture Management
+		}
+		else if (this->isAttacking())
+		{
+			this->stop();
+		}
+		else if (this->isReceivingDamage())
+		{
+			this->stop();
+		}
+		else if (player != nullptr && player->isAlive())
+		{
+			this->moveToAttackPlayer(map, player);
+			this->movingRandomly = false;
+			this->move(this->directedMovement.direction); // For Texture Management
+		}
+		else if (!this->ai->shouldStandStill())
+		{
+			this->moveRandomly(map);
+			this->movingToAttackPlayer = false;
+			this->move(this->directedMovement.direction); // For Texture Management
+		}
+		else
+		{
+			this->stop(); // For Texture Management
 		}
 	}
 }
@@ -97,7 +103,7 @@ void BasicMonster::moveToAttackPlayer(Map* map, Player* player)
 	}
 }
 
-void BasicMonster::moveRandomly(Map* map, Player* player)
+void BasicMonster::moveRandomly(Map* map)
 {
 	glm::vec3 newMonsterPosition = this->ai->getNextStep(this->directedMovement.movement);
 

@@ -77,7 +77,7 @@ public:
 
 	/* COMBAT */
 	void doDamage(unsigned int damage);
-	void attackCreature(Creature* creature);
+	virtual void attackCreature(Creature* creature);
 
 	/* UPDATE & RENDER */
 	virtual void update(Map* map, std::vector<Player*>* players);

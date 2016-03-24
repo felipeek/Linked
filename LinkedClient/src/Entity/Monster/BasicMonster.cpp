@@ -37,10 +37,14 @@ void BasicMonster::updateMovement(Map* map, Player* player)
 				this->stop(); // For Texture Management
 				this->forceMonsterToLookAtPlayer(player->getTransform()->getPosition());
 			}
-			else if (this->isAttacking() || this->isReceivingDamage())
+			else if (this->isAttacking())
 			{
 				this->stop();
 				this->forceMonsterToLookAtPlayer(player->getTransform()->getPosition());
+			}
+			else if (this->isReceivingDamage())
+			{
+				this->stop();
 			}
 			else if (this->ai->isOnRangeToChaseTarget(player->getTransform()->getPosition()) && this->ai->isPathFreeOfCollisions(map, player->getTransform()->getPosition()) && player->isAlive())
 			{
@@ -50,7 +54,7 @@ void BasicMonster::updateMovement(Map* map, Player* player)
 			}
 			else if (!this->ai->shouldStandStill())
 			{
-				this->moveRandomly(map, player);
+				this->moveRandomly(map);
 				this->movingToAttackPlayer = false;
 				this->move(this->directedMovement.direction); // For Texture Management
 			}
