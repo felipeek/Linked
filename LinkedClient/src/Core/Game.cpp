@@ -60,7 +60,6 @@ Game::Game(int windowWidth, int windowHeight)
 	: windowWidth(windowWidth), windowHeight(windowHeight)
 {	
 	PacketController::game = this;
-
 	this->createGraphicElements(windowWidth, windowHeight);
 	this->createMap();
 	
@@ -162,7 +161,7 @@ void Game::createMap()
 void Game::createOfflinePlayer()
 {
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 12, 0));
-	this->localPlayer = new Player(new Transform(glm::vec3(420, 550, PLAYER_HEIGHT), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
+	this->localPlayer = new Player(new Transform(glm::vec3(189.471f, 104.694f, PLAYER_HEIGHT), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
 	this->localPlayer->setHp(100);
 	this->localPlayer->setName("CHR de Xerath");
 	this->localPlayer->setClientId(0);
@@ -218,7 +217,7 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 
 	Player* designedPlayer = new Player(new Transform(localPlayerPosition, 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
 	
-	designedPlayer->setName("new player");
+	designedPlayer->setName("Newbie");
 	designedPlayer->setClientId(data[0]);
 
 	designedPlayer->setTotalMaximumHp(data[1]);
@@ -283,10 +282,10 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 
 	// TODO: delete EntityMap transform and textures
 	this->entityMap = new EntityMap(new Transform(), mapMesh,
-		new Texture("./res/Maps/stonePath.png"),
-		new Texture("./res/Maps/mountain.jpg"),
+		new Texture("./res/Maps/snow.jpg"),
+		new Texture("./res/Maps/ice_mountain.jpg"),
 		new Texture("./res/Maps/water.jpg"),
-		new Texture("./res/Maps/grassTex.png"),
+		new Texture("./res/Maps/mudpath.jpg"),
 		new Texture(TERRAIN_MAP_PATH));
 	entityMap->setShadowTexture(frameBuffer->getTexture());
 
@@ -294,7 +293,7 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 	Mesh* waterMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), (float)MAP_SIZE, (float)MAP_SIZE));
 	Texture* waterTexture = new Texture("./res/Maps/water.jpg");
 	waterTexture->setTileAmount(100);
-	water = new Entity(new Transform(glm::vec3(0,0,-0.3f)), waterMesh, waterTexture);
+	water = new Entity(new Transform(glm::vec3(0,0,-1.0f)), waterMesh, waterTexture);
 
 
 	// TODO: verify allocation in a loop ( if causes performance overhead )

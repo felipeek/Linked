@@ -11,13 +11,13 @@
 #include "SwapSkill.h"
 #include "LinkSkill.h"
 
-#define PLAYER_INITIAL_POSITION glm::vec3(133, 600, 2.5f)
-#define PLAYER_MAXHP_BASIS 10000
-#define PLAYER_HP_BASIS 10000
-#define PLAYER_NAME "New Player"
-#define PLAYER_ATTACK_BASIS 50
+#define PLAYER_INITIAL_POSITION glm::vec3(189.471f, 104.694f, 2.5f)
+#define PLAYER_MAXHP_BASIS 500
+#define PLAYER_HP_BASIS 500
+#define PLAYER_NAME "Newbie"
+#define PLAYER_ATTACK_BASIS 100
 #define PLAYER_ASPD_BASIS 20
-#define PLAYER_DEFENSE_BASIS 20
+#define PLAYER_DEFENSE_BASIS 50
 #define PLAYER_MAGICAL_POWER_BASIS 30
 #define PLAYER_SPEED_BASIS 35
 
@@ -47,9 +47,9 @@ Game::~Game()
 
 void Game::createMap()
 {
-	std::string mapPath = "./res/Maps/teste.png";
-	std::string monsterMapPath = "./res/Maps/monsters23.png";
-	std::string gameEntitiesMapPath = "./res/Maps/entities2.png";
+	std::string mapPath = "./res/Maps/terrain_map.png";
+	std::string monsterMapPath = "./res/Maps/monsters_map.png";
+	std::string gameEntitiesMapPath = "./res/Maps/entities_map.png";
 	this->monsterFactory = new MonsterFactory();
 	this->gameEntityFactory = new GameEntityFactory();
 	this->map = new Map(mapPath, gameEntitiesMapPath, monsterMapPath, 3, monsterFactory, gameEntityFactory);
