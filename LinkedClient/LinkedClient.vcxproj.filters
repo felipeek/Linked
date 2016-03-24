@@ -78,6 +78,7 @@
     <ClCompile Include="src\Entity\Monster\TurretMonster.cpp" />
     <ClCompile Include="src\GUI\Menu.cpp" />
     <ClCompile Include="src\Core\Audio.cpp" />
+    <ClCompile Include="src\Entity\Monster\DistanceMonster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Entity\AI\AI.h" />
@@ -165,5 +166,6 @@
     <ClInclude Include="include\Audio.h" />
     <ClInclude Include="include\AudioController.h" />
     <ClInclude Include="include\Core\Audio.h" />
+    <ClInclude Include="include\Entity\Monster\DistanceMonster.h" />
   </ItemGroup>
 </Project>

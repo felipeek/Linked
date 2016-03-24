@@ -158,6 +158,7 @@
     <ClCompile Include="include\external\freetypegl\texture-font.c" />
     <ClCompile Include="include\external\freetypegl\vector.c" />
     <ClCompile Include="src\Core\Audio.cpp" />
+    <ClCompile Include="src\Entity\Monster\DistanceMonster.cpp" />
     <ClCompile Include="src\GUI\Menu.cpp" />
     <ClCompile Include="src\Entity\AI\AI.cpp" />
     <ClCompile Include="src\Entity\Monster\BasicMonster.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="include\Entity\AI\AI.h" />
     <ClInclude Include="include\Entity\Monster\BasicMonster.h" />
     <ClInclude Include="include\Common.h" />
+    <ClInclude Include="include\Entity\Monster\DistanceMonster.h" />
     <ClInclude Include="include\Entity\Skill\CureBlessingSkill.h" />
     <ClInclude Include="include\Entity\Cursor.h" />
     <ClInclude Include="include\Core\Display.h" />

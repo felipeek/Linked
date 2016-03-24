@@ -13,7 +13,7 @@ enum class BasicMonsterActiveTexture
 	STANDING
 };
 
-class BasicMonster : public Monster
+class BasicMonster : virtual public Monster
 {
 public:
 	BasicMonster(Transform* transform, Mesh* mesh, Texture* texture);
@@ -26,22 +26,27 @@ public:
 
 	/* COPY */
 	virtual Monster* getCopy(Monster* copy);
-private:
-	void moveToAttackPlayer(Map* map, Player* player);
-	void moveRandomly(Map* map, Player* player);
-	void moveOnline(Map* map);
-
-	/* TEXTURE */
+protected:
 	void refreshTextureIfNecessary();
-	void animateActiveTexture();
+	void updateMovement(Map* map, Player* player);
+
+private:
 	double lastTimeTextureWasRefreshed;
 	BasicMonsterActiveTexture activeTexture;
 	MovementDirection activeTextureDirection;
 	int timeStopped = 0;
-	bool isIntegerOnRange(int integer, int begin, int end);
+	void animateActiveTexture();
+
+	void moveOnline(Map* map);
+	void moveToAttackPlayer(Map* map, Player* player);
+	void moveRandomly(Map* map, Player* player);
 
 	bool movingRandomly = false;
 	bool movingToAttackPlayer = false;
 	bool movingOnline = false;
+
 	MovementDefinition directedMovement;
+
+	bool isIntegerOnRange(int integer, int begin, int end);
+	void forceMonsterToLookAtPlayer(glm::vec3 playerPosition);
 };

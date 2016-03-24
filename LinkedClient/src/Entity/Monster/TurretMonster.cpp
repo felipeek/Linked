@@ -32,6 +32,11 @@ void TurretMonster::update(Map* map, Player* player)
 	else
 		this->changeTextureIndex(1);
 
+	this->updateProjectiles(map, player);
+}
+
+void TurretMonster::updateProjectiles(Map* map, Player* player)
+{
 	for (Projectile* p : this->projectiles)
 		p->update(map, nullptr, player, true);
 

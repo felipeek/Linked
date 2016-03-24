@@ -10,7 +10,7 @@ class Projectile;
 class Player;
 class Audio;
 
-class TurretMonster : public Monster
+class TurretMonster : virtual public Monster
 {
 public:
 	TurretMonster(Transform* transform, Mesh* mesh, Texture* texture);
@@ -30,8 +30,11 @@ public:
 	// if not, it will just copy the attributes to the existing monster.
 	virtual Monster* getCopy(Monster* copy);
 
-private:
+protected:
+	void updateProjectiles(Map* map, Player* player);
 	void tryToCreateProjectile(Player* player);
+
+private:
 	std::vector<Projectile*> projectiles;
 	void createProjectile(glm::vec3 direction, int projId);
 	void destroyProjectile(int projId);

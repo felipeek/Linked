@@ -17,9 +17,14 @@ BasicMonster::~BasicMonster()
 
 void BasicMonster::update(Map* map, Player* player)
 {
-	double now = LinkedTime::getTime();
 	Monster::update(map, player);
+	this->updateMovement(map, player);
+	this->refreshTextureIfNecessary();
+}
 
+void BasicMonster::updateMovement(Map* map, Player* player)
+{
+	double now = LinkedTime::getTime();
 	if (this->isAlive())
 	{
 		if (Game::multiplayer)
@@ -30,10 +35,12 @@ void BasicMonster::update(Map* map, Player* player)
 			{
 				if (!this->isAttacking()) this->attackCreature(player);
 				this->stop(); // For Texture Management
+				this->forceMonsterToLookAtPlayer(player->getTransform()->getPosition());
 			}
 			else if (this->isAttacking() || this->isReceivingDamage())
 			{
 				this->stop();
+				this->forceMonsterToLookAtPlayer(player->getTransform()->getPosition());
 			}
 			else if (this->ai->isOnRangeToChaseTarget(player->getTransform()->getPosition()) && this->ai->isPathFreeOfCollisions(map, player->getTransform()->getPosition()) && player->isAlive())
 			{
@@ -53,8 +60,6 @@ void BasicMonster::update(Map* map, Player* player)
 			}
 		}
 	}
-
-	this->refreshTextureIfNecessary();
 }
 
 void BasicMonster::render(Shader* shader)
@@ -283,4 +288,11 @@ void BasicMonster::animateActiveTexture()
 bool BasicMonster::isIntegerOnRange(int integer, int begin, int end)
 {
 	return ((unsigned)(integer - begin) <= (end - begin)) ? true : false;
+}
+
+void BasicMonster::forceMonsterToLookAtPlayer(glm::vec3 playerPosition)
+{
+	glm::vec3 monsterPosition = this->getTransform()->getPosition();
+	glm::vec3 differenceVector = playerPosition - monsterPosition;
+	this->directedMovement.direction = this->ai->getDiagonalDirection(differenceVector);
 }
