@@ -114,7 +114,7 @@ void BasicMonster::moveToAttackPlayer(Map* map, Player* player)
 	}
 }
 
-void BasicMonster::moveRandomly(Map* map, Player* player)
+void BasicMonster::moveRandomly(Map* map)
 {
 	glm::vec3 newMonsterPosition = this->ai->getNextStep(this->directedMovement.movement);
 
