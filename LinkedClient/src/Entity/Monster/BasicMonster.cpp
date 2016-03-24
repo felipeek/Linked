@@ -54,7 +54,7 @@ void BasicMonster::updateMovement(Map* map, Player* player)
 			}
 			else if (!this->ai->shouldStandStill())
 			{
-				this->moveRandomly(map, player);
+				this->moveRandomly(map);
 				this->movingToAttackPlayer = false;
 				this->move(this->directedMovement.direction); // For Texture Management
 			}
