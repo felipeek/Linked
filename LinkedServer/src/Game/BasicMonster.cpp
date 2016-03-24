@@ -16,8 +16,13 @@ BasicMonster::~BasicMonster()
 
 void BasicMonster::update(Map* map, std::vector<Player*>* players)
 {
-	glm::vec3 currentPosition = this->getPosition();
 	Monster::update(map, players);
+	this->updateMovement(map, players);
+}
+
+void BasicMonster::updateMovement(Map* map, std::vector<Player*>* players)
+{
+	glm::vec3 currentPosition = this->getPosition();
 	Player* player = this->ai->findClosestWorldObjectToAttack(map, players);
 
 	if (player != nullptr)

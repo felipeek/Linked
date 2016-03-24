@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClCompile Include="src\Game\AI\AI.cpp" />
     <ClCompile Include="src\Game\BasicMonster.cpp" />
+    <ClCompile Include="src\Game\DistanceMonster.cpp" />
     <ClCompile Include="src\Game\Skill\CureBlessingSkill.cpp" />
     <ClCompile Include="src\Game\Skill\LinkSkill.cpp" />
     <ClCompile Include="src\Core\Game.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="include\Game\AI\AI.h" />
     <ClInclude Include="include\Game\BasicMonster.h" />
     <ClInclude Include="include\Common.h" />
+    <ClInclude Include="include\Game\DistanceMonster.h" />
     <ClInclude Include="include\Game\Skill\CureBlessingSkill.h" />
     <ClInclude Include="include\Core\Game.h" />
     <ClInclude Include="include\Core\LinkedTime.h" />

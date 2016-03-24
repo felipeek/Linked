@@ -36,15 +36,13 @@ void DistanceMonster::render(Shader* shader)
 
 void DistanceMonster::startOnlineMovement(glm::vec3 position)
 {
-
+	BasicMonster::startOnlineMovement(position);
 }
 
 void DistanceMonster::action(int actionId, int xid, glm::vec3 vector)
 {
-	switch (actionId)
-	{
-		default: break;
-	}
+	BasicMonster::action(actionId, xid, vector);
+	TurretMonster::action(actionId, xid, vector);
 }
 
 Monster* DistanceMonster::getCopy(Monster* copy)
