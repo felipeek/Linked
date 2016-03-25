@@ -5,9 +5,9 @@
 
 #define MAP_SIZE 1024
 
-#define TERRAIN_MAP_PATH "./res/Maps/map_64.png"
-#define ENTITIES_MAP_PATH "./res/Maps/entities2.png"
-#define MONSTER_MAP_PATH "./res/Maps/monsters.png"
+#define TERRAIN_MAP_PATH "./res/Maps/terrain_map.png"
+#define ENTITIES_MAP_PATH "./res/Maps/entities_map.png"
+#define MONSTER_MAP_PATH "./res/Maps/monsters_map.png"
 #define THEME_AUDIO_PATH "./res/Audio/theme.wav"
 
 #define SHADOW_BUFFER_SIZE 2048

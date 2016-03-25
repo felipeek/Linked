@@ -23,6 +23,7 @@
 21. Arrumar problema do FPS (DONE)
 22. Refazer Movimento dos monstros em multiplayer. Diminuir envio de pacotes e enviar em tempo real
 23 . Fazer chat editável
+24. Organizar criação de sf::Sound e derivados. Muitos sf::Sounds bugam todo SMFL. Mais info: http://stackoverflow.com/questions/26265964/sfml-internal-openal-error#_=_
 
 TODO List far future:
 
