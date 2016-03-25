@@ -7,6 +7,7 @@
 #include "Core/Game.h"
 #include "Core/LinkedTime.h"
 #include "Window.h"
+#include "Input.h"
 
 #if _MSC_VER < 1900
 // VC 2013
@@ -70,6 +71,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 	// Message/Game Loop
 	const double FPS = 120.0;
+	const double GAMESPEED = 120.0;
 	game->running = true;
 
 	while (game->running)
@@ -78,6 +80,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		static double EndTime = 0.0;
 		static double Elapsed = 0.0;
 		static double GameTime = 0.0;
+		static double RenderTime = 0.0;
 		static double SecondCount = 0.0;
 		static int Frames = 0;
 
@@ -85,13 +88,18 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		EndTime = LinkedTime::getTime();
 		Elapsed = EndTime - StartTime;
 		GameTime += Elapsed;
+		RenderTime += Elapsed;
 		SecondCount += Elapsed;
 
 		if (SecondCount >= 1.0)
 		{
-			std::cout << Frames << std::endl;
+			//LOG(Frames);
 			Frames = 0;
 			SecondCount = 0;
+			//if (window->isWindowFocused())
+			//	LOG("Focused");
+			//else
+			//	LOG("Not Focused");
 		}
 
 		StartTime = LinkedTime::getTime();
@@ -104,22 +112,31 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			DispatchMessage(&msg);
 		}
 
-		if (GameTime >= 1.0 / FPS)
+		if (GameTime >= 1.0 / GAMESPEED)
 		{
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 			game->update();
-			game->render();
-
+			game->input();
 			linked::Window::updateWindows();
-			linked::Window::renderWindows();
-
-			SwapBuffers(window->getHDC());
+			
 			GameTime = GameTime - (1.0 / FPS);
-			Frames++;
 		}
 		else
 			Sleep(1);
+
+		if (RenderTime >= 1.0 / FPS)
+		{
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			// Render GUI and game
+			game->render();
+			linked::Window::renderWindows();
+
+			SwapBuffers(window->getHDC());
+
+			// Time control
+			RenderTime = RenderTime - (1.0 / GAMESPEED);
+			Frames++;
+		}
 
 	}
 

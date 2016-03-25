@@ -47,7 +47,10 @@ glm::vec2 MouseAttack::getScreenPos()
 
 glm::vec2 MouseAttack::getOrthoCoords()
 {
-	return glm::vec2(((float)ContextWindow::getCurrent().getWidth() / (float)ContextWindow::getCurrent().getHeight())*this->screenPos.x, this->screenPos.y);
+	//glm::vec2 r = glm::vec2(((float)ContextWindow::getCurrent().getWidth() / (float)ContextWindow::getCurrent().getHeight())*this->screenPos.x, this->screenPos.y);
+	glm::vec2 r = glm::vec2(((float)ContextWindow::getCurrent().getWidth() / (float)ContextWindow::getCurrent().getHeight())*this->screenPos.x, this->screenPos.y);
+	//std::cout << screenPos.x << " " << screenPos.y << std::endl;
+	return r;
 }
 
 glm::vec3 MouseAttack::attack()

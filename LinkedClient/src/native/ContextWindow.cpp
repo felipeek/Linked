@@ -89,9 +89,10 @@ void ContextWindow::InitOpenGL()
 		LOG("Erro ao inicializar GLEW!");
 	}
 
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glEnable(GL_DEPTH_TEST);
+	setClearColor(glm::vec4(1, 1, 1, 1));
+	glClearColor(m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a);
 
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 

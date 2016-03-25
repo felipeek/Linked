@@ -186,7 +186,7 @@ namespace linked{
 	void Window::mouseCallback(int button, int action, int mods)
 	{
 		//if (button == GLFW_MOUSE_BUTTON_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
-		if (button == 1 && (action == 1 || action == 1))
+		if (button == 0 && (action == 1 || action == 1))
 		{
 			// if any button is hovered window should not be moved but should be focused
 			for (WindowDiv* d : divs)
