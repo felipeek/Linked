@@ -71,7 +71,7 @@ void Menu::update()
 		}
 		multiplayerCanceled = false;
 		m_focusedLabel = F_NONE;
-		Chat::enable();
+		//Chat::enable();
 	}
 	if (serverIpMenu != nullptr)
 	{
@@ -234,7 +234,7 @@ void Menu::startMultiplayer()
 {
 	// Return chat to normal state
 	m_focusedLabel = F_NONE;
-	Chat::enable();
+	//Chat::enable();
 
 	// Setup game
 	if (defaultIp.size() > 0 && defaultPort.size() > 0)
@@ -261,10 +261,10 @@ void Menu::focusIpLabel()
 {
 	//if (Chat::isEnabled())
 	//{
-		Chat::setRestriction(CHAT_ALL);
-		Chat::setMaxMsgLength(MAX_ADDRESS);
-		Chat::disable();
-		Chat::getStream() << defaultIp;
+		//Chat::setRestriction(CHAT_ALL);
+		//Chat::setMaxMsgLength(MAX_ADDRESS);
+		//Chat::disable();
+		//Chat::getStream() << defaultIp;
 	//}
 	m_focusedLabel = F_IP_LABEL;
 }
@@ -273,10 +273,10 @@ void Menu::focusPortLabel()
 {
 	//if (Chat::isEnabled())
 	//{
-		Chat::setRestriction(CHAT_NUMBER_ONLY);
-		Chat::setMaxMsgLength(MAX_PORT);
-		Chat::disable();
-		Chat::getStream() << defaultPort;
+		//Chat::setRestriction(CHAT_NUMBER_ONLY);
+		//Chat::setMaxMsgLength(MAX_PORT);
+		//Chat::disable();
+		//Chat::getStream() << defaultPort;
 	//}
 	m_focusedLabel = F_PORT_LABEL;
 }

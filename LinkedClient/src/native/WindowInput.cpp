@@ -1,6 +1,9 @@
 #include "WindowInput.h"
 #include "ContextWindow.h"
 #include "Input.h"
+#include "Game.h"
+#include "GUI.h"
+#include "Chat.h"
 
 #include <GL/glew.h>
 #include <sstream>
@@ -18,8 +21,10 @@ LRESULT CALLBACK WindowInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 
 	switch (message)
 	{
+	case WM_MOUSELEAVE:
+		LOG("left");
+		break;
 	case WM_MOUSEMOVE:
-		std::cout << LOWORD(lParam) << " " << HIWORD(lParam) << std::endl;
 		Input::mousePos.x = LOWORD(lParam);
 		Input::mousePos.y = HIWORD(lParam);
 		Input::MousePosition(LOWORD(lParam), HIWORD(lParam));
@@ -36,6 +41,7 @@ LRESULT CALLBACK WindowInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 	case WM_LBUTTONUP:
 		Input::attack = !Input::attack;
 		Input::leftMouseButton = false;
+		Input::LeftClickRelease();
 		ReleaseCapture();
 		break;
 	case WM_KEYDOWN:
@@ -46,8 +52,24 @@ LRESULT CALLBACK WindowInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 		Input::keyStates[getLowerCase(wParam)] = false;
 		Input::keyStates[wParam] = false;
 		break;
+	case WM_SETCURSOR:
+	{
+		WORD ht = LOWORD(lParam);
+		static bool hiddencursor = false;
+		if (HTCLIENT == ht && !hiddencursor)
+		{
+			hiddencursor = true;
+			ShowCursor(false);
+		}
+		else if (HTCLIENT != ht && hiddencursor)
+		{
+			hiddencursor = false;
+			ShowCursor(true);
+		}
+	}
+	break;
 	case WM_CHAR:
-		// TODO: chat
+		Chat::ProcessKeyStroke(wParam);
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 		break;

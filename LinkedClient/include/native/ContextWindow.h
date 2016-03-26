@@ -49,5 +49,6 @@ public:	// Getters and Setters
 	static void startGame() {}	// TODO: fix
 	static void exitGame() {}	// TODO: fix
 	inline bool isWindowFocused() const { return GetFocus() == m_hWnd; }
+	inline void setWindowSize(int width, int height) { m_width = width, m_height = height; }
 };
 

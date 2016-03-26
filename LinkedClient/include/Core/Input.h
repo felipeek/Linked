@@ -16,6 +16,7 @@ public:
 	static glm::vec2 mousePos;
 	inline static glm::vec2& GetMousePos() { return mousePos; }
 	static void LeftClick();
+	static void LeftClickRelease();
 	static void MousePosition(int x, int y);
 
 	static void clear();

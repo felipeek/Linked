@@ -29,15 +29,18 @@ void Input::LeftClick()
 	float screenX = ((float)mousePos.x * 2 / width - 1.0f);
 	float screenY = -((float)mousePos.x * 2 / height - 1.0f);
 
-	std::cout << screenX << " " << screenY << std::endl;
-
 	Input::attack = !Input::attack;
-	Input::mouseAttack.setAttackPos(screenX, screenY);
-	Input::mouseAttack.setMouseCoords((int)mousePos.x, (int)mousePos.y);
 
 	for (unsigned int i = 0; i < linked::Window::openedWindows.size(); i++)
 		linked::Window::openedWindows[i]->mouseCallback(0, 1, 0);
 	linked::Button::mouseCallback(0, 1, 0);
+}
+
+void Input::LeftClickRelease()
+{
+	for (unsigned int i = 0; i < linked::Window::openedWindows.size(); i++)
+		linked::Window::openedWindows[i]->mouseCallback(0, 0, 0);
+	linked::Button::mouseCallback(0, 0, 0);
 }
 
 void Input::MousePosition(int x, int y)

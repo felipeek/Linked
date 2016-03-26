@@ -52,7 +52,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	bool running = true;
 
 	// Initialize window, OpenGL context and game
-	window = new ContextWindow(nCmdShow, hInstance, 800 * 1.5f, 450 * 1.5f, std::string("hoengine_opengl"), std::string("Linked - v2.0"));
+	window = new ContextWindow(nCmdShow, hInstance, 800 * 1.5, 450 * 1.5, std::string("hoengine_opengl"), std::string("Linked - v2.0"));
 	window->InitOpenGL();
 	game = new Game(window->getWidth(), window->getHeight());
 
@@ -61,6 +61,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	FILE* pCout;
 	freopen_s(&pCout, "CONOUT$", "w", stdout);
 #endif
+	//ShowCursor(false);
 
 	glewExperimental = true;
 	// Start glew
@@ -71,7 +72,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 	// Message/Game Loop
 	const double FPS = 120.0;
-	const double GAMESPEED = 120.0;
+	const double GAMESPEED = 100.0;
 	game->running = true;
 
 	while (game->running)
@@ -118,7 +119,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			game->input();
 			linked::Window::updateWindows();
 			
-			GameTime = GameTime - (1.0 / FPS);
+			GameTime = GameTime - (1.0 / GAMESPEED);
 		}
 		else
 			Sleep(1);

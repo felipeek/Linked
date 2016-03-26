@@ -67,6 +67,7 @@ public:
 	void input();
 
 private:
+	static Game* current;
 	int windowWidth;
 	int windowHeight;
 	/* INITIALIZATION METHODS */
@@ -120,6 +121,7 @@ private:
 	double cursorRot = 0;
 	double lastTime;
 public:
+	static inline Game* getCurrent() { return current; }
 	inline int getWidth()const { return windowWidth; }
 	inline int getHeight()const { return windowHeight; }
 	inline void setWindowWidth(int width) { windowWidth = width; }
