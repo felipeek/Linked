@@ -1,5 +1,6 @@
 #include "Button.h"
 #include "WindowDiv.h"
+#include "ContextWindow.h"
 
 namespace linked
 {
@@ -38,27 +39,8 @@ namespace linked
 
 	Button::~Button()
 	{
-		//if (m_label)
-		//	delete m_label;
 		if (m_buttonMesh)
 			delete m_buttonMesh;
-
-		// delete textures
-		//if (m_backgroundHeldTexture)
-		//{
-		//	delete m_backgroundHeldTexture;
-		//	m_backgroundHeldTexture = nullptr;
-		//}
-		//if (m_backgroundHoveredTexture)
-		//{
-		//	delete m_backgroundHoveredTexture;
-		//	m_backgroundHoveredTexture = nullptr;
-		//}
-		//if (m_backgroundNormalTexture)
-		//{
-		//	delete m_backgroundNormalTexture;
-		//	m_backgroundNormalTexture = nullptr;
-		//}
 	}
 
 	void Button::render()
@@ -108,7 +90,7 @@ namespace linked
 
 	bool Button::isHovered() const
 	{
-		glm::vec2 cursorPosition = Display::getCurrentInstance().getCursorPosition();
+		glm::vec2 cursorPosition = ContextWindow::getCurrent().getCursorPosition();
 
 		glm::vec2 buttonPosition = getScreenPosition();
 		

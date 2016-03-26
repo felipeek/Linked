@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "ContextWindow.h"
 
 #define DEBUG 1
 
@@ -37,8 +38,8 @@ namespace linked{
 		// Set Initial Position
 		m_screenPosition = position;
 		m_position = glm::vec2(
-			position.x + (width - Display::getCurrentInstance().getWidth()) / 2.0f,
-			position.y + (height - Display::getCurrentInstance().getHeight()) / 2.0f);
+			position.x + (width - ContextWindow::getCurrent().getWidth()) / 2.0f,
+			position.y + (height - ContextWindow::getCurrent().getHeight()) / 2.0f);
 
 		handleWindowHints(hints);
 
@@ -91,7 +92,7 @@ namespace linked{
 
 		// Render Inverse Mask ------------------------------------------------
 		glColorMask(false, false, false, true);									// sets a clear mask to only render on alpha channel
-		glm::vec4 clearColor = Display::getCurrentInstance().getClearColor();
+		glm::vec4 clearColor = ContextWindow::getCurrent().getClearColor();
 		glClearColor(clearColor.x, clearColor.y, clearColor.z, m_borderColor.a);// clears the color buffer and sets the alpha to 1 for inverse mask, 0 for normal mask
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -124,7 +125,7 @@ namespace linked{
 
 		// Set clipping planes back to all the screen
 		Window::m_windowShader->clipTL = glm::vec2(-1, -1);
-		Window::m_windowShader->clipBR = glm::vec2((float)Display::getCurrentInstance().getWidth(), (float)Display::getCurrentInstance().getHeight());
+		Window::m_windowShader->clipBR = glm::vec2((float)ContextWindow::getCurrent().getWidth(), (float)ContextWindow::getCurrent().getHeight());
 
 		// render window title in header if header enabled
 		if (h_header)
@@ -132,7 +133,7 @@ namespace linked{
 			// Set Clipping planes to all the context (to be always rendered)
 			Window::m_textShader->useShader();
 			Window::m_textShader->clipTL = glm::vec2(-1, -1);
-			Window::m_textShader->clipBR = glm::vec2((float)Display::getCurrentInstance().getWidth(), (float)Display::getCurrentInstance().getHeight());
+			Window::m_textShader->clipBR = glm::vec2((float)ContextWindow::getCurrent().getWidth(), (float)ContextWindow::getCurrent().getHeight());
 			Window::m_textShader->update();
 
 			float xpos = 0;
@@ -150,11 +151,11 @@ namespace linked{
 		// if the mouse is attached to the window, move it accordingly
 		if (m_attached && h_movable && focused)
 		{
-			glm::vec2 cursorPosition = Display::getCurrentInstance().getCursorPosition();
+			glm::vec2 cursorPosition = ContextWindow::getCurrent().getCursorPosition();
 			glm::vec2 delta = m_cursorPosWhenAttached - cursorPosition;
 			setPosition(m_posWhenAttached - delta);
 			// updates the screen position
-			m_screenPosition = m_position + glm::vec2(Display::getCurrentInstance().getWidth() / 2.0f, Display::getCurrentInstance().getHeight() / 2.0f);
+			m_screenPosition = m_position + glm::vec2(ContextWindow::getCurrent().getWidth() / 2.0f, ContextWindow::getCurrent().getHeight() / 2.0f);
 			m_screenPosition -= glm::vec2(m_width / 2.0f, m_height / 2.0f);
 		}
 	}
@@ -184,7 +185,8 @@ namespace linked{
 
 	void Window::mouseCallback(int button, int action, int mods)
 	{
-		if (button == GLFW_MOUSE_BUTTON_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		//if (button == GLFW_MOUSE_BUTTON_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		if (button == 0 && (action == 1 || action == 1))
 		{
 			// if any button is hovered window should not be moved but should be focused
 			for (WindowDiv* d : divs)
@@ -196,9 +198,10 @@ namespace linked{
 				}
 
 			attachMouse();
-			if (action == GLFW_PRESS)
+			if (action == 1)
+			//if (action == GLFW_PRESS)
 			{
-				m_cursorPosWhenAttached = Display::getCurrentInstance().getCursorPosition();
+				m_cursorPosWhenAttached = ContextWindow::getCurrent().getCursorPosition();
 				m_posWhenAttached = m_position;
 			}
 		}
@@ -253,10 +256,10 @@ namespace linked{
 	}
 	bool Window::isHovered()
 	{
-		glm::vec2 cursorPosition = Display::getCurrentInstance().getCursorPosition();
+		glm::vec2 cursorPosition = ContextWindow::getCurrent().getCursorPosition();
 		glm::vec2 cursorPosRefWindow = glm::vec2(
-			cursorPosition.x + (m_width - Display::getCurrentInstance().getWidth()) / 2.0f,
-			cursorPosition.y + (m_height - Display::getCurrentInstance().getHeight()) / 2.0f);
+			cursorPosition.x + (m_width - ContextWindow::getCurrent().getWidth()) / 2.0f,
+			cursorPosition.y + (m_height - ContextWindow::getCurrent().getHeight()) / 2.0f);
 
 		if (cursorPosRefWindow.x >= m_position.x && cursorPosRefWindow.x <= m_position.x + m_width &&
 			cursorPosRefWindow.y >= m_position.y && cursorPosRefWindow.y <= m_position.y + m_height)
@@ -300,8 +303,8 @@ namespace linked{
 		basePos.x -= m_width / 2.0f;
 		basePos.y -= m_height / 2.0f;
 
-		basePos.x /= Display::getCurrentInstance().getWidth() / 2.0f;
-		basePos.y /= Display::getCurrentInstance().getHeight() / 2.0f;
+		basePos.x /= ContextWindow::getCurrent().getWidth() / 2.0f;
+		basePos.y /= ContextWindow::getCurrent().getHeight() / 2.0f;
 
 		return basePos;
 	}

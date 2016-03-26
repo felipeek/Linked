@@ -2,7 +2,7 @@
 #include "FontShader.h"
 #include "Mesh.h"
 #include "Texture.h"
-#include "Display.h"
+#include "ContextWindow.h"
 #include "Primitive.h"
 
 FontRenderer::FontRenderer(float fontSize, int textureQuality)
@@ -33,8 +33,8 @@ int FontRenderer::renderText(const unsigned char* text, int textSize, const glm:
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, atlas->id);
 
-	float scaleX = (float)Display::getCurrentInstance().getWidth();
-	float scaleY = (float)Display::getCurrentInstance().getHeight();;
+	float scaleX = (float)ContextWindow::getCurrent().getWidth();
+	float scaleY = (float)ContextWindow::getCurrent().getHeight();;
 
 	float x = position.x;
 

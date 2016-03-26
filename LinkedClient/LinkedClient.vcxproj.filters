@@ -12,7 +12,6 @@
     <ClCompile Include="src\Shaders\Classes\FontShader.cpp" />
     <ClCompile Include="src\Shaders\Classes\SkillShader.cpp" />
     <ClCompile Include="src\Entity\Skill\LinkSkill.cpp" />
-    <ClCompile Include="src\Core\Display.cpp" />
     <ClCompile Include="src\Core\Game.cpp" />
     <ClCompile Include="src\Core\Input.cpp" />
     <ClCompile Include="src\Core\LinkedTime.cpp" />
@@ -79,6 +78,9 @@
     <ClCompile Include="src\GUI\Menu.cpp" />
     <ClCompile Include="src\Core\Audio.cpp" />
     <ClCompile Include="src\Entity\Monster\DistanceMonster.cpp" />
+    <ClCompile Include="src\native\Display.cpp" />
+    <ClCompile Include="src\native\ContextWindow.cpp" />
+    <ClCompile Include="src\native\WindowInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Entity\AI\AI.h" />
@@ -164,6 +166,8 @@
     <ClInclude Include="include\Entity\Monster\TurretMonster.h" />
     <ClInclude Include="include\GUI\Menu.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="include\native\ContextWindow.h" />
+    <ClInclude Include="include\native\WindowInput.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="LinkedIcon.ico" />
@@ -175,6 +179,5 @@
     <ClInclude Include="include\AudioController.h" />
     <ClInclude Include="include\Core\Audio.h" />
     <ClInclude Include="include\Entity\Monster\DistanceMonster.h" />
-
   </ItemGroup>
 </Project>

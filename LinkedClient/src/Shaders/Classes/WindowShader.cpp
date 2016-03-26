@@ -1,4 +1,5 @@
 #include "WindowShader.h"
+#include "ContextWindow.h"
 
 WindowShader::WindowShader(std::string fileName) : Shader(fileName, nullptr)
 {
@@ -23,8 +24,8 @@ void WindowShader::update(glm::vec2& translation)
 	float x = translation.x * 2.0f;
 	float y = -(translation.y * 2.0f);
 
-	float windowWidth = (float)Display::getCurrentInstance().getWidth();
-	float windowHeight = (float)Display::getCurrentInstance().getHeight();
+	float windowWidth = (float)ContextWindow::getCurrent().getWidth();
+	float windowHeight = (float)ContextWindow::getCurrent().getHeight();
 
 	//glm::mat4 model = glm::translate(glm::mat4(), glm::vec3(x, y, 0));
 	glm::mat4 model = glm::translate(glm::mat4(), glm::vec3(x, y, 0));

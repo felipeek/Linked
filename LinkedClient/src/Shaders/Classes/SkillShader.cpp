@@ -1,6 +1,6 @@
 #include "SkillShader.h"
 
-#include "Display.h"
+#include "ContextWindow.h"
 #include "Entity.h"
 #include "Primitive.h"
 
@@ -24,8 +24,8 @@ void SkillShader::getUniformLocations()
 
 void SkillShader::update()
 {
-	int ww = Display::getCurrentInstance().getWidth();
-	int wh = Display::getCurrentInstance().getHeight();
+	int ww = ContextWindow::getCurrent().getWidth();
+	int wh = ContextWindow::getCurrent().getHeight();
 	glm::mat4 ortho = glm::ortho(-(float)ww/wh, (float)ww/wh, -1.0f, 1.0f);
 	glm::mat4 finalMatrix = ortho * entity->getTransform()->model;
 	glActiveTexture(GL_TEXTURE0);

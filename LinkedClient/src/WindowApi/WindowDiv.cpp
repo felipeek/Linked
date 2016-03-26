@@ -1,4 +1,5 @@
 #include "WindowDiv.h"
+#include "ContextWindow.h"
 
 namespace linked
 {
@@ -87,7 +88,7 @@ namespace linked
 			l->render();
 
 		ws->clipTL = glm::vec2(-1, -1);
-		ws->clipBR = glm::vec2((float)Display::getCurrentInstance().getWidth(), (float)Display::getCurrentInstance().getHeight());
+		ws->clipBR = glm::vec2((float)ContextWindow::getCurrent().getWidth(), (float)ContextWindow::getCurrent().getHeight());
 
 		Window::m_textShader->stopShader();
 		
@@ -170,8 +171,8 @@ namespace linked
 		basePos.x -= m_width / 2.0f;
 		basePos.y -= m_height / 2.0f;
 
-		basePos.x /= Display::getCurrentInstance().getWidth() / 2.0f;
-		basePos.y /= Display::getCurrentInstance().getHeight() / 2.0f;
+		basePos.x /= ContextWindow::getCurrent().getWidth() / 2.0f;
+		basePos.y /= ContextWindow::getCurrent().getHeight() / 2.0f;
 
 		return basePos;
 	}
@@ -179,8 +180,8 @@ namespace linked
 	glm::vec2 WindowDiv::getScreenPosition() const
 	{
 		glm::vec2 divPosition = m_windowRelativePosition + glm::vec2(
-			Display::getCurrentInstance().getWidth() / 2.0f,
-			Display::getCurrentInstance().getHeight() / 2.0f);
+			ContextWindow::getCurrent().getWidth() / 2.0f,
+			ContextWindow::getCurrent().getHeight() / 2.0f);
 		divPosition.x -= m_width / 2.0f;
 		divPosition.y -= m_height / 2.0f;
 		return divPosition;

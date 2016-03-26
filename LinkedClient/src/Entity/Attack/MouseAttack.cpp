@@ -1,7 +1,7 @@
 #include "MouseAttack.h"
 #include "LinkedTime.h"
 #include "Camera.h"
-#include "Display.h"
+#include "ContextWindow.h"
 
 MouseAttack::MouseAttack()
 {
@@ -21,8 +21,8 @@ void MouseAttack::setAttackPos(float x, float y)
 
 void MouseAttack::setMouseCoords(int mouseX, int mouseY)
 {
-	float x = (2.0f * mouseX) / Display::getCurrentInstance().getWidth() - 1.0f;
-	float y = 1.0f - (2.0f * mouseY) / Display::getCurrentInstance().getHeight();
+	float x = (2.0f * mouseX) / ContextWindow::getCurrent().getWidth() - 1.0f;
+	float y = 1.0f - (2.0f * mouseY) / ContextWindow::getCurrent().getHeight();
 	float z = 1.0f;
 	//std::cout << x << " " << y << std::endl;
 	glm::vec3 screenPosition = glm::vec3(x, y,z);
@@ -47,7 +47,10 @@ glm::vec2 MouseAttack::getScreenPos()
 
 glm::vec2 MouseAttack::getOrthoCoords()
 {
-	return glm::vec2(((float)Display::getCurrentInstance().getWidth() / (float)Display::getCurrentInstance().getHeight())*this->screenPos.x, this->screenPos.y);
+	//glm::vec2 r = glm::vec2(((float)ContextWindow::getCurrent().getWidth() / (float)ContextWindow::getCurrent().getHeight())*this->screenPos.x, this->screenPos.y);
+	glm::vec2 r = glm::vec2(((float)ContextWindow::getCurrent().getWidth() / (float)ContextWindow::getCurrent().getHeight())*this->screenPos.x, this->screenPos.y);
+	//std::cout << screenPos.x << " " << screenPos.y << std::endl;
+	return r;
 }
 
 glm::vec3 MouseAttack::attack()
