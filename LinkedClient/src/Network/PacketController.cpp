@@ -9,6 +9,7 @@
 #include "RangeAttack.h"
 #include "GUI.h"
 #include "Common.h"
+#include "ContextWindow.h"
 #include <sstream>
 
 #define SHOW_PACKETS_LOG 1
@@ -352,17 +353,17 @@ void PacketController::dispatchMsg(int id, int xid, char* data)
 	gui->setNextMessage(ss.str());
 
 	// TODO: reimplement
-	//if (!ContextWindow::isWindowFocused())
-	//{
-	//	FLASHWINFO fwi;
-	//	fwi.cbSize = sizeof(FLASHWINFO);
-	//	fwi.dwFlags = FLASHW_ALL;
-	//	fwi.dwTimeout = 0;
-	//	fwi.hwnd = (HWND)ContextWindow::windowHandle;
-	//	fwi.uCount = 2;
-	//
-	//	FlashWindowEx(&fwi);
-	//}
+	if (!ContextWindow::getCurrent().isWindowFocused())
+	{
+		FLASHWINFO fwi;
+		fwi.cbSize = sizeof(FLASHWINFO);
+		fwi.dwFlags = FLASHW_ALL;
+		fwi.dwTimeout = 0;
+		fwi.hwnd = (HWND)ContextWindow::getCurrent().getHandler();
+		fwi.uCount = 2;
+	
+		FlashWindowEx(&fwi);
+	}
 }
 
 void PacketController::update10()

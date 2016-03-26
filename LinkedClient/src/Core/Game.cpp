@@ -572,16 +572,5 @@ void Game::input()
 		camera->input();
 		light->input();
 		localPlayer->input(this->map);
-
-		if (Input::keyStates['b'])
-		{
-			this->gui->setNextMessage(std::string("Local Player Attack: ") + std::to_string(localPlayer->getTotalAttack()));
-
-			if (Game::multiplayer)
-				for (Player* p : this->onlinePlayers)
-				{
-					this->gui->setNextMessage(std::string("Online Player Attack: ") + std::to_string(p->getTotalAttack()));
-				}
-		}
 	}
 }
