@@ -5,20 +5,20 @@ Linked is a multiplayer game idealized by Hoshoyo. It is currently being develop
 
 ## Tasks
 
-### Main Tasks
+#### Main Tasks
 - [ ] Create main menu
 - [ ] Create character selection menu
 - [ ] Create settings menu (window size, sounds, shadows, go back to main menu)
 - [ ] Create custom commands (client and server side)
 
-### Bug Fixes
+#### Bug Fixes
 - [ ] Avoid creating heaps of sf::Sound ([More info](http://stackoverflow.com/questions/26265964/sfml-internal-openal-error#_=_))
 - [ ] Fix chat overflow
 - [ ] Fix HP Bar texture and position
 - [ ] Disable skills when dead
 - [ ] Re-enable mouse right button
 
-### Future Tasks
+#### Future Tasks
 - [ ] Create new types of monsters
 - [ ] Create items logic
 - [ ] Create equipments logic
@@ -27,7 +27,7 @@ Linked is a multiplayer game idealized by Hoshoyo. It is currently being develop
 - [ ] Shadow refactor
 - [ ] Improve monster AI
 
-### Artistic Tasks (On Hold)
+#### Artistic Tasks (On Hold)
 - [ ] Create game maps
 - [ ] Create new textures
 - [ ] Create new entities
