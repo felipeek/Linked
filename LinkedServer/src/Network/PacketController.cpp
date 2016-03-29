@@ -246,7 +246,7 @@ void PacketController::dispatchVec3fArray(int id, int xid, glm::vec3* data, int 
 			info.x = data[0].x;
 			info.y = data[0].y;
 			info.z = data[0].z;
-			info.w = newProjectile->getId();
+			info.w = (float)newProjectile->getId();
 
 			for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
 				udpServer->sendPackets(Packet(info, 3, xid), (*udpServer->getClients())[i]->netInfo);
@@ -662,7 +662,7 @@ void PacketController::sendProjectileAttackByTurretMonster(int monsterId, Projec
 	info.x = projectile->getDirection().x;
 	info.y = projectile->getDirection().y;
 	info.z = projectile->getDirection().z;
-	info.w = projectile->getId();
+	info.w = (float)projectile->getId();
 
 	for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
 		udpServer->sendPackets(Packet(info, 10, monsterId), (*udpServer->getClients())[i]->netInfo);

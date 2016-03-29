@@ -24,7 +24,7 @@ public:
 	glm::vec2& getTextureOffset();
 
 	void setIndex(int i);
-	int getIndex();
+	float getIndex();
 private:
 	float index;
 	float numRows;

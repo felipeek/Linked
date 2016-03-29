@@ -33,13 +33,13 @@ Audio::~Audio()
 {
 	if (this->type == AudioType::MUSIC)
 	{
-		for (int i = 0; i < Audio::musics.size(); i++)
+		for (unsigned int i = 0; i < Audio::musics.size(); i++)
 			if (Audio::musics[i] == this)
 				Audio::musics.erase(Audio::musics.begin() + i);
 	}
 	else if (this->type == AudioType::SOUND)
 	{
-		for (int i = 0; i < Audio::sounds.size(); i++)
+		for (unsigned int i = 0; i < Audio::sounds.size(); i++)
 			if (Audio::sounds[i] == this)
 				Audio::sounds.erase(Audio::sounds.begin() + i);
 	}
@@ -72,9 +72,9 @@ unsigned int Audio::getSoundVolume()
 void Audio::setVolume(unsigned int volume)
 {
 	if (this->type == AudioType::SOUND)
-		this->sound.setVolume(volume);
+		this->sound.setVolume((float)volume);
 	else if (this->type == AudioType::MUSIC)
-		this->music.setVolume(volume);
+		this->music.setVolume((float)volume);
 }
 
 void Audio::play()

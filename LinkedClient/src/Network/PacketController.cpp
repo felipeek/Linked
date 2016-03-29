@@ -188,7 +188,7 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 		{
 			int clientId = data[0];
 
-			for (int i = 0; i < PacketController::onlinePlayers->size(); i++)
+			for (unsigned int i = 0; i < PacketController::onlinePlayers->size(); i++)
 			{
 				if ((*PacketController::onlinePlayers)[i]->getClientId() == clientId)
 				{

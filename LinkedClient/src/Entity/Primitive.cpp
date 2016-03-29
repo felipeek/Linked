@@ -120,7 +120,7 @@ void Quad::setIndex(int i)
 	calcAtlas();
 }
 
-int Quad::getIndex()
+float Quad::getIndex()
 {
 	return this->index;
 }

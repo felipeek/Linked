@@ -56,7 +56,7 @@ ContextWindow::ContextWindow(int nCmdShow, HINSTANCE hInstance,
 }
 ContextWindow::~ContextWindow()
 {
-
+	linked::Window::linkedWindowDestroy();
 }
 
 void ContextWindow::InitOpenGL()

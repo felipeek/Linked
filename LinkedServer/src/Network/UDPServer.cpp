@@ -147,6 +147,7 @@ int UDPServer::addToClients(struct sockaddr_in* client)
 		clientsInfo.push_back(ci);
 		return ClientInfo::currentId;
 	}
+	return -1;
 }
 
 int UDPServer::clientExists(int id)
@@ -174,6 +175,7 @@ int UDPServer::verifyClient(sockaddr_in* client)
 	{
 		return -1;
 	}
+	return 0;
 }
 
 std::vector <ClientInfo*>* UDPServer::getClients()

@@ -85,6 +85,7 @@ int FontRenderer::renderText(const unsigned char* text, int textSize, const glm:
 			
 			x += glyph->advance_x / scaleX;
 		}
+		//ftgl::texture_glyph_delete(glyph);
 	}
 	shader->stopShader();
 	shader->deactivateAlphaBlend();

@@ -48,7 +48,7 @@ int main(int argc, char** argv)
 		// Ping every two seconds
 		if (pingTime >= 5.0)
 		{
-			for (int i = 0; i < server->getClients()->size(); i++)
+			for (unsigned int i = 0; i < server->getClients()->size(); i++)
 			{
 
 				double pingToLastPong = (*server->getClients())[i]->lastPing - (*server->getClients())[i]->lastPong;
@@ -68,7 +68,7 @@ int main(int argc, char** argv)
 		// Connection check
 		if (cumulativeTime >= CONNECTION_CHECK_TIME)
 		{
-			for (int i = 0; i < server->getClients()->size(); i++)
+			for (unsigned int i = 0; i < server->getClients()->size(); i++)
 			{
 				server->sendPackets(Packet(ID_PING, 0), (*server->getClients())[i]->netInfo);
 				(*server->getClients())[i]->lastPing = LinkedTime::getTime();

@@ -156,7 +156,7 @@ void GUI::initLeftGUISkills()
 	skills->setBorderColor(glm::vec4(0, 0, 0, 1));
 	skillsGUI = skills;
 
-	const float divWidths = 200.0f / 4;
+	const int divWidths = 200 / 4;
 
 	skill1 = new WindowDiv(*skills, divWidths, 50, 0, 0, glm::vec2(0			, 0), glm::vec4(1, 0, 0, 1), DIV_ANCHOR_LEFT | DIV_ANCHOR_TOP);
 	skill2 = new WindowDiv(*skills, divWidths, 50, 0, 0, glm::vec2(divWidths * 1, 0), glm::vec4(0, 1, 0, 1), DIV_ANCHOR_LEFT | DIV_ANCHOR_TOP);

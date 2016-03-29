@@ -1,6 +1,7 @@
 #pragma once
 
 #include "external/freetypegl/freetype-gl.h"
+#include "external/freetypegl/texture-font.h"
 
 #include <glm/glm.hpp>
 

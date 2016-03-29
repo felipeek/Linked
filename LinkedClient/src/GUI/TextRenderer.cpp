@@ -135,7 +135,7 @@ void TextRenderer::renderText(unsigned char* text, int textSize, GLfloat x, GLfl
 		charsList = &chars14px;
 	}
 
-	for (unsigned int c = 0; c < textSize; c++)
+	for (unsigned int c = 0; c < (unsigned int)textSize; c++)
 	{
 		Character ch = (*charsList)[text[c]];
 

@@ -167,7 +167,6 @@
     <ClCompile Include="src\Shaders\Classes\FontShader.cpp" />
     <ClCompile Include="src\Shaders\Classes\SkillShader.cpp" />
     <ClCompile Include="src\Entity\Skill\LinkSkill.cpp" />
-    <ClCompile Include="src\native\Display.cpp" />
     <ClCompile Include="src\Core\Game.cpp" />
     <ClCompile Include="src\Core\Input.cpp" />
     <ClCompile Include="src\Core\LinkedTime.cpp" />
@@ -244,7 +243,6 @@
     <ClInclude Include="include\Entity\Monster\DistanceMonster.h" />
     <ClInclude Include="include\Entity\Skill\CureBlessingSkill.h" />
     <ClInclude Include="include\Entity\Cursor.h" />
-    <ClInclude Include="include\Core\Display.h" />
     <ClInclude Include="include\Core\Game.h" />
     <ClInclude Include="include\Core\Input.h" />
     <ClInclude Include="include\Core\LinkedTime.h" />

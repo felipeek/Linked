@@ -135,31 +135,31 @@ bool MonsterAI::isPathFreeOfCollisions(Map* map, glm::vec3 destination) const
 
 	if (yPos2 > yPos1)
 	{
-		for (int i = floor(yPos1); i <= floor(nextLeftRange); i++)
+		for (int i = (int)floor(yPos1); i <= floor(nextLeftRange); i++)
 			if (map->coordinateHasCollision(glm::vec3(floor(xPos1), i, 0)))
 				return false;
 
 		for (int i = 0; i < numberOfElementsInTheMiddleRange; i++, nextLeftRange = nextLeftRange + middleRange)
-			for (int j = floor(nextLeftRange); j <= floor(nextLeftRange + middleRange); j++)
+			for (int j = (int)floor(nextLeftRange); j <= floor(nextLeftRange + middleRange); j++)
 				if (map->coordinateHasCollision(glm::vec3(floor(xPos1 + i + 1), j, 0)))
 					return false;
 
-		for (int i = floor(nextLeftRange); i <= floor(nextLeftRange + rightRange); i++)
+		for (int i = (int)floor(nextLeftRange); i <= floor(nextLeftRange + rightRange); i++)
 			if (map->coordinateHasCollision(glm::vec3(floor(xPos2), i, 0)))
 				return false;
 	}
 	else
 	{
-		for (int i = floor(yPos1); i >= floor(nextLeftRange); i--)
+		for (int i = (int)floor(yPos1); i >= floor(nextLeftRange); i--)
 			if (map->coordinateHasCollision(glm::vec3(floor(xPos1), i, 0)))
 				return false;
 
 		for (int i = 0; i < numberOfElementsInTheMiddleRange; i++, nextLeftRange = nextLeftRange + middleRange)
-			for (int j = floor(nextLeftRange); j >= floor(nextLeftRange + middleRange); j--)
+			for (int j = (int)floor(nextLeftRange); j >= floor(nextLeftRange + middleRange); j--)
 				if (map->coordinateHasCollision(glm::vec3(floor(xPos1 + i + 1), j, 0)))
 					return false;
 
-		for (int i = floor(nextLeftRange); i >= floor(nextLeftRange + rightRange); i--)
+		for (int i = (int)floor(nextLeftRange); i >= floor(nextLeftRange + rightRange); i--)
 			if (map->coordinateHasCollision(glm::vec3(floor(xPos2), i, 0)))
 				return false;
 	}

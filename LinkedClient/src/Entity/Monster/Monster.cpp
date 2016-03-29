@@ -366,5 +366,5 @@ void Monster::changeTextureIndex(int index)
 
 int Monster::getCurrentTextureIndex()
 {
-	return this->getMesh()->getQuad()->getIndex();
+	return (int)this->getMesh()->getQuad()->getIndex();
 }

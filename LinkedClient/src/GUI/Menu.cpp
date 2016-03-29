@@ -92,8 +92,8 @@ void Menu::createMenu()
 {
 	if (menu == nullptr)
 	{
-		const float menuWidth = ContextWindow::getCurrent().getWidth();
-		const float menuHeight = ContextWindow::getCurrent().getHeight();
+		const int menuWidth = ContextWindow::getCurrent().getWidth();
+		const int menuHeight = ContextWindow::getCurrent().getHeight();
 
 		// Menu Window
 		menu = new linked::Window(menuWidth, menuHeight, glm::vec2(0, 0), glm::vec4(0.043, 0.045f, 0.05f, 1), nullptr, 0, linked::W_BORDER);

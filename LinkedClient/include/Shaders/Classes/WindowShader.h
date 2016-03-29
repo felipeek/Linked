@@ -1,5 +1,4 @@
 #pragma once
-#include "Display.h"
 #include "Shader.h"
 
 #include <glm/glm.hpp>

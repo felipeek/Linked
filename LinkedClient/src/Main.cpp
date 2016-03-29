@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <time.h>
+#include <vld.h>
 
 #include "Common.h"
 #include "GL/glew.h"
@@ -8,12 +9,12 @@
 #include "Core/LinkedTime.h"
 #include "Window.h"
 #include "Input.h"
+#include "PacketController.h"
 
 #if _MSC_VER < 1900
 // VC 2013
 #pragma comment(lib, "./lib/vc2013/glew32s_vc2013.lib")
 #pragma comment(lib, "./lib/vc2013/freetype261_vc2013.lib")
-#pragma comment(lib, "./lib/vc2013/glfw3.lib")
 #if _DEBUG
 #pragma comment(lib, "./lib/vc2013/sfml-audio-d.lib")
 #else
@@ -23,7 +24,6 @@
 // VC 2015
 #pragma comment(lib, "./lib/vc2015/glew32s_vc2015.lib")
 #pragma comment(lib, "./lib/vc2015/freetype261_vc2015.lib")
-#pragma comment(lib, "./lib/vc2015/glfw3.lib")
 #if _DEBUG
 #pragma comment(lib, "./lib/vc2015/sfml-audio-d.lib")
 #else
@@ -31,14 +31,6 @@
 #endif
 #endif
 #pragma comment(lib, "opengl32.lib")
-/*
-int main(int argc, char** argv)
-{
-	srand((unsigned int)time(NULL));
-	Display* display = new Display("Linked", 1600/2, 900/2);
-	delete display;
-	return 0;
-}*/
 
 int WINAPI WinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
@@ -83,6 +75,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		static double GameTime = 0.0;
 		static double RenderTime = 0.0;
 		static double SecondCount = 0.0;
+		static double Update10Time = 0.0;
 		static int Frames = 0;
 
 
@@ -91,16 +84,15 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		GameTime += Elapsed;
 		RenderTime += Elapsed;
 		SecondCount += Elapsed;
+		Update10Time += Elapsed;
 
 		if (SecondCount >= 1.0)
 		{
-			//LOG(Frames);
+#ifdef _DEBUG
+			LOG(Frames);
+#endif
 			Frames = 0;
 			SecondCount = 0;
-			//if (window->isWindowFocused())
-			//	LOG("Focused");
-			//else
-			//	LOG("Not Focused");
 		}
 
 		StartTime = LinkedTime::getTime();
@@ -124,6 +116,15 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		else
 			Sleep(1);
 
+		if (Game::multiplayer && game != nullptr)
+		{
+			if (Update10Time >= 1.0 / 7)				// Send packets 7 times per second
+			{
+				Update10Time = 0;
+				PacketController::update10();
+			}
+		}
+
 		if (RenderTime >= 1.0 / FPS)
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -145,7 +146,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	delete window;
 
 #if DEBUG
-	//fclose(pCout);	// release console
+	fclose(pCout);	// release console
 #endif
 	return (int)msg.wParam;
 }

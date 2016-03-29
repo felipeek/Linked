@@ -149,7 +149,7 @@ void Game::update()
 
 Monster* Game::getMonsterOfId(int id)
 {
-	for (int i = 0; i < monsters.size(); i++)
+	for (unsigned int i = 0; i < monsters.size(); i++)
 		if (monsters[i]->getId() == id)
 			return monsters[i];
 
@@ -158,7 +158,7 @@ Monster* Game::getMonsterOfId(int id)
 
 void Game::destroyProjectileOfId(int id)
 {
-	for (int i = 0; i < this->projectiles.size(); i++)
+	for (unsigned int i = 0; i < this->projectiles.size(); i++)
 	{
 		if (this->projectiles[i]->getId() == id)
 		{

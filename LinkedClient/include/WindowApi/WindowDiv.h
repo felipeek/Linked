@@ -1,6 +1,5 @@
 #pragma once
 #include "Button.h"
-#include "Display.h"
 #include "Label.h"
 #include "Mesh.h"
 #include "Texture.h"

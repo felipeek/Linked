@@ -1,5 +1,4 @@
 #pragma once
-#include "Display.h"
 #include "FontRenderer.h"
 #include "Label.h"
 #include "Mesh.h"

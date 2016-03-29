@@ -1,6 +1,5 @@
 #pragma once
 #include "Primitive.h"
-#include "Display.h"
 #include "WindowShader.h"
 #include "FontShader.h"
 #include "FontRenderer.h"
