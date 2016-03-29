@@ -64,7 +64,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 	// Message/Game Loop
 	const double FPS = 120.0;
-	const double GAMESPEED = 100.0;
+	const double GAMESPEED = 60.0;
 	game->running = true;
 
 	while (game->running)
