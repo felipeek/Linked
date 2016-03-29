@@ -186,16 +186,7 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 	case 7:
 		if (dataSize == sizeof(int))
 		{
-			int clientId = data[0];
-
-			for (unsigned int i = 0; i < PacketController::onlinePlayers->size(); i++)
-			{
-				if ((*PacketController::onlinePlayers)[i]->getClientId() == clientId)
-				{
-					delete (*PacketController::onlinePlayers)[i];
-					(*PacketController::onlinePlayers).erase((*PacketController::onlinePlayers).begin() + i);
-				}
-			}
+			PacketController::game->disconnectOnlinePlayer(data);
 		}
 		break;
 	// MONSTER ATTACK HIT A PLAYER

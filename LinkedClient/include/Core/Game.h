@@ -9,6 +9,8 @@
 #define ENTITIES_MAP_PATH "./res/Maps/entities_map.png"
 #define MONSTER_MAP_PATH "./res/Maps/monsters_map.png"
 #define THEME_AUDIO_PATH "./res/Audio/theme.wav"
+#define PLAYER_JOINED_AUDIO_PATH "./res/Audio/player_joined.wav"
+#define PLAYER_DISCONNECTED_AUDIO_PATH "./res/Audio/player_disconnected.wav"
 
 #define SHADOW_BUFFER_SIZE 2048
 
@@ -58,6 +60,7 @@ public:
 	/* AUXILIAR METHODS */
 	Monster* getMonsterOfId(int id);
 	void destroyProjectileOfId(int id);
+	void disconnectOnlinePlayer(int* data);
 
 	/* RENDER & UPDATE*/
 	void render();
@@ -117,6 +120,8 @@ private:
 
 	/* GAME THEME AUDIO */
 	Audio* themeAudio;
+	Audio* playerJoinedAudio;
+	Audio* playerDisconnectedAudio;
 
 	double cursorRot = 0;
 	double lastTime;

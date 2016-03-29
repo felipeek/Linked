@@ -1,6 +1,5 @@
 #include <windows.h>
 #include <time.h>
-#include <vld.h>
 
 #include "Common.h"
 #include "GL/glew.h"

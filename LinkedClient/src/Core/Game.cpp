@@ -65,7 +65,7 @@ Game::Game(int windowWidth, int windowHeight)
 
 	this->createGraphicElements(windowWidth, windowHeight);
 	this->createMap();
-	
+
 	if (Game::multiplayer)
 	{
 		this->createUDPConnection();
@@ -80,6 +80,7 @@ Game::Game(int windowWidth, int windowHeight)
 	}
 	this->createGUI();
 	Chat::gui = this->gui;
+
 	this->initializateThemeAudio();
 }
 
@@ -122,6 +123,8 @@ Game::~Game()
 	}
 
 	if (this->themeAudio != nullptr) delete this->themeAudio;
+	if (this->playerJoinedAudio != nullptr) delete this->playerJoinedAudio;
+	if (this->playerDisconnectedAudio != nullptr) delete this->playerDisconnectedAudio;
 }
 
 void Game::createGraphicElements(int windowWidth, int windowHeight)
@@ -259,6 +262,24 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 	{
 		this->onlinePlayers.push_back(designedPlayer);
 		designedPlayer->setType(NETWORK);
+		if (this->playerJoinedAudio != nullptr) this->playerJoinedAudio->play();
+		if (Chat::gui != nullptr) Chat::gui->setNextMessage(std::string("A new player joined."));
+	}
+}
+
+void Game::disconnectOnlinePlayer(int* data)
+{
+	int clientId = data[0];
+
+	for (unsigned int i = 0; i < PacketController::onlinePlayers->size(); i++)
+	{
+		if ((*PacketController::onlinePlayers)[i]->getClientId() == clientId)
+		{
+			delete (*PacketController::onlinePlayers)[i];
+			(*PacketController::onlinePlayers).erase((*PacketController::onlinePlayers).begin() + i);
+			if (this->playerDisconnectedAudio != nullptr) this->playerDisconnectedAudio->play();
+			if (Chat::gui != nullptr) Chat::gui->setNextMessage(std::string("Player disconnected."));
+		}
 	}
 }
 
@@ -278,6 +299,8 @@ void Game::initializateThemeAudio()
 	this->themeAudio = new Audio(THEME_AUDIO_PATH, AudioType::MUSIC);
 	this->themeAudio->setLoop(true);
 	this->themeAudio->play();
+	this->playerJoinedAudio = new Audio(PLAYER_JOINED_AUDIO_PATH, AudioType::SOUND);
+	this->playerDisconnectedAudio = new Audio(PLAYER_DISCONNECTED_AUDIO_PATH, AudioType::SOUND);
 }
 
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
