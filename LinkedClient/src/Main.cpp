@@ -110,7 +110,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			game->input();
 			linked::Window::updateWindows();
 			
-			GameTime = GameTime - (1.0 / GAMESPEED);
+			GameTime = 0;
 		}
 		else
 			Sleep(1);
@@ -135,7 +135,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			SwapBuffers(window->getHDC());
 
 			// Time control
-			RenderTime = RenderTime - (1.0 / GAMESPEED);
+			RenderTime = 0;
 			Frames++;
 		}
 

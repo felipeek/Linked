@@ -34,7 +34,7 @@ void Cursor::renderCursor(Shader* shader)
 
 void Cursor::update()
 {
-	if (!Input::attack)
+	if (Input::attack)
 	{
 		if (this->mode != CursorMode::ATTACK)
 			this->setCursorMode(CursorMode::ATTACK);

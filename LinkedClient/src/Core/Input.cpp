@@ -57,3 +57,27 @@ void Input::MousePosition(int x, int y)
 
 	ContextWindow::getCurrent().setCursorPosition(glm::vec2(x, y));
 }
+
+std::string Input::GetClipboardText()
+{
+	// Try opening the clipboard
+	if (!OpenClipboard(nullptr))
+		LOG("no clipboard");
+
+	// Get handle of clipboard object for ANSI text
+	HANDLE hData = GetClipboardData(CF_TEXT);
+	if (hData == nullptr)
+		LOG("Error");
+
+	// Lock the handle to get the actual text pointer
+	char * pszText = static_cast<char*>(GlobalLock(hData));
+	if (pszText == nullptr)
+		LOG("Error");
+
+	std::string text(pszText);
+
+	GlobalUnlock(hData);
+	CloseClipboard();
+
+	return text;
+}

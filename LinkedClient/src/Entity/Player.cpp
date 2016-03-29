@@ -451,7 +451,7 @@ void Player::input(Map* map)
 
 	if (!Game::multiplayer)
 	{
-		if (Input::keyStates['x'] && this->getHp() != this->getTotalMaximumHp())
+		if (Input::keyStates['X'] && this->getHp() != this->getTotalMaximumHp())
 			this->setHp(this->getHp() + 1);
 	}
 
@@ -459,7 +459,7 @@ void Player::input(Map* map)
 
 	if (this->isAlive())
 	{
-		if (Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
+		if (Input::keyStates['W'] && !Input::keyStates['A'] && !Input::keyStates['S'] && !Input::keyStates['D'])
 		{
 			glm::vec3 nextPosition = this->getPlayerNextPosition(TOP);
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, nextPosition) || !map->coordinateHasCollision(nextPosition))
@@ -467,7 +467,7 @@ void Player::input(Map* map)
 			this->currentDirection = TOP;
 			this->moving = true;
 		}
-		else if (Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && Input::keyStates['d'])
+		else if (Input::keyStates['W'] && !Input::keyStates['A'] && !Input::keyStates['S'] && Input::keyStates['D'])
 		{
 			glm::vec3 nextPosition = this->getPlayerNextPosition(TOP_RIGHT);
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, nextPosition) || !map->coordinateHasCollision(nextPosition))
@@ -475,7 +475,7 @@ void Player::input(Map* map)
 			this->currentDirection = TOP_RIGHT;
 			this->moving = true;
 		}
-		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && !Input::keyStates['s'] && Input::keyStates['d'])
+		else if (!Input::keyStates['W'] && !Input::keyStates['A'] && !Input::keyStates['S'] && Input::keyStates['D'])
 		{
 			glm::vec3 nextPosition = this->getPlayerNextPosition(RIGHT);
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, nextPosition) || !map->coordinateHasCollision(nextPosition))
@@ -483,7 +483,7 @@ void Player::input(Map* map)
 			this->currentDirection = RIGHT;
 			this->moving = true;
 		}
-		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && Input::keyStates['s'] && Input::keyStates['d'])
+		else if (!Input::keyStates['W'] && !Input::keyStates['A'] && Input::keyStates['S'] && Input::keyStates['D'])
 		{
 			glm::vec3 nextPosition = this->getPlayerNextPosition(BOTTOM_RIGHT);
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, nextPosition) || !map->coordinateHasCollision(nextPosition))
@@ -491,7 +491,7 @@ void Player::input(Map* map)
 			this->currentDirection = BOTTOM_RIGHT;
 			this->moving = true;
 		}
-		else if (!Input::keyStates['w'] && !Input::keyStates['a'] && Input::keyStates['s'] && !Input::keyStates['d'])
+		else if (!Input::keyStates['W'] && !Input::keyStates['A'] && Input::keyStates['S'] && !Input::keyStates['D'])
 		{
 			glm::vec3 nextPosition = this->getPlayerNextPosition(BOTTOM);
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, nextPosition) || !map->coordinateHasCollision(nextPosition))
@@ -499,7 +499,7 @@ void Player::input(Map* map)
 			this->currentDirection = BOTTOM;
 			this->moving = true;
 		}
-		else if (!Input::keyStates['w'] && Input::keyStates['a'] && Input::keyStates['s'] && !Input::keyStates['d'])
+		else if (!Input::keyStates['W'] && Input::keyStates['A'] && Input::keyStates['S'] && !Input::keyStates['D'])
 		{
 			glm::vec3 nextPosition = this->getPlayerNextPosition(BOTTOM_LEFT);
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, nextPosition) || !map->coordinateHasCollision(nextPosition))
@@ -507,7 +507,7 @@ void Player::input(Map* map)
 			this->currentDirection = BOTTOM_LEFT;
 			this->moving = true;
 		}
-		else if (!Input::keyStates['w'] && Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
+		else if (!Input::keyStates['W'] && Input::keyStates['A'] && !Input::keyStates['S'] && !Input::keyStates['D'])
 		{
 			glm::vec3 nextPosition = this->getPlayerNextPosition(LEFT);
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, nextPosition) || !map->coordinateHasCollision(nextPosition))
@@ -515,7 +515,7 @@ void Player::input(Map* map)
 			this->currentDirection = LEFT;
 			this->moving = true;
 		}
-		else if (Input::keyStates['w'] && Input::keyStates['a'] && !Input::keyStates['s'] && !Input::keyStates['d'])
+		else if (Input::keyStates['W'] && Input::keyStates['A'] && !Input::keyStates['S'] && !Input::keyStates['D'])
 		{
 			glm::vec3 nextPosition = this->getPlayerNextPosition(TOP_LEFT);
 			if (checkIfPlayerIsStillOnTheSameMapPosition(currentPosition, nextPosition) || !map->coordinateHasCollision(nextPosition))

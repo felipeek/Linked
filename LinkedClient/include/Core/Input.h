@@ -3,6 +3,7 @@
 
 #define KEYSTATES 512
 #include <glm/glm.hpp>
+#include <string>
 
 class Input
 {
@@ -18,6 +19,7 @@ public:
 	static void LeftClick();
 	static void LeftClickRelease();
 	static void MousePosition(int x, int y);
+	static std::string GetClipboardText();
 
 	static void clear();
 };

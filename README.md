@@ -18,7 +18,7 @@ Linked is a multiplayer game idealized by Hoshoyo. It is currently being develop
 - [ ] Fix chat overflow
 - [ ] Fix HP Bar texture and position
 - [ ] Disable skills when dead
-- [ ] Re-enable mouse right button
+- [x] Re-enable mouse right button
 - [ ] Re-enable skills cooldown icons
 
 #### Future Tasks
