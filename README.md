@@ -12,7 +12,7 @@ Linked is a multiplayer game idealized by Hoshoyo. It is currently being develop
 - [ ] Create custom commands (client and server side)
 
 ### Bug Fixes
-- [ ] Avoid creating heaps of sf::Sound (More info: http://stackoverflow.com/questions/26265964/sfml-internal-openal-error#_=_)
+- [ ] Avoid creating heaps of sf::Sound ([More info](http://stackoverflow.com/questions/26265964/sfml-internal-openal-error#_=_))
 - [ ] Fix chat overflow
 - [ ] Fix HP Bar texture and position
 - [ ] Disable skills when dead
