@@ -68,6 +68,9 @@ LRESULT CALLBACK WindowInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 		}
 	}
 	break;
+	case WM_MOUSEWHEEL:		
+		Input::wheel = static_cast<short>(HIWORD(wParam));
+		break;
 	case WM_CHAR:
 		Chat::ProcessKeyStroke(wParam);
 	default:
