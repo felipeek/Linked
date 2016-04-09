@@ -1,13 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinkedClient", "LinkedClient\LinkedClient.vcxproj", "{82719FD9-FAB5-42B2-AD62-68EED2FB4D78}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinkedServer", "LinkedServer\LinkedServer.vcxproj", "{2CD0D693-3DA3-469A-ACFB-C07C19A089EE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DEBB17BE-D4AE-49AE-A5B8-D87309721B93}"
+	ProjectSection(SolutionItems) = preProject
+		Performance2.psess = Performance2.psess
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86

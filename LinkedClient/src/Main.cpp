@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <windowsx.h>
 #include <time.h>
 
 #include "Common.h"
@@ -43,7 +44,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	bool running = true;
 
 	// Initialize window, OpenGL context and game
-	window = new ContextWindow(nCmdShow, hInstance, 800 * 1.5, 450 * 1.5, std::string("hoengine_opengl"), std::string("Linked - v2.0"));
+	window = new ContextWindow(nCmdShow, hInstance, 800 * 1.8, 450 * 1.8, std::string("hoengine_opengl"), std::string("Linked - v2.0"));
 	window->InitOpenGL();
 	game = new Game(window->getWidth(), window->getHeight());
 
@@ -62,9 +63,12 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	}
 
 	// Message/Game Loop
-	const double FPS = 120.0;
+	const double FPS = 60.0;
 	const double GAMESPEED = 60.0;
 	game->running = true;
+
+	// Enable Vsync
+	wglSwapIntervalEXT(1);
 
 	while (game->running)
 	{
@@ -96,24 +100,6 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 		StartTime = LinkedTime::getTime();
 
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			if (msg.message == WM_QUIT)
-				game->running = false;
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-
-		if (GameTime >= 1.0 / GAMESPEED)
-		{
-			game->update();
-			game->input();
-			linked::Window::updateWindows();
-			
-			GameTime = 0;
-		}
-		else
-			Sleep(1);
 
 		if (Game::multiplayer && game != nullptr)
 		{
@@ -122,6 +108,22 @@ int WINAPI WinMain(HINSTANCE hInstance,
 				Update10Time = 0;
 				PacketController::update10();
 			}
+		}
+
+		if (GameTime >= 1.0 / GAMESPEED)
+		{
+			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0)
+			{
+				if (msg.message == WM_QUIT)
+					game->running = false;
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+			game->update();
+			game->input();
+			linked::Window::updateWindows();
+
+			GameTime = GameTime - (1.0 / GAMESPEED);
 		}
 
 		if (RenderTime >= 1.0 / FPS)
@@ -135,10 +137,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			SwapBuffers(window->getHDC());
 
 			// Time control
-			RenderTime = 0;
+			RenderTime = RenderTime - (1.0 / FPS);
 			Frames++;
 		}
-
 	}
 
 	delete game;
