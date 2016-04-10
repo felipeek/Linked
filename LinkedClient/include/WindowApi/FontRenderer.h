@@ -1,9 +1,10 @@
 #pragma once
 
 #include "external/freetypegl/freetype-gl.h"
-#include "external/freetypegl/texture-font.h"
+//#include "external/freetypegl/texture-font.h"
 
 #include <glm/glm.hpp>
+#include <string>
 
 class FontShader;
 class Mesh;
@@ -14,6 +15,7 @@ public:
 	FontRenderer(float fontSize, int textureQuality);
 	~FontRenderer();
 	int renderText(const unsigned char* text, int textSize, const glm::vec2& position, float rightLimit, float bottomLimit, const glm::vec4 color, FontShader* shader);
+	int RenderText(std::string text, int xPos, int yPos, float pixelWidthLimit, const glm::vec4 color, FontShader* shader, bool wordFormat);
 private:
 	ftgl::texture_atlas_t* atlas;
 	ftgl::texture_font_t* font;

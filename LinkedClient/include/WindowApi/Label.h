@@ -38,6 +38,7 @@ private:
 	
 	int m_textLength;
 	float lineSpace;
+	int m_yAdvance;
 	glm::vec4 m_textColor;
 public:
 	inline void setLineSpace(float lineSpace) { this->lineSpace = lineSpace; }
@@ -51,5 +52,6 @@ public:
 	inline void setText(unsigned char* newText, int length){ this->m_text = newText; this->m_textLength = length; }
 	inline void setTextLength(int length){ this->m_textLength = length; }
 	inline void setString(std::string& str) { this->m_string = str; }
+	inline int getYAdvance() { return this->m_yAdvance; }
 };
 }

@@ -61,26 +61,15 @@ namespace linked
 	{
 		// Calculate the lineSpacing
 		glm::vec2 renderPosition = m_div.getDivBasePosition(m_margin + m_position.x, m_margin + m_position.y + (lineSpace / 2.0f));
-		glm::vec2 yRenderOffset = m_div.getDivBasePosition(m_margin + m_position.x, m_margin + m_position.y + (lineSpace / 2.0f) + lineSpace);
-		float yOffsetValue;
-		if (defaultLineSpace)
-			yOffsetValue = yRenderOffset.y - renderPosition.y;
-		else
-			yOffsetValue = (lineSpace / (ContextWindow::getCurrent().getHeight() / 2.0f));
 
-		// Calculate the right limit of the div
-		float rightLimit = m_div.getDivBasePosition((float)m_div.getWidth() - m_margin, 0).x;
+		float rightLimit = m_div.getWindow().getPosition().x * 2.0f + m_div.getWidth() - 50;
 
-		// Render first line, returns the index of the last characted that fit the div width
-		int fitted = m_fontRenderer->renderText(m_text, m_textLength, glm::vec2(renderPosition.x, -renderPosition.y), rightLimit, 0, m_textColor, Window::m_textShader);
+		int ww = ContextWindow::getCurrent().getWidth();
+		int wh = ContextWindow::getCurrent().getHeight();
 
-		float currentYoffset = yOffsetValue;	// Set the line spacing for next line rendering
-		int lastFittingChar = fitted;
-		while (fitted > 0)
-		{
-			fitted = m_fontRenderer->renderText(&m_text[lastFittingChar], m_textLength - lastFittingChar, glm::vec2(renderPosition.x, -renderPosition.y - currentYoffset), rightLimit, 0, m_textColor, Window::m_textShader);
-			lastFittingChar += fitted;
-			currentYoffset += yOffsetValue;
-		}
+		if(m_text)
+			m_yAdvance = m_fontRenderer->RenderText(std::string((const char*)m_text),
+			renderPosition.x * ww, -renderPosition.y * wh, rightLimit, m_textColor, Window::m_textShader, true);
+
 	}
 }

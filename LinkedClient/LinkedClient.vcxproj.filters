@@ -169,7 +169,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="LinkedIcon.ico" />
-    <Image Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LinkedClient.rc" />

@@ -185,6 +185,7 @@ void GUI::render()
 		chatDiv->setBackgroundColor(glm::vec4(0, 0, 0, 0));
 
 	chatLabel->setText((unsigned char*)chatString.c_str(), chatString.size());
+
 }
 
 void GUI::setPlayerHealth(unsigned int health, unsigned int maxHealth)
@@ -288,6 +289,23 @@ void GUI::renderSkillIcons(Shader* shader)
 
 void GUI::setNextMessage(std::string& msg)
 {
+	linked::Label* l = messagesDiv->getLabels()[0];
+	if (l->getYAdvance() > 0) 
+	{
+		for (int i = 0; i < l->getYAdvance(); i++)
+		{
+			if (messages.size() < CHAT_MAX_MSGS)
+			{
+				messages.insert(messages.begin(), "");
+			}
+			else
+			{
+				messages.erase(messages.begin() + messages.size() - 1);
+				messages.insert(messages.begin(), "");
+			}
+		}
+	}
+
 	if (messages.size() < CHAT_MAX_MSGS)
 	{
 		messages.insert(messages.begin(), msg);

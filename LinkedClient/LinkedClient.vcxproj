@@ -72,14 +72,14 @@
     <OutDir>bin/debug/</OutDir>
     <IntDir>bin/debug/</IntDir>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>bin/release/</OutDir>
     <IntDir>bin/release/</IntDir>
     <IncludePath>$(ProjectDir)/include/Entity/Monster;$(ProjectDir)/include/WindowApi;$(ProjectDir)/include/Shaders/Classes;$(ProjectDir)/include;$(ProjectDir)/include/External;$(ProjectDir)/include/Entity/Skill;$(ProjectDir)/include/Entity/Attack;$(ProjectDir)/include/Entity/Factory;$(ProjectDir)/include/Shaders;$(ProjectDir)/include/Entity/AI;$(ProjectDir)/include/Map;$(ProjectDir)/include/Entity;$(ProjectDir)/include/Network;$(ProjectDir)/include/ResourceLoad;$(ProjectDir)/include/GUI;$(ProjectDir)/include/Core;C:\Program Files %28x86%29\Visual Leak Detector\include;$(IncludePath)</IncludePath>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>bin/</OutDir>
@@ -96,7 +96,7 @@
       <SDLCheck>false</SDLCheck>
       <AdditionalIncludeDirectories>include/native;include/Entity/Monster;include/WindowApi;include/Shaders/Classes;include;include/External;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <EnablePREfast>true</EnablePREfast>
+      <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -128,7 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>include/Entity/Monster;include/WindowApi;include/Shaders/Classes;include;include/External;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core;include/native</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <EnablePREfast>true</EnablePREfast>
+      <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -329,7 +329,6 @@
     <ClInclude Include="include\native\WindowInput.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="icon.ico" />
     <Image Include="LinkedIcon.ico" />
   </ItemGroup>
   <ItemGroup>
