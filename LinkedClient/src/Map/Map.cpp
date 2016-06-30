@@ -62,7 +62,7 @@ MapCoordinate Map::getMapCoordinateForMapCreation(glm::vec3 coordinate)
 }
 
 // can be done because 'getMapTerrainForCoordinate' does not create anything on heap
-MapTerrain Map::getMapTerrainForCoordinate(glm::vec3 coordinate)
+MapTerrain Map::getMapTerrainForCoordinate(glm::vec3& coordinate)
 {
 	return mapTerrainLoader->getMapTerrainForCoordinate(coordinate);
 }

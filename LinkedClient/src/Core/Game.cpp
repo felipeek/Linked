@@ -50,7 +50,7 @@
 #include <iostream>
 #include <string>
 
-bool Game::multiplayer = true;
+bool Game::multiplayer = false;
 int Game::server_port = 9090;
 std::string Game::server_ip = "127.0.0.1";
 //std::string Game::server_ip = "189.6.251.134";
@@ -64,6 +64,7 @@ Game::Game(int windowWidth, int windowHeight)
 	Game::current = this;
 
 	this->createGraphicElements(windowWidth, windowHeight);
+
 	this->createMap();
 
 	if (Game::multiplayer)
@@ -78,6 +79,7 @@ Game::Game(int windowWidth, int windowHeight)
 		this->createOfflinePlayer();
 		this->loadMonstersAndEntities(true, true);
 	}
+
 	this->createGUI();
 	Chat::gui = this->gui;
 
@@ -305,9 +307,9 @@ void Game::initializateThemeAudio()
 
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 {
+	// Note: 11 seconds to load map
 	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, this->map));
 
-	// TODO: delete EntityMap transform and textures
 	this->entityMap = new EntityMap(new Transform(), mapMesh,
 		new Texture("./res/Maps/snow.jpg"),
 		new Texture("./res/Maps/ice_mountain.jpg"),
@@ -316,17 +318,15 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 		new Texture(TERRAIN_MAP_PATH));
 	entityMap->setShadowTexture(frameBuffer->getTexture());
 
-	// TODO: delete waterMesh Mesh, texture and transform
+
 	Mesh* waterMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), (float)MAP_SIZE, (float)MAP_SIZE));
 	Texture* waterTexture = new Texture("./res/Maps/water.jpg");
 	waterTexture->setTileAmount(100);
 	water = new Entity(new Transform(glm::vec3(0,0,-1.0f)), waterMesh, waterTexture);
 
-
 	// TODO: verify allocation in a loop ( if causes performance overhead )
 	//monsters.resize(77);
 	//gameEntities.resize(30);
-	
 	// Load monsters and entities
 	for (int i = 0/*, m=0, e=0*/; i < MAP_SIZE; i++)
 	{

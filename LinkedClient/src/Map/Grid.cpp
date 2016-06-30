@@ -2,13 +2,14 @@
 #include "Map.h"
 
 Grid::Grid(int blockSize, Map* map)
+	: blockSize(blockSize)
 {
 	int arraySize = blockSize * blockSize;
+	// Preallocate
 	indexedModel.positions.resize(arraySize);
 	indexedModel.normals.resize(arraySize);
 	indexedModel.texCoords.resize(arraySize);
 
-	this->blockSize = blockSize;
 	for (int i = 0, var = 0; i < blockSize; i += 2)
 	{
 		for (int j = 0; j < blockSize; j += 2)
@@ -72,6 +73,7 @@ Grid::Grid(int blockSize, Map* map)
 		}
 	}
 
+	indexedModel.indices.reserve(5000000);
 	for (int i = 0, prevFirst = 0, newFirst = 0, deslocamento = 0, ultimo = 0, var = 0; i < blockSize - 1; i++)
 	{
 		for (int j = 0, aux = 0; j < blockSize - 1; j++)
@@ -83,12 +85,6 @@ Grid::Grid(int blockSize, Map* map)
 			indexedModel.indices.push_back(newFirst + j + 2 + aux);
 			indexedModel.indices.push_back(deslocamento + j + 3 + aux);
 
-			//indexedModel.indices[var] = (deslocamento + j + 3 + aux);			// if preallocated
-			//indexedModel.indices[var + 1] = (deslocamento + j + 1 + aux);
-			//indexedModel.indices[var + 2] = (newFirst + j + aux);
-			//indexedModel.indices[var + 3] = (newFirst + j + aux);
-			//indexedModel.indices[var + 4] = (newFirst + j + 2 + aux);
-			//indexedModel.indices[var + 5] = (deslocamento + j + 3 + aux);
 			var += 6;
 
 			if (j == 0)

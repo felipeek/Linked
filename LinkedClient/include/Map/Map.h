@@ -25,7 +25,7 @@ public:
 	MapCoordinate getMapCoordinateForMapCreation(glm::vec3 coordinate);
 
 	bool coordinateHasCollision(glm::vec3 coordinate);
-	MapTerrain getMapTerrainForCoordinate(glm::vec3 coordinate);
+	MapTerrain getMapTerrainForCoordinate(glm::vec3& coordinate);
 private:
 	MapTerrainImageLoader* mapTerrainLoader;
 	MapGameEntityImageLoader* mapGameEntityLoader;

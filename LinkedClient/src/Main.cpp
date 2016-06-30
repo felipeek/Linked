@@ -1,36 +1,4 @@
-#include <windows.h>
-#include <windowsx.h>
-#include <time.h>
-
 #include "Common.h"
-#include "GL/glew.h"
-#include "native/ContextWindow.h"
-#include "Core/Game.h"
-#include "Core/LinkedTime.h"
-#include "Window.h"
-#include "Input.h"
-#include "PacketController.h"
-
-#if _MSC_VER < 1900
-// VC 2013
-#pragma comment(lib, "./lib/vc2013/glew32s_vc2013.lib")
-#pragma comment(lib, "./lib/vc2013/freetype261_vc2013.lib")
-#if _DEBUG
-#pragma comment(lib, "./lib/vc2013/sfml-audio-d.lib")
-#else
-#pragma comment(lib, "./lib/vc2013/sfml-audio.lib")
-#endif
-#elif _MSC_VER < 2000
-// VC 2015
-#pragma comment(lib, "./lib/vc2015/glew32s_vc2015.lib")
-#pragma comment(lib, "./lib/vc2015/freetype261_vc2015.lib")
-#if _DEBUG
-#pragma comment(lib, "./lib/vc2015/sfml-audio-d.lib")
-#else
-#pragma comment(lib, "./lib/vc2015/sfml-audio.lib")
-#endif
-#endif
-#pragma comment(lib, "opengl32.lib")
 
 int WINAPI WinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
@@ -44,15 +12,16 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	bool running = true;
 
 	// Initialize window, OpenGL context and game
-	window = new ContextWindow(nCmdShow, hInstance, 800 * 1.8, 450 * 1.8, std::string("hoengine_opengl"), std::string("Linked - v2.0"));
+	window = new ContextWindow(nCmdShow, hInstance, (int)800 * 1.8, (int)450 * 1.8, std::string("hoengine_opengl"), std::string("Linked - v2.0"));
 	window->InitOpenGL();
-	game = new Game(window->getWidth(), window->getHeight());
 
-#if DEBUG
+#if _DEBUG
 	AllocConsole();
 	FILE* pCout;
 	freopen_s(&pCout, "CONOUT$", "w", stdout);
 #endif
+
+	game = new Game(window->getWidth(), window->getHeight());
 	//ShowCursor(false);
 
 	glewExperimental = true;
@@ -145,7 +114,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	delete game;
 	delete window;
 
-#if DEBUG
+#if _DEBUG
 	fclose(pCout);	// release console
 #endif
 	return (int)msg.wParam;

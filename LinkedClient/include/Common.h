@@ -1,10 +1,37 @@
 #pragma once
-#define DEBUG 1
+#include <windows.h>
+#include <windowsx.h>
+#include <time.h>
+#include "GL/glew.h"
+#include "native/ContextWindow.h"
+#include "Core/Game.h"
+#include "Core/LinkedTime.h"
+#include "Window.h"
+#include "Input.h"
+#include "PacketController.h"
 
-#if DEBUG
-#include <iostream>
+#define _DEBUG 1
+#pragma comment(lib, "opengl32.lib")
+#pragma comment(lib, "winmm.lib")
 
-#define LOG(x) std::cout << x << std::endl
+#ifdef _WIN32
+#pragma comment(lib, "./lib/win32/glew32s.lib")
+#pragma comment(lib, "./lib/win32/freetype263MT.lib")
+
+
+#ifdef SFML_STATIC
+#pragma comment(lib, "./lib/win32/sfml-audio-2.lib")
+#pragma comment(lib, "./lib/win32/sfml-system-2.lib")
+#pragma comment(lib, "./lib/win32/flac.lib")
+#pragma comment(lib, "./lib/win32/ogg.lib")
+#pragma comment(lib, "./lib/win32/openal32.lib")
+#pragma comment(lib, "./lib/win32/vorbis.lib")
+#pragma comment(lib, "./lib/win32/vorbisenc.lib")
+#pragma comment(lib, "./lib/win32/vorbisfile.lib")
 #else
-#define LOG(x)
+#pragma comment(lib, "./lib/win32/sfml-audio.lib")
 #endif
+
+#endif
+#include <iostream>
+#define LOG(x) std::cout << x << std::endl

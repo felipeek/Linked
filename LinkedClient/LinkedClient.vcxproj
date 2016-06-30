@@ -70,13 +70,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>bin/debug/</OutDir>
-    <IntDir>bin/debug/</IntDir>
+    <IntDir>bin/debug/intermediaries/</IntDir>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>bin/release/</OutDir>
-    <IntDir>bin/release/</IntDir>
+    <IntDir>bin/release/intermediaries/</IntDir>
     <IncludePath>$(ProjectDir)/include/Entity/Monster;$(ProjectDir)/include/WindowApi;$(ProjectDir)/include/Shaders/Classes;$(ProjectDir)/include;$(ProjectDir)/include/External;$(ProjectDir)/include/Entity/Skill;$(ProjectDir)/include/Entity/Attack;$(ProjectDir)/include/Entity/Factory;$(ProjectDir)/include/Shaders;$(ProjectDir)/include/Entity/AI;$(ProjectDir)/include/Map;$(ProjectDir)/include/Entity;$(ProjectDir)/include/Network;$(ProjectDir)/include/ResourceLoad;$(ProjectDir)/include/GUI;$(ProjectDir)/include/Core;C:\Program Files %28x86%29\Visual Leak Detector\include;$(IncludePath)</IncludePath>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -97,13 +97,13 @@
       <AdditionalIncludeDirectories>include/native;include/Entity/Monster;include/WindowApi;include/Shaders/Classes;include;include/External;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnablePREfast>false</EnablePREfast>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>./lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>LIBCMTD.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <IgnoreSpecificDefaultLibraries>msvcrt;libcmt;</IgnoreSpecificDefaultLibraries>
+      <AdditionalDependencies>LIBCMT.lib;libvcruntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcmt</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -126,12 +126,13 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <AdditionalIncludeDirectories>include/Entity/Monster;include/WindowApi;include/Shaders/Classes;include;include/External;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core;include/native</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnablePREfast>false</EnablePREfast>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <DebugInformationFormat>None</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>No</GenerateDebugInformation>

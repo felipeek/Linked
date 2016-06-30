@@ -12,7 +12,7 @@ MapTerrainImageLoader::~MapTerrainImageLoader()
 	freeLoadedImage();
 }
 
-bool MapTerrainImageLoader::coordinateHasCollision(glm::vec3 coordinateVector){
+bool MapTerrainImageLoader::coordinateHasCollision(glm::vec3& coordinateVector){
 	try
 	{
 		glm::vec3 rgb;
@@ -42,7 +42,7 @@ bool MapTerrainImageLoader::coordinateHasCollision(glm::vec3 coordinateVector){
 	return false;
 }
 
-MapTerrain MapTerrainImageLoader::getMapTerrainForCoordinate(vec3 coordinateVector)
+MapTerrain MapTerrainImageLoader::getMapTerrainForCoordinate(vec3& coordinateVector)
 {
 	MapTerrain mapObject;
 

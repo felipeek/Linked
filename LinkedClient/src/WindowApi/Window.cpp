@@ -1,15 +1,6 @@
 #include "Window.h"
 #include "ContextWindow.h"
 
-#define DEBUG 1
-
-#ifdef DEBUG
-#include <iostream>
-#define LOG(x) std::cout << x << std::endl;
-#else
-#define LOG(x)
-#endif
-
 namespace linked{
 	std::vector<Window*> Window::openedWindows;
 	FontShader* Window::m_textShader = nullptr;
