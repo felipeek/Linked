@@ -111,7 +111,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>include;include/Entity/Skill;include/Entity/Factory;include/Entity/Attack;include/Entity/AI;include/Shaders;include/ResourceLoad;include/Network;include/Map;include/GUI;include/external;include/Entity;include/Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;include/Entity/Skill;include/Entity/Factory;include/Entity/Monster;include/Entity/Attack;include/Entity/AI;include/WindowApi;include/Shaders/Classes;include/Shaders;include/ResourceLoad;include/Network;include/Map;include/GUI;include/external;include/Entity;include/Core;include/native;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -152,7 +152,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>include;include/Entity/Skill;include/Entity/Factory;include/Entity/Attack;include/Entity/AI;include/Shaders;include/ResourceLoad;include/Network;include/Map;include/GUI;include/external;include/Entity;include/Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;include/Entity/Skill;include/Entity/Factory;include/Entity/Monster;include/Entity/Attack;include/Entity/AI;include/WindowApi;include/Shaders/Classes;include/Shaders;include/ResourceLoad;include/Network;include/Map;include/GUI;include/external;include/Entity;include/Core;include/native;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -160,7 +160,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;glfw3.lib;freetype261.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
