@@ -92,6 +92,11 @@ LRESULT CALLBACK WindowInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 	case WM_CHAR:
 		if(!Input::keyStates[17])
 			Chat::ProcessKeyStroke(wParam);
+		break;
+
+	case WM_SIZE:
+		OutputDebugStringA("teste");
+		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 		break;
