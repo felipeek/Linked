@@ -12,7 +12,7 @@
 #define PLAYER_JOINED_AUDIO_PATH "./res/Audio/player_joined.wav"
 #define PLAYER_DISCONNECTED_AUDIO_PATH "./res/Audio/player_disconnected.wav"
 
-#define SHADOW_BUFFER_SIZE 2048
+#define SHADOW_BUFFER_SIZE 4096
 
 #define PLAYER_HEIGHT 1.39f
 

@@ -18,9 +18,9 @@ Light::~Light()
 
 void Light::input()
 {
-	if (Input::keyStates[1 + 320])
+	if (Input::keyStates['O'])
 		dayDelta += 0.5f;
-	if (Input::keyStates[9 + 320])
+	if (Input::keyStates['P'])
 		dayDelta -= 0.5f;
 }
 

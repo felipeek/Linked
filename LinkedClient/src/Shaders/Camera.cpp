@@ -22,7 +22,8 @@ Camera::Camera(glm::vec3 position, glm::vec3 orientation, float orthoSpan, float
 	viewMatrix = glm::lookAt(position, orientation, upVector);
 
 	orthoSpan = abs(orthoSpan);
-	projectionMatrix = glm::ortho(-orthoSpan, orthoSpan, -orthoSpan, orthoSpan, zNear, zFar);
+	const float aspect = 16.0f / 9.0f;
+	projectionMatrix = glm::ortho(-orthoSpan * aspect, orthoSpan * aspect, -orthoSpan, orthoSpan, zNear, zFar);
 	updateViewProj();
 }
 

@@ -1,4 +1,5 @@
 // Project Libs
+#include <glm\gtc\matrix_transform.hpp>
 #include "Game.h"
 #include "LinkedTime.h"
 #include "Input.h"
@@ -153,7 +154,7 @@ void Game::createGraphicElements(int windowWidth, int windowHeight)
 	// Shadows
 	frameBuffer = new FrameBuffer(SHADOW_BUFFER_SIZE, SHADOW_BUFFER_SIZE);
 	frameBuffer->genShadowMap(glm::vec4(1,1,1,1));
-	frameBuffer->genLightCamera(55.0f);
+	frameBuffer->genLightCamera(15.0f);
 }
 
 void Game::createMap()
