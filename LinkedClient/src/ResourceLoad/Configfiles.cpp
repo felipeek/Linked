@@ -1,6 +1,6 @@
 #include "Configfiles.h"
 #include <stdio.h>
-#include "Log/Log.h"
+#include "Logging/Log.h"
 
 Config::Config(const char* filename, bool* mult, int* port, std::string& ip)
 {
