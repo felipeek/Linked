@@ -47,7 +47,7 @@
 #include "Audio.h"
 
 // Standard libs
-#include "Debug/Log.h"
+#include "Log/Log.h"
 #include "Configfiles.h"
 #include <string>
 
