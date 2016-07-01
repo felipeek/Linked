@@ -47,19 +47,20 @@
 #include "Audio.h"
 
 // Standard libs
-#include <iostream>
+#include "Debug/Log.h"
+#include "Configfiles.h"
 #include <string>
 
-bool Game::multiplayer = false;
-int Game::server_port = 9090;
-std::string Game::server_ip = "127.0.0.1";
-//std::string Game::server_ip = "189.6.251.134";
+bool Game::multiplayer;
+int Game::server_port;
+std::string Game::server_ip;
 Cursor* Game::cursor = nullptr;
 Game* Game::current = nullptr;
 
 Game::Game(int windowWidth, int windowHeight)
 	: windowWidth(windowWidth), windowHeight(windowHeight)
-{	
+{
+	Config config("config.linked", &multiplayer, &server_port, server_ip);
 	PacketController::game = this;
 	Game::current = this;
 

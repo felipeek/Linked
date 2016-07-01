@@ -95,7 +95,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <AdditionalIncludeDirectories>include/native;include/Entity/Monster;include/WindowApi;include/Shaders/Classes;include;include/External;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnablePREfast>false</EnablePREfast>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -128,7 +128,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <AdditionalIncludeDirectories>include/Entity/Monster;include/WindowApi;include/Shaders/Classes;include;include/External;include/Entity/Skill;include/Entity/Attack;include/Entity/Factory;include/Shaders;include/Entity/AI;include/Map;include/Entity;include/Network;include/ResourceLoad;include/GUI;include/Core;include/native</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnablePREfast>false</EnablePREfast>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -176,6 +176,7 @@
     <ClCompile Include="src\Entity\Monster\BasicMonster.cpp" />
     <ClCompile Include="src\Entity\Skill\CureBlessingSkill.cpp" />
     <ClCompile Include="src\Entity\Cursor.cpp" />
+    <ClCompile Include="src\ResourceLoad\Configfiles.cpp" />
     <ClCompile Include="src\Shaders\Classes\FontShader.cpp" />
     <ClCompile Include="src\Shaders\Classes\SkillShader.cpp" />
     <ClCompile Include="src\Entity\Skill\LinkSkill.cpp" />
@@ -245,6 +246,7 @@
     <ClCompile Include="src\native\WindowInput.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Debug\Log.h" />
     <ClInclude Include="include\native\ContextWindow.h" />
     <ClInclude Include="include\Audio.h" />
     <ClInclude Include="include\AudioController.h" />
@@ -333,6 +335,7 @@
     <ClInclude Include="include\GUI\Menu.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="include\native\WindowInput.h" />
+    <ClInclude Include="include\ResourceLoad\Configfiles.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="LinkedIcon.ico" />

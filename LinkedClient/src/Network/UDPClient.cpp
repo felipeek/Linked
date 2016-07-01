@@ -4,8 +4,6 @@
 #include "PacketController.h"
 #include <iostream>
 
-//#define DEBUG
-
 using namespace std;
 
 int UDPClient::myID = -1;
