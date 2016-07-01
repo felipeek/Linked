@@ -4,6 +4,7 @@
 #include "Primitive.h"
 #include "Game.h"
 #include "Audio.h"
+#include <math.h>
 
 #define FIRST_ID 1
 
@@ -345,7 +346,8 @@ Monster* Monster::getCopy(Monster* copy)
 	copy->setTotalCollisionRange(this->getTotalCollisionRange());
 	copy->setTotalAttackSpeed(this->getTotalAttackSpeed());
 	// Copy Mesh (A new mesh/quad object must be created for each monster)
-	if (copy->getMesh() == nullptr)	copy->setMesh(new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 7, 7)));
+	// Obs.: numRows is static for monsters that have 1 kind of texture pattern
+	if (copy->getMesh() == nullptr)	copy->setMesh(new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, ceil(sqrt(16*this->getTextureQuantity() + 1)), 7)));
 	// Copy Texture (The same texture will be setted for all monsters of same class)
 	copy->setTexture(this->getTexture());
 	// Copy Transform (A new transform object must be created for each monster)
