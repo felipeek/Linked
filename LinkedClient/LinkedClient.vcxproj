@@ -164,6 +164,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Entity\Monster\BomberMonster.cpp" />
     <ClCompile Include="src\native\ContextWindow.cpp" />
     <ClCompile Include="include\external\freetypegl\platform.c" />
     <ClCompile Include="include\external\freetypegl\texture-atlas.c" />
@@ -245,6 +246,7 @@
     <ClCompile Include="src\native\WindowInput.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Entity\Monster\BomberMonster.h" />
     <ClInclude Include="include\native\ContextWindow.h" />
     <ClInclude Include="include\Audio.h" />
     <ClInclude Include="include\AudioController.h" />

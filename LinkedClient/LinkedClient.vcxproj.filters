@@ -80,6 +80,7 @@
     <ClCompile Include="src\Entity\Monster\DistanceMonster.cpp" />
     <ClCompile Include="src\native\ContextWindow.cpp" />
     <ClCompile Include="src\native\WindowInput.cpp" />
+    <ClCompile Include="src\Entity\Monster\BomberMonster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Entity\AI\AI.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="include\native\ContextWindow.h" />
     <ClInclude Include="include\native\WindowInput.h" />
+    <ClInclude Include="include\Entity\Monster\BomberMonster.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="LinkedIcon.ico" />

@@ -33,13 +33,15 @@ enum class MonsterType
 	GENERIC,
 	BASIC,
 	TURRET,
-	DISTANCE
+	DISTANCE,
+	BOMBER
 };
 
 class Monster;
 class BasicMonster;
 class TurretMonster;
 class DistanceMonster;
+class BomberMonster;
 
 class MonsterNotFoundException : std::exception{};
 
@@ -62,6 +64,7 @@ private:
 	void fillBasicMonsterAttributes(BasicMonster* monster, rapidxml::xml_node<> *firstNode);
 	void fillTurretMonsterAttributes(TurretMonster* monster, rapidxml::xml_node<> *firstNode);
 	void fillDistanceMonsterAttributes(DistanceMonster* monster, rapidxml::xml_node<> *firstNode);
+	void fillBomberMonsterAttributes(BomberMonster* monster, rapidxml::xml_node<> *firstNode);
 	void parseAllMonstersInDirectory();
 	MonsterType findMonsterType(rapidxml::xml_node<> *firstNode);
 	std::vector<Monster*> monsters;

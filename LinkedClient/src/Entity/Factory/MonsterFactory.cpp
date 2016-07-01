@@ -3,6 +3,7 @@
 #include "BasicMonster.h"
 #include "TurretMonster.h"
 #include "DistanceMonster.h"
+#include "BomberMonster.h"
 
 MonsterFactory::MonsterFactory()
 {
@@ -110,6 +111,14 @@ Monster* MonsterFactory::parseXmlMonster(char* monsterPath)
 			this->fillGenericMonsterAttributes(distanceMonster, rootNode->first_node());
 			parsedMonster = distanceMonster;
 		}
+		else if (type == MonsterType::BOMBER)
+		{
+			BomberMonster* bomberMonster = new BomberMonster(nullptr, nullptr, nullptr);
+			this->fillBomberMonsterAttributes(bomberMonster, rootNode->first_node());
+			this->fillBasicMonsterAttributes(bomberMonster, rootNode->first_node());
+			this->fillGenericMonsterAttributes(bomberMonster, rootNode->first_node());
+			parsedMonster = bomberMonster;
+		}
 	}
 
 	return parsedMonster;
@@ -189,6 +198,11 @@ void MonsterFactory::fillDistanceMonsterAttributes(DistanceMonster* monster, rap
 
 }
 
+void MonsterFactory::fillBomberMonsterAttributes(BomberMonster* monster, rapidxml::xml_node<> *firstNode)
+{
+
+}
+
 MonsterType MonsterFactory::decodeMonsterType(std::string encodedType)
 {
 	if (encodedType.compare("BASIC") == 0)
@@ -199,6 +213,8 @@ MonsterType MonsterFactory::decodeMonsterType(std::string encodedType)
 		return MonsterType::TURRET;
 	else if (encodedType.compare("DISTANCE") == 0)
 		return MonsterType::DISTANCE;
+	else if (encodedType.compare("BOMBER") == 0)
+		return MonsterType::BOMBER;
 
 	return MonsterType::GENERIC;
 }
