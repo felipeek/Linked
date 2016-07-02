@@ -1,22 +1,16 @@
 #pragma once
 #include "Skill.h"
 
-#define HOSHOYO_EXPLOSION_SKILL_MAX_RADIUS 25
+#define MONSTER_EXPLOSION_SKILL_MAX_RADIUS 25
 
 class Audio;
 
-enum class HoshoyoExplosionSkillStatus
-{
-	AIM,
-	EXECUTION
-};
-
 #pragma once
-class HoshoyoExplosionSkill : public Skill
+class MonsterExplosionSkill : public Skill
 {
 public:
-	HoshoyoExplosionSkill(SkillOwner owner);
-	~HoshoyoExplosionSkill();
+	MonsterExplosionSkill(SkillOwner owner);
+	~MonsterExplosionSkill();
 
 	void render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer);
 	void prepareExecution(MovementDirection skillDirection);
@@ -24,16 +18,9 @@ public:
 	bool cancelIfPossible();
 	void update(std::vector<Monster*> *monsters, std::vector<Player*> *players, Player* localPlayer);
 private:
-	void hitEnemiesOnSkillRadius(std::vector<Monster*> *monsters);
-	
-	Entity* aimEntity;
-	Entity* rangeEntity;
-	HoshoyoExplosionSkillStatus status;
+	void hitPlayerIfOnRadius(Player* localPlayer);
 	glm::vec3 explosionPosition;
-
 	int currentExplosionTextureIndex;
-	float cursorRot;
-
 	Audio* skillAudio;
 };
 

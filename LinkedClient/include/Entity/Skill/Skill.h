@@ -25,13 +25,13 @@ enum SkillSlot{
 class Skill : public Entity
 {
 public:
-	Skill(SkillOwner owner, std::vector<Monster*> *monsters, std::vector<Player*> *players, Player** localPlayer);
+	Skill(SkillOwner owner);
 	virtual ~Skill();
 
 	virtual void prepareExecution(MovementDirection skillDirection) = 0;
 	virtual void execute(MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId) = 0;
 	virtual bool cancelIfPossible() = 0;
-	virtual void update() = 0;
+	virtual void update(std::vector<Monster*> *monsters, std::vector<Player*> *players, Player* localPlayer) = 0;
 	virtual void render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer) = 0;
 
 	SkillSlot getSlot();
@@ -57,9 +57,6 @@ protected:
 	bool active;
 	Entity* entity;
 	SkillIcon* skillIcon;
-	std::vector<Monster*> *monsters;
-	std::vector<Player*> *players;
-	Player** localPlayer;
 
 	void startCooldownContage();
 	void resetCooldownContageForcibly();

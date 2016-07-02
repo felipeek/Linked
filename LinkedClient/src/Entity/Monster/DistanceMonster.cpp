@@ -20,18 +20,18 @@ void DistanceMonster::attackCreature(Creature* creature)
 	this->attack();
 }
 
-void DistanceMonster::update(Map* map, Player* player)
+void DistanceMonster::update(Map* map, Player* player, std::vector<Monster*>* monsters)
 {
-	Monster::update(map, player);
+	Monster::update(map, player, monsters);
 	BasicMonster::updateMovement(map, player);
 	TurretMonster::updateProjectiles(map, player);
 	BasicMonster::refreshTextureIfNecessary();
 }
 
-void DistanceMonster::render(Shader* shader)
+void DistanceMonster::render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer)
 {
-	BasicMonster::render(shader);
-	TurretMonster::render(shader);
+	BasicMonster::render(primitiveShader, skillShader, textRenderer);
+	TurretMonster::render(primitiveShader, skillShader, textRenderer);
 }
 
 void DistanceMonster::startOnlineMovement(glm::vec3 position)
