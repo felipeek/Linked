@@ -21,9 +21,9 @@ TurretMonster::~TurretMonster()
 	delete this->attackSound;
 }
 
-void TurretMonster::update(Map* map, Player* player)
+void TurretMonster::update(Map* map, Player* player, std::vector<Monster*>* monsters)
 {
-	Monster::update(map, player);
+	Monster::update(map, player, monsters);
 	if (this->isAlive())
 	{
 		if (!Game::multiplayer) this->tryToCreateProjectile(player);
@@ -50,12 +50,12 @@ void TurretMonster::updateProjectiles(Map* map, Player* player)
 	}
 }
 
-void TurretMonster::render(Shader* shader)
+void TurretMonster::render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer)
 {
-	Monster::render(shader);
+	Monster::render(primitiveShader, skillShader, textRenderer);
 
 	for (Projectile* p : this->projectiles)
-		p->render(shader);
+		p->render(primitiveShader);
 }
 
 void TurretMonster::startOnlineMovement(glm::vec3 position)

@@ -182,19 +182,19 @@ void Game::createOfflinePlayer()
 	this->localPlayer->setDefenseBasis(100);
 	this->localPlayer->setMagicalPowerBasis(20);
 
-	Skill* skill1 = new LinkSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
+	Skill* skill1 = new LinkSkill(PLAYER);
 	skill1->setSlot(SLOT_1);
 	localPlayer->addNewSkill(skill1);
 	
-	Skill* skill2 = new SwapSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
+	Skill* skill2 = new SwapSkill(PLAYER);
 	skill2->setSlot(SLOT_2);
 	localPlayer->addNewSkill(skill2);
 	
-	Skill* skill3 = new CureBlessingSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
+	Skill* skill3 = new CureBlessingSkill(PLAYER);
 	skill3->setSlot(SLOT_3);
 	localPlayer->addNewSkill(skill3);
 	
-	Skill* skill4 = new HoshoyoExplosionSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
+	Skill* skill4 = new HoshoyoExplosionSkill(PLAYER);
 	skill4->setSlot(SLOT_4);
 	localPlayer->addNewSkill(skill4);
 }
@@ -238,19 +238,19 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 	designedPlayer->setTotalAttackSpeed(data[7]);
 
 	/* FOR NOW, SKILLS MUST BE THE SAME AS THEY ARE DEFINED SERVER-SIDE (SAME SLOTS, ALSO) */
-	Skill* skill1 = new LinkSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
+	Skill* skill1 = new LinkSkill(PLAYER);
 	skill1->setSlot(SLOT_1);
 	designedPlayer->addNewSkill(skill1);
 
-	Skill* skill2 = new SwapSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
+	Skill* skill2 = new SwapSkill(PLAYER);
 	skill2->setSlot(SLOT_2);
 	designedPlayer->addNewSkill(skill2);
 
-	Skill* skill3 = new CureBlessingSkill(PLAYER, &monsters, &onlinePlayers, &localPlayer);
+	Skill* skill3 = new CureBlessingSkill(PLAYER);
 	skill3->setSlot(SLOT_3);
 	designedPlayer->addNewSkill(skill3);
 
-	Skill* skill4 = new HoshoyoExplosionSkill(PLAYER,&monsters, &onlinePlayers, &localPlayer);
+	Skill* skill4 = new HoshoyoExplosionSkill(PLAYER);
 	skill4->setSlot(SLOT_4);
 	designedPlayer->addNewSkill(skill4);
 
@@ -444,10 +444,10 @@ void Game::renderFirstPass()
 			if (Game::multiplayer)
 			{
 				if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()) && !m->shouldTranslate())
-					m->render(primitiveShader);
+					m->render(primitiveShader, skillShader, nullptr);
 			}
 			else
-				m->render(primitiveShader);
+				m->render(primitiveShader, skillShader, nullptr);
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
@@ -517,10 +517,10 @@ void Game::renderSecondsPass()
 			if (Game::multiplayer)
 			{
 				if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()) && !m->shouldTranslate())
-					m->render(primitiveShader);
+					m->render(primitiveShader, skillShader, nullptr);
 			}
 			else
-				m->render(primitiveShader);
+				m->render(primitiveShader, skillShader, nullptr);
 		}
 		catch (...){
 			std::cerr << "Error rendering entity" << std::endl;
@@ -550,7 +550,7 @@ void Game::update()
 	light->update(localPlayer->getTransform()->getPosition());
 
 	// Player update	
-	localPlayer->update(this->map, &this->monsters);
+	localPlayer->update(this->map, this->localPlayer, &this->onlinePlayers, &this->monsters);
 
 	// Camera update
 	camera->updatePlayer(localPlayer->getTransform()->getPosition());
@@ -559,12 +559,12 @@ void Game::update()
 	if (Game::multiplayer)
 	{
 		for (Player* player : this->onlinePlayers)
-			player->update(this->map, &this->monsters);
+			player->update(this->map, this->localPlayer, &this->onlinePlayers, &this->monsters);
 	}
 
 	// Monsters update
 	for (unsigned int i = 0; i < monsters.size(); i++)
-		monsters[i]->update(map, localPlayer);
+		monsters[i]->update(map, localPlayer, &this->monsters);
 
 	for (unsigned int i = 0; i < monsters.size(); i++)
 		if (monsters[i]->shouldBeDeleted())

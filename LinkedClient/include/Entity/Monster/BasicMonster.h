@@ -19,8 +19,8 @@ public:
 	BasicMonster(Transform* transform, Mesh* mesh, Texture* texture);
 	~BasicMonster();
 
-	virtual void update(Map* map, Player* player);
-	virtual void render(Shader* shader);
+	virtual void update(Map* map, Player* player, std::vector<Monster*>* monsters);
+	virtual void render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer);
 	virtual void startOnlineMovement(glm::vec3 position);
 	virtual void action(int actionId, int xid, glm::vec3 vector);
 

@@ -417,7 +417,7 @@ bool Player::isOutsideExternalRadiusArea(glm::vec3 position)
 
 /* METHODS RELATED TO INPUT, UPDATE AND RENDERING */
 
-void Player::update(Map* map, std::vector<Monster*>* monsters)
+void Player::update(Map* map, Player* localPlayer, std::vector<Player*>* players, std::vector<Monster*>* monsters)
 {
 	double now = LinkedTime::getTime();
 
@@ -439,7 +439,7 @@ void Player::update(Map* map, std::vector<Monster*>* monsters)
 	this->refreshTexture();
 
 	for (Skill* skill : this->skills)
-		skill->update();
+		skill->update(monsters, players, localPlayer);
 }
 
 void Player::input(Map* map)

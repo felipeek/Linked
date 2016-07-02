@@ -15,9 +15,9 @@ BasicMonster::~BasicMonster()
 {
 }
 
-void BasicMonster::update(Map* map, Player* player)
+void BasicMonster::update(Map* map, Player* player, std::vector<Monster*>* monsters)
 {
-	Monster::update(map, player);
+	Monster::update(map, player, monsters);
 	this->updateMovement(map, player);
 	this->refreshTextureIfNecessary();
 }
@@ -42,7 +42,7 @@ void BasicMonster::updateMovement(Map* map, Player* player)
 				this->stop();
 				this->forceMonsterToLookAtPlayer(player->getTransform()->getPosition());
 			}
-			else if (this->isReceivingDamage())
+			else if (this->isReceivingDamage() && this->isKnockbackable())
 			{
 				this->stop();
 			}
@@ -66,9 +66,9 @@ void BasicMonster::updateMovement(Map* map, Player* player)
 	}
 }
 
-void BasicMonster::render(Shader* shader)
+void BasicMonster::render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer)
 {
-	Monster::render(shader);
+	Monster::render(primitiveShader, skillShader, textRenderer);
 }
 
 void BasicMonster::startOnlineMovement(glm::vec3 position)

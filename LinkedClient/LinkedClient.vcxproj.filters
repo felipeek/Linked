@@ -81,6 +81,8 @@
     <ClCompile Include="src\native\ContextWindow.cpp" />
     <ClCompile Include="src\native\WindowInput.cpp" />
     <ClCompile Include="src\Entity\Monster\BomberMonster.cpp" />
+    <ClCompile Include="src\Entity\Monster\Skill\MonsterExplosionSkill.cpp" />
+    <ClCompile Include="src\Entity\Monster\Skill\MonsterEndureSkill.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Entity\AI\AI.h" />
@@ -168,6 +170,8 @@
     <ClInclude Include="include\native\ContextWindow.h" />
     <ClInclude Include="include\native\WindowInput.h" />
     <ClInclude Include="include\Entity\Monster\BomberMonster.h" />
+    <ClInclude Include="include\Entity\Monster\Skill\MonsterExplosionSkill.h" />
+    <ClInclude Include="include\Entity\Monster\Skill\MonsterEndureSkill.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="LinkedIcon.ico" />

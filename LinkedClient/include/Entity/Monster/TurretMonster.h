@@ -17,8 +17,8 @@ public:
 	~TurretMonster();
 
 	/* UPDATE & RENDER */
-	virtual void update(Map* map, Player* player);
-	virtual void render(Shader* shader);
+	virtual void update(Map* map, Player* player, std::vector<Monster*>* monsters);
+	virtual void render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer);
 
 	/* MOVEMENT */
 	virtual void startOnlineMovement(glm::vec3 position);
