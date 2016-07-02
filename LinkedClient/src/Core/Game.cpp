@@ -154,7 +154,7 @@ void Game::createGraphicElements(int windowWidth, int windowHeight)
 	// Shadows
 	frameBuffer = new FrameBuffer(SHADOW_BUFFER_SIZE, SHADOW_BUFFER_SIZE);
 	frameBuffer->genShadowMap(glm::vec4(1,1,1,1));
-	frameBuffer->genLightCamera(15.0f);
+	frameBuffer->genLightCamera(55.0f);
 }
 
 void Game::createMap()
@@ -322,7 +322,7 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 
 
 	Mesh* waterMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), (float)MAP_SIZE, (float)MAP_SIZE));
-	Texture* waterTexture = new Texture("./res/Maps/water.jpg");
+	Texture* waterTexture = new Texture("./res/Maps/water.bmp");
 	waterTexture->setTileAmount(100);
 	water = new Entity(new Transform(glm::vec3(0,0,-1.0f)), waterMesh, waterTexture);
 
