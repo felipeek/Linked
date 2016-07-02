@@ -15,17 +15,17 @@ enum class CureBlessingSkillStatus
 class CureBlessingSkill : public Skill
 {
 public:
-	CureBlessingSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vector<Player*>* players, Player** localPlayer);
+	CureBlessingSkill(SkillOwner owner);
 	~CureBlessingSkill();
 	void render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer);
 	void prepareExecution(MovementDirection skillDirection);
 	void execute(MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId);
 	bool cancelIfPossible();
-	void update();
+	void update(std::vector<Monster*> *monsters, std::vector<Player*> *players, Player* localPlayer);
 private:
 	Entity* aimEntity;
 	CureBlessingSkillStatus status;
-	Player* getTargetPlayer();
+	Player* getTargetPlayer(Player* localPlayer, std::vector<Player*> *players);
 	bool checkCooldown = false;
 	float cursorRot;
 };

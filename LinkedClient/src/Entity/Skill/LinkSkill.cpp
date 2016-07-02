@@ -9,7 +9,7 @@
 
 #define LINK_SKILL_THRESHOLD 3.0f
 
-LinkSkill::LinkSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vector<Player*>* players, Player** localPlayer) : Skill(owner, monsters, players, localPlayer)
+LinkSkill::LinkSkill(SkillOwner owner) : Skill(owner)
 {
 	/* AIM ENTITY */
 	Mesh* aimMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.2f, 0.2f));
@@ -66,7 +66,7 @@ bool LinkSkill::cancelIfPossible()
 	return false;
 }
 
-void LinkSkill::update()
+void LinkSkill::update(std::vector<Monster*> *monsters, std::vector<Player*> *players, Player* localPlayer)
 {
 	if (this->isActive())
 	{
@@ -82,7 +82,7 @@ void LinkSkill::update()
 			if (Input::attack)
 			{
 				Game::cursor->showCursor();
-				Player* targetPlayer = this->getTargetPlayer();
+				Player* targetPlayer = this->getTargetPlayer(localPlayer, players);
 				if (targetPlayer != NULL)
 				{
 					if (Game::multiplayer)
@@ -109,14 +109,14 @@ void LinkSkill::render(Shader* primitiveShader, Shader* skillShader, TextRendere
 		this->aimEntity->render(skillShader);
 }
 
-Player* LinkSkill::getTargetPlayer()
+Player* LinkSkill::getTargetPlayer(Player* localPlayer, std::vector<Player*> *players)
 {
 	// mouse position related to the world, not the window
 	glm::vec3 mousePos = Input::mouseAttack.getMouseIntersection();
-	Player* mostClosePlayer = *(this->localPlayer);
-	float currentLength = glm::length(glm::vec2(mousePos.x, mousePos.y) - glm::vec2((*(this->localPlayer))->getTransform()->getPosition().x, (*(this->localPlayer))->getTransform()->getPosition().y));
+	Player* mostClosePlayer = localPlayer;
+	float currentLength = glm::length(glm::vec2(mousePos.x, mousePos.y) - glm::vec2(localPlayer->getTransform()->getPosition().x, localPlayer->getTransform()->getPosition().y));
 
-	for (Player* player : *(this->players))
+	for (Player* player : *(players))
 	{
 		glm::vec3 playerPosition = player->getTransform()->getPosition();
 		float length = glm::length(mousePos - playerPosition);

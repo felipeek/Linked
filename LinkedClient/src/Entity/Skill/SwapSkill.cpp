@@ -6,7 +6,7 @@
 
 #define SWAP_SKILL_COOLDOWN 5
 
-SwapSkill::SwapSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vector<Player*>* players, Player** localPlayer) : Skill (owner, monsters, players, localPlayer)
+SwapSkill::SwapSkill(SkillOwner owner) : Skill (owner)
 {
 	/* SKILL ICON */
 	Texture* enabledSkillIconTexture = new Texture("./res/Skills/swap_icon.png");
@@ -51,7 +51,7 @@ bool SwapSkill::cancelIfPossible()
 	return false;
 }
 
-void SwapSkill::update()
+void SwapSkill::update(std::vector<Monster*> *monsters, std::vector<Player*> *players, Player* localPlayer)
 {
 	if (this->active && this->status != SwapSkillStatus::IDLE)
 	{

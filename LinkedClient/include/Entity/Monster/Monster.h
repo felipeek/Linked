@@ -20,6 +20,7 @@ class Player;
 class MonsterAI;
 class Map;
 class Audio;
+class TextRenderer;
 enum MovementDirection;
 
 class Monster : public Entity, public Creature
@@ -75,15 +76,18 @@ public:
 	void move(MovementDirection direction);
 	void stop();
 	bool shouldBeDeleted();
+	bool isKnockbackable();
+	void setKnockbackable(bool knockbackable);
 
 	/* COMBAT */
-	void doDamage(unsigned int damage);
+	virtual void doDamage(unsigned int damage);
 	virtual void attackCreature(Creature* creature);
 	virtual void action(int actionId, int xid, glm::vec3 vector);
 	
 	/* UPDATE & RENDER */
-	virtual void update(Map* map, Player* player);
-	virtual void render(Shader* shader);
+	virtual void update(Map* map, Player* player, std::vector<Monster*>* monsters);
+	virtual void render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer);
+	virtual int getNumberOfTextureRows();
 
 	/* MOVEMENT */
 	virtual void startOnlineMovement(glm::vec3 position);
@@ -111,6 +115,7 @@ private:
 	bool attacking = false;
 	bool receivingDamage = false;
 	bool moving = false;
+	bool knockbackable = true;
 	MovementDirection movingDirection;
 	unsigned int hp;
 	unsigned int totalMaximumHp;

@@ -11,7 +11,7 @@
 
 // TODO: Skill Animation flow must be implemented using LinkedTime, not only the update call.
 
-HoshoyoExplosionSkill::HoshoyoExplosionSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vector<Player*>* players, Player** localPlayer) : Skill(owner, monsters, players, localPlayer)
+HoshoyoExplosionSkill::HoshoyoExplosionSkill(SkillOwner owner) : Skill(owner)
 {
 	/* AIM ENTITY */
 	Mesh* aimMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 1, 12));
@@ -76,7 +76,7 @@ void HoshoyoExplosionSkill::prepareExecution(MovementDirection skillDirection)
 	}
 }
 
-void HoshoyoExplosionSkill::update()
+void HoshoyoExplosionSkill::update(std::vector<Monster*> *monsters, std::vector<Player*> *players, Player* localPlayer)
 {
 	if (this->isActive())
 	{
@@ -119,7 +119,7 @@ void HoshoyoExplosionSkill::update()
 			if (!Game::multiplayer)
 			{
 				if (this->currentExplosionTextureIndex % 27 == 0)
-					this->hitEnemiesOnSkillRadius();
+					this->hitEnemiesOnSkillRadius(monsters);
 			}
 			if (this->currentExplosionTextureIndex == 81)
 			{
@@ -160,11 +160,11 @@ void HoshoyoExplosionSkill::execute(MovementDirection skillDirection, glm::vec3 
 const float skillRadius = 10.0f;
 const int skillDamage = 10;
 
-void HoshoyoExplosionSkill::hitEnemiesOnSkillRadius()
+void HoshoyoExplosionSkill::hitEnemiesOnSkillRadius(std::vector<Monster*> *monsters)
 {
 	if (this->owner == PLAYER)
 	{
-		for (Monster* monster : *(this->monsters))
+		for (Monster* monster : *(monsters))
 		{
 			glm::vec3 diffVector = monster->getTransform()->getPosition() - explosionPosition;
 			if (glm::length(diffVector) < skillRadius && monster->isAlive())

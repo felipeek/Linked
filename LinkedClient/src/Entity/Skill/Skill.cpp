@@ -4,15 +4,12 @@
 #include "Player.h"
 #include "LinkedTime.h"
 
-Skill::Skill(SkillOwner owner, std::vector<Monster*> *monsters, std::vector<Player*> *players, Player** localPlayer) : Entity(nullptr, nullptr, nullptr)
+Skill::Skill(SkillOwner owner) : Entity(nullptr, nullptr, nullptr)
 {
 	slot = SLOT_1;
 	active = false;
 	entity = nullptr;
 	this->owner = owner;
-	this->monsters = monsters;
-	this->players = players;
-	this->localPlayer = localPlayer;
 }
 
 Skill::~Skill()
