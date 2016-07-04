@@ -16,9 +16,6 @@
 
 #define PLAYER_HEIGHT 1.39f
 
-#define MUSIC_VOLUME 100
-#define EFFECT_VOLUME 100
-
 class EntityMap;
 class Entity;
 class Camera;
@@ -70,6 +67,9 @@ public:
 	void input();
 
 private:
+	int musicVolume;
+	int effectsVolume;
+
 	static Game* current;
 	int windowWidth;
 	int windowHeight;
@@ -81,7 +81,7 @@ private:
 	void createGUI();
 	void createUDPConnection();
 	void loadMonstersAndEntities(bool loadMonsters, bool loadEntities);
-	void initializateThemeAudio();
+	void initializateAudio();
 
 	/* GAME GRAPHIC ELEMENTS */
 	Camera* camera;

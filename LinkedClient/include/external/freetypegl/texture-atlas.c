@@ -31,6 +31,7 @@
  * policies, either expressed or implied, of Nicolas P. Rougier.
  * ============================================================================
  */
+#pragma warning(push, 0) 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -348,3 +349,4 @@ texture_atlas_upload( texture_atlas_t * self )
     }
 }
 
+#pragma warning(pop)

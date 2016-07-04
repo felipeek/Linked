@@ -61,31 +61,31 @@ Game* Game::current = nullptr;
 Game::Game(int windowWidth, int windowHeight)
 	: windowWidth(windowWidth), windowHeight(windowHeight)
 {
-	Config config("config.linked", &multiplayer, &server_port, server_ip);
+	Config config("config.linked", &multiplayer, &server_port, server_ip, &musicVolume, &effectsVolume);
 	PacketController::game = this;
 	Game::current = this;
 
-	this->createGraphicElements(windowWidth, windowHeight);
+	createGraphicElements(windowWidth, windowHeight);
 
-	this->createMap();
+	createMap();
 
 	if (Game::multiplayer)
 	{
-		this->createUDPConnection();
+		createUDPConnection();
 		PacketController::onlinePlayers = &this->onlinePlayers;
-		this->waitForCreationOfOnlinePlayer();
-		this->loadMonstersAndEntities(false, true);
+		waitForCreationOfOnlinePlayer();
+		loadMonstersAndEntities(false, true);
 	}
 	else
 	{
-		this->createOfflinePlayer();
-		this->loadMonstersAndEntities(true, true);
+		createOfflinePlayer();
+		loadMonstersAndEntities(true, true);
 	}
 
-	this->createGUI();
+	createGUI();
 	Chat::gui = this->gui;
 
-	this->initializateThemeAudio();
+	initializateAudio();
 }
 
 Game::~Game()
@@ -144,17 +144,17 @@ void Game::createGraphicElements(int windowWidth, int windowHeight)
 	this->light = new Light(glm::vec3(100, 500, 50), glm::vec3(1, 0.95f, 0.8f));
 
 	// Shaders
-	this->primitiveShader = new PrimitiveShader("./shaders/normalshader", camera, light);
-	this->commonShader = new CommonShader("./shaders/commonshader", camera, light);
-	this->projectileShader = new CommonShader("./shaders/projectile", camera, light);
-	this->mapShader = new MapShader("./shaders/mapshader_shadow", camera, light);
-	this->skillShader = new SkillShader("./shaders/fontshader");
-	this->worldSkillShader = new PrimitiveShader("./shaders/skillshader", camera, light);
+	this->primitiveShader = new PrimitiveShader("./res/shaders/normalshader", camera, light);
+	this->commonShader = new CommonShader("./res/shaders/commonshader", camera, light);
+	this->projectileShader = new CommonShader("./res/shaders/projectile", camera, light);
+	this->mapShader = new MapShader("./res/shaders/mapshader_shadow", camera, light);
+	this->skillShader = new SkillShader("./res/shaders/fontshader");
+	this->worldSkillShader = new PrimitiveShader("./res/shaders/skillshader", camera, light);
 
 	// Shadows
 	frameBuffer = new FrameBuffer(SHADOW_BUFFER_SIZE, SHADOW_BUFFER_SIZE);
 	frameBuffer->genShadowMap(glm::vec4(1,1,1,1));
-	frameBuffer->genLightCamera(15.0f);
+	frameBuffer->genLightCamera(55.0f);
 }
 
 void Game::createMap()
@@ -172,17 +172,17 @@ void Game::createMap()
 void Game::createOfflinePlayer()
 {
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 12, 0));
-	this->localPlayer = new Player(new Transform(glm::vec3(189.471f, 104.694f, PLAYER_HEIGHT), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
-	this->localPlayer->setHp(100);
-	this->localPlayer->setName("CHR de Xerath");
-	this->localPlayer->setClientId(0);
+	localPlayer = new Player(new Transform(glm::vec3(189.471f, 104.694f, PLAYER_HEIGHT), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
+	localPlayer->setHp(100);
+	localPlayer->setName("CHR de Xerath");
+	localPlayer->setClientId(0);
 	PacketController::localPlayer = localPlayer;
 
-	this->localPlayer->setAttackBasis(50);
-	this->localPlayer->setSpeedBasis(26);
-	this->localPlayer->setMaximumHpBasis(100);
-	this->localPlayer->setDefenseBasis(100);
-	this->localPlayer->setMagicalPowerBasis(20);
+	localPlayer->setAttackBasis(50);
+	localPlayer->setSpeedBasis(26);
+	localPlayer->setMaximumHpBasis(100);
+	localPlayer->setDefenseBasis(100);
+	localPlayer->setMagicalPowerBasis(20);
 
 	Skill* skill1 = new LinkSkill(PLAYER);
 	skill1->setSlot(SLOT_1);
@@ -214,7 +214,7 @@ void Game::waitForCreationOfOnlinePlayer()
 
 		Sleep(100);
 	}
-	while (this->localPlayer == nullptr);
+	while (localPlayer == nullptr);
 	//this->localPlayer = PacketController::localPlayer;
 }
 
@@ -258,15 +258,15 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 
 	if (isLocalPlayer)
 	{
-		this->localPlayer = designedPlayer;
+		localPlayer = designedPlayer;
 		PacketController::localPlayer = this->localPlayer;
 		designedPlayer->setType(LOCAL);
 	}
 	else
 	{
-		this->onlinePlayers.push_back(designedPlayer);
+		onlinePlayers.push_back(designedPlayer);
 		designedPlayer->setType(NETWORK);
-		if (this->playerJoinedAudio != nullptr) this->playerJoinedAudio->play();
+		if (playerJoinedAudio != nullptr) playerJoinedAudio->play();
 		if (Chat::gui != nullptr) Chat::gui->setNextMessage(std::string("A new player joined."));
 	}
 }
@@ -281,7 +281,7 @@ void Game::disconnectOnlinePlayer(int* data)
 		{
 			delete (*PacketController::onlinePlayers)[i];
 			(*PacketController::onlinePlayers).erase((*PacketController::onlinePlayers).begin() + i);
-			if (this->playerDisconnectedAudio != nullptr) this->playerDisconnectedAudio->play();
+			if (playerDisconnectedAudio != nullptr) playerDisconnectedAudio->play();
 			if (Chat::gui != nullptr) Chat::gui->setNextMessage(std::string("Player disconnected."));
 		}
 	}
@@ -289,30 +289,30 @@ void Game::disconnectOnlinePlayer(int* data)
 
 void Game::createGUI()
 {
-	this->gui = new GUI(localPlayer);
-	for (Skill* s : this->localPlayer->getSkills())
-		this->gui->addSkillIcon(s->getSkillIcon());
-	PacketController::gui = this->gui;
-	Chat::gui = this->gui;	
+	gui = new GUI(localPlayer);
+	for (Skill* s : localPlayer->getSkills())
+		gui->addSkillIcon(s->getSkillIcon());
+	PacketController::gui = gui;
+	Chat::gui = gui;	
 }
 
-void Game::initializateThemeAudio()
+void Game::initializateAudio()
 {
-	Audio::setMusicVolume(MUSIC_VOLUME);
-	Audio::setSoundVolume(EFFECT_VOLUME);
-	this->themeAudio = new Audio(THEME_AUDIO_PATH, AudioType::MUSIC);
-	this->themeAudio->setLoop(true);
-	this->themeAudio->play();
-	this->playerJoinedAudio = new Audio(PLAYER_JOINED_AUDIO_PATH, AudioType::SOUND);
-	this->playerDisconnectedAudio = new Audio(PLAYER_DISCONNECTED_AUDIO_PATH, AudioType::SOUND);
+	Audio::setMusicVolume(musicVolume);
+	Audio::setSoundVolume(effectsVolume);
+	themeAudio = new Audio(THEME_AUDIO_PATH, AudioType::MUSIC);
+	themeAudio->setLoop(true);
+	themeAudio->play();
+	playerJoinedAudio = new Audio(PLAYER_JOINED_AUDIO_PATH, AudioType::SOUND);
+	playerDisconnectedAudio = new Audio(PLAYER_DISCONNECTED_AUDIO_PATH, AudioType::SOUND);
 }
 
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 {
 	// Note: 11 seconds to load map
-	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, this->map));
+	Mesh* mapMesh = new Mesh(new Grid(MAP_SIZE, map));
 
-	this->entityMap = new EntityMap(new Transform(), mapMesh,
+	entityMap = new EntityMap(new Transform(), mapMesh,
 		new Texture("./res/Maps/snow.jpg"),
 		new Texture("./res/Maps/ice_mountain.jpg"),
 		new Texture("./res/Maps/water.jpg"),
@@ -322,15 +322,11 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 
 
 	Mesh* waterMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), (float)MAP_SIZE, (float)MAP_SIZE));
-	Texture* waterTexture = new Texture("./res/Maps/water.jpg");
+	Texture* waterTexture = new Texture("./res/Maps/water.bmp");
 	waterTexture->setTileAmount(100);
-	water = new Entity(new Transform(glm::vec3(0,0,-1.0f)), waterMesh, waterTexture);
+	water = new Entity(new Transform(glm::vec3(0, 0, -1.0f)), waterMesh, waterTexture);
 
-	// TODO: verify allocation in a loop ( if causes performance overhead )
-	//monsters.resize(77);
-	//gameEntities.resize(30);
-	// Load monsters and entities
-	for (int i = 0/*, m=0, e=0*/; i < MAP_SIZE; i++)
+	for (int i = 0; i < MAP_SIZE; i++)
 	{
 		for (int j = 0; j < MAP_SIZE; j++)
 		{
@@ -340,16 +336,13 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 			
 			if (coordinate.mapMonster.monsterExists)
 			{
-				if (!map->coordinateHasCollision(glm::vec3(i, j, 0)) && loadMonsters/* && m < 1*/)
+				if (!map->coordinateHasCollision(glm::vec3(i, j, 0)) && loadMonsters)
 				{
 					monster->getTransform()->translate((float)i, (float)j, 1.3f);
 					monsters.push_back(monster);
-					//m++;
 				}
 				else
-				{
 					delete monster;
-				}
 			}
 			
 			if (coordinate.mapGameEntity.gameEntityExists && loadEntities)
@@ -370,19 +363,17 @@ void Game::createUDPConnection()
 
 void Game::createMonster(short* data)
 {
-	// TODO: delete newMonster
-
 	// do not tests collision intentionally
 	int monsterId = data[0];
 	int monsterHp = data[1];
 	glm::vec3 monsterRgb = glm::vec3(data[2], data[3], data[4]);
 	glm::vec3 monsterPosition = glm::vec3(data[5], data[6], data[7]);
 
-	Monster* newMonster = this->monsterFactory->getMonsterOfMapColor(monsterRgb);
+	Monster* newMonster = monsterFactory->getMonsterOfMapColor(monsterRgb);
 	newMonster->getTransform()->translate(monsterPosition.x, monsterPosition.y, monsterPosition.z);
 	newMonster->setId(monsterId);
 	newMonster->setHp(monsterHp);
-	this->monsters.push_back(newMonster);
+	monsters.push_back(newMonster);
 }
 
 Monster* Game::getMonsterOfId(int id)
@@ -442,30 +433,18 @@ void Game::renderFirstPass()
 	// Monsters
 	for (Monster* m : monsters)
 	{
-		try{
-			if (Game::multiplayer)
-			{
-				if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()) && !m->shouldTranslate())
-					m->render(primitiveShader, skillShader, nullptr);
-			}
-			else
+		if (Game::multiplayer)
+		{
+			if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()) && !m->shouldTranslate())
 				m->render(primitiveShader, skillShader, nullptr);
 		}
-		catch (...){
-			std::cerr << "Error rendering entity" << std::endl;
-		}
+		else
+			m->render(primitiveShader, skillShader, nullptr);
 	}
 
 	// Common static entities
 	for (Entity* e : gameEntities)
-	{
-		try{
 			e->render(commonShader);
-		}
-		catch (...){
-			std::cerr << "Error rendering entity" << std::endl;
-		}
-	}
 
 	// Player
 	localPlayer->hpBarRenderOptions(false);
@@ -515,30 +494,18 @@ void Game::renderSecondsPass()
 	// Monsters
 	for (Monster* m : monsters)
 	{
-		try{
-			if (Game::multiplayer)
-			{
-				if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()) && !m->shouldTranslate())
-					m->render(primitiveShader, skillShader, nullptr);
-			}
-			else
+		if (Game::multiplayer)
+		{
+			if (!localPlayer->isFogOfWar(m->getTransform()->getPosition()) && !m->shouldTranslate())
 				m->render(primitiveShader, skillShader, nullptr);
 		}
-		catch (...){
-			std::cerr << "Error rendering entity" << std::endl;
-		}
+		else
+			m->render(primitiveShader, skillShader, nullptr);
 	}
 
 	// Common static entities
 	for (Entity* e : gameEntities)
-	{
-		try{
 			e->render(commonShader);
-		}
-		catch (...){
-			std::cerr << "Error rendering entity" << std::endl;
-		}
-	}
 }
 
 void Game::update()

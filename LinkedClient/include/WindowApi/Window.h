@@ -45,8 +45,8 @@ enum divHints{
 
 class Window
 {
-#define WINDOW_SHADER_PATH "./shaders/windowapi/window_shader"
-#define FONT_SHADER_PATH "./shaders/windowapi/font_shader"
+#define WINDOW_SHADER_PATH "./res/shaders/windowapi/window_shader"
+#define FONT_SHADER_PATH "./res/shaders/windowapi/font_shader"
 #define DEFAULT_TITLE_COLOR 0.2f, 0.2f, 0.2f, 1.0f
 #define DEFAULT_BORDER_SIZE 2		// pixels
 #define DEFAULT_BORDER_COLOR 0.0f, 0.0f, 0.0f, 1.0f
