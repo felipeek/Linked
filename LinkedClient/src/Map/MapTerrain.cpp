@@ -18,18 +18,18 @@ bool MapTerrainImageLoader::coordinateHasCollision(glm::vec3& coordinateVector){
 		glm::vec3 rgb;
 		MapTerrain mapTerrain;
 
-		rgb = getPixel(floor(coordinateVector.x), floor(coordinateVector.y));
+		rgb = getPixel((int)floor(coordinateVector.x), (int)floor(coordinateVector.y));
 		mapTerrain = transformRgbIntoMapTerrain(rgb);
 		if (mapTerrain == BLOCKED || mapTerrain == WATER)
 			return true;
 
 		/* Check if there is a collision in the right and in the top too. */
 		/* This is to refine the collision, since a floor() function is being used. */
-		rgb = getPixel(floor(coordinateVector.x), floor(coordinateVector.y+1));
+		rgb = getPixel((int)floor(coordinateVector.x), (int)floor(coordinateVector.y+1));
 		mapTerrain = transformRgbIntoMapTerrain(rgb);
 		if (mapTerrain == BLOCKED || mapTerrain == WATER)
 			return true;
-		rgb = getPixel(floor(coordinateVector.x+1), floor(coordinateVector.y));
+		rgb = getPixel((int)floor(coordinateVector.x+1), (int)floor(coordinateVector.y));
 		mapTerrain = transformRgbIntoMapTerrain(rgb);
 		if (mapTerrain == BLOCKED || mapTerrain == WATER)
 			return true;

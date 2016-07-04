@@ -333,7 +333,7 @@ void Monster::render(Shader* primitiveShader, Shader* skillShader, TextRenderer*
 
 int Monster::getNumberOfTextureRows()
 {
-	return ceil(sqrt(16 * this->getTextureQuantity() + 1));
+	return (int)ceil(sqrt(16 * this->getTextureQuantity() + 1));
 }
 
 /* MOVEMENT */

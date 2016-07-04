@@ -69,7 +69,7 @@ namespace linked
 
 		if(m_text)
 			m_yAdvance = m_fontRenderer->RenderText(std::string((const char*)m_text),
-			renderPosition.x * ww, -renderPosition.y * wh, rightLimit, m_textColor, Window::m_textShader, true);
+			(int)(renderPosition.x * (float)ww), (int)(-renderPosition.y * (float)wh), rightLimit, m_textColor, Window::m_textShader, true);
 
 	}
 }

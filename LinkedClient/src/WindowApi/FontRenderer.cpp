@@ -93,13 +93,13 @@ int FontRenderer::RenderText(std::string text, int xPos, int yPos, float pixelWi
 	float scaleY = (float)ContextWindow::getCurrent().getHeight();
 
 	float x = xPos / scaleX;
-	float firstPos = xPos;
+	float firstPos = (float)xPos;
 	float limitX = (pixelWidthLimit + xPos) / scaleX;
 	float yAdvance = 0;
 
 	auto fit = [&text, pixelWidthLimit](int index, int xPos, int headStart, ftgl::texture_font_t* font)
 	{
-		float x = xPos;
+		float x = (float)xPos;
 		for (; text[index + 1] != ' ' && text[index + 1] != 0; ++index)
 		{
 			unsigned char c = text[index];
@@ -122,7 +122,7 @@ int FontRenderer::RenderText(std::string text, int xPos, int yPos, float pixelWi
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, atlas->id);
 
-	for (int i = 0; i < text.size(); i++)
+	for (unsigned int i = 0; i < text.size(); i++)
 	{
 		unsigned char c = text[i];
 		ftgl::texture_glyph_t* glyph = ftgl::texture_font_get_glyph(font, c);
@@ -137,7 +137,7 @@ int FontRenderer::RenderText(std::string text, int xPos, int yPos, float pixelWi
 					if (!fit(i, firstPos, x * scaleX, font) && c != ' ')
 					{
 						x = xPos / scaleX;
-						yPos -= fontSize;
+						yPos -= fontSize;		// Note(Ho): Is this a bug?
 						yAdvance++;
 					}
 				}
@@ -181,5 +181,5 @@ int FontRenderer::RenderText(std::string text, int xPos, int yPos, float pixelWi
 	}
 	shader->stopShader();
 	shader->deactivateAlphaBlend();
-	return yAdvance;
+	return yAdvance;		// Note(Ho): Check this
 }

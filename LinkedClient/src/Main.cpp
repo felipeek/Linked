@@ -12,7 +12,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	bool running = true;
 
 	// Initialize window, OpenGL context and game
-	window = new ContextWindow(nCmdShow, hInstance, (int)800 * 1.8, (int)450 * 1.8, std::string("hoengine_opengl"), std::string("Linked - v2.0"));
+	window = new ContextWindow(nCmdShow, hInstance, (int)(800 * 1.8), (int)(450 * 1.8), std::string("hoengine_opengl"), std::string("Linked - v2.0"));
 	window->InitOpenGL();
 
 #if _DEBUG

@@ -11,6 +11,8 @@
 #include "PacketController.h"
 
 #define _DEBUG 1
+
+#ifndef COMMAND_LINE_COMPILE
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "winmm.lib")
 
@@ -30,6 +32,7 @@
 #pragma comment(lib, "./lib/win32/vorbisfile.lib")
 #else
 #pragma comment(lib, "./lib/win32/sfml-audio.lib")
+#endif
 #endif
 
 #endif
