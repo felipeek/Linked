@@ -2,13 +2,15 @@
 #include <stdio.h>
 #include "Logging/Log.h"
 
-Config::Config(const char* filename, bool* mult, int* port, std::string& ip)
+Config::Config(const char* filename, bool* mult, int* port, std::string& ip, int* music_volume, int* effects_volume)
 {
 	ReadConfigFile(filename);
 	ParseConfigFile();
 	*mult = multiplayer;
 	*port = serverport;
 	ip = serverip;
+	*music_volume = this->music_volume;
+	*effects_volume = this->effects_volume;
 }
 
 Config::~Config()
@@ -38,13 +40,14 @@ void Config::ParseConfigFile()
 {
 	if (filedata)
 	{
-		char* strs[] = { "multiplayer", "serverip", "serverport", "false", "true" };
-		char buffer[3][256] = {};
+		char* strs[] = { "multiplayer", "serverip", "serverport", "music_volume", "effects_volume" };
+		char* bools[] = { "false", "true" };
+		char buffer[5][256] = {};
 
 		int i = 0;
 		int j = 0;
 
-		for (int x = 0; x < 3; x++)
+		for (int x = 0; x < 5; x++)
 		{
 			while (filedata[i] == strs[x][j])
 			{
@@ -69,14 +72,16 @@ void Config::ParseConfigFile()
 			i++;
 			j = 0;
 		}
-		if (!strcmp(strs[3], buffer[0]))
+		if (!strcmp(bools[0], buffer[0]))
 			multiplayer = false;
-		else if (!strcmp(strs[4], buffer[0]))
+		else if (!strcmp(bools[1], buffer[0]))
 			multiplayer = true;
 		else
 			fatal("Config file incorrect, multiplayer requires boolean true/false.");
 
 		serverip = std::string(buffer[1]);
 		serverport = atoi(buffer[2]);
+		music_volume = atoi(buffer[3]);
+		effects_volume = atoi(buffer[4]);
 	}
 }

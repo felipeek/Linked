@@ -5,7 +5,8 @@ set INCDIR=..\..\include\
 set LIBDIR=..\..\lib\
 
 set ProgramDefinitions= -DGLEW_STATIC -DCOMMAND_LINE_COMPILE -D_CRT_SECURE_NO_WARNINGS
-set CompilerFlags=-MT -nologo -Gm- -GR- -EHsc -W3 -Zi -MP -Oi -Fo.\obj\ -FeLinkedClient.exe -wd4996
+REM set CompilerFlags=-MT -nologo -Gm- -GR- -EHsc -W3 -Zi -MP -Oi -Fo.\obj\ -FeLinkedClient.exe -Fd -wd4996
+set CompilerFlags=-MT -nologo -Gm -GR- -EHsc -W3 -Zi -Oi -Fo.\obj\ -FeLinkedClient.exe -FdLinkedClient -wd4996
 set LinkerFlags= -opt:ref -ignore:4099
 set LinkedLibraries= user32.lib gdi32.lib winmm.lib opengl32.lib %LIBDIR%win32\glew32s.lib %LIBDIR%win32\freetype263MT.lib %LIBDIR%win32\sfml-audio.lib ..\..\LinkedClient.res
 

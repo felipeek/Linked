@@ -50,7 +50,6 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		static double Update10Time = 0.0;
 		static int Frames = 0;
 
-
 		EndTime = LinkedTime::getTime();
 		Elapsed = EndTime - StartTime;
 		GameTime += Elapsed;
@@ -68,7 +67,6 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		}
 
 		StartTime = LinkedTime::getTime();
-
 
 		if (Game::multiplayer && game != nullptr)
 		{

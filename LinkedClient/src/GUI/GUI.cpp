@@ -35,7 +35,7 @@ GUI::GUI(Player* player)
 	this->color = glm::vec3(LGUI_R, LGUI_G, LGUI_B);
 	this->activeText = glm::vec3(0.8f, 0.8f, 0.95f);
 
-	this->guiShader = new GUIShader("./shaders/fontshader");
+	this->guiShader = new GUIShader("./res/shaders/fontshader");
 
 	currentDisplayWidth = ContextWindow::getCurrent().getWidth();
 	currentDisplayHeight = ContextWindow::getCurrent().getHeight();
@@ -74,10 +74,6 @@ void GUI::initLeftGUI()
 		DIV_ANCHOR_LEFT | DIV_ANCHOR_TOP);
 	stats->divs.push_back(playerInfo);
 	initLeftGUIText(playerInfo);
-
-	WindowDiv* playerEquips = new WindowDiv(*stats, 110, 140, 0, 0, glm::vec2(0, 0), glm::vec4(0, 0, 0, 0.1f),
-		DIV_ANCHOR_RIGHT | DIV_ANCHOR_TOP);
-	stats->divs.push_back(playerEquips);
 
 	// Chat Window
 	Window* chat = new Window(500, 140, glm::vec2(currentDisplayWidth - 510, currentDisplayHeight - 150), glm::vec4(0.16f, 0.15f, 0.2f, 0.5f), (unsigned char*)std::string("Chat").c_str(), 5,
