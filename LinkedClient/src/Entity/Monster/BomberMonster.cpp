@@ -25,7 +25,7 @@ BomberMonster::~BomberMonster()
 void BomberMonster::attackCreature(Creature* creature)
 {
 	this->attack();
-	this->explosionSkill->execute(MovementDirection::BOTTOM, this->getTransform()->getPosition(), 0);
+	if (!this->explosionSkill->isActive()) this->explosionSkill->execute(MovementDirection::BOTTOM, this->getTransform()->getPosition(), 0);
 	this->doDamage(this->getHp());
 }
 
@@ -48,6 +48,10 @@ void BomberMonster::doDamage(unsigned int damage)
 	}
 
 	BasicMonster::doDamage(damage);
+
+	if (!this->isAlive())
+		if (!this->explosionSkill->isActive())
+			this->explosionSkill->execute(MovementDirection::BOTTOM, this->getTransform()->getPosition(), 0);
 }
 
 void BomberMonster::render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer)
