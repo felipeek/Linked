@@ -15,9 +15,9 @@ TurretMonster::~TurretMonster()
 
 }
 
-void TurretMonster::update(Map* map, std::vector<Player*>* players)
+void TurretMonster::update(Map* map, std::vector<Player*>* players, std::vector<Monster*>* monsters)
 {
-	Monster::update(map, players);
+	Monster::update(map, players, monsters);
 	Player* player = this->ai->findClosestWorldObjectToAttack(map, players);
 	if (this->isAlive() && player != nullptr)
 		this->tryToCreateProjectile(player);

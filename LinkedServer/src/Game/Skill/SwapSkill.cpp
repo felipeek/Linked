@@ -4,7 +4,7 @@
 
 #define SWAP_SKILL_COOLDOWN 5
 
-SwapSkill::SwapSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vector<Player*>* players) : Skill(owner, monsters, players)
+SwapSkill::SwapSkill(SkillOwner owner) : Skill(owner)
 {
 	this->status = SwapSkillStatus::ANIMATION;
 	this->cooldown = SWAP_SKILL_COOLDOWN;
@@ -23,7 +23,7 @@ void SwapSkill::execute(MovementDirection skillDirection, glm::vec3 skillTargetP
 	}
 }
 
-void SwapSkill::update()
+void SwapSkill::update(std::vector<Monster*> *monsters, std::vector<Player*> *players)
 {
 	if (this->active)
 	{

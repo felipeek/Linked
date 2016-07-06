@@ -164,6 +164,17 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 					udpServer->sendPackets(Packet(data, 3, 11, xid), (*udpServer->getClients())[i]->netInfo);
 		}
 		break;
+	// PLAYER TOOK SIMPLE DAMAGE
+	case 12:
+		if (dataSize == sizeof(int))
+		{
+			Player* hurtPlayer = getPlayerOfClient(xid);
+			int attack = data[0];
+			if (hurtPlayer != NULL)
+				hurtPlayer->doDamage(attack);
+
+			// player hp will be updated in the next player attributes update.
+		}
 	}
 }
 void PacketController::dispatchFloatArray(int id, int xid, float* data, int dataSize)
@@ -666,6 +677,13 @@ void PacketController::sendProjectileAttackByTurretMonster(int monsterId, Projec
 
 	for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
 		udpServer->sendPackets(Packet(info, 10, monsterId), (*udpServer->getClients())[i]->netInfo);
+}
+
+void PacketController::sendMonsterExplosionSkill(int monsterId)
+{
+	int dummy = -1;
+	for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
+		udpServer->sendPackets(Packet(dummy, 12, monsterId), (*udpServer->getClients())[i]->netInfo);
 }
 
 void PacketController::dispatchMsg(int id, int xid, char* data, int senderID)

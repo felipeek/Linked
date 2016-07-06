@@ -70,19 +70,19 @@ Player* Game::createNewPlayer(unsigned short clientId)
 	newPlayer->setSpeedBasis(PLAYER_SPEED_BASIS);
 
 	/* FOR NOW, SKILLS MUST BE THE SAME AS THEY ARE DEFINED CLIENT-SIDE (SAME SLOTS, ALSO) */
-	Skill* skill1 = new LinkSkill(PLAYER, &monsters, &players);
+	Skill* skill1 = new LinkSkill(PLAYER);
 	skill1->setSlot(SLOT_1);
 	newPlayer->addNewSkill(skill1);
 
-	Skill* skill2 = new SwapSkill(PLAYER, &monsters, &players);
+	Skill* skill2 = new SwapSkill(PLAYER);
 	skill2->setSlot(SLOT_2);
 	newPlayer->addNewSkill(skill2);
 
-	Skill* skill3 = new CureBlessingSkill(PLAYER, &monsters, &players);
+	Skill* skill3 = new CureBlessingSkill(PLAYER);
 	skill3->setSlot(SLOT_3);
 	newPlayer->addNewSkill(skill3);
 
-	Skill* skill4 = new HoshoyoExplosionSkill(PLAYER,&monsters, &players);
+	Skill* skill4 = new HoshoyoExplosionSkill(PLAYER);
 	skill4->setSlot(SLOT_4);
 	newPlayer->addNewSkill(skill4);
 
@@ -132,11 +132,11 @@ Projectile* Game::createNewProjectile(glm::vec3 position, glm::vec3 direction, i
 void Game::update()
 {
 	for (Player* player : this->players)
-		player->update();
+		player->update(&monsters, &players);
 	// Monsters update
 	for (unsigned int i = 0; i < monsters.size(); i++)
 	{
-		monsters[i]->update(map, &players);
+		monsters[i]->update(map, &players, &monsters);
 	}
 
 	for (unsigned int i = 0; i < monsters.size(); i++)

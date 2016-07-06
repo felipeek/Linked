@@ -16,7 +16,7 @@ public:
 	~TurretMonster();
 
 	/* UPDATE & RENDER */
-	virtual void update(Map* map, std::vector<Player*>* players);
+	virtual void update(Map* map, std::vector<Player*>* players, std::vector<Monster*>* monsters);
 
 	/* NETWORK MOVEMENT */
 	virtual bool mustUpdateDestinationToClients();

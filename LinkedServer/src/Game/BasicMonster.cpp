@@ -14,9 +14,9 @@ BasicMonster::~BasicMonster()
 {
 }
 
-void BasicMonster::update(Map* map, std::vector<Player*>* players)
+void BasicMonster::update(Map* map, std::vector<Player*>* players, std::vector<Monster*>* monsters)
 {
-	Monster::update(map, players);
+	Monster::update(map, players, monsters);
 	this->updateMovement(map, players);
 }
 

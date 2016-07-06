@@ -5,7 +5,7 @@
 
 #define LINK_SKILL_THRESHOLD 1.5f
 
-LinkSkill::LinkSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vector<Player*>* players) : Skill(owner, monsters, players)
+LinkSkill::LinkSkill(SkillOwner owner) : Skill(owner)
 {
 	this->linked = false;
 }
@@ -25,7 +25,7 @@ void LinkSkill::execute(MovementDirection skillDirection, glm::vec3 skillTargetP
 		((Player*)(this->worldObject))->setLink(targetPlayer);
 }
 
-void LinkSkill::update()
+void LinkSkill::update(std::vector<Monster*> *monsters, std::vector<Player*> *players)
 {
 	if (this->active == true) {
 		this->active = false;

@@ -257,10 +257,10 @@ Equipment* Player::addNewEquipment(Equipment* equipment){
 }
 
 /* UPDATE */
-void Player::update()
+void Player::update(std::vector<Monster*> *monsters, std::vector<Player*> *players)
 {
 	for (Skill* skill : this->skills)
-		skill->update();
+		skill->update(monsters, players);
 }
 
 /* NETWORK MOVEMENT */

@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClCompile Include="src\Game\AI\AI.cpp" />
     <ClCompile Include="src\Game\BasicMonster.cpp" />
+    <ClCompile Include="src\Game\BomberMonster.cpp" />
     <ClCompile Include="src\Game\DistanceMonster.cpp" />
     <ClCompile Include="src\Game\Skill\CureBlessingSkill.cpp" />
     <ClCompile Include="src\Game\Skill\LinkSkill.cpp" />
@@ -149,6 +150,8 @@
     <ClCompile Include="src\Game\Player.cpp" />
     <ClCompile Include="src\Game\Projectile.cpp" />
     <ClCompile Include="src\Game\Skill\HoshoyoExplosionSkill.cpp" />
+    <ClCompile Include="src\Game\Skill\MonsterEndureSkill.cpp" />
+    <ClCompile Include="src\Game\Skill\MonsterExplosionSkill.cpp" />
     <ClCompile Include="src\Game\Skill\Skill.cpp" />
     <ClCompile Include="src\Game\TurretMonster.cpp" />
     <ClCompile Include="src\Game\WorldObject.cpp" />
@@ -169,6 +172,7 @@
     <ClInclude Include="include\Game\AI\AI.h" />
     <ClInclude Include="include\Game\BasicMonster.h" />
     <ClInclude Include="include\Common.h" />
+    <ClInclude Include="include\Game\BomberMonster.h" />
     <ClInclude Include="include\Game\DistanceMonster.h" />
     <ClInclude Include="include\Game\Skill\CureBlessingSkill.h" />
     <ClInclude Include="include\Core\Game.h" />
@@ -185,6 +189,8 @@
     <ClInclude Include="include\Game\Player.h" />
     <ClInclude Include="include\Game\Projectile.h" />
     <ClInclude Include="include\Game\Skill\HoshoyoExplosionSkill.h" />
+    <ClInclude Include="include\Game\Skill\MonsterEndureSkill.h" />
+    <ClInclude Include="include\Game\Skill\MonsterExplosionSkill.h" />
     <ClInclude Include="include\Game\Skill\Skill.h" />
     <ClInclude Include="include\Game\TurretMonster.h" />
     <ClInclude Include="include\Game\WorldObject.h" />

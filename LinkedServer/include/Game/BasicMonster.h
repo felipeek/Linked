@@ -8,7 +8,7 @@ public:
 	BasicMonster();
 	~BasicMonster();
 
-	virtual void update(Map* map, std::vector<Player*>* players);
+	virtual void update(Map* map, std::vector<Player*>* players, std::vector<Monster*>* monsters);
 
 	/* COPY */
 	virtual Monster* getCopy(Monster* copy);
