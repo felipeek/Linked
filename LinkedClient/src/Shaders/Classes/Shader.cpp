@@ -1,10 +1,12 @@
 #include "Shader.h"
-
+#include <windows.h>
 #include <fstream>
 #include "Common.h"
 
 Shader::Shader(std::string filename, Camera* camera)
 {
+	auto a = glGenBuffers;
+	GLuint(__stdcall *glCreateShader2)(GLenum) = (GLuint(__stdcall*)(GLenum))wglGetProcAddress("glCreateShader");
 	GLuint ShaderProgram = glCreateProgram();
 	ShaderProgram = loadShader(filename.c_str(), ShaderProgram);
 	shader = ShaderProgram;

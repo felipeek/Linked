@@ -24,12 +24,15 @@ ContextWindow::ContextWindow(int nCmdShow, HINSTANCE hInstance,
 	m_wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	m_wcex.lpszMenuName = NULL;
 	m_wcex.lpszClassName = m_windowClass.c_str();
-	//m_wcex.hIconSm = LoadIcon(m_wcex.hInstance, MAKEINTRESOURCE(IDI_ERROR));
+	m_wcex.hIconSm = LoadIcon(m_wcex.hInstance, MAKEINTRESOURCE(IDI_ERROR));
 
 	if (!RegisterClassEx(&m_wcex))
 	{
 		LOG("Erro ao criar classe Win32.");
 	}
+
+	auto a = GetLastError();
+
 	// adjust size of window
 	RECT wr = { 0, 0, width, height };
 	AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);
@@ -80,7 +83,9 @@ void ContextWindow::InitOpenGL()
 	}
 
 	m_hRC = wglCreateContext(m_hDC);		// Create the context
-	wglMakeCurrent(m_hDC, m_hRC);			// Make the context current
+	
+	auto a = wglMakeCurrent(m_hDC, m_hRC);			// Make the context current
+	auto x = GetLastError();
 
 	glewExperimental = true;
 	GLenum err = glewInit();

@@ -61,6 +61,6 @@ Monster* BomberMonster::getCopy(Monster* copy)
 
 void BomberMonster::explode()
 {
-	this->doDamage(this->getHp());
 	this->explosionSkill->execute(MovementDirection::BOTTOM, this->getPosition(), 0);
+	this->doDamage(this->getHp());
 }

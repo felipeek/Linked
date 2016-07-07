@@ -15,7 +15,7 @@ void MonsterExplosionSkill::execute(MovementDirection skillDirection, glm::vec3 
 {
 	this->active = true;
 	this->skillPhase = 0;
-	PacketController::sendMonsterExplosionSkill(this->getId());
+	PacketController::sendMonsterExplosionSkill(this->getWorldObject()->getId());
 }
 
 void MonsterExplosionSkill::update(std::vector<Monster*> *monsters, std::vector<Player*> *players)

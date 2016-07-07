@@ -24,7 +24,7 @@ BomberMonster::~BomberMonster()
 
 void BomberMonster::attackCreature(Creature* creature)
 {
-	if (Game::multiplayer)
+	if (!Game::multiplayer)
 	{
 		this->attack();
 		if (!this->explosionSkill->isActive())
@@ -43,7 +43,7 @@ void BomberMonster::update(Map* map, Player* player, std::vector<Monster*>* mons
 
 void BomberMonster::doDamage(unsigned int damage)
 {
-	if (!this->endureSkill->isActive())
+	if (!this->endureSkill->isActive() && !Game::multiplayer)
 	{
 		int randomNumber = rand() % 100;
 		if (ENDURE_CHANCE > randomNumber)
@@ -87,6 +87,6 @@ Monster* BomberMonster::getCopy(Monster* copy)
 
 void BomberMonster::explode()
 {
-	this->doDamage(this->getHp());
 	this->explosionSkill->execute(MovementDirection::BOTTOM, this->getTransform()->getPosition(), 0);
+	this->doDamage(this->getHp());
 }
