@@ -1,5 +1,4 @@
 #include "TextRenderer.h"
-#include "TextShader.h"
 #include "Common.h"
 
 TextRenderer::TextRenderer(Shader* shader, std::string fontName)
@@ -116,7 +115,7 @@ void TextRenderer::genDynamicVAO()
 void TextRenderer::renderText(unsigned char* text, int textSize, GLfloat x, GLfloat y, charPixelSize scale, glm::vec3 color)
 {
 	this->shader->useShader();
-	glUniform3f(((TextShader*)shader)->getUniformTextColorLocation(), color.x, color.y, color.z);
+	//glUniform3f(((TextShader*)shader)->getUniformTextColorLocation(), color.x, color.y, color.z);
 	// Activate corresponding render state	
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO);

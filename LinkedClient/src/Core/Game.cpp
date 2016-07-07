@@ -22,9 +22,7 @@
 #include "Camera.h"
 #include "PrimitiveShader.h"
 #include "MapShader.h"
-#include "GUIShader.h"
 #include "CommonShader.h"
-#include "TextShader.h"
 #include "SkillShader.h"
 #include "Light.h"
 
@@ -46,6 +44,7 @@
 
 #include "FrameBuffer.h"
 #include "Audio.h"
+#include "LinkedDebug.h"
 
 // Standard libs
 #include "Logging/Log.h"

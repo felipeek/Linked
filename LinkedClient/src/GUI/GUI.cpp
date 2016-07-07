@@ -2,7 +2,6 @@
 #include "Player.h"
 #include "SkillIcon.h"
 #include "Chat.h"
-#include "GUIShader.h"
 #include "ContextWindow.h"
 
 #include <sstream>
@@ -35,8 +34,6 @@ GUI::GUI(Player* player)
 	this->color = glm::vec3(LGUI_R, LGUI_G, LGUI_B);
 	this->activeText = glm::vec3(0.8f, 0.8f, 0.95f);
 
-	this->guiShader = new GUIShader("./res/shaders/fontshader");
-
 	currentDisplayWidth = ContextWindow::getCurrent().getWidth();
 	currentDisplayHeight = ContextWindow::getCurrent().getHeight();
 
@@ -52,8 +49,6 @@ GUI::~GUI()
 	skill2->setBackgroundTexture(nullptr);
 	skill3->setBackgroundTexture(nullptr);
 	skill4->setBackgroundTexture(nullptr);
-
-	delete this->guiShader;
 }
 
 void GUI::initLeftGUI()

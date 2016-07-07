@@ -49,7 +49,7 @@ void FrameBuffer::genShadowMap(glm::vec4& borderColor)
 
 void FrameBuffer::genLightCamera(float orthoSpan)
 {
-	lightCamera = new Camera(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), orthoSpan, 15.0f, 120.0f);
+	lightCamera = new Camera(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), orthoSpan, 15.0f, 140.0f);
 }
 
 void FrameBuffer::renderDepth()

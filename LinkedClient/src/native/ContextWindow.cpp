@@ -24,7 +24,7 @@ ContextWindow::ContextWindow(int nCmdShow, HINSTANCE hInstance,
 	m_wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	m_wcex.lpszMenuName = NULL;
 	m_wcex.lpszClassName = m_windowClass.c_str();
-	//m_wcex.hIconSm = LoadIcon(m_wcex.hInstance, MAKEINTRESOURCE(IDI_ERROR));
+	m_wcex.hIconSm = LoadIcon(m_wcex.hInstance, MAKEINTRESOURCE(IDI_ERROR));
 
 	if (!RegisterClassEx(&m_wcex))
 	{

@@ -32,8 +32,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	}
 
 	// Message/Game Loop
-	const double FPS = 60.0;
-	const double GAMESPEED = 60.0;
+	const double FPS = 120.0;
+	const double GAMESPEED = 120.0;
 	game->running = true;
 
 	// Enable Vsync

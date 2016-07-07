@@ -61,13 +61,10 @@
     <ClCompile Include="src\Shaders\Classes\CommonShader.cpp" />
     <ClCompile Include="src\Shaders\Classes\WindowShader.cpp" />
     <ClCompile Include="src\Shaders\FrameBuffer.cpp" />
-    <ClCompile Include="src\Shaders\Classes\FrameShader.cpp" />
-    <ClCompile Include="src\Shaders\Classes\GUIShader.cpp" />
     <ClCompile Include="src\Shaders\Light.cpp" />
     <ClCompile Include="src\Shaders\Classes\MapShader.cpp" />
     <ClCompile Include="src\Shaders\Classes\PrimitiveShader.cpp" />
     <ClCompile Include="src\Shaders\Classes\Shader.cpp" />
-    <ClCompile Include="src\Shaders\Classes\TextShader.cpp" />
     <ClCompile Include="src\Entity\Skill\SwapSkill.cpp" />
     <ClCompile Include="src\WindowApi\Button.cpp" />
     <ClCompile Include="src\WindowApi\FontRenderer.cpp" />
@@ -150,13 +147,10 @@
     <ClInclude Include="include\Shaders\Classes\FontShader.h" />
     <ClInclude Include="include\Shaders\Classes\WindowShader.h" />
     <ClInclude Include="include\Shaders\FrameBuffer.h" />
-    <ClInclude Include="include\Shaders\Classes\FrameShader.h" />
-    <ClInclude Include="include\Shaders\Classes\GUIShader.h" />
     <ClInclude Include="include\Shaders\Light.h" />
     <ClInclude Include="include\Shaders\Classes\MapShader.h" />
     <ClInclude Include="include\Shaders\Classes\PrimitiveShader.h" />
     <ClInclude Include="include\Shaders\Classes\Shader.h" />
-    <ClInclude Include="include\Shaders\Classes\TextShader.h" />
     <ClInclude Include="include\Entity\Skill\LinkSkill.h" />
     <ClInclude Include="include\Entity\Skill\SwapSkill.h" />
     <ClInclude Include="include\Shaders\Classes\SkillShader.h" />
@@ -175,6 +169,7 @@
     <ClInclude Include="include\Entity\Monster\BomberMonster.h" />
     <ClInclude Include="include\Entity\Monster\Skill\MonsterExplosionSkill.h" />
     <ClInclude Include="include\Entity\Monster\Skill\MonsterEndureSkill.h" />
+    <ClInclude Include="include\Core\LinkedDebug.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="LinkedIcon.ico" />

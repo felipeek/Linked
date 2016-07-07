@@ -6,6 +6,7 @@
 #include "Map.h"
 #include "GUI.h"
 #include "Game.h"
+#include "LinkedDebug.h"
 #include <iostream>
 
 std::string Chat::msg = "";
@@ -13,6 +14,7 @@ std::stringstream Chat::ss;
 bool Chat::m_Enabled = false;
 GUI* Chat::gui = nullptr;
 
+LinkedDebug d;
 
 void Chat::updateGameMultiplayer(UDPClient* udpClient, Player* localPlayer, Map* map)
 {
@@ -78,6 +80,61 @@ void Chat::updateGameSingleplayer()
 	{
 		if (gui != nullptr)
 			gui->setNextMessage(Chat::msg);
+
+		if (Chat::msg[0] == '/')
+		{
+			switch (Chat::msg[1])
+			{
+				case 'd': {
+					char varbuffer[256] = {};
+					char argbuffer[256] = {};
+					int i = 3;
+					for (; Chat::msg[i] != 0 && Chat::msg[i] != ' '; ++i)
+						varbuffer[i - 3] = Chat::msg[i];
+					if (Chat::msg[i] != 0)
+					{
+						i++;
+						for (int j = 0; Chat::msg[i] != 0 && Chat::msg[i] != ' '; ++i, ++j)
+							argbuffer[j] = Chat::msg[i];
+					}
+					int address = strtol(varbuffer, NULL, 16);
+					int offset = atoi(argbuffer);
+					gui->setNextMessage(d.PrintAtAddress((void*)address, offset));
+				}break;
+			}
+		}
+
+		if (Chat::msg[0] == '/')
+		{
+			switch (Chat::msg[1])
+			{
+			case 's': {
+				char varbuffer[256] = {};
+				char argbuffer[256] = {};
+				char valbuffer[256] = {};
+				int i = 3;
+				for (; Chat::msg[i] != 0 && Chat::msg[i] != ' '; ++i)
+					varbuffer[i - 3] = Chat::msg[i];
+				if (Chat::msg[i] != 0)
+				{
+					i++;
+					for (int j = 0; Chat::msg[i] != 0 && Chat::msg[i] != ' '; ++i, ++j)
+						argbuffer[j] = Chat::msg[i];
+				}
+				if (Chat::msg[i] != 0)
+				{
+					i++;
+					for (int j = 0; Chat::msg[i] != 0 && Chat::msg[i] != ' '; ++i, ++j)
+						valbuffer[j] = Chat::msg[i];
+				}
+
+				int address = strtol(varbuffer, NULL, 16);
+				int offset = atoi(argbuffer);
+				int value = atoi(valbuffer);
+				d.SetIntegerValueAtAddress((void*)address, offset, value);
+			}break;
+			}
+		}
 
 		Chat::msg = "";
 	}
