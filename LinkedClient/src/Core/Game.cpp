@@ -67,6 +67,7 @@ Game::Game(int windowWidth, int windowHeight)
 	createGraphicElements(windowWidth, windowHeight);
 
 	createMap();
+	initializateAudio();
 
 	if (Game::multiplayer)
 	{
@@ -83,8 +84,6 @@ Game::Game(int windowWidth, int windowHeight)
 
 	createGUI();
 	Chat::gui = this->gui;
-
-	initializateAudio();
 }
 
 Game::~Game()
