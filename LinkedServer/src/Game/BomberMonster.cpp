@@ -18,6 +18,8 @@ BomberMonster::BomberMonster()
 
 BomberMonster::~BomberMonster()
 {
+	delete this->explosionSkill;
+	delete this->endureSkill;
 }
 
 void BomberMonster::attackCreature(Creature* creature)

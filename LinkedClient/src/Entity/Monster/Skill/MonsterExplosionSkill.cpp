@@ -76,15 +76,14 @@ void MonsterExplosionSkill::execute(MovementDirection skillDirection, glm::vec3 
 	this->skillAudio->play();
 }
 
-const float skillRadius = 10.0f;
-const int skillDamage = 10;
-
 void MonsterExplosionSkill::hitPlayerIfOnRadius(Player* localPlayer)
 {
 	if (this->owner == MONSTER)
 	{
+		Monster* owner = (Monster*)this->getEntity();
+		int skillDamage = SKILL_DAMAGE_FACTOR * owner->getTotalAttack();
 		glm::vec3 diffVector = localPlayer->getTransform()->getPosition() - explosionPosition;
-		if (glm::length(diffVector) < skillRadius && localPlayer->isAlive())
+		if (glm::length(diffVector) < MONSTER_EXPLOSION_SKILL_MAX_RADIUS && localPlayer->isAlive())
 		{
 			if (Game::multiplayer) PacketController::sendPlayerDamageToServer(skillDamage);
 			localPlayer->doDamage(skillDamage);

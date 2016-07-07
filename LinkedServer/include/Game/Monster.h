@@ -74,6 +74,8 @@ public:
 	void move(MovementDirection direction);
 	void stop();
 	bool shouldBeDeleted();
+	bool isKnockbackable();
+	void setKnockbackable(bool knockbackable);
 
 	/* COMBAT */
 	void doDamage(unsigned int damage);
@@ -104,6 +106,7 @@ private:
 	bool attacking = false;
 	bool receivingDamage = false;
 	bool moving = false;
+	bool knockbackable = true;
 	MovementDirection movingDirection;
 	unsigned int hp;
 	unsigned int totalMaximumHp;

@@ -38,11 +38,11 @@ void BasicMonster::updateMovement(Map* map, std::vector<Player*>* players)
 		{
 			this->stop();
 		}
-		else if (this->isReceivingDamage())
+		else if (this->isReceivingDamage() && this->isKnockbackable())
 		{
 			this->stop();
 		}
-		else if (player != nullptr && player->isAlive())
+		else if (player != nullptr && this->ai->isOnRangeToChaseTarget(player->getPosition()) && this->ai->isPathFreeOfCollisions(map, player->getPosition()) && player->isAlive())
 		{
 			this->moveToAttackPlayer(map, player);
 			this->movingRandomly = false;

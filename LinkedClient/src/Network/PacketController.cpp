@@ -212,7 +212,7 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 			}
 		}
 		break;
-	// BOMB MONSTER EXPLODED
+	// EXPLOSION SKILL
 	case 12:
 		if (dataSize == sizeof(int))
 		{
@@ -220,6 +220,17 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 			if (monster != NULL)
 			{
 				monster->action(2, 0, glm::vec3(0, 0, 0));
+			}
+		}
+		break;
+		// ENDURE SKILL
+	case 13:
+		if (dataSize == sizeof(int))
+		{
+			Monster* monster = PacketController::game->getMonsterOfId(xid);
+			if (monster != NULL)
+			{
+				monster->action(3, 0, glm::vec3(0, 0, 0));
 			}
 		}
 		break;

@@ -181,4 +181,7 @@
     <ClInclude Include="include\Core\Audio.h" />
     <ClInclude Include="include\Entity\Monster\DistanceMonster.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="config.linked" />
+  </ItemGroup>
 </Project>

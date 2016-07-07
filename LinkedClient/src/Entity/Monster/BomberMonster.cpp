@@ -43,7 +43,7 @@ void BomberMonster::update(Map* map, Player* player, std::vector<Monster*>* mons
 
 void BomberMonster::doDamage(unsigned int damage)
 {
-	if (!this->endureSkill->isActive() && !Game::multiplayer)
+	if (!Game::multiplayer && !this->endureSkill->isActive())
 	{
 		int randomNumber = rand() % 100;
 		if (ENDURE_CHANCE > randomNumber)
@@ -52,7 +52,7 @@ void BomberMonster::doDamage(unsigned int damage)
 
 	BasicMonster::doDamage(damage);
 
-	if (!this->isAlive())
+	if (!Game::multiplayer && !this->isAlive())
 		if (!this->explosionSkill->isActive())
 			this->explode();
 }
@@ -74,6 +74,10 @@ void BomberMonster::action(int actionId, int xid, glm::vec3 vector)
 	if (actionId == 2)
 		if (!this->explosionSkill->isActive())
 			this->explode();
+	if (actionId == 3)
+		if (!this->endureSkill->isActive())
+			this->endureSkill->execute(MovementDirection::BOTTOM, glm::vec3(0, 0, 0), 0);
+
 	BasicMonster::action(actionId, xid, vector);
 }
 

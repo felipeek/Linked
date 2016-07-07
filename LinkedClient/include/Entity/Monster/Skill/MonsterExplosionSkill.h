@@ -1,7 +1,8 @@
 #pragma once
 #include "Skill.h"
 
-#define MONSTER_EXPLOSION_SKILL_MAX_RADIUS 25
+#define MONSTER_EXPLOSION_SKILL_MAX_RADIUS 8
+#define SKILL_DAMAGE_FACTOR 3
 
 class Audio;
 

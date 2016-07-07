@@ -686,6 +686,13 @@ void PacketController::sendMonsterExplosionSkill(int monsterId)
 		udpServer->sendPackets(Packet(dummy, 12, monsterId), (*udpServer->getClients())[i]->netInfo);
 }
 
+void PacketController::sendMonsterEndureSkill(int monsterId)
+{
+	int dummy = -1;
+	for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
+		udpServer->sendPackets(Packet(dummy, 13, monsterId), (*udpServer->getClients())[i]->netInfo);
+}
+
 void PacketController::dispatchMsg(int id, int xid, char* data, int senderID)
 {
 	std::string msg(data);

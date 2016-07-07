@@ -54,11 +54,11 @@ void MonsterEndureSkill::update(std::vector<Monster*> *monsters, std::vector<Pla
 		else if (this->currentAuraTextureIndex == 16)
 		{
 			this->active = false;
-			if (!Game::multiplayer)
-			{
+			/*if (!Game::multiplayer)
+			{*/
 				owner->setKnockbackable(true);
 				owner->setTotalSpeed(owner->getTotalSpeed() - SPEED_BONUS);
-			}
+			//}
 		}
 		else
 		{
@@ -90,13 +90,10 @@ void MonsterEndureSkill::execute(MovementDirection skillDirection, glm::vec3 ski
 		this->getTransform()->translate(initialAuraPos.x, initialAuraPos.y, 0.5f);
 		this->currentAuraTextureIndex = 0;
 		this->timeReference = LinkedTime::getTime();
-		if (!Game::multiplayer)
-		{
+	/*	if (!Game::multiplayer)
+		{*/
 			owner->setKnockbackable(false);
 			owner->setTotalSpeed(owner->getTotalSpeed() + SPEED_BONUS);
-		}
+		//}
 	}
 }
-
-const float skillRadius = 10.0f;
-const int skillDamage = 10;

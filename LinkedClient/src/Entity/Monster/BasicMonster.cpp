@@ -162,6 +162,7 @@ void BasicMonster::moveOnline(Map* map)
 		}
 		else
 		{
+			//this->getTransform()->translate(this->directedMovement.movement.x, this->directedMovement.movement.y, this->getTransform()->getPosition().z);
 			this->movingOnline = false;
 			if (!this->isAttacking() && !this->isReceivingDamage()) timeStopped++;
 		}
@@ -175,7 +176,7 @@ void BasicMonster::moveOnline(Map* map)
 	// When this happens, the monster "flicks".
 	// The line of code below will make the STANDING texture appears only when the monster has stopped walking for a
 	// considerable amount of time.
-	if (timeStopped > 10)
+	if (timeStopped > 5)
 		this->stop();
 }
 

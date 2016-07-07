@@ -345,6 +345,9 @@
   <ItemGroup>
     <ResourceCompile Include="LinkedClient.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="config.linked" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

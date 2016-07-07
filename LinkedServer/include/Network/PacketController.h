@@ -30,6 +30,7 @@ public:
 	static void sendProjectileAttackByTurretMonster(int monsterId, Projectile* direction);
 	
 	static void sendMonsterExplosionSkill(int monsterId);
+	static void sendMonsterEndureSkill(int monsterId);
 
 	static void disconnectClient(int clientId, bool timedOut);
 	static void update10();

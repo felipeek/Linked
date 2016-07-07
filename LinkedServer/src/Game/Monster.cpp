@@ -251,6 +251,16 @@ bool Monster::shouldBeDeleted()
 	return false;
 }
 
+bool Monster::isKnockbackable()
+{
+	return this->knockbackable;
+}
+
+void Monster::setKnockbackable(bool knockbackable)
+{
+	this->knockbackable = knockbackable;
+}
+
 /* COMBAT */
 
 void Monster::doDamage(unsigned int damage)
