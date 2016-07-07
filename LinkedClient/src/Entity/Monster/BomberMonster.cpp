@@ -24,9 +24,12 @@ BomberMonster::~BomberMonster()
 
 void BomberMonster::attackCreature(Creature* creature)
 {
-	this->attack();
-	this->explosionSkill->execute(MovementDirection::BOTTOM, this->getTransform()->getPosition(), 0);
-	this->doDamage(this->getHp());
+	if (!Game::multiplayer)
+	{
+		this->attack();
+		if (!this->explosionSkill->isActive())
+			this->explode();
+	}
 }
 
 void BomberMonster::update(Map* map, Player* player, std::vector<Monster*>* monsters)
@@ -40,7 +43,7 @@ void BomberMonster::update(Map* map, Player* player, std::vector<Monster*>* mons
 
 void BomberMonster::doDamage(unsigned int damage)
 {
-	if (!this->endureSkill->isActive())
+	if (!this->endureSkill->isActive() && !Game::multiplayer)
 	{
 		int randomNumber = rand() % 100;
 		if (ENDURE_CHANCE > randomNumber)
@@ -48,6 +51,10 @@ void BomberMonster::doDamage(unsigned int damage)
 	}
 
 	BasicMonster::doDamage(damage);
+
+	if (!this->isAlive())
+		if (!this->explosionSkill->isActive())
+			this->explode();
 }
 
 void BomberMonster::render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer)
@@ -64,6 +71,9 @@ void BomberMonster::startOnlineMovement(glm::vec3 position)
 
 void BomberMonster::action(int actionId, int xid, glm::vec3 vector)
 {
+	if (actionId == 2)
+		if (!this->explosionSkill->isActive())
+			this->explode();
 	BasicMonster::action(actionId, xid, vector);
 }
 
@@ -73,4 +83,10 @@ Monster* BomberMonster::getCopy(Monster* copy)
 	if (copy == nullptr) copy = new BomberMonster(nullptr, nullptr, nullptr);
 
 	return Monster::getCopy(copy);
+}
+
+void BomberMonster::explode()
+{
+	this->explosionSkill->execute(MovementDirection::BOTTOM, this->getTransform()->getPosition(), 0);
+	this->doDamage(this->getHp());
 }

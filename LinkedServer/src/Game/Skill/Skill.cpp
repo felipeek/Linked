@@ -1,11 +1,10 @@
 #include "Skill.h"
 #include "LinkedTime.h"
 
-Skill::Skill(SkillOwner owner, std::vector<Monster*> *monsters, std::vector<Player*>* players)
+Skill::Skill(SkillOwner owner)
 {
 	slot = SLOT_1;
 	active = false;
-	this->monsters = monsters;
 	this->owner = owner;
 }
 

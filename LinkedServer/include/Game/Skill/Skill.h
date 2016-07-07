@@ -23,13 +23,13 @@ enum SkillSlot {
 class Skill : public WorldObject
 {
 public:
-	Skill(SkillOwner owner, std::vector<Monster*> *monsters, std::vector<Player*>* players);
+	Skill(SkillOwner owner);
 	~Skill();
 	SkillSlot getSlot();
 	void setSlot(SkillSlot slot);
 	bool isActive();
 	virtual void execute(MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId) = 0;
-	virtual void update() = 0;
+	virtual void update(std::vector<Monster*> *monsters, std::vector<Player*> *players) = 0;
 
 	// Creature that "owns" this skill and will use it eventually
 	void setWorldObject(WorldObject* entity);
@@ -47,7 +47,6 @@ protected:
 	SkillOwner owner;
 	bool active;
 	WorldObject* worldObject;
-	std::vector<Monster*> *monsters;
 
 	void startCooldownContage();
 	void resetCooldownContageForcibly();

@@ -10,11 +10,11 @@ enum class SwapSkillStatus
 class SwapSkill : public Skill
 {
 public:
-	SwapSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vector<Player*>* players);
+	SwapSkill(SkillOwner owner);
 	~SwapSkill();
 	void execute(MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId);
 	bool cancelIfPossible();
-	void update();
+	void update(std::vector<Monster*> *monsters, std::vector<Player*> *players);
 private:
 	SwapSkillStatus status;
 };

@@ -80,7 +80,7 @@ public:
 	virtual void attackCreature(Creature* creature);
 
 	/* UPDATE & RENDER */
-	virtual void update(Map* map, std::vector<Player*>* players);
+	virtual void update(Map* map, std::vector<Player*>* players, std::vector<Monster*>* monsters);
 
 	/* COPY */
 	// if the "copy" parameter is NULL, it will allocate the monster

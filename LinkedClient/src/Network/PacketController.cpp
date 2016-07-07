@@ -212,6 +212,17 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 			}
 		}
 		break;
+	// BOMB MONSTER EXPLODED
+	case 12:
+		if (dataSize == sizeof(int))
+		{
+			Monster* monster = PacketController::game->getMonsterOfId(xid);
+			if (monster != NULL)
+			{
+				monster->action(2, 0, glm::vec3(0, 0, 0));
+			}
+		}
+		break;
 	}
 }
 void PacketController::dispatchFloatArray(int id, int xid, float* data, int dataSize)
@@ -418,6 +429,11 @@ void PacketController::sendSkillToServer(SkillSlot slot, MovementDirection skill
 	skillInformation[4] = skillTargetPosition.z;
 	skillInformation[5] = (float)(targetCreatureId);
 	udpClient->sendPackets(Packet(skillInformation, 6, 6, UDPClient::myID));
+}
+
+void PacketController::sendPlayerDamageToServer(int damage)
+{
+	udpClient->sendPackets(Packet(damage, 12, UDPClient::myID));
 }
 
 Player* PacketController::getPlayerOfClient(int clientId)

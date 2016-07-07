@@ -96,7 +96,7 @@ public:
 	Equipment* addNewEquipment(Equipment* equipment);
 
 	/* UPDATE */
-	void update();
+	void update(std::vector<Monster*> *monsters, std::vector<Player*> *players);
 
 	/* NETWORK MOVEMENT */
 	virtual bool mustUpdateDestinationToClients();

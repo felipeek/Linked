@@ -275,7 +275,7 @@ void Monster::attackCreature(Creature* creature)
 
 /* UPDATE & RENDER */
 
-void Monster::update(Map* map, std::vector<Player*>* players)
+void Monster::update(Map* map, std::vector<Player*>* players, std::vector<Monster*>* monsters)
 {
 	double now = LinkedTime::getTime();
 

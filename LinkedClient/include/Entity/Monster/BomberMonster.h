@@ -33,4 +33,5 @@ protected:
 private:
 	Skill* explosionSkill;
 	Skill* endureSkill;
+	void explode();
 };

@@ -19,9 +19,9 @@ void DistanceMonster::attackCreature(Creature* creature)
 	this->attack();
 }
 
-void DistanceMonster::update(Map* map, std::vector<Player*>* players)
+void DistanceMonster::update(Map* map, std::vector<Player*>* players, std::vector<Monster*>* monsters)
 {
-	Monster::update(map, players);
+	Monster::update(map, players, monsters);
 	BasicMonster::updateMovement(map, players);
 }
 

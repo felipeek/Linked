@@ -5,7 +5,7 @@
 
 #define CURE_BLESSING_SKILL_THRESHOLD 3.0f
 
-CureBlessingSkill::CureBlessingSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vector<Player*>* players) : Skill(owner, monsters, players)
+CureBlessingSkill::CureBlessingSkill(SkillOwner owner) : Skill(owner)
 {
 	this->status = CureBlessingSkillStatus::IDLE;
 	this->cooldown = CURE_BLESSING_SKILL_COOLDOWN;
@@ -25,7 +25,7 @@ void CureBlessingSkill::execute(MovementDirection skillDirection, glm::vec3 skil
 	if (targetPlayer != nullptr && this->owner == PLAYER)
 		targetPlayer->setHp((unsigned int)round((CURE_BLESSING_SKILL_PERCENTAGE / 100.0f)*(float)targetPlayer->getTotalMaximumHp()));
 }
-void CureBlessingSkill::update()
+void CureBlessingSkill::update(std::vector<Monster*> *monsters, std::vector<Player*> *players)
 {
 	if (this->isActive() && this->status != CureBlessingSkillStatus::IDLE)
 	{

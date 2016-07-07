@@ -33,6 +33,7 @@ public:
 	static void sendAttackToServer(glm::vec3 attackDirection);
 	static void sendAttackCollisionToServer(int monsterId, int attackId, int damage);
 	static void sendMonsterAttackCollisionToServer(int monsterId, int attackId, int damage);
+	static void sendPlayerDamageToServer(int damage);
 
 	/* SKILLS */
 	static void sendSkillToServer(SkillSlot slot, MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId);

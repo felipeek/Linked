@@ -1,14 +1,13 @@
 #pragma once
 #include "Skill.h"
 
-class LinkSkill : public Skill
+class MonsterEndureSkill : public Skill
 {
 public:
-	LinkSkill(SkillOwner owner);
-	~LinkSkill();
+	MonsterEndureSkill(SkillOwner owner);
+	~MonsterEndureSkill();
 	void execute(MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId);
 	void update(std::vector<Monster*> *monsters, std::vector<Player*> *players);
 private:
-	bool linked;
 };
 

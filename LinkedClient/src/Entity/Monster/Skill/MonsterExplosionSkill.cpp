@@ -5,6 +5,7 @@
 #include "TextRenderer.h"
 #include "Audio.h"
 #include "Player.h"
+#include "PacketController.h"
 
 // TODO: Skill Animation flow must be implemented using LinkedTime, not only the update call.
 
@@ -46,11 +47,8 @@ void MonsterExplosionSkill::update(std::vector<Monster*> *monsters, std::vector<
 {
 	if (this->isActive())
 	{
-		if (!Game::multiplayer)
-		{
-			if (this->currentExplosionTextureIndex == 0)
-				this->hitPlayerIfOnRadius(localPlayer);
-		}
+		if (this->currentExplosionTextureIndex == 0)
+			this->hitPlayerIfOnRadius(localPlayer);
 		if (this->currentExplosionTextureIndex == 12)
 		{
 			this->active = false;
@@ -87,6 +85,9 @@ void MonsterExplosionSkill::hitPlayerIfOnRadius(Player* localPlayer)
 	{
 		glm::vec3 diffVector = localPlayer->getTransform()->getPosition() - explosionPosition;
 		if (glm::length(diffVector) < skillRadius && localPlayer->isAlive())
+		{
+			if (Game::multiplayer) PacketController::sendPlayerDamageToServer(skillDamage);
 			localPlayer->doDamage(skillDamage);
+		}
 	}
 }

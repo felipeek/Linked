@@ -3,7 +3,7 @@
 #include "Game.h"
 #include "PacketController.h"
 
-HoshoyoExplosionSkill::HoshoyoExplosionSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vector<Player*>* players) : Skill(owner, monsters, players)
+HoshoyoExplosionSkill::HoshoyoExplosionSkill(SkillOwner owner) : Skill(owner)
 {
 	this->skillPhase = 0;
 }
@@ -12,12 +12,12 @@ HoshoyoExplosionSkill::~HoshoyoExplosionSkill()
 {
 }
 
-void HoshoyoExplosionSkill::update()
+void HoshoyoExplosionSkill::update(std::vector<Monster*> *monsters, std::vector<Player*> *players)
 {
 	if (this->isActive())
 	{
 		if (this->skillPhase % 27 == 0)
-			this->hitEnemiesOnSkillRadius();
+			this->hitEnemiesOnSkillRadius(monsters);
 		if (this->skillPhase == 81)
 		{
 			this->active = false;
@@ -42,11 +42,11 @@ void HoshoyoExplosionSkill::execute(MovementDirection skillDirection, glm::vec3 
 const float skillRadius = 10.0f;
 const int skillDamage = 10;
 
-void HoshoyoExplosionSkill::hitEnemiesOnSkillRadius()
+void HoshoyoExplosionSkill::hitEnemiesOnSkillRadius(std::vector<Monster*> *monsters)
 {
 	if (this->owner == PLAYER)
 	{
-		for (Monster* monster : *(this->monsters))
+		for (Monster* monster : *monsters)
 		{
 			glm::vec3 diffVector = monster->getPosition() - explosionPosition;
 			if (glm::length(diffVector) < skillRadius && monster->isAlive())

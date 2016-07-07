@@ -13,10 +13,10 @@ enum class CureBlessingSkillStatus
 class CureBlessingSkill : public Skill
 {
 public:
-	CureBlessingSkill(SkillOwner owner, std::vector<Monster*>* monsters, std::vector<Player*>* players);
+	CureBlessingSkill(SkillOwner owner);
 	~CureBlessingSkill();
 	void execute(MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId);
-	void update();
+	void update(std::vector<Monster*> *monsters, std::vector<Player*> *players);
 private:
 	CureBlessingSkillStatus status;
 	bool checkCooldown = false;
