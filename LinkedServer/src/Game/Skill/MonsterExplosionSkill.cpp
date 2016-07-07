@@ -33,4 +33,4 @@ void MonsterExplosionSkill::update(std::vector<Monster*> *monsters, std::vector<
 }
 
 const float skillRadius = 10.0f;
-const int skillDamage = 10;
+const int skillDamage = 100;
