@@ -568,7 +568,7 @@ void PacketController::updateMonstersPosition(int vectorIndex, int quantity, std
 	for (int i = 0; i < quantity; i++)
 	{
 		Monster* monster = monsters[i + vectorIndex];
-		monstersPosition[i] = monster->getDestination();
+		monstersPosition[i] = monster->getPosition();
 		monstersIds[i] = monster->getId();
 	}
 

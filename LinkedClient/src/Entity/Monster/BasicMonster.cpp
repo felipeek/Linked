@@ -162,7 +162,6 @@ void BasicMonster::moveOnline(Map* map)
 		}
 		else
 		{
-			this->getTransform()->translate(this->directedMovement.movement.x, this->directedMovement.movement.y, this->getTransform()->getPosition().z);
 			this->movingOnline = false;
 			if (!this->isAttacking() && !this->isReceivingDamage()) timeStopped++;
 		}

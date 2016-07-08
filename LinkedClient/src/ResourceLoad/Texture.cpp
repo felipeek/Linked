@@ -9,7 +9,7 @@ Texture::Texture(std::string fileName, float bias) : ImageLoader(fileName, 4)
 	this->bias = bias;
 	this->fileName = fileName;
 	this->tileAmount = 1.0f;
-	this->interpolationMethod = TexInterp::LINEAR_MIPMAP;
+	this->interpolationMethod = TexInterp::NEAREST_MIPMAP;
 	textureID = genGLTexture();
 }
 
