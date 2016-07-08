@@ -24,7 +24,8 @@ namespace linked
 		m_position(position), 
 		defaultLineSpace(true), 
 		lineSpace(0), 
-		m_textColor(textColor)
+		m_textColor(textColor),
+		m_yAdvance(0)
 	{
 		// Create font of size if non existant, use the existing if there is one
 		m_fontRenderer = nullptr;
