@@ -61,7 +61,7 @@ void Projectile::update(Map* map, std::vector<Monster*>* monsters, Player* local
 	int hitMonsterIndex;
 
 	// if projectile hit wall it must be deleted
-	if (map->coordinateHasCollision(newPos))
+	if (map->coordinateHasCollisionNoWater(newPos))
 	{
 		this->dead = true;
 	}

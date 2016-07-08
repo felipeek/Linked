@@ -8,7 +8,7 @@
 
 #define PORT 9090
 
-#define MAX_DC_TIME 5
+#define MAX_DC_TIME 15
 
 #define CONNECTION_CHECK_TIME 5
 

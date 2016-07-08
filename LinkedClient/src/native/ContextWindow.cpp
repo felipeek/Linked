@@ -41,12 +41,17 @@ ContextWindow::ContextWindow(int nCmdShow, HINSTANCE hInstance,
 		NULL,
 		m_windowClass.c_str(),
 		m_title.c_str(),
-		WS_OVERLAPPEDWINDOW,// ^ WS_THICKFRAME,
+		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		wr.right - wr.left,
 		wr.bottom - wr.top,
 		NULL, NULL, m_hInst, NULL
 		);
+
+	int monitor_width = GetSystemMetrics(SM_CXSCREEN);
+	int monitor_height = GetSystemMetrics(SM_CYSCREEN);
+	if(monitor_width >= width && monitor_height >= height)
+		MoveWindow(m_hWnd, (monitor_width - width) / 2.0f, (monitor_height - height) / 2.0f, width, height, false);
 
 	if (!m_hWnd)
 	{

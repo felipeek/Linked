@@ -15,7 +15,7 @@ HoshoyoExplosionSkill::HoshoyoExplosionSkill(SkillOwner owner) : Skill(owner)
 {
 	/* AIM ENTITY */
 	Mesh* aimMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 1, 12));
-	Transform* aimTransform = new Transform(glm::vec3(0, 0, 0.1f), 0, glm::vec3(1, 0, 0), glm::vec3(10, 10, 10));
+	Transform* aimTransform = new Transform(glm::vec3(0, 0, 0.15f), 0, glm::vec3(1, 0, 0), glm::vec3(10, 10, 10));
 	Texture* aimTexture = new Texture("./res/Skills/aim.png");
 	this->aimEntity = new Entity(aimTransform, aimMesh, aimTexture);
 	this->cursorRot = 0;
@@ -55,10 +55,13 @@ HoshoyoExplosionSkill::~HoshoyoExplosionSkill()
 
 void HoshoyoExplosionSkill::render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer)
 {
+	// Note: DEPTH_TEST needs to be enabled in order to render correctly in 3d space
+	// If the render order of the player were to change, this will cause a bug
+	glEnable(GL_DEPTH_TEST);
 	if (this->status == HoshoyoExplosionSkillStatus::AIM)
 	{
-		this->aimEntity->render(primitiveShader);
 		this->rangeEntity->render(primitiveShader);
+		this->aimEntity->render(primitiveShader);
 	}
 	else if (this->status == HoshoyoExplosionSkillStatus::EXECUTION)
 	{
@@ -88,13 +91,13 @@ void HoshoyoExplosionSkill::update(std::vector<Monster*> *monsters, std::vector<
 			float diff = glm::length(mousePos - entityPos);
 			if (diff < (float)(HOSHOYO_EXPLOSION_SKILL_MAX_RADIUS - 1))
 			{
-				this->aimEntity->getTransform()->translate(mousePos.x, mousePos.y, 0.1f);
+				this->aimEntity->getTransform()->translate(mousePos.x, mousePos.y, 0.15f);
 				Game::cursor->hideCursor();
 			}
 			else
 			{
 				glm::vec3 v = (float)(HOSHOYO_EXPLOSION_SKILL_MAX_RADIUS - 1)*glm::normalize(mousePos - entityPos);
-				this->aimEntity->getTransform()->translate((entityPos+v).x, (entityPos + v).y, 0.1f);
+				this->aimEntity->getTransform()->translate((entityPos+v).x, (entityPos + v).y, 0.15f);
 				Game::cursor->showCursor();
 			}
 			this->aimEntity->getTransform()->rotate(cursorRot, glm::vec3(0, 0, 1));

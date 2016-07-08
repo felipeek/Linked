@@ -11,15 +11,15 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	MSG msg;
 	bool running = true;
 
-	// Initialize window, OpenGL context and game
-	window = new ContextWindow(nCmdShow, hInstance, (int)(800 * 1.8), (int)(450 * 1.8), std::string("hoengine_opengl"), std::string("Linked - v2.0"));
-	window->InitOpenGL();
-
 #if _DEBUG
 	AllocConsole();
 	FILE* pCout;
 	freopen_s(&pCout, "CONOUT$", "w", stdout);
 #endif
+
+	// Initialize window, OpenGL context and game
+	window = new ContextWindow(nCmdShow, hInstance, 1440, 910, std::string("hoengine_opengl"), std::string("Linked - v2.0"));
+	window->InitOpenGL();
 
 	game = new Game(window->getWidth(), window->getHeight());
 	//ShowCursor(false);

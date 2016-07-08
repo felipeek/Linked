@@ -40,6 +40,16 @@ bool Map::coordinateHasCollision(glm::vec3 coordinate)
 	return true;
 }
 
+bool Map::coordinateHasCollisionNoWater(glm::vec3 coordinate)
+{
+	if (!mapTerrainLoader->coordinateHasCollisionNoWater(coordinate))
+		if (!mapMonsterLoader->coordinateHasCollision(coordinate))
+			if (!mapGameEntityLoader->coordinateHasCollision(coordinate))
+				return false;
+
+	return true;
+}
+
 // Can only be used to Map Creation
 // It will create new monsters/entity whenever called.
 MapCoordinate Map::getMapCoordinateForMapCreation(glm::vec3 coordinate)

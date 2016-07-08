@@ -567,7 +567,6 @@ void Player::render(Shader* primitiveShader, Shader* skillShader, Shader* worldS
 			std::cerr << "Error rendering entity" << std::endl;
 		}
 	}
-
 	for (Skill* skill : this->getSkills())
 	{
 		try{

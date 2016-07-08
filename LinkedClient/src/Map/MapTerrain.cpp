@@ -42,6 +42,36 @@ bool MapTerrainImageLoader::coordinateHasCollision(glm::vec3& coordinateVector){
 	return false;
 }
 
+bool MapTerrainImageLoader::coordinateHasCollisionNoWater(glm::vec3& coordinateVector) {
+	try
+	{
+		glm::vec3 rgb;
+		MapTerrain mapTerrain;
+
+		rgb = getPixel((int)floor(coordinateVector.x), (int)floor(coordinateVector.y));
+		mapTerrain = transformRgbIntoMapTerrain(rgb);
+		if (mapTerrain == BLOCKED)
+			return true;
+
+		/* Check if there is a collision in the right and in the top too. */
+		/* This is to refine the collision, since a floor() function is being used. */
+		rgb = getPixel((int)floor(coordinateVector.x), (int)floor(coordinateVector.y + 1));
+		mapTerrain = transformRgbIntoMapTerrain(rgb);
+		if (mapTerrain == BLOCKED)
+			return true;
+		rgb = getPixel((int)floor(coordinateVector.x + 1), (int)floor(coordinateVector.y));
+		mapTerrain = transformRgbIntoMapTerrain(rgb);
+		if (mapTerrain == BLOCKED)
+			return true;
+	}
+	catch (PixelOutOfBoundsException e)
+	{
+		return false;
+	}
+
+	return false;
+}
+
 MapTerrain MapTerrainImageLoader::getMapTerrainForCoordinate(vec3& coordinateVector)
 {
 	MapTerrain mapObject;
