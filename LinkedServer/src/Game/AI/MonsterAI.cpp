@@ -36,7 +36,7 @@ MovementDefinition MonsterAI::generateRandomMovement(Map* map) const
 		randomMovement.direction = this->getDiagonalDirection(randomMovementDirection);
 		randomMovement.movement = randomMovementDirection + aiOwnerPosition;
 		tries++;
-	} while (map->coordinateHasCollision(this->getNextStep(randomMovement.movement)) && tries < AVOID_WALLS_INTELLIGENCE);
+	} while (!this->isPathFreeOfCollisions(map, this->getNextStep(randomMovement.movement)) && tries < AVOID_WALLS_INTELLIGENCE);
 
 	return randomMovement;
 }
