@@ -170,7 +170,11 @@ void Game::createMap()
 void Game::createOfflinePlayer()
 {
 	Mesh* playerMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 12, 0));
+#ifdef DEBUG
+	localPlayer = new Player(new Transform(glm::vec3(64, 64, PLAYER_HEIGHT), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
+#else
 	localPlayer = new Player(new Transform(glm::vec3(189.471f, 104.694f, PLAYER_HEIGHT), 45, glm::vec3(1, 0, 0), glm::vec3(2, 2, 2)), playerMesh, new Texture("./res/Monsters/Sprites/greenwarrior.png"));
+#endif
 	localPlayer->setHp(100);
 	localPlayer->setName("crazyshane75");
 	localPlayer->setClientId(0);

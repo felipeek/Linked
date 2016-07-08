@@ -3,11 +3,24 @@
 #include <glm\glm.hpp>
 #include <vector>
 
-#define MAP_SIZE 1024
+#define DEBUG
 
+#ifdef DEBUG
+#define MAP_SIZE 128
+#else
+#define MAP_SIZE 1024
+#endif
+
+#ifdef DEBUG
+#define TERRAIN_MAP_PATH "./res/Maps/debug_terrain_map.png"
+#define ENTITIES_MAP_PATH "./res/Maps/debug_entities_map.png"
+#define MONSTER_MAP_PATH "./res/Maps/debug_monsters_map.png"
+#else
 #define TERRAIN_MAP_PATH "./res/Maps/terrain_map.png"
 #define ENTITIES_MAP_PATH "./res/Maps/entities_map.png"
 #define MONSTER_MAP_PATH "./res/Maps/monsters_map.png"
+#endif
+
 #define THEME_AUDIO_PATH "./res/Audio/theme.wav"
 #define PLAYER_JOINED_AUDIO_PATH "./res/Audio/player_joined.wav"
 #define PLAYER_DISCONNECTED_AUDIO_PATH "./res/Audio/player_disconnected.wav"
