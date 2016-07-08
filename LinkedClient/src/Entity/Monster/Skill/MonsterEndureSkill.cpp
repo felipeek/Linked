@@ -15,7 +15,7 @@ MonsterEndureSkill::MonsterEndureSkill(SkillOwner owner) : Skill(owner)
 {
 	/* EXPLOSION ENTITY (THIS) */
 	Mesh* hoshoyoEndureMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 4, 0));
-	Transform* hoshoyoEndureTransform = new Transform(glm::vec3(520, 500, 1.5f), 35, glm::vec3(1, 0, 0), glm::vec3(7, 7, 7));
+	Transform* hoshoyoEndureTransform = new Transform(glm::vec3(520, 500, 1.5f), 0, glm::vec3(1, 0, 0), glm::vec3(7, 7, 7));
 	Texture* hoshoyoEndureTexture = new Texture("./res/Skills/aura.png");
 	this->setMesh(hoshoyoEndureMesh);
 	this->setTransform(hoshoyoEndureTransform);
@@ -63,7 +63,7 @@ void MonsterEndureSkill::update(std::vector<Monster*> *monsters, std::vector<Pla
 		else
 		{
 			glm::vec3 auraNewPos = owner->getTransform()->getPosition();
-			this->getTransform()->translate(auraNewPos.x, auraNewPos.y, 1.0f);
+			this->getTransform()->translate(auraNewPos.x, auraNewPos.y, 0.01f);
 
 			if (now > (this->timeReference + TIME_OFFSET))
 			{
@@ -87,7 +87,7 @@ void MonsterEndureSkill::execute(MovementDirection skillDirection, glm::vec3 ski
 		this->active = true;
 		Monster* owner = (Monster*)this->getEntity();
 		glm::vec3 initialAuraPos = owner->getTransform()->getPosition();
-		this->getTransform()->translate(initialAuraPos.x, initialAuraPos.y, 0.5f);
+		this->getTransform()->translate(initialAuraPos.x, initialAuraPos.y, 0.01f);
 		this->currentAuraTextureIndex = 0;
 		this->timeReference = LinkedTime::getTime();
 	/*	if (!Game::multiplayer)
