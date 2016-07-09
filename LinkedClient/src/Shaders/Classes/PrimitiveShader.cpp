@@ -3,6 +3,7 @@
 #include "Primitive.h"
 #include "Camera.h"
 #include "Light.h"
+#include "Player.h"
 
 PrimitiveShader::PrimitiveShader(std::string fileName, Camera* camera, Light* light) : Shader(fileName, camera)
 {
@@ -24,6 +25,7 @@ void PrimitiveShader::getUniformLocations()
 	uniform_textureOffset = glGetUniformLocation(shader, "textureOffset");
 	uniform_lightPosition = glGetUniformLocation(shader, "lightPosition");
 	uniform_lightColor = glGetUniformLocation(shader, "lightColor");
+	uniform_secondLightPos = glGetUniformLocation(shader, "other_light_pos");
 }
 
 void PrimitiveShader::update()
@@ -38,4 +40,7 @@ void PrimitiveShader::update()
 
 	glUniform3fv(uniform_lightPosition, 1, &this->light->lightPosition[0]);
 	glUniform3fv(uniform_lightColor, 1, &this->light->lightColor[0]);
+
+	glm::vec3 sndlightpos = this->player->getTransform()->getPosition() + glm::vec3(0, 0, 2.0f);
+	glUniform3fv(uniform_secondLightPos, 1, &sndlightpos[0]);
 }

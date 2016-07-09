@@ -6,6 +6,7 @@ in vec3 normal;
 in vec3 fragPos;
 in vec2 texCoords;
 in vec4 fragPosLightSpace;
+in vec3 second_light_pos;
 
 out vec4 out_Color;
 
@@ -85,5 +86,13 @@ void main(){
 	// Shadow
 	float shadow = ShadowCalculation(fragPosLightSpace);
 	vec3 lighting = (ambient + (1.0 - shadow) * diffuse) * totalColor.rgb;
-	out_Color = vec4(lighting, 1.0);
+	
+	vec3 seconddistance = second_light_pos - fragPos;
+	
+	float att = clamp(1.0 - length(seconddistance)/30.0, 0.0, 1.0);
+	att = att * att;
+	
+	vec3 second_diffuse = max(dot(normalize(seconddistance), Normal), 0.0) * totalColor.rgb * vec3(att, att, att*0.95);
+
+	out_Color = vec4(lighting + second_diffuse, 1.0);
 }

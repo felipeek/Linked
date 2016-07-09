@@ -2,6 +2,7 @@
 #include "Shader.h"
 class Light;
 class Camera;
+class Player;
 
 class MapShader : public Shader
 {
@@ -13,6 +14,8 @@ public:
 	/* GETTERS AND SETTERS */
 	void setLight(Light* light);
 	void setLightCamera(Camera* c);
+
+	void setPlayer(Player* player) { this->player = player; }
 private:
 	virtual void getUniformLocations();
 
@@ -25,10 +28,12 @@ private:
 	GLuint uniform_LightIntensity;
 	GLuint uniform_lightSpace;
 	GLuint uniform_shadowMap;
+	GLuint uniform_SecondLightPos;
 
 	GLuint uniform_Model;
 	GLuint uniform_viewProj;
 
 	Light* light;
 	Camera* lightCamera;
+	Player* player;
 };
