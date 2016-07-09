@@ -18,10 +18,11 @@ public:
 	void update(std::vector<Monster*> *monsters, std::vector<Player*> *players, Player* localPlayer);
 	void render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer);
 private:
-	Player* getTargetPlayer(Player* localPlayer, std::vector<Player*> *players);
+	Player* getTargetPlayer(std::vector<Player*> *players);
 	Entity* aimEntity;
+	Texture* aimBlackTexture;
+	Texture* aimRedTexture;
 	LinkSkillStatus status;
-	bool linked;
 	float cursorRot;
 };
 

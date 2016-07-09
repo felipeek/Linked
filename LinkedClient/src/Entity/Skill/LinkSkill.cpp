@@ -14,15 +14,15 @@ LinkSkill::LinkSkill(SkillOwner owner) : Skill(owner)
 	/* AIM ENTITY */
 	Mesh* aimMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.2f, 0.2f));
 	Transform* aimTransform = new Transform(glm::vec3(0, 0, 0), glm::vec3(0.5f , 0.5f, 0.5f));
-	Texture* aimTexture = new Texture("./res/Skills/small_aim.png");
-	this->aimEntity = new Entity(aimTransform, aimMesh, aimTexture);
+	this->aimRedTexture = new Texture("./res/Skills/small_aim_red.png");
+	this->aimBlackTexture = new Texture("./res/Skills/small_aim_black.png");
+	this->aimEntity = new Entity(aimTransform, aimMesh, aimBlackTexture);
 
 	/* SKILL ICON */
 	Texture* enabledSkillIconTexture = new Texture("./res/Skills/link_icon.png");
 	Texture* disabledSkillIconTexture = new Texture("./res/Skills/link_icon_black.png");
 	this->skillIcon = new SkillIcon(enabledSkillIconTexture, disabledSkillIconTexture, SLOT_1);
 
-	this->linked = false;
 	this->cursorRot = 0;
 }
 
@@ -34,25 +34,35 @@ LinkSkill::~LinkSkill()
 
 void LinkSkill::prepareExecution(MovementDirection skillDirection)
 {
-	if (!this->active && !this->linked)
+	if (this->owner == PLAYER)
 	{
-		this->active = true;
-		this->status = LinkSkillStatus::AIM;
-		Game::cursor->hideCursor();
+		bool linked = ((Player*)this->getEntity())->getLink() != nullptr;
+		if (!this->active && !linked)
+		{
+			this->active = true;
+			this->status = LinkSkillStatus::AIM;
+			Game::cursor->hideCursor();
+		}
 	}
 }
 
 void LinkSkill::execute(MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId)
 {
-	this->status = LinkSkillStatus::EXECUTION;
-	this->skillIcon->disableIcon();
-	this->active = true;
-	this->linked = true;
+	if (this->owner == PLAYER)
+	{
+		bool linked = ((Player*)this->getEntity())->getLink() != nullptr;
+		this->status = LinkSkillStatus::EXECUTION;
+		this->skillIcon->disableIcon();
+		this->active = true;
 
-	Player* targetPlayer = PacketController::getPlayerOfClient(targetCreatureId);
+		Player* targetPlayer = PacketController::getPlayerOfClient(targetCreatureId);
 
-	if (targetPlayer != nullptr && this->owner == PLAYER)
-		((Player*)(this->entity))->setLink(targetPlayer);
+		if (targetPlayer != nullptr && !linked)
+		{
+			((Player*)(this->entity))->setLink(targetPlayer);
+			targetPlayer->setLink((Player*)(this->entity));
+		}
+	}
 }
 
 bool LinkSkill::cancelIfPossible()
@@ -79,10 +89,15 @@ void LinkSkill::update(std::vector<Monster*> *monsters, std::vector<Player*> *pl
 			this->aimEntity->getTransform()->rotate(cursorRot, glm::vec3(0, 0, 1));
 			cursorRot += CURSOR_ROTATION_SPEED;
 
+			if (this->getTargetPlayer(players) != nullptr)
+				this->aimEntity->setTexture(this->aimRedTexture);
+			else
+				this->aimEntity->setTexture(this->aimBlackTexture);
+
 			if (Input::attack)
 			{
 				Game::cursor->showCursor();
-				Player* targetPlayer = this->getTargetPlayer(localPlayer, players);
+				Player* targetPlayer = this->getTargetPlayer(players);
 				if (targetPlayer != NULL)
 				{
 					if (Game::multiplayer)
@@ -109,12 +124,12 @@ void LinkSkill::render(Shader* primitiveShader, Shader* skillShader, TextRendere
 		this->aimEntity->render(skillShader);
 }
 
-Player* LinkSkill::getTargetPlayer(Player* localPlayer, std::vector<Player*> *players)
+Player* LinkSkill::getTargetPlayer(std::vector<Player*> *players)
 {
 	// mouse position related to the world, not the window
 	glm::vec3 mousePos = Input::mouseAttack.getMouseIntersection();
-	Player* mostClosePlayer = localPlayer;
-	float currentLength = glm::length(glm::vec2(mousePos.x, mousePos.y) - glm::vec2(localPlayer->getTransform()->getPosition().x, localPlayer->getTransform()->getPosition().y));
+	Player* mostClosePlayer = nullptr;
+	float currentLength = LINK_SKILL_THRESHOLD;
 
 	for (Player* player : *(players))
 	{

@@ -137,7 +137,7 @@ public:
 	bool hpBar_shouldRender;
 private:
 	/* FUNDAMENTAL ATTRIBUTES */
-	Player* link;
+	Player* link = nullptr;
 	short clientId;
 	std::string name;
 	unsigned int hp;
