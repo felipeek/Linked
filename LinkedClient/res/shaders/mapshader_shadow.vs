@@ -10,10 +10,12 @@ out vec3 normal;
 out vec3 fragPos;
 out vec2 texCoords;
 out vec4 fragPosLightSpace;
+out vec3 second_light_pos;
 
 uniform mat4 Model;
 uniform mat4 viewProj;
 uniform mat4 lightSpaceMatrix;
+uniform vec3 other_light_pos;
 
 void main()
 {
@@ -25,4 +27,5 @@ void main()
 	normal = vec3(Model * vec4(vertexNormal_modelspace, 1.0));
 	fragPos = vec3(worldPosition);
 	fragPosLightSpace = lightSpaceMatrix * vec4(fragPos, 1.0);
+	second_light_pos = other_light_pos;
 }

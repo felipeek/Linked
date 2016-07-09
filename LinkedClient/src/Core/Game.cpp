@@ -201,6 +201,10 @@ void Game::createOfflinePlayer()
 	Skill* skill4 = new HoshoyoExplosionSkill(PLAYER);
 	skill4->setSlot(SLOT_4);
 	localPlayer->addNewSkill(skill4);
+
+	this->mapShader->setPlayer(localPlayer);
+	this->primitiveShader->setPlayer(localPlayer);
+	this->worldSkillShader->setPlayer(localPlayer);
 }
 
 void Game::waitForCreationOfOnlinePlayer()

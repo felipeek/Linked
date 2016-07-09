@@ -141,18 +141,18 @@ void GUI::initLeftGUISkills()
 	using namespace linked;
 
 	int displayHeight = ContextWindow::getCurrent().getHeight();
-	Window* skills = new Window(200, 50, glm::vec2(10 + 300 + 10, displayHeight - 60), glm::vec4(0.76f, 0.75f, 0.8f, 0.1f), nullptr, 0, W_BORDER | W_MOVABLE);
+	Window* skills = new Window(220, 55, glm::vec2(10 + 300 + 10, displayHeight - 65), glm::vec4(0.76f, 0.75f, 0.8f, 0.1f), nullptr, 0, W_BORDER | W_MOVABLE);
 	skills->setBorderSizeX(1);
 	skills->setBorderSizeY(1);
 	skills->setBorderColor(glm::vec4(0, 0, 0, 1));
 	skillsGUI = skills;
 
-	const int divWidths = 200 / 4;
+	const int divWidths = 220 / 4;
 
-	skill1 = new WindowDiv(*skills, divWidths, 50, 0, 0, glm::vec2(0			, 0), glm::vec4(1, 0, 0, 1), DIV_ANCHOR_LEFT | DIV_ANCHOR_TOP);
-	skill2 = new WindowDiv(*skills, divWidths, 50, 0, 0, glm::vec2(divWidths * 1, 0), glm::vec4(0, 1, 0, 1), DIV_ANCHOR_LEFT | DIV_ANCHOR_TOP);
-	skill3 = new WindowDiv(*skills, divWidths, 50, 0, 0, glm::vec2(divWidths * 2, 0), glm::vec4(1, 0, 1, 1), DIV_ANCHOR_LEFT | DIV_ANCHOR_TOP);
-	skill4 = new WindowDiv(*skills, divWidths, 50, 0, 0, glm::vec2(divWidths * 3, 0), glm::vec4(1, 1, 0, 1), DIV_ANCHOR_LEFT | DIV_ANCHOR_TOP);
+	skill1 = new WindowDiv(*skills, divWidths, 55, 0, 0, glm::vec2(0			, 0), glm::vec4(1, 0, 0, 1), DIV_ANCHOR_LEFT | DIV_ANCHOR_TOP);
+	skill2 = new WindowDiv(*skills, divWidths, 55, 0, 0, glm::vec2(divWidths * 1, 0), glm::vec4(0, 1, 0, 1), DIV_ANCHOR_LEFT | DIV_ANCHOR_TOP);
+	skill3 = new WindowDiv(*skills, divWidths, 55, 0, 0, glm::vec2(divWidths * 2, 0), glm::vec4(1, 0, 1, 1), DIV_ANCHOR_LEFT | DIV_ANCHOR_TOP);
+	skill4 = new WindowDiv(*skills, divWidths, 55, 0, 0, glm::vec2(divWidths * 3, 0), glm::vec4(1, 1, 0, 1), DIV_ANCHOR_LEFT | DIV_ANCHOR_TOP);
 	
 	
 	skill1->setBackgroundTexture(player->getSkills()[0]->getSkillIcon()->getTexture());
@@ -220,6 +220,11 @@ void GUI::setPlayerSpeed(unsigned int speed)
 
 void GUI::update()
 {
+	skill1->setBackgroundTexture(player->getSkills()[0]->getSkillIcon()->getTexture());
+	skill2->setBackgroundTexture(player->getSkills()[1]->getSkillIcon()->getTexture());
+	skill3->setBackgroundTexture(player->getSkills()[2]->getSkillIcon()->getTexture());
+	skill4->setBackgroundTexture(player->getSkills()[3]->getSkillIcon()->getTexture());
+
 	if (player->getHp() != playerHealth)
 	{
 		setPlayerHealth(player->getHp(), player->getTotalMaximumHp());
