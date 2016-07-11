@@ -1,6 +1,10 @@
 #pragma once
 #include "Skill.h"
 
+#define LINK_SKILL_ICON_ENABLED "./res/Skills/link_enabled.png"
+#define LINK_SKILL_ICON_DISABLED "./res/Skills/link_disabled.png"
+#define LINK_SKILL_AIM_THRESHOLD 2.0f
+
 enum class LinkSkillStatus
 {
 	AIM,
@@ -20,9 +24,8 @@ public:
 private:
 	Player* getTargetPlayer(std::vector<Player*> *players);
 	Entity* aimEntity;
-	Texture* aimBlackTexture;
-	Texture* aimRedTexture;
 	LinkSkillStatus status;
 	float cursorRot;
+	void sendExecutionToServer(glm::vec3 mousePos, Player* targetPlayer);
 };
 

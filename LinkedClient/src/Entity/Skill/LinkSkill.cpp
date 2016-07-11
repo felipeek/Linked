@@ -7,20 +7,17 @@
 #include "Game.h"
 #include "Cursor.h"
 
-#define LINK_SKILL_THRESHOLD 3.0f
-
 LinkSkill::LinkSkill(SkillOwner owner) : Skill(owner)
 {
 	/* AIM ENTITY */
-	Mesh* aimMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.2f, 0.2f));
+	Mesh* aimMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 0.2f, 0.2f, 2, 0));
 	Transform* aimTransform = new Transform(glm::vec3(0, 0, 0), glm::vec3(0.5f , 0.5f, 0.5f));
-	this->aimRedTexture = new Texture("./res/Skills/small_aim_red.png");
-	this->aimBlackTexture = new Texture("./res/Skills/small_aim_black.png");
-	this->aimEntity = new Entity(aimTransform, aimMesh, aimBlackTexture);
+	Texture* aimTexture = new Texture("./res/Skills/small_aim.png");
+	this->aimEntity = new Entity(aimTransform, aimMesh, aimTexture);
 
 	/* SKILL ICON */
-	Texture* enabledSkillIconTexture = new Texture("./res/Skills/link_icon.png");
-	Texture* disabledSkillIconTexture = new Texture("./res/Skills/link_icon_black.png");
+	Texture* enabledSkillIconTexture = new Texture(LINK_SKILL_ICON_ENABLED);
+	Texture* disabledSkillIconTexture = new Texture(LINK_SKILL_ICON_DISABLED);
 	this->skillIcon = new SkillIcon(enabledSkillIconTexture, disabledSkillIconTexture, SLOT_1);
 
 	this->cursorRot = 0;
@@ -36,8 +33,8 @@ void LinkSkill::prepareExecution(MovementDirection skillDirection)
 {
 	if (this->owner == PLAYER)
 	{
-		bool linked = ((Player*)this->getEntity())->getLink() != nullptr;
-		if (!this->active && !linked)
+		Player* owner = (Player*)this->getEntity();
+		if (!this->active && !owner->hasLink())
 		{
 			this->active = true;
 			this->status = LinkSkillStatus::AIM;
@@ -50,19 +47,37 @@ void LinkSkill::execute(MovementDirection skillDirection, glm::vec3 skillTargetP
 {
 	if (this->owner == PLAYER)
 	{
-		bool linked = ((Player*)this->getEntity())->getLink() != nullptr;
-		this->status = LinkSkillStatus::EXECUTION;
-		this->skillIcon->disableIcon();
-		this->active = true;
-
+		Player* owner = (Player*)this->getEntity();
 		Player* targetPlayer = PacketController::getPlayerOfClient(targetCreatureId);
 
-		if (targetPlayer != nullptr && !linked)
+		if (targetPlayer != nullptr && !owner->hasLink() && owner->isAlive())
 		{
-			((Player*)(this->entity))->setLink(targetPlayer);
+			this->status = LinkSkillStatus::EXECUTION;
+			this->skillIcon->disableIcon();
+			this->active = true;
+			owner->setLink(targetPlayer);
 			targetPlayer->setLink((Player*)(this->entity));
 		}
+		else
+			this->active = false;
 	}
+	else
+		this->active = false;
+}
+
+void LinkSkill::sendExecutionToServer(glm::vec3 mousePos, Player* targetPlayer)
+{
+	if (this->owner == PLAYER)
+	{
+		Player* owner = (Player*)this->getEntity();
+
+		if (targetPlayer != nullptr && !owner->hasLink() && owner->isAlive())
+			PacketController::sendSkillToServer(this->getSlot(), TOP, mousePos, targetPlayer->getClientId());
+		else
+			this->active = false;
+	}
+	else
+		this->active = false;
 }
 
 bool LinkSkill::cancelIfPossible()
@@ -82,6 +97,7 @@ void LinkSkill::update(std::vector<Monster*> *monsters, std::vector<Player*> *pl
 	{
 		if (this->status == LinkSkillStatus::AIM)
 		{
+			Player* targetPlayer = this->getTargetPlayer(players);
 			// mouse position related to window, not the world
 			glm::vec2 screenPos = Input::mouseAttack.getOrthoCoords();
 			glm::vec3 mousePos = glm::vec3(screenPos.x, screenPos.y, 0);
@@ -89,19 +105,18 @@ void LinkSkill::update(std::vector<Monster*> *monsters, std::vector<Player*> *pl
 			this->aimEntity->getTransform()->rotate(cursorRot, glm::vec3(0, 0, 1));
 			cursorRot += CURSOR_ROTATION_SPEED;
 
-			if (this->getTargetPlayer(players) != nullptr)
-				this->aimEntity->setTexture(this->aimRedTexture);
+			if (targetPlayer != nullptr)
+				this->aimEntity->getMesh()->getQuad()->setIndex(1);
 			else
-				this->aimEntity->setTexture(this->aimBlackTexture);
+				this->aimEntity->getMesh()->getQuad()->setIndex(0);
 
 			if (Input::attack)
 			{
 				Game::cursor->showCursor();
-				Player* targetPlayer = this->getTargetPlayer(players);
 				if (targetPlayer != NULL)
 				{
 					if (Game::multiplayer)
-						PacketController::sendSkillToServer(this->getSlot(), TOP, mousePos, targetPlayer->getClientId());
+						this->sendExecutionToServer(mousePos, targetPlayer);
 					else
 						this->execute(TOP, mousePos, targetPlayer->getClientId());
 				}
@@ -114,6 +129,15 @@ void LinkSkill::update(std::vector<Monster*> *monsters, std::vector<Player*> *pl
 		else if (this->status == LinkSkillStatus::EXECUTION)
 		{
 			this->active = false;
+		}
+	}
+	else
+	{
+		if (this->owner == PLAYER)
+		{
+			Player* owner = (Player*)this->getEntity();
+			if (owner->hasLink() && this->skillIcon->isEnabled())
+				this->skillIcon->disableIcon();
 		}
 	}
 }
@@ -129,7 +153,7 @@ Player* LinkSkill::getTargetPlayer(std::vector<Player*> *players)
 	// mouse position related to the world, not the window
 	glm::vec3 mousePos = Input::mouseAttack.getMouseIntersection();
 	Player* mostClosePlayer = nullptr;
-	float currentLength = LINK_SKILL_THRESHOLD;
+	float currentLength = LINK_SKILL_AIM_THRESHOLD;
 
 	for (Player* player : *(players))
 	{
@@ -144,7 +168,7 @@ Player* LinkSkill::getTargetPlayer(std::vector<Player*> *players)
 	}
 	
 	if (mostClosePlayer != nullptr)
-		if (currentLength < LINK_SKILL_THRESHOLD)
+		if (currentLength < LINK_SKILL_AIM_THRESHOLD)
 			return mostClosePlayer;
 	
 	return nullptr;

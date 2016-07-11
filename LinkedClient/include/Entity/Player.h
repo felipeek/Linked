@@ -116,6 +116,7 @@ public:
 	void attack();
 	void receiveDamage();
 	bool isReceivingDamage();
+	bool hasLink();
 
 	/* COMBAT */
 	void doDamage(unsigned int damage);
@@ -174,6 +175,7 @@ private:
 	bool lastIsReceivingDamage = false;
 	bool lastIsDead = false;
 	bool lastIsMoving = false;
+	bool bLink = false;
 
 	/* TEXTURE-RELATED METHODS */
 	void refreshTexture();

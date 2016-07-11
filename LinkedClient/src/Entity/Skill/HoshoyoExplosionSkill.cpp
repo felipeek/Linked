@@ -8,6 +8,7 @@
 #include "PacketController.h"
 #include "TextRenderer.h"
 #include "Audio.h"
+#include "Player.h"
 
 // TODO: Skill Animation flow must be implemented using LinkedTime, not only the update call.
 
@@ -35,8 +36,8 @@ HoshoyoExplosionSkill::HoshoyoExplosionSkill(SkillOwner owner) : Skill(owner)
 	this->setTexture(hoshoyoExplosionTexture);
 
 	/* SKILL ICON */
-	Texture* enabledSkillIconTexture = new Texture("./res/Skills/hoshoyoexplosion_icon.png");
-	Texture* disabledSkillIconTexture = new Texture("./res/Skills/hoshoyoexplosion_icon_black.png");
+	Texture* enabledSkillIconTexture = new Texture(HOSHOYO_EXPLOSION_SKILL_ICON_ENABLED);
+	Texture* disabledSkillIconTexture = new Texture(HOSHOYO_EXPLOSION_SKILL_ICON_DISABLED);
 	this->skillIcon = new SkillIcon(enabledSkillIconTexture, disabledSkillIconTexture, SLOT_1);
 
 	/* SKILL AUDIO */
@@ -109,7 +110,7 @@ void HoshoyoExplosionSkill::update(std::vector<Monster*> *monsters, std::vector<
 				Game::cursor->showCursor();
 				if (Game::multiplayer)
 				{
-					PacketController::sendSkillToServer(this->getSlot(), TOP, this->aimEntity->getTransform()->getPosition(), 0);
+					this->sendExecutionToServer();
 				}
 				else
 				{
@@ -151,13 +152,40 @@ bool HoshoyoExplosionSkill::cancelIfPossible()
 
 void HoshoyoExplosionSkill::execute(MovementDirection skillDirection, glm::vec3 skillTargetPosition, int targetCreatureId)
 {
-	this->status = HoshoyoExplosionSkillStatus::EXECUTION;
-	explosionPosition = skillTargetPosition;
-	this->getTransform()->translate(skillTargetPosition.x, skillTargetPosition.y, 0.1f);
-	this->currentExplosionTextureIndex = 0;
-	this->skillIcon->disableIcon();
-	this->active = true;
-	this->skillAudio->play();
+	if (this->owner == PLAYER)
+	{
+		Player* owner = (Player*)this->getEntity();
+
+		if (owner->isAlive())
+		{
+			this->status = HoshoyoExplosionSkillStatus::EXECUTION;
+			explosionPosition = skillTargetPosition;
+			this->getTransform()->translate(skillTargetPosition.x, skillTargetPosition.y, 0.1f);
+			this->currentExplosionTextureIndex = 0;
+			this->skillIcon->disableIcon();
+			this->active = true;
+			this->skillAudio->play();
+		}
+		else
+			this->active = false;
+	}
+	else
+		this->active = false;
+}
+
+void HoshoyoExplosionSkill::sendExecutionToServer()
+{
+	if (this->owner == PLAYER)
+	{
+		Player* owner = (Player*)this->getEntity();
+
+		if (owner->isAlive())
+			PacketController::sendSkillToServer(this->getSlot(), TOP, this->aimEntity->getTransform()->getPosition(), 0);
+		else
+			this->active = false;
+	}
+	else
+		this->active = false;
 }
 
 const float skillRadius = 10.0f;

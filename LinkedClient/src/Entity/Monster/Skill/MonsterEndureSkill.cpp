@@ -14,9 +14,9 @@
 MonsterEndureSkill::MonsterEndureSkill(SkillOwner owner) : Skill(owner)
 {
 	/* EXPLOSION ENTITY (THIS) */
-	Mesh* hoshoyoEndureMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 4, 0));
-	Transform* hoshoyoEndureTransform = new Transform(glm::vec3(520, 500, 1.5f), 0, glm::vec3(1, 0, 0), glm::vec3(7, 7, 7));
-	Texture* hoshoyoEndureTexture = new Texture("./res/Skills/aura.png");
+	Mesh* hoshoyoEndureMesh = new Mesh(new Quad(glm::vec3(0, 0, 0), 1.0f, 1.0f, 1, 0));
+	Transform* hoshoyoEndureTransform = new Transform(glm::vec3(520, 500, 1.5f), 0, glm::vec3(1, 0, 0), glm::vec3(3, 3, 3));
+	Texture* hoshoyoEndureTexture = new Texture("./res/Skills/endure.png");
 	this->setMesh(hoshoyoEndureMesh);
 	this->setTransform(hoshoyoEndureTransform);
 	this->setTexture(hoshoyoEndureTexture);
@@ -67,7 +67,7 @@ void MonsterEndureSkill::update(std::vector<Monster*> *monsters, std::vector<Pla
 
 			if (now > (this->timeReference + TIME_OFFSET))
 			{
-				this->getMesh()->getQuad()->setIndex(this->currentAuraTextureIndex);
+				//	this->getMesh()->getQuad()->setIndex(this->currentAuraTextureIndex);
 				this->currentAuraTextureIndex++;
 				this->timeReference = now;
 			}
