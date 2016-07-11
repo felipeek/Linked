@@ -58,16 +58,19 @@ If the above doesn't work or if you want to build Linked server too, you can bui
 After building Linked, the game will only work when Linked resources are moved along with the executable. To do this, follow the steps below.
 
 If you want to run LinkedClient.exe:
+
 1. Go to **LinkedClient/** and copy the directory **res/** and the file **config.linked**.
 2. Move both to the same folder of your **LinkedClient.exe**.
 3. Go to **LinkedClient/lib/win32** and copy all **.dll** inside this folder.
 4. Move all **.dll** to the same folder of your **LinkedClient.exe**.
 
 If you want to run LinkedServer.exe:
+
 1. Go to **LinkedServer/** and copy the directory **res/**.
 2. Move the directory to the same folder of your **LinkedServer.exe**.
 
 Now the game can be initialized, but you may want to change Linked basic configurations. To do this, follow the steps below.
+
 1. Go to the directory of your **LinkedClient.exe** and find the file **config.linked**.
 2. Change the file. Network related fields like ***serverip*** and ***serverport*** are only meaningful if the ***multiplayer*** field is **true**.
 
