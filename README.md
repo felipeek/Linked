@@ -17,9 +17,9 @@ Linked is a multiplayer game idealized by Hoshoyo. It is currently being develop
 - [ ] Avoid creating heaps of sf::Sound ([More info](http://stackoverflow.com/questions/26265964/sfml-internal-openal-error#_=_))
 - [ ] Fix chat overflow
 - [ ] Fix HP Bar texture and position
-- [ ] Disable skills when dead
+- [x] Disable skills when dead
 - [x] Re-enable mouse right button
-- [ ] Re-enable skills cooldown icons
+- [x] Re-enable skills cooldown icons
 
 #### Future Tasks
 - [ ] Create items logic
