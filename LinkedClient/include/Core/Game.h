@@ -3,7 +3,7 @@
 #include <glm\glm.hpp>
 #include <vector>
 
-//#define DEBUG
+#define DEBUG
 
 #ifdef DEBUG
 #define MAP_SIZE 128
