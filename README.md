@@ -41,24 +41,40 @@ Linked is a multiplayer game idealized by Hoshoyo. It is currently being develop
 ![MultiPlayer](http://puu.sh/kVyA1/de09997992.jpg)
 
 ## Build
-To build Linked through the command line:
+You can easily build Linked client through the command line following the steps below.
 
-- Run Visual Studio vcvarsall.bat in a cmd normally located at C:\Program Files (x86)\Microsoft Visual Studio **14.0**\VC\vcvarsall.bat where 14.0 is the version of the compiler
-- Use the same cmd to run build.bat inside LinkedClient
+1. Open a Windows Terminal (cmd).
+2. Using the terminal, run the Visual Studio batch file **vcvarsall.bat**. This file is normally located at C:\Program Files (x86)\Microsoft Visual Studio **14.0**\VC\vcvarsall.bat, where 14.0 is the version of the compiler.
+3. Using the same terminal, run the batch file **build.bat**, which is located in the LinkedClient directory.
+4. Linked Client will be compiled and created in **LinkedClient/bin/cmdbuild**.
 
-LinkedClient.exe will be created at bin/cmdbuild
+If the above doesn't work or if you want to build Linked server too, you can build Linked directly from Visual Studio. To do this, follow the steps below.
 
-To execute LinkedClient.exe:
-- The directories **LinkedClient\res**, **LinkedClient\shaders** and **LinkedClient\fonts** must be in the same directory as LinkedClient.exe
-- All dlls inside **LinkedClient\lib\win32\** must be in the same directory as LinkedClient.exe.
+1. Open **Linked.sln** using Visual Studio 2015.
+2. Change the Solution Platform to **x86** and Solution Configurations to **Release**.
+3. Right-click Linked solution and select Build Solution.
+4. Linked Client will be compiled and created in **LinkedClient/bin/release**. Linked Server will be compiled and created in **LinkedServer/bin/release**.
 
-To execute LinkedServer.exe:
-- The directory **LinkedServer\res** must be in the same directory as LinkedServer.exe
+After building Linked, the game will only work when Linked resources are moved along with the executable. To do this, follow the steps below.
 
-Copy all the required directories to the same path as the executables and the game can be initialized.
+If you want to run LinkedClient.exe:
+1. Go to **LinkedClient/** and copy the directory **res/** and the file **config.linked**.
+2. Move both to the same folder of your **LinkedClient.exe**.
+3. Go to **LinkedClient/lib/win32** and copy all **.dll** inside this folder.
+4. Move all **.dll** to the same folder of your **LinkedClient.exe**.
+
+If you want to run LinkedServer.exe:
+1. Go to **LinkedServer/** and copy the directory **res/**.
+2. Move the directory to the same folder of your **LinkedServer.exe**.
+
+Now the game can be initialized, but you may want to change Linked basic configurations. To do this, follow the steps below.
+1. Go to the directory of your **LinkedClient.exe** and find the file **config.linked**.
+2. Change the file. Network related fields like ***serverip*** and ***serverport*** are only meaningful if the ***multiplayer*** field is **true**.
+
+Now you can play Linked.
 
 ## Play
-To play the game Single Player, only the client is necessary. To play multiplayer, you must have the server running. To run the server, execute LinkedServer.exe, and to run the client, execute LinkedClient.exe.
+To play the game Single Player, just run LinkedClient.exe. To play multiplayer, run LinkedServer.exe and then LinkedClient.exe.
 
 ## Developer Contact
 1. Felipe Kersting (fekersting@inf.ufrgs.br)
