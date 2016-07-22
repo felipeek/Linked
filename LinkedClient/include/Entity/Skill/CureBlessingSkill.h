@@ -1,8 +1,11 @@
 #pragma once
 #include "Skill.h"
 
+#define CURE_BLESSING_SKILL_ICON_ENABLED "./res/Skills/cure_blessing_enabled.png"
+#define CURE_BLESSING_SKILL_ICON_DISABLED "./res/Skills/cure_blessing_disabled.png"
 #define CURE_BLESSING_SKILL_COOLDOWN 15
 #define CURE_BLESSING_SKILL_PERCENTAGE 30
+#define CURE_BLESSING_SKILL_AIM_THRESHOLD 2.0f
 
 enum class CureBlessingSkillStatus
 {
@@ -25,8 +28,9 @@ public:
 private:
 	Entity* aimEntity;
 	CureBlessingSkillStatus status;
-	Player* getTargetPlayer(Player* localPlayer, std::vector<Player*> *players);
+	Player* getTargetPlayer(std::vector<Player*> *players);
 	bool checkCooldown = false;
 	float cursorRot;
+	void sendExecutionToServer(glm::vec3 mousePos, Player* targetPlayer);
 };
 

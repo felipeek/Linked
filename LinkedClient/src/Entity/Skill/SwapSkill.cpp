@@ -9,8 +9,8 @@
 SwapSkill::SwapSkill(SkillOwner owner) : Skill (owner)
 {
 	/* SKILL ICON */
-	Texture* enabledSkillIconTexture = new Texture("./res/Skills/swap_icon.png");
-	Texture* disabledSkillIconTexture = new Texture("./res/Skills/swap_icon_black.png");
+	Texture* enabledSkillIconTexture = new Texture(SWAP_SKILL_ICON_ENABLED);
+	Texture* disabledSkillIconTexture = new Texture(SWAP_SKILL_ICON_DISABLED);
 	this->skillIcon = new SkillIcon(enabledSkillIconTexture, disabledSkillIconTexture, SLOT_1);
 
 	this->status = SwapSkillStatus::IDLE;
@@ -28,15 +28,20 @@ void SwapSkill::render(Shader* primitiveShader, Shader* skillShader, TextRendere
 
 void SwapSkill::prepareExecution(MovementDirection skillDirection)
 {
-	if (!this->active && !this->isOnCooldown() && this->status == SwapSkillStatus::IDLE)
+	if (this->owner == PLAYER)
 	{
-		if (Game::multiplayer)
+		Player* owner = (Player*)this->getEntity();
+
+		if (owner->isAlive() && owner->hasLink() && !this->active && !this->isOnCooldown() && this->status == SwapSkillStatus::IDLE)
 		{
-			this->status = SwapSkillStatus::WAITING_FOR_SERVER_RESPONSE;
-			PacketController::sendSkillToServer(this->getSlot(), skillDirection, glm::vec3(0, 0, 0), 0);
+			if (Game::multiplayer)
+			{
+				this->status = SwapSkillStatus::WAITING_FOR_SERVER_RESPONSE;
+				PacketController::sendSkillToServer(this->getSlot(), skillDirection, glm::vec3(0, 0, 0), 0);
+			}
+			else
+				execute(skillDirection, glm::vec3(0, 0, 0), 0);
 		}
-		else
-			execute(skillDirection, glm::vec3(0, 0, 0), 0);
 	}
 }
 
@@ -68,14 +73,14 @@ void SwapSkill::update(std::vector<Monster*> *monsters, std::vector<Player*> *pl
 		{
 			if (this->owner == PLAYER)
 			{
-				Player* ownPlayer = ((Player*)entity);
-				Player* targetPlayer = ownPlayer->getLink();
+				Player* owner = ((Player*)entity);
+				Player* targetPlayer = owner->getLink();
 
-				if (targetPlayer != NULL)
+				if (targetPlayer != NULL && owner->isAlive() && targetPlayer->isAlive())
 				{
-					glm::vec3 ownPlayerPosition = ownPlayer->getTransform()->getPosition();
+					glm::vec3 ownPlayerPosition = owner->getTransform()->getPosition();
 					glm::vec3 targetPlayerPosition = targetPlayer->getTransform()->getPosition();
-					ownPlayer->getTransform()->translate(targetPlayerPosition.x, targetPlayerPosition.y, targetPlayerPosition.z);
+					owner->getTransform()->translate(targetPlayerPosition.x, targetPlayerPosition.y, targetPlayerPosition.z);
 					targetPlayer->getTransform()->translate(ownPlayerPosition.x, ownPlayerPosition.y, ownPlayerPosition.z);
 				}
 			}

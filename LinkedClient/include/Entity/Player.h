@@ -116,6 +116,7 @@ public:
 	void attack();
 	void receiveDamage();
 	bool isReceivingDamage();
+	bool hasLink();
 
 	/* COMBAT */
 	void doDamage(unsigned int damage);
@@ -137,7 +138,7 @@ public:
 	bool hpBar_shouldRender;
 private:
 	/* FUNDAMENTAL ATTRIBUTES */
-	Player* link;
+	Player* link = nullptr;
 	short clientId;
 	std::string name;
 	unsigned int hp;
@@ -174,6 +175,7 @@ private:
 	bool lastIsReceivingDamage = false;
 	bool lastIsDead = false;
 	bool lastIsMoving = false;
+	bool bLink = false;
 
 	/* TEXTURE-RELATED METHODS */
 	void refreshTexture();

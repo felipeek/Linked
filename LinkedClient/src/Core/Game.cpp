@@ -267,6 +267,9 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 		localPlayer = designedPlayer;
 		PacketController::localPlayer = this->localPlayer;
 		designedPlayer->setType(LOCAL);
+		this->mapShader->setPlayer(localPlayer);
+		this->primitiveShader->setPlayer(localPlayer);
+		this->worldSkillShader->setPlayer(localPlayer);
 	}
 	else
 	{

@@ -87,6 +87,13 @@ Player* Player::getLink()
 void Player::setLink(Player* link)
 {
 	this->link = link;
+	if (link != nullptr) this->bLink = true;
+	else this->bLink = false;
+}
+
+bool Player::hasLink()
+{
+	return this->bLink;
 }
 
 short Player::getClientId()

@@ -1,6 +1,9 @@
 #pragma once
 #include "Skill.h"
 
+#define SWAP_SKILL_ICON_ENABLED "./res/Skills/swap_enabled.png"
+#define SWAP_SKILL_ICON_DISABLED "./res/Skills/swap_disabled.png"
+
 enum class SwapSkillStatus
 {
 	IDLE,
