@@ -30,7 +30,7 @@ set GameNetworkFiles= %SRCDIR%Network\UDPClient.cpp %SRCDIR%Network\PacketContro
 set GameResourceLoadFiles= %SRCDIR%ResourceLoad\Texture.cpp %SRCDIR%ResourceLoad\IndexedModel.cpp %SRCDIR%ResourceLoad\ImageLoader.cpp %SRCDIR%ResourceLoad\Configfiles.cpp
 
 set GameShaderFiles= %SRCDIR%Shaders\Light.cpp %SRCDIR%Shaders\FrameBuffer.cpp %SRCDIR%Shaders\Camera.cpp
-set GameShaderClassesFiles= %SRCDIR%Shaders\Classes\WindowShader.cpp %SRCDIR%Shaders\Classes\TextShader.cpp %SRCDIR%Shaders\Classes\SkillShader.cpp %SRCDIR%Shaders\Classes\Shader.cpp %SRCDIR%Shaders\Classes\PrimitiveShader.cpp %SRCDIR%Shaders\Classes\MapShader.cpp %SRCDIR%Shaders\Classes\GUIShader.cpp %SRCDIR%Shaders\Classes\FrameShader.cpp %SRCDIR%Shaders\Classes\FontShader.cpp %SRCDIR%Shaders\Classes\CommonShader.cpp
+set GameShaderClassesFiles= %SRCDIR%Shaders\Classes\WindowShader.cpp %SRCDIR%Shaders\Classes\SkillShader.cpp %SRCDIR%Shaders\Classes\Shader.cpp %SRCDIR%Shaders\Classes\PrimitiveShader.cpp %SRCDIR%Shaders\Classes\MapShader.cpp %SRCDIR%Shaders\Classes\FontShader.cpp %SRCDIR%Shaders\Classes\CommonShader.cpp
 
 set WindowApiFiles= %SRCDIR%WindowApi\WindowDiv.cpp %SRCDIR%WindowApi\Window.cpp %SRCDIR%WindowApi\Label.cpp %SRCDIR%WindowApi\FontRenderer.cpp %SRCDIR%WindowApi\Button.cpp
 
