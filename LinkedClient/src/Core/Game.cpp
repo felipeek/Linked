@@ -432,9 +432,12 @@ void Game::renderFirstPass()
 	frameBuffer->renderDepth();
 
 	// Map
-	//entityMap->render(mapShader);
 	((Entity*)entityMap)->render(commonShader);
 	water->render(commonShader);
+
+	// Common static entities
+	for (Entity* e : gameEntities)
+		e->render(commonShader);
 
 	// Monsters
 	for (Monster* m : monsters)
@@ -447,10 +450,6 @@ void Game::renderFirstPass()
 		else
 			m->render(primitiveShader, skillShader, nullptr);
 	}
-
-	// Common static entities
-	for (Entity* e : gameEntities)
-			e->render(commonShader);
 
 	// Player
 	localPlayer->hpBarRenderOptions(false);
@@ -479,7 +478,9 @@ void Game::renderSecondsPass()
 	frameBuffer->normalRender(windowWidth, windowHeight);
 
 	// Map
+	//Mesh::wireframe = true;
 	entityMap->render(mapShader, frameBuffer->getCamera());
+#if 1
 	water->render(commonShader);
 
 	// Player
@@ -512,6 +513,26 @@ void Game::renderSecondsPass()
 	// Common static entities
 	for (Entity* e : gameEntities)
 			e->render(commonShader);
+#endif
+#if 0
+	glUseProgram(0);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, frameBuffer->getTexture()->textureID);
+
+	glLoadIdentity();
+	glTranslatef(0.5f, 0.5f, 0.0f);
+	const float divisor = 3.0f;
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0);
+	glVertex2f(-1.0f / divisor, -1.0f / divisor);
+	glTexCoord2f(1, 0);
+	glVertex2f(1.0f / divisor, -1.0f / divisor);
+	glTexCoord2f(1, 1);
+	glVertex2f(1.0f / divisor, 1.0f / divisor);
+	glTexCoord2f(0, 1);
+	glVertex2f(-1.0f / divisor, 1.0f / divisor);
+	glEnd();
+#endif
 }
 
 void Game::update()

@@ -30,7 +30,7 @@ void Light::update(glm::vec3& playerPosition)
 	
 	glm::mat4 rot = glm::rotate(glm::mat4(), dayDelta, glm::cross(glm::vec3(-2, -1, 0), glm::vec3(0, 0, 1)));
 
-	glm::vec4 initialPosition = glm::vec4(-80.0f, -40.0f, 0, 1.0f);
+	glm::vec4 initialPosition = glm::vec4(-80.0f, -60.0f, 0, 1.0f);
 	initialPosition = rot * initialPosition;
 
 	glm::vec3 endPos = glm::vec3(initialPosition);

@@ -26,7 +26,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 	projCoords = projCoords * 0.5 + 0.5;
 	float closestDepth = texture(shadowMap, projCoords.xy).r;
 	float currentDepth = projCoords.z;
-	float bias =  max(0.05*(1.0 - dot(normalize(normal), lightPosition - fragPos)), 0.005);
+	float bias =  max(0.05*(1.0 - dot(normalize(normal), lightPosition - fragPos)), 0.003);
 	
 	float shadow = 0.0;
 	
@@ -36,7 +36,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 		for(int y = -1; y <= 1; ++y)
 		{
 			float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x,y) * texelSize).r;
-			shadow += currentDepth - bias > pcfDepth ? 0.7 : 0.1;
+			shadow += currentDepth - bias > pcfDepth ? 0.9 : 0.2;
 		}
 	}
 	shadow /= 9.0;
@@ -51,17 +51,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 void main(){
 	vec3 surfaceToLight = lightPosition - fragPos;
 	vec3 lightColor = lightIntensity;
-	//vec4 blendMapColor = texture(BlendMap, uvCoords);
-	
-	//vec4 tNormalFloor = texture(NormalFloor, uvCoords * 40.0);
-	//vec4 tBlocked = texture(Blocked, uvCoords * 40.0);
-	//vec4 tWater = texture(Water, uvCoords * 40.0);
 
-	//float perc_NormalFloor = clamp(1 - length(blendMapColor - vec4(1,1,1,1)), 0, 1);
-	//float perc_Blocked = clamp(1 - length(blendMapColor - vec4(0,0,0,1)), 0, 1);
-	//float perc_Water = clamp(1 - length(blendMapColor - vec4(0,0,1,1)), 0, 1);
-	
-	//out_Color = tNormalFloor * perc_NormalFloor + tBlocked * perc_Blocked + tWater * perc_Water;
 	vec4 blendMapColor = texture(BlendMap, uvCoords);
 	
 	float backTextureAmount = 1 - (blendMapColor.r + blendMapColor.g + blendMapColor.b);
@@ -73,9 +63,6 @@ void main(){
 
 	vec4 totalColor;
 
-	//if (blendMapColor.r < 0.35 && blendMapColor.g < 0.35 && blendMapColor.b < 0.35)
-	//	totalColor = backgroundTextureColor;
-	//else
 	totalColor = backgroundTextureColor + rTextureColor + gTextureColor + bTextureColor;
 		
 	vec3 Normal = normalize(normal);
@@ -85,6 +72,7 @@ void main(){
 	vec3 diffuse = diff * lightIntensity;
 	// Shadow
 	float shadow = ShadowCalculation(fragPosLightSpace);
+	shadow = 0.0;
 	vec3 lighting = (ambient + (1.0 - shadow) * diffuse) * totalColor.rgb;
 	
 	vec3 seconddistance = second_light_pos - fragPos;

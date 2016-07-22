@@ -68,9 +68,12 @@ namespace linked
 		int ww = ContextWindow::getCurrent().getWidth();
 		int wh = ContextWindow::getCurrent().getHeight();
 
-		if(m_text)
-			m_yAdvance = m_fontRenderer->RenderText(std::string((const char*)m_text),
-			(int)(renderPosition.x * (float)ww), (int)(-renderPosition.y * (float)wh), rightLimit, m_textColor, Window::m_textShader, true);
-
+		if (m_text)
+		{
+			TextInfo ti = m_fontRenderer->RenderText(std::string((const char*)m_text),
+				(int)(renderPosition.x * (float)ww), (int)(-renderPosition.y * (float)wh),
+				rightLimit, m_textColor, Window::m_textShader, true);
+			m_yAdvance = ti.num_rows;
+		}
 	}
 }

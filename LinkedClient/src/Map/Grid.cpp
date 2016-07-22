@@ -9,7 +9,7 @@ Grid::Grid(int blockSize, Map* map)
 	indexedModel.positions.resize(arraySize);
 	indexedModel.normals.resize(arraySize);
 	indexedModel.texCoords.resize(arraySize);
-
+	
 	for (int i = 0, var = 0; i < blockSize; i += 2)
 	{
 		for (int j = 0; j < blockSize; j += 2)
@@ -58,8 +58,9 @@ Grid::Grid(int blockSize, Map* map)
 			var += 4;
 		}
 	}
-
+	
 	// Calc Normals
+	
 	int indexPos = 0;
 	for (int i = 0; i < blockSize; i += 2)
 	{
@@ -72,19 +73,14 @@ Grid::Grid(int blockSize, Map* map)
 			indexPos += 4;
 		}
 	}
-
-	indexedModel.indices.resize(7000000);
+	
+	int halfblock = blockSize / 2.0f;
+	indexedModel.indices.resize((halfblock * (blockSize - 1) + (halfblock - 1) * (blockSize - 1)) * 6);
+	
 	for (int i = 0, prevFirst = 0, newFirst = 0, deslocamento = 0, ultimo = 0, var = 0; i < blockSize - 1; i++)
 	{
 		for (int j = 0, aux = 0; j < blockSize - 1; j++)
 		{
-			//indexedModel.indices.push_back(deslocamento + j + 3 + aux);
-			//indexedModel.indices.push_back(deslocamento + j + 1 + aux);
-			//indexedModel.indices.push_back(newFirst + j + aux);
-			//indexedModel.indices.push_back(newFirst + j + aux);
-			//indexedModel.indices.push_back(newFirst + j + 2 + aux);
-			//indexedModel.indices.push_back(deslocamento + j + 3 + aux);
-
 			indexedModel.indices[var + 0] = deslocamento + j + 3 + aux;
 			indexedModel.indices[var + 1] = deslocamento + j + 1 + aux;
 			indexedModel.indices[var + 2] = newFirst + j + aux;
@@ -105,6 +101,8 @@ Grid::Grid(int blockSize, Map* map)
 		else
 			deslocamento = ultimo - ((blockSize - 2) * 2 - 1) - 3;
 	}
+
+
 }
 
 glm::vec3 Grid::calculateNormal(glm::vec3& position)
