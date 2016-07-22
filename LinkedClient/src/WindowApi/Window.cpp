@@ -127,12 +127,14 @@ namespace linked{
 			Window::m_textShader->clipBR = glm::vec2((float)ContextWindow::getCurrent().getWidth(), (float)ContextWindow::getCurrent().getHeight());
 			Window::m_textShader->update();
 
-			float xpos = 0;
-			if (m_titleCentered)
-				xpos = m_width / 2.0f - (m_titleLength / 2.0f * 10);
-			glm::vec2 winPos = getWindowBasePosition(xpos, -5);
 			float rightLimit = getWindowBasePosition((float)m_width, 0).x;
-			m_fontRenderer->renderText(m_title, m_titleLength - 1, glm::vec2(winPos.x, -winPos.y), rightLimit, 0, m_titleColor, m_textShader);
+			float xpos = getPosition().x * 2.0f - m_width;
+			float ypos = getPosition().y * 2.0f - m_height - 10.0f;
+
+			if (m_titleCentered)
+				xpos += m_width / 2.0f;
+
+			m_fontRenderer->RenderText(std::string((const char*)m_title), xpos, -ypos, rightLimit, m_titleColor, m_textShader, false);
 			Window::m_textShader->stopShader();
 		}
 	}
