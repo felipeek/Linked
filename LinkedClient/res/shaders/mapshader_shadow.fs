@@ -72,7 +72,7 @@ void main(){
 	vec3 diffuse = diff * lightIntensity;
 	// Shadow
 	float shadow = ShadowCalculation(fragPosLightSpace);
-	shadow = 0.0;
+
 	vec3 lighting = (ambient + (1.0 - shadow) * diffuse) * totalColor.rgb;
 	
 	vec3 seconddistance = second_light_pos - fragPos;
