@@ -99,6 +99,21 @@ namespace linked
 		{
 			return true;
 		}
+#if 1	// Font debug
+		glUseProgram(0);
+
+		glLineWidth(1.0);
+
+		glBegin(GL_LINES);
+
+		glColor3f(1, 0.5f, 0);
+
+		glVertex3f(cursorPosition.x, cursorPosition.y, 0.0f);	// Vertical left debug line
+		glVertex3f(cursorPosition.x + 0.1f, cursorPosition.y, 0.0f);
+
+		glEnd();
+
+#endif
 		return false;
 	}
 

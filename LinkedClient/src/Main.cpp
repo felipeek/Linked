@@ -100,6 +100,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			// Render GUI and game
 			game->render();
 			linked::Window::renderWindows();
+			game->renderGUI();
 
 			SwapBuffers(window->getHDC());
 

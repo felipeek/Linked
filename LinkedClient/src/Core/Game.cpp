@@ -409,12 +409,18 @@ void Game::destroyProjectileOfId(int id)
 
 void Game::render()
 {
+#if 0
 	/* FIRST PASS (SHADOW PASS) */
 	renderFirstPass();
 
 	/* SECOND PASS (COLOR PASS) */
 	renderSecondsPass();
+#endif
 	
+}
+
+void Game::renderGUI()
+{
 	// Render GUI and Cursor (Order is important)
 	bool wire = Mesh::wireframe;
 	Mesh::wireframe = false;

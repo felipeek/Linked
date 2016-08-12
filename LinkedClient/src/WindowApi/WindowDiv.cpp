@@ -27,8 +27,10 @@ namespace linked
 	void WindowDiv::render()
 	{
 		WindowShader* ws = m_window.getWindowShader();
+
 		ws->useShader();
 		ws->activateAlphaBlend();
+
 		if (m_backgroundTexture != nullptr)
 			ws->bindTextures(this->m_backgroundTexture->textureID);
 		if (m_render)
@@ -43,6 +45,28 @@ namespace linked
 			if (m_backgroundTexture != nullptr)
 				ws->bindTextures(m_backgroundTexture->textureID);
 		
+			glm::vec2 rp = getRelativePosition();
+			float ww_ = (float)ContextWindow::getCurrent().getWidth() / 2.0f;
+			float wh_ = (float)ContextWindow::getCurrent().getHeight() / 2.0f;
+			rp.x /= ww_;
+			rp.y /= wh_;
+
+#if 1
+			glUseProgram(0);
+
+			glLineWidth(1.0);
+
+			glBegin(GL_LINES);
+
+			glColor3f(0, 1, 0);
+
+			glVertex3f(rp.x - this->m_width / (ww_ * 2.0f), -rp.y - m_height / (wh_ * 2.0f), -1.0f);
+			glVertex3f(rp.x + this->m_width / (ww_ * 2.0f), -rp.y + m_height / (wh_ * 2.0f), -1.0f);
+
+			glEnd();
+			ws->useShader();
+#endif
+
 			ws->update(getRelativePosition());
 			divMesh->render();
 		

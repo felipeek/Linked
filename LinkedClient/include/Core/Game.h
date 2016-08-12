@@ -74,6 +74,7 @@ public:
 
 	/* RENDER & UPDATE*/
 	void render();
+	void renderGUI();
 	void update();
 
 	/* GAME INPUT */
