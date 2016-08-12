@@ -5,8 +5,6 @@
 #define HOSHOYO_EXPLOSION_SKILL_ICON_DISABLED "./res/Skills/hoshoyo_explosion_disabled.png"
 #define HOSHOYO_EXPLOSION_SKILL_MAX_RADIUS 25
 
-class Audio;
-
 enum class HoshoyoExplosionSkillStatus
 {
 	AIM,
@@ -36,7 +34,5 @@ private:
 
 	int currentExplosionTextureIndex;
 	float cursorRot;
-
-	Audio* skillAudio;
 };
 

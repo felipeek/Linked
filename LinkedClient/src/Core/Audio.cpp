@@ -1,12 +1,7 @@
 #include "Audio.h"
 #include <SFML\Audio.hpp>
 
-std::vector<Audio*> Audio::sounds = std::vector<Audio*>();
-std::vector<Audio*> Audio::musics = std::vector<Audio*>();
-unsigned int Audio::musicVolume = 100;
-unsigned int Audio::soundVolume = 100;
-
-Audio::Audio(std::string path, AudioType type)
+Audio::Audio(std::string path, AudioType type, unsigned int volume)
 {
 	this->type = type;
 	this->path = path;
@@ -17,64 +12,22 @@ Audio::Audio(std::string path, AudioType type)
 			throw ("Sound Error. Path: " + path);
 
 		this->sound.setBuffer(buffer);
-		this->setVolume(Audio::soundVolume);
-		Audio::sounds.push_back(this);
+		this->setVolume(volume);
 	}
 	else if (type == AudioType::MUSIC)
 	{
 		if (!music.openFromFile(path))
 			throw ("Music Error. Path: " + path);
-		this->setVolume(Audio::musicVolume);
-		Audio::musics.push_back(this);
+		this->setVolume(volume);
 	}
+}
+
+Audio::Audio(std::string path, AudioType type) : Audio(path, type, AUDIO_DEFAULT_VOLUME)
+{
 }
 
 Audio::~Audio()
 {
-	if (this->type == AudioType::MUSIC)
-	{
-		for (unsigned int i = 0; i < Audio::musics.size(); i++)
-			if (Audio::musics[i] == this)
-				Audio::musics.erase(Audio::musics.begin() + i);
-	}
-	else if (this->type == AudioType::SOUND)
-	{
-		for (unsigned int i = 0; i < Audio::sounds.size(); i++)
-			if (Audio::sounds[i] == this)
-				Audio::sounds.erase(Audio::sounds.begin() + i);
-	}
-}
-
-void Audio::setMusicVolume(unsigned int volume)
-{
-	for (Audio* audio : Audio::musics)
-		audio->setVolume(volume);
-	Audio::musicVolume = volume;
-}
-
-unsigned int Audio::getMusicVolume()
-{
-	return Audio::musicVolume;
-}
-
-void Audio::setSoundVolume(unsigned int volume)
-{
-	for (Audio* audio : Audio::sounds)
-		audio->setVolume(volume);
-	Audio::soundVolume = volume;
-}
-
-unsigned int Audio::getSoundVolume()
-{
-	return Audio::soundVolume;
-}
-
-void Audio::setVolume(unsigned int volume)
-{
-	if (this->type == AudioType::SOUND)
-		this->sound.setVolume((float)volume);
-	else if (this->type == AudioType::MUSIC)
-		this->music.setVolume((float)volume);
 }
 
 void Audio::play()
@@ -107,6 +60,14 @@ void Audio::setLoop(bool remainsOnLoop)
 		this->sound.setLoop(remainsOnLoop);
 	else if (this->type == AudioType::MUSIC)
 		this->music.setLoop(remainsOnLoop);
+}
+
+void Audio::setVolume(unsigned int volume)
+{
+	if (this->type == AudioType::SOUND)
+		this->sound.setVolume((float)volume);
+	else if (this->type == AudioType::MUSIC)
+		this->music.setVolume((float)volume);
 }
 
 AudioType Audio::getType()

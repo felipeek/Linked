@@ -9,7 +9,6 @@
 
 class Projectile;
 class Player;
-class Audio;
 
 class DistanceMonster : public BasicMonster, public TurretMonster
 {

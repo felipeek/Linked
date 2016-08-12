@@ -7,7 +7,7 @@
 #include "Cursor.h"
 #include "PacketController.h"
 #include "TextRenderer.h"
-#include "Audio.h"
+#include "AudioController.h"
 #include "Player.h"
 
 // TODO: Skill Animation flow must be implemented using LinkedTime, not only the update call.
@@ -39,9 +39,6 @@ HoshoyoExplosionSkill::HoshoyoExplosionSkill(SkillOwner owner) : Skill(owner)
 	Texture* enabledSkillIconTexture = new Texture(HOSHOYO_EXPLOSION_SKILL_ICON_ENABLED);
 	Texture* disabledSkillIconTexture = new Texture(HOSHOYO_EXPLOSION_SKILL_ICON_DISABLED);
 	this->skillIcon = new SkillIcon(enabledSkillIconTexture, disabledSkillIconTexture, SLOT_1);
-
-	/* SKILL AUDIO */
-	this->skillAudio = new Audio("./res/Audio/hoshoyo_explosion_skill.wav", AudioType::SOUND);
 }
 
 HoshoyoExplosionSkill::~HoshoyoExplosionSkill()
@@ -50,8 +47,6 @@ HoshoyoExplosionSkill::~HoshoyoExplosionSkill()
 		delete this->aimEntity;
 	if (this->rangeEntity != NULL)
 		delete this->rangeEntity;
-	if (this->skillAudio != NULL)
-		delete this->skillAudio;
 }
 
 void HoshoyoExplosionSkill::render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer)
@@ -164,7 +159,7 @@ void HoshoyoExplosionSkill::execute(MovementDirection skillDirection, glm::vec3 
 			this->currentExplosionTextureIndex = 0;
 			this->skillIcon->disableIcon();
 			this->active = true;
-			this->skillAudio->play();
+			AudioController::getHoshoyoExplosionSkillAudio().play();
 		}
 		else
 			this->active = false;

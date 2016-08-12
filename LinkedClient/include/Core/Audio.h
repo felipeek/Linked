@@ -1,6 +1,8 @@
 #include <string>
 #include <SFML\Audio.hpp>
 
+#define AUDIO_DEFAULT_VOLUME 100
+
 enum class AudioType
 {
 	SOUND,
@@ -12,24 +14,17 @@ class Audio
 {
 public:
 	Audio(std::string path, AudioType type);
+	Audio(std::string path, AudioType type, unsigned int volume);
 	~Audio();
-	static void setMusicVolume(unsigned int volume);
-	static unsigned int getMusicVolume();
-	static void setSoundVolume(unsigned int volume);
-	static unsigned int getSoundVolume();
 	void play();
 	void pause();
 	void rewind();
 	void setLoop(bool remainsOnLoop);
+	void setVolume(unsigned int volume);
 	AudioType getType();
 	std::string getPath();
-private:
-	static std::vector<Audio*> sounds;
-	static std::vector<Audio*> musics;
-	static unsigned int musicVolume;
-	static unsigned int soundVolume;
 
-	void setVolume(unsigned int volume);
+private:
 	sf::Sound sound;
 	sf::Music music;
 	sf::SoundBuffer buffer;

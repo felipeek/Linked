@@ -3,7 +3,7 @@
 #include "Monster.h"
 #include "Game.h"
 #include "TextRenderer.h"
-#include "Audio.h"
+#include "AudioController.h"
 #include "Player.h"
 #include "PacketController.h"
 
@@ -19,17 +19,12 @@ MonsterExplosionSkill::MonsterExplosionSkill(SkillOwner owner) : Skill(owner)
 	this->setTransform(hoshoyoExplosionTransform);
 	this->setTexture(hoshoyoExplosionTexture);
 
-	/* SKILL AUDIO */
-	this->skillAudio = new Audio("./res/Audio/hoshoyo_explosion_skill.wav", AudioType::SOUND);
-
 	/* SKILL ICON */
 	this->skillIcon = nullptr;
 }
 
 MonsterExplosionSkill::~MonsterExplosionSkill()
 {
-	if (this->skillAudio != NULL)
-		delete this->skillAudio;
 }
 
 void MonsterExplosionSkill::render(Shader* primitiveShader, Shader* skillShader, TextRenderer* textRenderer)
@@ -73,7 +68,7 @@ void MonsterExplosionSkill::execute(MovementDirection skillDirection, glm::vec3 
 	explosionPosition = skillTargetPosition;
 	this->getTransform()->translate(skillTargetPosition.x, skillTargetPosition.y, 0.1f);
 	this->currentExplosionTextureIndex = 0;
-	this->skillAudio->play();
+	AudioController::getHoshoyoExplosionSkillAudio().play();
 }
 
 void MonsterExplosionSkill::hitPlayerIfOnRadius(Player* localPlayer)
