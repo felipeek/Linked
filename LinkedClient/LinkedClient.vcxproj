@@ -165,6 +165,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\AudioController.cpp" />
     <ClCompile Include="src\Entity\Monster\BomberMonster.cpp" />
     <ClCompile Include="src\Entity\Monster\Skill\MonsterExplosionSkill.cpp" />
     <ClCompile Include="src\Entity\Monster\Skill\MonsterEndureSkill.cpp" />
@@ -247,6 +248,7 @@
     <ClCompile Include="src\native\WindowInput.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Core\AudioController.h" />
     <ClInclude Include="include\Core\LinkedDebug.h" />
     <ClInclude Include="include\Debug\Log.h" />
     <ClInclude Include="include\Entity\Monster\BomberMonster.h" />
@@ -346,6 +348,8 @@
     <ResourceCompile Include="LinkedClient.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="config.linked" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

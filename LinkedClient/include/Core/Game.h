@@ -21,10 +21,6 @@
 #define MONSTER_MAP_PATH "./res/Maps/monsters_map.png"
 #endif
 
-#define THEME_AUDIO_PATH "./res/Audio/theme.wav"
-#define PLAYER_JOINED_AUDIO_PATH "./res/Audio/player_joined.wav"
-#define PLAYER_DISCONNECTED_AUDIO_PATH "./res/Audio/player_disconnected.wav"
-
 #define SHADOW_BUFFER_SIZE 4096
 
 #define PLAYER_HEIGHT 1.39f
@@ -48,7 +44,6 @@ class GUI;
 class FrameBuffer;
 class Cursor;
 class UDPClient;
-class Audio;
 
 class Game
 {
@@ -130,11 +125,6 @@ private:
 	/* GAME RENDER PASSES */
 	void renderFirstPass();
 	void renderSecondsPass();
-
-	/* GAME THEME AUDIO */
-	Audio* themeAudio;
-	Audio* playerJoinedAudio;
-	Audio* playerDisconnectedAudio;
 
 	double cursorRot = 0;
 	double lastTime;

@@ -45,7 +45,6 @@ class PlayerAI;
 class Skill;
 class Monster;
 class TextRenderer;
-class Audio;
 enum EquipmentClass;
 enum SkillSlot;
 
@@ -188,10 +187,6 @@ private:
 
 	/* MOVEMENT METHODS */
 	void moveOnline(Map* map);	// multiplater
-
-	/* AUDIO-RELATED ATTRIBUTES */
-	Audio* receiveDamageAudio;
-	Audio* attackSound;
 
 	/* AUXILIAR METHODS */
 	bool checkIfPlayerIsStillOnTheSameMapPosition(glm::vec3 currentPosition, glm::vec3 nextPosition);

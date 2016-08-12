@@ -2,7 +2,7 @@
 #include "Projectile.h"
 #include "Player.h"
 #include "LinkedTime.h"
-#include "Audio.h"
+#include "AudioController.h"
 #include "Game.h"
 
 TurretMonster::TurretMonster(Transform* transform, Mesh* mesh, Texture* texture) : Monster(transform, mesh, texture)
@@ -11,14 +11,12 @@ TurretMonster::TurretMonster(Transform* transform, Mesh* mesh, Texture* texture)
 	projectileMesh->setReferenceCount(1);
 	this->projectileTexture = new Texture("./res/Textures/enemyBall.png");
 	projectileTexture->setReferenceCount(1);
-	this->attackSound = new Audio("./res/Audio/enemy_attack.wav", AudioType::SOUND);
 }
 
 TurretMonster::~TurretMonster()
 {
 	delete this->projectileMesh;
 	delete this->projectileTexture;
-	delete this->attackSound;
 }
 
 void TurretMonster::update(Map* map, Player* player, std::vector<Monster*>* monsters)
@@ -121,7 +119,7 @@ void TurretMonster::createProjectile(glm::vec3 direction, int projId)
 	entityD->setId(projId);
 	projectiles.push_back(entityD);
 
-	this->attackSound->play();
+	AudioController::getTurretAttackAudio().play();
 }
 
 void TurretMonster::destroyProjectile(int projId)

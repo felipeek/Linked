@@ -122,7 +122,11 @@ void PacketController::dispatchShortArray(int id, int xid, short* data, int data
 					if (player != NULL)
 					{
 						player->setTotalMaximumHp((data + i)[1]);
-						player->setHp((data + i)[2]);
+						short hp = (data + i)[2];
+						if (hp > player->getHp()) // done this way instead of using setHp() to activate textures automatically.
+							player->healHp(hp - player->getHp());
+						else if (hp < player->getHp())
+							player->doDamage(player->getHp() - hp);
 						player->setTotalAttack((data + i)[3]);
 						player->setTotalDefense((data + i)[4]);
 						player->setTotalMagicalPower((data + i)[5]);

@@ -81,6 +81,7 @@
     <ClCompile Include="src\Entity\Monster\BomberMonster.cpp" />
     <ClCompile Include="src\Entity\Monster\Skill\MonsterExplosionSkill.cpp" />
     <ClCompile Include="src\Entity\Monster\Skill\MonsterEndureSkill.cpp" />
+    <ClCompile Include="src\Core\AudioController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Entity\AI\AI.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="include\Entity\Monster\Skill\MonsterExplosionSkill.h" />
     <ClInclude Include="include\Entity\Monster\Skill\MonsterEndureSkill.h" />
     <ClInclude Include="include\Core\LinkedDebug.h" />
+    <ClInclude Include="include\Core\AudioController.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="LinkedIcon.ico" />
@@ -183,5 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config.linked" />
+    <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

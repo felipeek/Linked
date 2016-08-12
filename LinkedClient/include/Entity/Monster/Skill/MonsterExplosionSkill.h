@@ -4,8 +4,6 @@
 #define MONSTER_EXPLOSION_SKILL_MAX_RADIUS 8
 #define SKILL_DAMAGE_FACTOR 3
 
-class Audio;
-
 #pragma once
 class MonsterExplosionSkill : public Skill
 {
@@ -22,6 +20,5 @@ private:
 	void hitPlayerIfOnRadius(Player* localPlayer);
 	glm::vec3 explosionPosition;
 	int currentExplosionTextureIndex;
-	Audio* skillAudio;
 };
 

@@ -43,7 +43,7 @@
 #include "UDPClient.h"
 
 #include "FrameBuffer.h"
-#include "Audio.h"
+#include "AudioController.h"
 #include "LinkedDebug.h"
 
 // Standard libs
@@ -65,7 +65,6 @@ Game::Game(int windowWidth, int windowHeight)
 	Game::current = this;
 
 	createGraphicElements(windowWidth, windowHeight);
-
 	createMap();
 	initializateAudio();
 
@@ -123,10 +122,6 @@ Game::~Game()
 		udpClient->virtualDisconnection();
 		if (this->udpClient != nullptr) delete udpClient;
 	}
-
-	if (this->themeAudio != nullptr) delete this->themeAudio;
-	if (this->playerJoinedAudio != nullptr) delete this->playerJoinedAudio;
-	if (this->playerDisconnectedAudio != nullptr) delete this->playerDisconnectedAudio;
 }
 
 void Game::createGraphicElements(int windowWidth, int windowHeight)
@@ -275,7 +270,7 @@ void Game::createOnlinePlayer(short* data, bool isLocalPlayer)
 	{
 		onlinePlayers.push_back(designedPlayer);
 		designedPlayer->setType(NETWORK);
-		if (playerJoinedAudio != nullptr) playerJoinedAudio->play();
+		AudioController::getPlayerJoinedAudio().play();
 		if (Chat::gui != nullptr) Chat::gui->setNextMessage(std::string("A new player joined."));
 	}
 }
@@ -290,7 +285,7 @@ void Game::disconnectOnlinePlayer(int* data)
 		{
 			delete (*PacketController::onlinePlayers)[i];
 			(*PacketController::onlinePlayers).erase((*PacketController::onlinePlayers).begin() + i);
-			if (playerDisconnectedAudio != nullptr) playerDisconnectedAudio->play();
+			AudioController::getPlayerDisconnectedAudio().play();
 			if (Chat::gui != nullptr) Chat::gui->setNextMessage(std::string("Player disconnected."));
 		}
 	}
@@ -307,13 +302,11 @@ void Game::createGUI()
 
 void Game::initializateAudio()
 {
-	Audio::setMusicVolume(musicVolume);
-	Audio::setSoundVolume(effectsVolume);
-	themeAudio = new Audio(THEME_AUDIO_PATH, AudioType::MUSIC);
-	themeAudio->setLoop(true);
-	themeAudio->play();
-	playerJoinedAudio = new Audio(PLAYER_JOINED_AUDIO_PATH, AudioType::SOUND);
-	playerDisconnectedAudio = new Audio(PLAYER_DISCONNECTED_AUDIO_PATH, AudioType::SOUND);
+	AudioController::setMusicVolume(musicVolume);
+	AudioController::setSoundVolume(effectsVolume);
+	Audio& themeAudio = AudioController::getThemeAudio();
+	themeAudio.setLoop(true);
+	themeAudio.play();
 }
 
 void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
