@@ -63,8 +63,11 @@ LRESULT CALLBACK WindowInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 		// Ctrl+V to paste in chat
 		if (Input::keyStates[17] && Input::keyStates['V'])
 		{
-			if(Chat::isChatActive())
-				Chat::getStream() << Input::GetClipboardText();
+			if (Chat::isChatActive())
+			{
+				if(Input::GetClipboardText() != std::string(""))
+					Chat::getStream() << Input::GetClipboardText();
+			}
 		}
 		break;
 	case WM_KEYUP:

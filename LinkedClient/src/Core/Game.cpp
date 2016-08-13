@@ -402,7 +402,7 @@ void Game::destroyProjectileOfId(int id)
 
 void Game::render()
 {
-#if 0
+#if 1
 	/* FIRST PASS (SHADOW PASS) */
 	renderFirstPass();
 
