@@ -340,7 +340,7 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 			{
 				if (!map->coordinateHasCollision(glm::vec3(i, j, 0)) && loadMonsters)
 				{
-					monster->getTransform()->translate((float)i, (float)j, 1.3f);
+					monster->getTransform()->translate((float)i, (float)j, 1.6f);
 					monsters.push_back(monster);
 				}
 				else
