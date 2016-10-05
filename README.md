@@ -37,7 +37,7 @@ Linked is a multiplayer game idealized by Hoshoyo. It is currently being develop
 
 ## Game
 ![Image 1](https://github.com/felipeek/Linked/blob/master/documentation/Image1.png)
-![Image 2](https://github.com/felipeek/Linked/master/documentation/Image2.png)
+![Image 2](https://github.com/felipeek/Linked/blob/master/documentation/Image2.png)
 ![Image 3](https://github.com/felipeek/Linked/blob/master/documentation/Image3.png)
 
 
