@@ -185,7 +185,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config.linked" />
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

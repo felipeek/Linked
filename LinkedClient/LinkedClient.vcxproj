@@ -82,12 +82,12 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>bin/</OutDir>
-    <IntDir>bin/</IntDir>
+    <OutDir>bin/x64/debug/</OutDir>
+    <IntDir>bin/x64/debug/intermediaries/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>bin/</OutDir>
-    <IntDir>bin/</IntDir>
+    <OutDir>bin/x64/release</OutDir>
+    <IntDir>bin/x64/release/intermediares/</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -111,13 +111,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>include;include/Entity/Skill;include/Entity/Factory;include/Entity/Monster;include/Entity/Attack;include/Entity/AI;include/WindowApi;include/Shaders/Classes;include/Shaders;include/ResourceLoad;include/Network;include/Map;include/GUI;include/external;include/Entity;include/Core;include/native;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include/Entity/Monster/Skill;include;include/Entity/Skill;include/Entity/Factory;include/Entity/Monster;include/Entity/Attack;include/Entity/AI;include/WindowApi;include/Shaders/Classes;include/Shaders;include/ResourceLoad;include/Network;include/Map;include/GUI;include/external;include/Entity;include/Core;include/native;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;glfw3.lib;freetype261.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>lib;lib/x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew64d.lib;freetyped.lib;opengl32.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -155,13 +156,14 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>include;include/Entity/Skill;include/Entity/Factory;include/Entity/Monster;include/Entity/Attack;include/Entity/AI;include/WindowApi;include/Shaders/Classes;include/Shaders;include/ResourceLoad;include/Network;include/Map;include/GUI;include/external;include/Entity;include/Core;include/native;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew64.lib;freetype263MT.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -348,8 +350,6 @@
     <ResourceCompile Include="LinkedClient.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="config.linked" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

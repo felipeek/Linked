@@ -1,5 +1,6 @@
 // Project Libs
 #include <glm\gtc\matrix_transform.hpp>
+#include <intrin.h>
 #include "Game.h"
 #include "LinkedTime.h"
 #include "Input.h"
@@ -327,7 +328,7 @@ void Game::loadMonstersAndEntities(bool loadMonsters, bool loadEntities)
 	Texture* waterTexture = new Texture("./res/Maps/water.bmp");
 	waterTexture->setTileAmount(100);
 	water = new Entity(new Transform(glm::vec3(0, 0, -1.0f)), waterMesh, waterTexture);
-
+	
 	for (int i = 0; i < MAP_SIZE; i++)
 	{
 		for (int j = 0; j < MAP_SIZE; j++)
@@ -402,14 +403,12 @@ void Game::destroyProjectileOfId(int id)
 
 void Game::render()
 {
-#if 1
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	/* FIRST PASS (SHADOW PASS) */
 	renderFirstPass();
 
 	/* SECOND PASS (COLOR PASS) */
 	renderSecondsPass();
-#endif
-	
 }
 
 void Game::renderGUI()

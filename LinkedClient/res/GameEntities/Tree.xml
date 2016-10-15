@@ -1,6 +1,6 @@
 <GAMEENTITY>
   <NAME>Tree</NAME>
-  <OBJECT>Objects/arvore.obj</OBJECT>
+  <OBJECT>Objects/arvore.lk</OBJECT>
   <TEXTURE>Textures/arvore_tex.png</TEXTURE>
   <SIZE>7</SIZE>
   <ANGLE>180</ANGLE>

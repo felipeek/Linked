@@ -5,7 +5,7 @@ Audio::Audio(std::string path, AudioType type, unsigned int volume)
 {
 	this->type = type;
 	this->path = path;
-
+	
 	if (type == AudioType::SOUND)
 	{
 		if (!this->buffer.loadFromFile(path))
@@ -20,6 +20,7 @@ Audio::Audio(std::string path, AudioType type, unsigned int volume)
 			throw ("Music Error. Path: " + path);
 		this->setVolume(volume);
 	}
+	
 }
 
 Audio::Audio(std::string path, AudioType type) : Audio(path, type, AUDIO_DEFAULT_VOLUME)

@@ -1,6 +1,6 @@
 <GAMEENTITY>
   <NAME>House</NAME>
-  <OBJECT>Objects/house.obj</OBJECT>
+  <OBJECT>Objects/house.lk</OBJECT>
   <TEXTURE>Textures/house.png</TEXTURE>
   <SIZE>7</SIZE>
   <ANGLE>180</ANGLE>
