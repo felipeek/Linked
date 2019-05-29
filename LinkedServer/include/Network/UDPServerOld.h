@@ -2,6 +2,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
@@ -30,9 +33,27 @@ public:
 
 	double getPing();
 private:
-    int sockfd; 
+	int port;
+	WSADATA wsaData;
+
+	struct sockaddr_in serverInfo, clientInfo;
+	int sizeServerInfo, sizeClientInfo;
+
 	std::vector <ClientInfo*> clientsInfo;
-	friend bool operator==(struct sockaddr_in l, struct sockaddr_in r);
-	friend bool operator!=(struct sockaddr_in l, struct sockaddr_in r);
+
+	SOCKET connectionSocket;
+
+	bool asyncSocket;
+
+	// Methods
+	void startWinsock();
+	void createSocket();
+	void initAndBindSocket();
+	friend bool operator==(sockaddr_in l, sockaddr_in r);
+	friend bool operator!=(sockaddr_in l, sockaddr_in r);
+
+	double last;
+
+	double ping;
 };
 

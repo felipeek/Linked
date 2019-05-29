@@ -1,10 +1,11 @@
 #include <iostream>
-#include "glm\glm.hpp"
-#include "network\UDPServer.h"
+#include "glm/glm.hpp"
+#include "Network/UDPServer.h"
 #include "LinkedTime.h"
 #include "PacketController.h"
 #include "Game.h"
 #include <thread>
+#include <unistd.h>
 
 #define PORT 9090
 
@@ -70,7 +71,8 @@ int main(int argc, char** argv)
 		{
 			for (unsigned int i = 0; i < server->getClients()->size(); i++)
 			{
-				server->sendPackets(Packet(ID_PING, 0), (*server->getClients())[i]->netInfo);
+				Packet p = Packet(ID_PING, 0);
+				server->sendPackets(p, (*server->getClients())[i]->netInfo);
 				(*server->getClients())[i]->lastPing = LinkedTime::getTime();
 			}
 			cumulativeTime = 0;

@@ -1,132 +1,117 @@
 #include "UDPServer.h"
-#include <iostream>
-#include "LinkedTime.h"
+#include <stdio.h> 
+#include <stdlib.h> 
+#include <unistd.h> 
+#include <string.h> 
+#include <sys/types.h> 
+#include <sys/socket.h> 
+#include <arpa/inet.h> 
+#include <netinet/in.h>
 #include "PacketController.h"
+#include "Common.h"
+#include <iostream>
 
 using namespace std;
 
-//#define DEBUG
+#define MAXLINE 1024
+
+bool operator==(struct sockaddr_in l, struct sockaddr_in r)
+{
+	if (l.sin_port == r.sin_port)
+		return true;
+	else
+		return false;
+}
+
+bool operator!=(struct sockaddr_in l, struct sockaddr_in r)
+{
+	if (l.sin_port != r.sin_port)
+		return true;
+	else
+		return false;
+}
 
 UDPServer::UDPServer(int port)
 {
-	this->port = port;
-	sizeServerInfo = sizeof(serverInfo);
-	sizeClientInfo = sizeof(clientInfo);
-	startWinsock();
-	asyncSocket = true;
-	createSocket();
-	initAndBindSocket();
+    struct sockaddr_in servaddr;
+
+    // Creating socket file descriptor 
+    if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
+    { 
+        perror("socket creation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    memset(&servaddr, 0, sizeof(servaddr));
+
+    // Filling server information 
+    servaddr.sin_family    = AF_INET; // IPv4 
+    servaddr.sin_addr.s_addr = INADDR_ANY; 
+    servaddr.sin_port = htons(port);
+
+    // Bind the socket with the server address 
+    if (bind(sockfd, (const struct sockaddr *)&servaddr, sizeof(servaddr)) < 0)
+    { 
+        perror("bind failed"); 
+        exit(EXIT_FAILURE); 
+    }
 }
 
 UDPServer::~UDPServer()
 {
-}
 
-void UDPServer::createSocket()
-{
-	//Create a socket
-	if ((connectionSocket = socket(AF_INET, SOCK_DGRAM, 0)) == INVALID_SOCKET)
-	{
-#ifdef DEBUG
-		cerr << "Could not create socket : " << WSAGetLastError() << endl;
-#else
-		cerr << "Erro na criacao do socket de rede." << endl;
-#endif
-		WSACleanup();
-		exit(1);
-	}
-	u_long iMode = 1;
-	if (asyncSocket)
-		iMode = 1;
-	else
-		iMode = 0;
-	ioctlsocket(connectionSocket, FIONBIO, &iMode);
-#ifdef DEBUG
-	cout << "Socket created." << endl;
-#endif
-}
-
-void UDPServer::initAndBindSocket()
-{
-	serverInfo.sin_family = AF_INET;
-	serverInfo.sin_addr.s_addr = INADDR_ANY;
-	serverInfo.sin_port = htons(port);
-
-	//Bind
-	if (bind(connectionSocket, (struct sockaddr *)&serverInfo, sizeof(serverInfo)) == SOCKET_ERROR)
-	{
-#ifdef DEBUG
-		cerr <<"Bind failed with error code : " << WSAGetLastError() << endl;
-#else
-		cerr << "Erro ao fazer o bind do socket." << endl;
-#endif
-		closesocket(connectionSocket);
-		WSACleanup();
-		exit(1);
-	}
-#ifdef DEBUG
-	cout << "Bind successful" << endl;
-#endif
-}
-
-void UDPServer::startWinsock()
-{
-	int status = WSAStartup(MAKEWORD(2, 2), &wsaData);
-	if (status != 0)
-	{
-		#ifdef DEBUG
-		cerr << "WSAStartup failed: " << status << endl;
-		#endif
-		exit(1);
-	}
-	#ifdef DEBUG
-	cout << "WSAStartup inicializado." << endl;
-	#endif
 }
 
 void UDPServer::receivePackets()
 {
-	char buffer[RECVBUFFERSIZE];
-	int status = recvfrom(connectionSocket, buffer, RECVBUFFERSIZE, 0, (struct sockaddr*)&clientInfo, &sizeClientInfo);
-	if (status == SOCKET_ERROR)
-	{
-		int ierr = WSAGetLastError();
-		if (ierr == WSAEWOULDBLOCK) {  // currently no data available
-			//Sleep(1);  // wait and try again
-			return;
-		}
-		else
-		{
-			//#ifdef DEBUG
-			cerr << "Error recvfrom :" << WSAGetLastError() << endl;
-			//#endif
-		}
-	}
-	else
-	{
+    struct sockaddr_in clientInfo;
+    memset(&clientInfo, 0, sizeof(clientInfo));
+    char buffer[MAXLINE]; 
+    socklen_t len, n; 
+    n = recvfrom(sockfd, (char *)buffer, MAXLINE,  
+                MSG_DONTWAIT, ( struct sockaddr *) &clientInfo, 
+                &len);
+
+    if (n == -1)
+    {
+        // nothing to receive
+        if (errno == EWOULDBLOCK)
+            return;
+        cout << "receivePackets: error: " << strerror(errno) << endl;
+        return;
+    }
+    if (n == 0)
+        return;
+
+    buffer[n] = '\0'; 
 #ifdef DEBUG
-		cout << inet_ntoa(clientInfo.sin_addr) << " (" << ntohs(clientInfo.sin_port) << "):";
-		cout << (short)buffer[0] << endl;
+    cout << inet_ntoa(clientInfo.sin_addr) << " (" << ntohs(clientInfo.sin_port) << "):";
+    cout << (short)buffer[0] << endl;
 #endif
-		int id = verifyClient(&clientInfo);
-		ClientPacket *cp = new ClientPacket(buffer, id, &clientInfo);
-		if ((id != -1 || PacketController::isConnectionPacket(cp)) && !(id != -1 && PacketController::isConnectionPacket(cp)))
-			PacketController::dispatch(cp);
-		delete cp;
-	}
+    int id = verifyClient(&clientInfo);
+    ClientPacket *cp = new ClientPacket(buffer, id, &clientInfo);
+    if ((id != -1 || PacketController::isConnectionPacket(cp)) && !(id != -1 && PacketController::isConnectionPacket(cp)))
+        PacketController::dispatch(cp);
+    delete cp;
 }
 
 void UDPServer::sendPackets(Packet& packet, struct sockaddr_in& client)
 {
-	int status = sendto(connectionSocket, packet.getData(), packet.getDataLength(), 0, (struct sockaddr*)&client, sizeClientInfo);
-	if (status == SOCKET_ERROR)
+    int status = sendto(sockfd, (const char *)packet.getData(), packet.getDataLength(),  
+        0, (struct sockaddr*)&client, sizeof(struct sockaddr_in)); 
+	if (status == -1)
 	{
 		#ifdef DEBUG
-		cerr << "Error sendto: " << WSAGetLastError() << endl;
+		//cerr << "Error sendto: " << WSAGetLastError() << endl;
 		#endif
 	}
 
-	last = LinkedTime::getTime();
+    return;
+}
+
+std::vector <ClientInfo*>* UDPServer::getClients()
+{
+	return &clientsInfo;
 }
 
 int UDPServer::addToClients(struct sockaddr_in* client)
@@ -160,7 +145,7 @@ int UDPServer::clientExists(int id)
 	return -1;
 }
 
-int UDPServer::verifyClient(sockaddr_in* client)
+int UDPServer::verifyClient(struct sockaddr_in* client)
 {
 	bool clientExists = false;
 	for (unsigned int i = 0; i < clientsInfo.size(); i++)
@@ -178,27 +163,7 @@ int UDPServer::verifyClient(sockaddr_in* client)
 	return 0;
 }
 
-std::vector <ClientInfo*>* UDPServer::getClients()
-{
-	return &clientsInfo;
-}
-
 double UDPServer::getPing()
 {
-	return this->ping;
-}
-
-bool operator==(struct sockaddr_in l, struct sockaddr_in r)
-{
-	if (l.sin_port == r.sin_port)
-		return true;
-	else
-		return false;
-}
-bool operator!=(struct sockaddr_in l, struct sockaddr_in r)
-{
-	if (l.sin_port != r.sin_port)
-		return true;
-	else
-		return false;
+    return 0.0;
 }

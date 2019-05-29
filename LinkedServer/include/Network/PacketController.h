@@ -1,9 +1,8 @@
 #pragma once
 
-#include "glm\glm.hpp"
+#include "glm/glm.hpp"
 #include <vector>
 #include <set>
-#include <winsock2.h>
 
 class ClientPacket;
 class Player;

@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include <glm\glm.hpp>
+#include "glm/glm.hpp"
 #include "MapTerrain.h"
 #include "MapMonster.h"
 #include "MapEntity.h"

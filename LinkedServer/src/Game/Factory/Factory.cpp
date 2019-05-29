@@ -1,5 +1,8 @@
 #include "Factory.h"
 #include <dirent.h>
+#include <stdio.h>
+#include <string.h>
+
 
 Factory::Factory()
 {

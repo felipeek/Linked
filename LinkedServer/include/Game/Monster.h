@@ -3,6 +3,7 @@
 #include "Creature.h"
 #include <string>
 #include <vector>
+#include "Movement.h"
 
 #define MONSTER_DEFAULT_NAME "unnamed"
 #define MONSTER_DEFAULT_HP 10
@@ -21,7 +22,6 @@
 class Player;
 class MonsterAI;
 class Map;
-enum MovementDirection;
 
 class Monster : public WorldObject, public Creature
 {

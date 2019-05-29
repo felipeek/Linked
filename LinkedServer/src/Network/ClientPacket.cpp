@@ -1,6 +1,8 @@
 #include "ClientPacket.h"
-#include "network\Packet.h"
+#include "Network/Packet.h"
 #include <iostream>
+#include <stdio.h>
+#include <string.h>
 
 using namespace std;
 
@@ -109,7 +111,7 @@ void ClientPacket::decodePacket(char* rawPacket)
 		}
 	}
 	if (type >= P_SINGLE_BYTE && type < P_PING || type == P_MSG)
-		std::memcpy(data, &rawPacket[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE], sizeData);
+		memcpy(data, &rawPacket[PACKET_TYPE_SIZE + PACKET_ID_SIZE + PACKET_XID_SIZE], sizeData);
 
 }
 
@@ -243,7 +245,7 @@ int ClientPacket::getSenderID()
 	return senderID;
 }
 
-sockaddr_in* ClientPacket::getClientInfo()
+struct sockaddr_in* ClientPacket::getClientInfo()
 {
 	return clientInfo;
 }

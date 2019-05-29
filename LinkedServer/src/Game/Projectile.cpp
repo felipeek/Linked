@@ -1,5 +1,4 @@
 #include "Projectile.h"
-#include "Time.h"
 
 int Projectile::G_ID = 0;
 

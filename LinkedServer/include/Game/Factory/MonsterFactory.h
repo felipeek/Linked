@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 #include <rapidxml_utils.hpp>
-#include <glm\glm.hpp>
+#include "glm/glm.hpp"
 #include "Factory.h"
 
 #define MONSTERS_DIRECTORY "./res/Monsters/"

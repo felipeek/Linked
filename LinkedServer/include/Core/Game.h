@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include "glm\glm.hpp"
+#include "glm/glm.hpp"
 
 #define MAP_SIZE 1024
 #define GAMESPEED 60.0

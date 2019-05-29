@@ -2,7 +2,7 @@
 
 #include "ImageLoader.h"
 #include "stb_image.h"
-#include <glm\glm.hpp>
+#include <glm/glm.hpp>
 
 using namespace glm;
 

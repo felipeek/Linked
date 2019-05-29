@@ -1,7 +1,7 @@
 #include "PacketController.h"
 #include "ClientPacket.h"
-#include "network\Packet.h"
-#include "network\UDPServer.h"
+#include "Network/Packet.h"
+#include "Network/UDPServer.h"
 #include "LinkedTime.h"
 #include "Player.h"
 #include "Monster.h"
@@ -111,7 +111,8 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 				<< ":" << udpServer->getClients()->back()->netInfo.sin_port << ") " <<
 				"connected with ID " << udpServer->getClients()->back()->id << std::endl;
 			// Send their ID back
-			udpServer->sendPackets(Packet(1, 0, udpServer->getClients()->back()->id), udpServer->getClients()->back()->netInfo);
+			Packet p = Packet(1, 0, udpServer->getClients()->back()->id);
+			udpServer->sendPackets(p, udpServer->getClients()->back()->netInfo);
 
 			// Send essential game information for client
 			PacketController::sendEssentialGameInformationToClient(udpServer->getClients()->back());
@@ -140,7 +141,10 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 
 			for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
 				if ((*udpServer->getClients())[i]->id != xid || projectileToBeDestroyed == -1)
-					udpServer->sendPackets(Packet(data, 3, 4, xid), (*udpServer->getClients())[i]->netInfo);
+				{
+					Packet p = Packet(data, 3, 4, xid);
+					udpServer->sendPackets(p, (*udpServer->getClients())[i]->netInfo);
+				}
 		}
 		break;
 	// MONSTER ATTACK COLLISION
@@ -161,7 +165,10 @@ void PacketController::dispatchIntArray(int id, int xid, int* data, int dataSize
 
 			for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
 				if ((*udpServer->getClients())[i]->id != xid || projectileToBeDestroyed == -1)
-					udpServer->sendPackets(Packet(data, 3, 11, xid), (*udpServer->getClients())[i]->netInfo);
+				{
+					Packet p = Packet(data, 3, 11, xid);
+					udpServer->sendPackets(p, (*udpServer->getClients())[i]->netInfo);
+				}
 		}
 		break;
 	// PLAYER TOOK SIMPLE DAMAGE
@@ -203,7 +210,10 @@ void PacketController::dispatchFloatArray(int id, int xid, float* data, int data
 					usedSkill->execute(skillDirection, skillTargetPosition, creatureId);
 
 					for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
-						udpServer->sendPackets(Packet(data, 6, 6, xid), (*udpServer->getClients())[i]->netInfo);
+					{
+						Packet p = Packet(data, 6, 6, xid);
+						udpServer->sendPackets(p, (*udpServer->getClients())[i]->netInfo);
+					}
 				}
 			}
 		}
@@ -260,7 +270,10 @@ void PacketController::dispatchVec3fArray(int id, int xid, glm::vec3* data, int 
 			info.w = (float)newProjectile->getId();
 
 			for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
-				udpServer->sendPackets(Packet(info, 3, xid), (*udpServer->getClients())[i]->netInfo);
+			{
+				Packet p(info, 3, xid);
+				udpServer->sendPackets(p, (*udpServer->getClients())[i]->netInfo);
+			}
 
 			// projectile is being deleted because server side is not using it
 			PacketController::game->destroyProjectileOfId(newProjectile->getId());
@@ -316,7 +329,10 @@ void PacketController::disconnectClient(int clientId, bool timedOut)
 				}
 
 			for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
-				udpServer->sendPackets(Packet(clientId, 7, 0), (*udpServer->getClients())[i]->netInfo);
+			{
+				Packet p = Packet(clientId, 7, 0);
+				udpServer->sendPackets(p, (*udpServer->getClients())[i]->netInfo);
+			}
 		}
 	}
 }
@@ -368,7 +384,10 @@ void PacketController::createPlayerOnAllClientsExcept(ClientInfo* client, Player
 
 	for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
 		if ((*udpServer->getClients())[i]->id != client->id)
-			udpServer->sendPackets(Packet(playerInformation, 11, 0, 0), (*udpServer->getClients())[i]->netInfo);
+		{
+			Packet p = Packet(playerInformation, 11, 0 , 0);
+			udpServer->sendPackets(p, (*udpServer->getClients())[i]->netInfo);
+		}
 }
 void PacketController::createAllPlayersOnClient(ClientInfo* client)
 {
@@ -388,7 +407,8 @@ void PacketController::createAllPlayersOnClient(ClientInfo* client)
 		playerInformation[9] = (short)round(player->getPosition().y);
 		playerInformation[10] = (short)round(player->getPosition().z);
 
-		udpServer->sendPackets(Packet(playerInformation, 11, 0, 0), client->netInfo);
+		Packet p = Packet(playerInformation, 11, 0 , 0);
+		udpServer->sendPackets(p, client->netInfo);
 	}
 }
 
@@ -427,7 +447,8 @@ void PacketController::createMonsters(int vectorIndex, int quantity, ClientInfo*
 		monstersInformation[8 * i + 7] = (short)(monster->getPosition().z);
 	}
 
-	udpServer->sendPackets(Packet(monstersInformation, 8*quantity, 0, 1), client->netInfo);
+	Packet p = Packet(monstersInformation, 8*quantity, 0, 1);
+	udpServer->sendPackets(p, client->netInfo);
 }
 
 void PacketController::updatePlayersAttributesToAllClients()
@@ -480,7 +501,10 @@ void PacketController::updatePlayersAttributes(int vectorIndex, int quantity, st
 	}
 
 	for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
-		udpServer->sendPackets(Packet(playerAttributes, 8 * quantity, 1, 0), (*udpServer->getClients())[i]->netInfo);
+	{
+		Packet p = Packet(playerAttributes, 8 * quantity, 1, 0);
+		udpServer->sendPackets(p, (*udpServer->getClients())[i]->netInfo);
+	}
 }
 
 void PacketController::updatePlayersPositionToAllClients()
@@ -526,7 +550,10 @@ void PacketController::updatePlayersPosition(int vectorIndex, int quantity, std:
 	}
 
 	for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
-		udpServer->sendPackets(Packet(playersPosition, playersClientIds, quantity, 1, 1), (*udpServer->getClients())[i]->netInfo);
+	{
+		Packet p = Packet(playersPosition, playersClientIds, quantity, 1, 1);
+		udpServer->sendPackets(p, (*udpServer->getClients())[i]->netInfo);
+	}
 }
 
 void PacketController::updateMonstersPositionToAllClients()
@@ -573,7 +600,10 @@ void PacketController::updateMonstersPosition(int vectorIndex, int quantity, std
 	}
 
 	for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
-		udpServer->sendPackets(Packet(monstersPosition, monstersIds, quantity, 2, 0), (*udpServer->getClients())[i]->netInfo);
+	{
+		Packet p = Packet(monstersPosition, monstersIds, quantity, 2, 0);
+		udpServer->sendPackets(p, (*udpServer->getClients())[i]->netInfo);
+	}
 }
 
 void PacketController::updateMonstersAttacksToAllClients()
@@ -618,7 +648,10 @@ void PacketController::updateMonstersAttacks(int vectorIndex, int quantity, std:
 	}
 
 	for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
-		udpServer->sendPackets(Packet(monstersAttacks, quantity, 5, 0), (*udpServer->getClients())[i]->netInfo);
+	{
+		Packet p = Packet(monstersAttacks, quantity, 5, 0);
+		udpServer->sendPackets(p, (*udpServer->getClients())[i]->netInfo);
+	}
 }
 
 void PacketController::updateMonsterDamagesToAllClients()
@@ -664,7 +697,10 @@ void PacketController::updateMonsterDamages(int vectorIndex, int quantity, std::
 	}
 
 	for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
-		udpServer->sendPackets(Packet(monsterDamages, quantity, 4, 0), (*udpServer->getClients())[i]->netInfo);
+	{
+		Packet p = Packet(monsterDamages, quantity, 4, 0);
+		udpServer->sendPackets(p, (*udpServer->getClients())[i]->netInfo);
+	}
 }
 
 void PacketController::sendProjectileAttackByTurretMonster(int monsterId, Projectile* projectile)
@@ -676,21 +712,30 @@ void PacketController::sendProjectileAttackByTurretMonster(int monsterId, Projec
 	info.w = (float)projectile->getId();
 
 	for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
-		udpServer->sendPackets(Packet(info, 10, monsterId), (*udpServer->getClients())[i]->netInfo);
+	{
+		Packet p = Packet(info, 10, monsterId);
+		udpServer->sendPackets(p, (*udpServer->getClients())[i]->netInfo);
+	}
 }
 
 void PacketController::sendMonsterExplosionSkill(int monsterId)
 {
 	int dummy = -1;
 	for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
-		udpServer->sendPackets(Packet(dummy, 12, monsterId), (*udpServer->getClients())[i]->netInfo);
+	{
+		Packet p = Packet(dummy, 12, monsterId);
+		udpServer->sendPackets(p, (*udpServer->getClients())[i]->netInfo);
+	}
 }
 
 void PacketController::sendMonsterEndureSkill(int monsterId)
 {
 	int dummy = -1;
 	for (unsigned int i = 0; i < udpServer->getClients()->size(); i++)
-		udpServer->sendPackets(Packet(dummy, 13, monsterId), (*udpServer->getClients())[i]->netInfo);
+	{
+		Packet p = Packet(dummy, 13, monsterId);
+		udpServer->sendPackets(p, (*udpServer->getClients())[i]->netInfo);
+	}
 }
 
 void PacketController::dispatchMsg(int id, int xid, char* data, int senderID)
@@ -702,7 +747,10 @@ void PacketController::dispatchMsg(int id, int xid, char* data, int senderID)
 		// BroadCast
 		for (unsigned int i = 0; i < udpServer->getClients()->size(); i++){
 			if ((*udpServer->getClients())[i]->id != senderID)
-				udpServer->sendPackets(Packet(msg, -1), (*udpServer->getClients())[i]->netInfo);
+			{
+				Packet p = Packet(msg, -1);
+				udpServer->sendPackets(p, (*udpServer->getClients())[i]->netInfo);
+			}
 		}
 	}
 	else
@@ -711,7 +759,10 @@ void PacketController::dispatchMsg(int id, int xid, char* data, int senderID)
 		int receiverIndex = udpServer->clientExists(id);
 		
 		if (receiverIndex != -1 && id != senderID)
-			udpServer->sendPackets(Packet(msg, senderID), (*udpServer->getClients())[receiverIndex]->netInfo);
+		{
+			Packet p = Packet(msg, senderID);
+			udpServer->sendPackets(p, (*udpServer->getClients())[receiverIndex]->netInfo);
+		}
 	}
 	
 }
